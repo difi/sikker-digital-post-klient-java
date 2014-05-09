@@ -3,4 +3,9 @@ target
 .classpath
 .project
 *.iml
-.idea
+
+#Ignore all intellij files
+.idea/*
+
+# ... except these
+!.idea/codeStyleSettings.xml
