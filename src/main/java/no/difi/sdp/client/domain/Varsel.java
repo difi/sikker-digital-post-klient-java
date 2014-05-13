@@ -10,7 +10,7 @@ public class Varsel {
     private Varselstekst varseltekst;
 
     /**
-     * Antall dager etter brevet er tilgjengeliggjort for mottaker det første, andre osv varselet skal sendes.
+     * Antall dager etter brevet er tilgjengeliggjort for mottaker det første, andre osv varsel skal sendes.
      */
     private List<Integer> dagerEtter;
 
