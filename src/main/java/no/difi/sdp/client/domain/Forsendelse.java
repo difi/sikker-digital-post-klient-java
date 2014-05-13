@@ -5,9 +5,10 @@ import java.util.Date;
 public class Forsendelse {
 
     private String konversasjonsId;
-    private Dokumentpakke dokumentpakke;
 
-    private Repetisjoner repetisjoner;
+    private Mottaker mottaker;
+
+    private Dokumentpakke dokumentpakke;
 
     /**
      * Når brevet tilgjengeliggjøres for mottaker. Standard er nå.

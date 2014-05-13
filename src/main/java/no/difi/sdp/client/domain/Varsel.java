@@ -1,5 +1,7 @@
 package no.difi.sdp.client.domain;
 
+import java.util.List;
+
 public class Varsel {
 
     /**
@@ -8,13 +10,8 @@ public class Varsel {
     private Varselstekst varseltekst;
 
     /**
-     * Antall ganger e-postvarsel skal sendes dersom mottaker ikke åpner brevet.
+     * Antall dager etter brevet er tilgjengeliggjort for mottaker det første, andre osv varselet skal sendes.
      */
-    private int repitisjoner = 1;
-
-    /**
-     * Antall dager etter brevet er tilgjengeliggjort for mottaker det første varselet skal sendes.
-     */
-    private int dagerEtter = 0;
+    private List<Integer> dagerEtter;
 
 }
