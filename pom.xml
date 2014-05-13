@@ -7,18 +7,11 @@
 		<maven>2.2.1</maven>
 	</prerequisites>
 
-	<parent>
-		<groupId>no.digipost</groupId>
-		<artifactId>digipost-open-super-pom</artifactId>
-		<version>0.2</version>
-		<relativePath/>
-	</parent>
-
 	<artifactId>sikker-digital-post-klient</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Sikker digital post klient</name>
-	<groupId>no.digipost.difi</groupId>
+	<groupId>no.difi</groupId>
 	<description>
 		Klient for sending av sikker digital post fra offentlige virksomheter.
 	</description>
