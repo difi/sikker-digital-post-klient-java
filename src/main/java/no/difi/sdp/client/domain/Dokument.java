@@ -15,6 +15,10 @@ public class Dokument {
     private String mimeType;
 
     /**
+     * Filnavnet til dokumentet.
+     */
+    private String href;
+    /**
      * Dokumentet som en strøm
      */
     private InputStream dokument;

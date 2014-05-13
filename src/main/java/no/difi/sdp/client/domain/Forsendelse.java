@@ -31,4 +31,18 @@ public class Forsendelse {
      * Varsler som skal sendes til mottaker av brevet.
      */
     private Varsler varsler;
+
+    /**
+     * Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender)
+     * i meldingsprosessen. Alle kvitteringer skal addresseres til denne parten som mottaker.
+     * Er dette samme som avsender?
+     */
+    private String organisasjonsNummerSender;
+
+    /**
+     * Identifikator (organisasjonsnummer) til virksomheten som er sluttmottaker i
+     * meldingsprosessen. Ved initiell sending av melding vil dette alltid være en postboks eller utskriftsleverandør.
+     */
+    private String organisasjonsNummerReceiver;
+
 }
