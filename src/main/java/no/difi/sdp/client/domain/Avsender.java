@@ -27,7 +27,7 @@ public class Avsender {
      */
     private String orgNummer;
 
-    private Rolle rolle;
+    private AvsenderRolle rolle;
 
 
 }

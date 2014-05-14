@@ -15,13 +15,10 @@
  */
 package no.difi.sdp.client.domain;
 
-public enum Rolle {
+public enum AvsenderRolle {
 
     BEHANDLINGSANSVARLIG,
     DATABEHANDLER,
-    MELDINGSFORMIDLERLEVERANDØR,
-    POSTKASSELEVERANDØR,
-    MOTTAKER,
     ANSVARLIG_ENHET,
     TEKNISK_AVSENDER
 }

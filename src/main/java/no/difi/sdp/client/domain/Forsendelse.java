@@ -21,7 +21,6 @@ public class Forsendelse {
 
     private String konversasjonsId;
     private Prioritet prioritet;
-    private MottakerVirksomhet mottakerVirksomhet;
     private Mottaker mottaker;
 
     private Dokumentpakke dokumentpakke;
