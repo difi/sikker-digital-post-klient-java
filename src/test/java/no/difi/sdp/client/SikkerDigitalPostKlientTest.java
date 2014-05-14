@@ -47,6 +47,10 @@ public class SikkerDigitalPostKlientTest {
                 .build();
 
         postklient.send(builder);
+
+
+        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
+        postklient.hentKvittering(kvitteringForespoersel);
     }
 
 }

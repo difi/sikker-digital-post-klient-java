@@ -2,6 +2,10 @@ package no.difi.sdp.client.domain;
 
 public class KvitteringForespoersel {
 
+    private KvitteringForespoersel(Prioritet prioritet) {
+        this.prioritet = prioritet;
+    }
+
     /**
      * Hvilken prioritet det forespørres kvittering for.
      *
@@ -9,4 +13,19 @@ public class KvitteringForespoersel {
      */
     private Prioritet prioritet;
 
+    public static Builder builder(Prioritet prioritet) {
+        return new Builder(prioritet);
+    }
+
+    public static class Builder {
+        private final KvitteringForespoersel target;
+
+        public Builder(Prioritet prioritet) {
+            target = new KvitteringForespoersel(prioritet);
+        }
+
+        public KvitteringForespoersel build() {
+            return target;
+        }
+    }
 }
