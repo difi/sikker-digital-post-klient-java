@@ -15,7 +15,7 @@
 	<description>
 		Klient for sending av sikker digital post fra offentlige virksomheter.
 	</description>
-	
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
