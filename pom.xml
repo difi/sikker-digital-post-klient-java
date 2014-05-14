@@ -64,28 +64,6 @@
 				<version>2.16</version>
 			</plugin>
 			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<header>src/main/resources/header.txt</header>
-					<strictCheck>true</strictCheck>
-					<excludes>
-						<exclude>**/*.txt</exclude>
-						<exclude>**/*.xml</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>check-license-header</id>
-						<goals>
-							<goal>check</goal>
-						</goals>
-						<phase>test</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
 				<executions>
