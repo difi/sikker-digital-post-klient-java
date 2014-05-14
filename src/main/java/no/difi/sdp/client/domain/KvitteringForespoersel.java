@@ -1,7 +1,5 @@
 package no.difi.sdp.client.domain;
 
-import no.difi.sdp.client.domain.Prioritet;
-
 public class KvitteringForespoersel {
 
     /**

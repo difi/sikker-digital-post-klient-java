@@ -4,6 +4,12 @@ import java.io.InputStream;
 
 public class Dokument {
 
+    private Dokument(String tittel, String filnavn, InputStream dokument) {
+        this.tittel = tittel;
+        this.filnavn = filnavn;
+        this.dokument = dokument;
+    }
+
     /**
      * Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
      */
@@ -17,10 +23,32 @@ public class Dokument {
     /**
      * Filnavnet til dokumentet.
      */
-    private String href;
+    private String filnavn;
+
     /**
-     * Dokumentet som en strøm
+     * Dokumentet som en strøm.
      */
     private InputStream dokument;
 
+    public static Builder builder(String tittel, String filnavn, InputStream dokument) {
+        return new Builder(tittel, filnavn, dokument);
+    }
+
+    public static class Builder {
+
+        private final Dokument target;
+
+        public Builder(String tittel, String filnavn, InputStream dokument) {
+            target = new Dokument(tittel, filnavn, dokument);
+        }
+
+        public Builder mimeType(String mimeType) {
+            target.mimeType = mimeType;
+            return this;
+        }
+
+        public Dokument build() {
+            return target;
+        }
+    }
 }

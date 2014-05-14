@@ -1,16 +1,28 @@
 package no.difi.sdp.client.domain;
 
+import java.util.UUID;
+
 public class Forsendelse {
 
-    private String konversasjonsId;
-    private Prioritet prioritet;
-    private Mottaker mottaker;
+    private Forsendelse(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
+        this.digitalpostInfo = digitalpostInfo;
+        this.dokumentpakke = dokumentpakke;
+        this.mottaker = mottaker;
+    }
 
     /**
-     * Identifikator (organisasjonsnummer) til virksomheten som er sluttmottaker i
-     * meldingsprosessen. Ved initiell sending av melding vil dette alltid være en postboks eller utskriftsleverandør.
+     * ID for forsendelsen. Skal være unik for en avsender.
+     *
+     * Standard er {@link java.util.UUID#randomUUID()}}.
      */
-    private String orgNummerMottakerVirksomhet;
+    private String konversasjonsId = UUID.randomUUID().toString();
+
+    /**
+     * Standard er {@link Prioritet#NORMAL}
+     */
+    private Prioritet prioritet = Prioritet.NORMAL;
+
+    private Mottaker mottaker;
 
     /**
      * Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
@@ -18,13 +30,35 @@ public class Forsendelse {
     private DigitalpostInfo digitalpostInfo;
 
     /**
-     * todo: SBD/Melding/Dokumentpakke --> hvorfor samme begrep som selve vedlegget? Hvor finner vi engangsnøkkel?
-     */
-
-    /**
      * todo: SBD/Melding/FysiskpostInfo --> trengs denne? Hva må vi få inn?
      */
 
     private Dokumentpakke dokumentpakke;
 
+    public static Builder builder(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
+        return new Builder(digitalpostInfo, dokumentpakke, mottaker);
+    }
+
+    public static class Builder {
+
+        private final Forsendelse target;
+
+        public Builder(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
+            this.target = new Forsendelse(digitalpostInfo, dokumentpakke, mottaker);
+        }
+
+        public Builder konversasjonsId(String konversasjonsId) {
+            target.konversasjonsId = konversasjonsId;
+            return this;
+        }
+
+        public Builder prioritet(Prioritet prioritet) {
+            target.prioritet = prioritet;
+            return this;
+        }
+
+        public Forsendelse build() {
+            return target;
+        }
+    }
 }

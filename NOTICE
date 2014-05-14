@@ -8,5 +8,7 @@ Licensed under Apache 2 - http://www.apache.org/licenses/LICENSE-2.0.html
 
 This software includes third party software subject to the following licenses:
 
+  Hamcrest Core under New BSD License
+  JUnit under Common Public License Version 1.0
   Sikker digital post klient under The Apache Software License, Version 2.0
 
