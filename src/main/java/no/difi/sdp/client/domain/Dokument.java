@@ -16,9 +16,11 @@ public class Dokument {
     private String tittel;
 
     /**
-     * MIME-type for dokumentet. For liste over tillatte MIME-typer, se <a href="http://begrep.difi.no">http://begrep.difi.no</a> }
+     * MIME-type for dokumentet. For informasjon om tillatte formater, se <a href="http://begrep.difi.no/SikkerDigitalPost/Dokumentformat/">http://begrep.difi.no/SikkerDigitalPost/Dokumentformat/</a> }.
+     *
+     * Standard er application/pdf.
      */
-    private String mimeType;
+    private String mimeType = "application/pdf";
 
     /**
      * Filnavnet til dokumentet.

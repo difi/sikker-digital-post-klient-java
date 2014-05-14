@@ -18,7 +18,7 @@ public class Forsendelse {
     private String konversasjonsId = UUID.randomUUID().toString();
 
     /**
-     * Standard er {@link Prioritet#NORMAL}
+     * Standard er {@link no.difi.sdp.client.domain.Prioritet#NORMAL}
      */
     private Prioritet prioritet = Prioritet.NORMAL;
 

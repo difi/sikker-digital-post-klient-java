@@ -9,27 +9,35 @@ public class DigitalpostInfo {
     }
 
     /**
-     * Når brevet tilgjengeliggjøres for mottaker. Standard er nå.
+     * Når brevet tilgjengeliggjøres for mottaker.
+     *
+     * Standard er nå.
      */
     private Date virkningsdato = new Date();
 
     /**
-     * Ønskes kvittering når brevet blir åpnet av mottaker? Standard er false.
+     * Ønskes kvittering når brevet blir åpnet av mottaker?
+     *
+     * Standard er false.
      */
     private boolean aapningskvittering = false;
 
     /**
-     * Sikkerhetsnivå som kreves for å åpne brevet. Standard er {@link Sikkerhetsnivaa#NIVAA_3} (passord).
+     * Sikkerhetsnivå som kreves for å åpne brevet.
+     *
+     * Standard er {@link Sikkerhetsnivaa#NIVAA_3} (passord).
      */
     private Sikkerhetsnivaa sikkerhetsnivaa = Sikkerhetsnivaa.NIVAA_3;
 
     /**
-     * Ikke-sensitiv tittel på brevet.
+     * Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
      */
     private String tittel;
 
     /**
-     * Varsler som skal sendes til mottaker av brevet. Standard er e-postvarsel med standardteksten til postkasseleverandøren.
+     * Varsler som skal sendes til mottaker av brevet.
+     *
+     * Standard er e-postvarsel med standardteksten til postkasseleverandøren.
      */
     private Varsler varsler = Varsler.builder().epostVarsel(Varsel.builder().build()).build();
 
