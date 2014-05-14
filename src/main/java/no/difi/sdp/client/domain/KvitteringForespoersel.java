@@ -1,4 +1,4 @@
-package no.difi.sdp.client;
+package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.Prioritet;
 
