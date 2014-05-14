@@ -17,6 +17,14 @@ public class Forsendelse {
      */
     private DigitalpostInfo digitalpostInfo;
 
+    /**
+     * todo: SBD/Melding/Dokumentpakke --> hvorfor samme begrep som selve vedlegget? Hvor finner vi engangsnøkkel?
+     */
+
+    /**
+     * todo: SBD/Melding/FysiskpostInfo --> trengs denne? Hva må vi få inn?
+     */
+
     private Dokumentpakke dokumentpakke;
 
 }
