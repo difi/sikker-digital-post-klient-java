@@ -17,6 +17,7 @@ public class Avsender {
     private String orgNummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
+    private String orgNummerDatabehandler;
 
     private AvsenderRolle rolle = AvsenderRolle.BEHANDLINGSANSVARLIG;
 
@@ -61,6 +62,16 @@ public class Avsender {
          */
         public Builder avsenderIdentifikator(String avsenderIdentifikator) {
             target.avsenderIdentifikator = avsenderIdentifikator;
+            return this;
+        }
+
+        /**
+         *
+         * @param orgNummerDatabehandler Identifikator (organisasjonsnummer) til avsender eller avtalepart hos avsender, ansvarlig for pakking og sikring av postforsendelser.
+         * @return
+         */
+        public Builder orgNummerDatabehandler(String orgNummerDatabehandler) {
+            target.orgNummerDatabehandler = orgNummerDatabehandler;
             return this;
         }
 
