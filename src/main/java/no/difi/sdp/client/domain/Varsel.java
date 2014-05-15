@@ -7,14 +7,23 @@ import static java.util.Arrays.asList;
 
 public class Varsel {
 
-    private Varsel() {}
+    private Varsel(String tekst) {
+        this.tekst = tekst;
+    }
 
     /**
      * Avsenderstyrt tekst som skal inngå i e-postvarselet.
      *
      * Standard er postkassens vanlige oppsett for varsler.
      */
-    private Varselstekst varseltekst;
+    private String tekst;
+
+    /**
+     * Språkkode i henhold til ISO-639-1 (2 bokstaver). Brukes til å informere postkassen om hvilket språk som benyttes, slik at varselet om mulig kan vises i riktig språkkontekst.
+     *
+     * Standard er NO.
+     */
+    private String spraakkode = "NO";
 
     /**
      * Antall dager etter brevet er tilgjengeliggjort for mottaker det første, andre osv varsel skal sendes.
@@ -25,16 +34,16 @@ public class Varsel {
      */
     private List<Integer> dagerEtter = asList(0);
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(String tekst) {
+        return new Builder(tekst);
     }
 
     public static class Builder {
 
         private final Varsel target;
 
-        private Builder() {
-            target = new Varsel();
+        private Builder(String tekst) {
+            target = new Varsel(tekst);
         }
 
         public Builder varselEtterDager(List<Integer> varselEtterDager) {
@@ -42,8 +51,8 @@ public class Varsel {
             return this;
         }
 
-        public Builder varseltekst(Varselstekst varseltekst) {
-            target.varseltekst = varseltekst;
+        public Builder spraakkode(String spraakkode) {
+            target.spraakkode = spraakkode;
             return this;
         }
 

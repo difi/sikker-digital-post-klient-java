@@ -37,9 +37,10 @@ public class DigitalpostInfo {
     /**
      * Varsler som skal sendes til mottaker av brevet.
      *
-     * Standard er e-postvarsel med standardteksten til postkasseleverandøren.
+     * Standard er standardoppførselen til postkasseleverandøren.
      */
-    private Varsler varsler = Varsler.builder().epostVarsel(Varsel.builder().build()).build();
+    private Varsel epostVarsel;
+    private Varsel smsVarsel;
 
     public static Builder builder(String ikkeSensitivTittel) {
         return new Builder(ikkeSensitivTittel);
@@ -68,8 +69,13 @@ public class DigitalpostInfo {
             return this;
         }
 
-        public Builder varsler(Varsler varsler) {
-            target.varsler = varsler;
+        public Builder epostVarsel(Varsel epostVarsel) {
+            target.epostVarsel = epostVarsel;
+            return this;
+        }
+
+        public Builder smsVarsel(Varsel smsVarsel) {
+            target.smsVarsel = smsVarsel;
             return this;
         }
 

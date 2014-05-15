@@ -4,11 +4,11 @@ import java.security.cert.X509Certificate;
 
 public class Mottaker {
 
-    private Mottaker(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerMottakerVirksomhet) {
+    private Mottaker(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
         this.personidentifikator = personidentifikator;
         this.postkasseadresse = postkasseadresse;
         this.mottakerSertifikat = mottakerSertifikat;
-        this.orgNummerMottakerVirksomhet = orgNummerMottakerVirksomhet;
+        this.orgNummerPostkasse = orgNummerPostkasse;
     }
 
     private String personidentifikator;
@@ -24,17 +24,17 @@ public class Mottaker {
      *
      * Ved initiell sending av melding vil dette alltid være en postboks eller utskriftsleverandør.
      */
-    private String orgNummerMottakerVirksomhet;
+    private String orgNummerPostkasse;
 
-    public static Builder builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerMottakerVirksomhet) {
-        return new Builder(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerMottakerVirksomhet);
+    public static Builder builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
+        return new Builder(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
     }
 
     public static class Builder {
         private final Mottaker target;
 
-        private Builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerMottakerVirksomhet) {
-            target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerMottakerVirksomhet);
+        private Builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
+            target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
         }
 
         public Builder epostadresse(String epostadresse) {

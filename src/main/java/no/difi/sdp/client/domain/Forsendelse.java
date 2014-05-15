@@ -29,10 +29,6 @@ public class Forsendelse {
      */
     private DigitalpostInfo digitalpostInfo;
 
-    /**
-     * todo: SBD/Melding/FysiskpostInfo --> trengs denne? Hva må vi få inn?
-     */
-
     private Dokumentpakke dokumentpakke;
 
     public static Builder builder(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {

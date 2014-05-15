@@ -17,15 +17,14 @@ public class SikkerDigitalPostKlientTest {
         Avsender avsender = Avsender.builder("984661185", new X509CertImpl()).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, new KlientKonfigurasjon());
 
-        Varselstekst epostVarselstekst = Varselstekst.builder("Varselstekst i e-post").spraakkode("NO").build();
-        Varsel epostVarsel = Varsel.builder().varseltekst(epostVarselstekst).varselEtterDager(asList(1, 4, 10)).build();
-        Varsler varsler = Varsler.builder().epostVarsel(epostVarsel).build();
+        Varsel epostVarsel = Varsel.builder("Du har mottatt brev i din digitale postkasse")
+                        .varselEtterDager(asList(1, 4, 10)).build();
 
         DigitalpostInfo digitalpostInfo = DigitalpostInfo.builder("Ikke-sensitiv tittel for forsendelsen")
                 .virkningsdato(new Date())
                 .aapningskvittering(false)
                 .sikkerhetsnivaa(Sikkerhetsnivaa.NIVAA_3)
-                .varsler(varsler)
+                .epostVarsel(epostVarsel)
                 .build();
 
         Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
@@ -41,12 +40,12 @@ public class SikkerDigitalPostKlientTest {
                 .mobilnummer("+4799999999")
                 .build();
 
-        Forsendelse builder = Forsendelse.builder(digitalpostInfo, dokumentpakke, mottaker)
+        Forsendelse forsendelse = Forsendelse.builder(digitalpostInfo, dokumentpakke, mottaker)
                 .konversasjonsId("konversasjonsId")
                 .prioritet(Prioritet.NORMAL)
                 .build();
 
-        postklient.send(builder);
+        postklient.send(forsendelse);
 
 
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
