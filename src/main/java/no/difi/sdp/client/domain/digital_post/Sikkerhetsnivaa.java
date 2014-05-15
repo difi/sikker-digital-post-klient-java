@@ -1,4 +1,4 @@
-package no.difi.sdp.client.domain;
+package no.difi.sdp.client.domain.digital_post;
 
 public enum Sikkerhetsnivaa {
 

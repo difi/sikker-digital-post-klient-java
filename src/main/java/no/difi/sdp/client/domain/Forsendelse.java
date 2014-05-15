@@ -1,5 +1,7 @@
 package no.difi.sdp.client.domain;
 
+import no.difi.sdp.client.domain.digital_post.DigitalpostInfo;
+
 import java.util.UUID;
 
 public class Forsendelse {

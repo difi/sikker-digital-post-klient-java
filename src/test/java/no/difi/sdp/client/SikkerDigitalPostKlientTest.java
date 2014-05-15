@@ -1,6 +1,10 @@
 package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.*;
+import no.difi.sdp.client.domain.digital_post.DigitalpostInfo;
+import no.difi.sdp.client.domain.digital_post.EpostVarsel;
+import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
+import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import org.junit.Test;
 import sun.security.x509.X509CertImpl;
 
