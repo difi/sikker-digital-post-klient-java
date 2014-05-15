@@ -20,7 +20,11 @@ public class SikkerDigitalPostKlientTest {
     @Test
     public void test_build_forsendelse() {
         PrivateKey privatnoekkel = null;
-        Avsender avsender = Avsender.builder("984661185", new X509CertImpl(), privatnoekkel).build();
+        Avsender avsender = Avsender.builder("984661185", new X509CertImpl(), privatnoekkel)
+                .fakturaReferanse("ØK1")
+                .avsenderIdentifikator("12345")
+                .build();
+
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, new KlientKonfigurasjon());
 
         EpostVarsel epostVarsel = EpostVarsel.builder("Du har mottatt brev i din digitale postkasse")
@@ -30,6 +34,7 @@ public class SikkerDigitalPostKlientTest {
 
         SmsVarsel smsVarsel = SmsVarsel.builder("Du har mottatt brev i din digitale postkasse")
                 .mobilnummer("4799999999")
+                .varselEtterDager(asList(1, 7))
                 .spraakkode("SE")
                 .build();
 
