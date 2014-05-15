@@ -26,6 +26,7 @@ public class Forsendelse {
     public static class Builder {
 
         private final Forsendelse target;
+        private boolean built = false;
 
         private Builder(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
             this.target = new Forsendelse(digitalpostInfo, dokumentpakke, mottaker);
@@ -50,6 +51,8 @@ public class Forsendelse {
         }
 
         public Forsendelse build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

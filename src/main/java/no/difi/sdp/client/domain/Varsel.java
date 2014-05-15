@@ -25,6 +25,7 @@ public class Varsel {
     public static class Builder {
 
         private final Varsel target;
+        private boolean built = false;
 
         private Builder(String tekst) {
             target = new Varsel(tekst);
@@ -62,6 +63,8 @@ public class Varsel {
         }
 
         public Varsel build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

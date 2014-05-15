@@ -27,6 +27,7 @@ public class Dokument {
     public static class Builder {
 
         private final Dokument target;
+        private boolean built = false;
 
         private Builder(String tittel, String filnavn, InputStream dokument) {
             target = new Dokument(tittel, filnavn, dokument);
@@ -43,6 +44,8 @@ public class Dokument {
         }
 
         public Dokument build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

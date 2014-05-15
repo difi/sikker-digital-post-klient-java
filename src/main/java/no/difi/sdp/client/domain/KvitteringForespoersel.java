@@ -17,12 +17,15 @@ public class KvitteringForespoersel {
 
     public static class Builder {
         private final KvitteringForespoersel target;
+        private boolean built = false;
 
         private Builder(Prioritet prioritet) {
             target = new KvitteringForespoersel(prioritet);
         }
 
         public KvitteringForespoersel build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }
