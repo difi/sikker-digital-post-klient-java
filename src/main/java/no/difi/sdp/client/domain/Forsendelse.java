@@ -1,28 +1,37 @@
 package no.difi.sdp.client.domain;
 
-import no.difi.sdp.client.domain.digital_post.DigitalpostInfo;
+import no.difi.sdp.client.domain.digital_post.DigitalPost;
+import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 
 import java.util.UUID;
 
 public class Forsendelse {
 
-    private Forsendelse(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
-        this.digitalpostInfo = digitalpostInfo;
+    private Forsendelse(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+        if ((fysiskPost != null && digitalPost != null) || (fysiskPost == null && digitalPost == null)) {
+            throw new IllegalArgumentException("Can only specify exactly one of digitalPost and fysiskPost");
+        }
+
+        this.digitalPost = digitalPost;
+        this.fysiskPost = fysiskPost;
         this.dokumentpakke = dokumentpakke;
-        this.mottaker = mottaker;
     }
 
-    private DigitalpostInfo digitalpostInfo;
+    private DigitalPost digitalPost;
+    private FysiskPost fysiskPost;
     private Dokumentpakke dokumentpakke;
-    private Mottaker mottaker;
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
 
     /**
-     * @param digitalpostInfo Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
+     * @param digitalPost Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
      */
-    public static Builder builder(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
-        return new Builder(digitalpostInfo, dokumentpakke, mottaker);
+    public static Builder builder(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+        return new Builder(digitalPost, null, dokumentpakke);
+    }
+
+    public static Builder builder(FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+        return new Builder(null, fysiskPost, dokumentpakke);
     }
 
     public static class Builder {
@@ -30,8 +39,8 @@ public class Forsendelse {
         private final Forsendelse target;
         private boolean built = false;
 
-        private Builder(DigitalpostInfo digitalpostInfo, Dokumentpakke dokumentpakke, Mottaker mottaker) {
-            this.target = new Forsendelse(digitalpostInfo, dokumentpakke, mottaker);
+        private Builder(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+            this.target = new Forsendelse(digitalPost, fysiskPost, dokumentpakke);
         }
 
         /**

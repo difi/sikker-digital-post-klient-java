@@ -1,34 +1,38 @@
 package no.difi.sdp.client.domain.digital_post;
 
+import no.difi.sdp.client.domain.Mottaker;
+
 import java.util.Date;
 
-public class DigitalpostInfo {
+public class DigitalPost {
 
-    private DigitalpostInfo(String tittel) {
+    private DigitalPost(Mottaker mottaker, String tittel) {
+        this.mottaker = mottaker;
         this.tittel = tittel;
     }
 
+    private Mottaker mottaker;
     private Date virkningsdato = new Date();
     private boolean aapningskvittering = false;
     private Sikkerhetsnivaa sikkerhetsnivaa = Sikkerhetsnivaa.NIVAA_3;
     private String tittel;
     private EpostVarsel epostVarsel = null;
     private SmsVarsel smsVarsel = null;
-    
+
     /**
      * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
      */
-    public static Builder builder(String ikkeSensitivTittel) {
-        return new Builder(ikkeSensitivTittel);
+    public static Builder builder(Mottaker mottaker, String ikkeSensitivTittel) {
+        return new Builder(mottaker, ikkeSensitivTittel);
     }
 
     public static class Builder {
 
-        private final DigitalpostInfo target;
+        private final DigitalPost target;
         private boolean built = false;
 
-        private Builder(String ikkeSensitivTittel) {
-            target = new DigitalpostInfo(ikkeSensitivTittel);
+        private Builder(Mottaker mottaker, String ikkeSensitivTittel) {
+            target = new DigitalPost(mottaker, ikkeSensitivTittel);
         }
 
         /**
@@ -81,9 +85,10 @@ public class DigitalpostInfo {
             return this;
         }
 
-        public DigitalpostInfo build() {
+        public DigitalPost build() {
             if (built) throw new IllegalStateException("Can't build twice");
             built = true;
+
             return target;
         }
     }
