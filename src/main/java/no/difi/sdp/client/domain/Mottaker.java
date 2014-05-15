@@ -13,19 +13,20 @@ public class Mottaker {
 
     private String personidentifikator;
     private String postkasseadresse;
-    private String mobilnummer;
-    private String epostadresse;
     private X509Certificate mottakerSertifikat;
-
-    /**
-     * TODO: Denne fås fra oppslagsregisteret. Bør navgivningen ligge tettere opp til det den heter der? Vil gjøre det vesentlig lettere å bruke APIet…
-     *
-     * Identifikator (organisasjonsnummer) til virksomheten som er sluttmottaker i meldingsprosessen.
-     *
-     * Ved initiell sending av melding vil dette alltid være en postboks eller utskriftsleverandør.
-     */
     private String orgNummerPostkasse;
 
+    private String mobilnummer;
+    private String epostadresse;
+
+    /**
+     * Informasjon om mottaker. Vil vanligvis være hentet fra <a href="http://begrep.difi.no/Oppslagstjenesten/">Oppslagstjenesten</a>.
+     *
+     * @param personidentifikator Identifikator (fødselsnummer) til mottaker av brevet.
+     * @param postkasseadresse Mottakerens adresse hos postkasseleverandøren.
+     * @param mottakerSertifikat Mottakers sertifikat.
+     * @param orgNummerPostkasse Identifikator (organisasjonsnummer) til virksomheten som er sluttmottaker i meldingsprosessen.
+     */
     public static Builder builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
         return new Builder(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
     }

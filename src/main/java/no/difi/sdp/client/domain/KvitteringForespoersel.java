@@ -6,13 +6,11 @@ public class KvitteringForespoersel {
         this.prioritet = prioritet;
     }
 
-    /**
-     * Hvilken prioritet det forespørres kvittering for.
-     *
-     * De ulike prioritene kan ses på som egne køer for kvitteringer. Dersom en forsendelse er sendt med normal prioritet, vil den kun dukke opp dersom det spørres om kvittering på normal prioritet.
-     */
     private Prioritet prioritet;
 
+    /**
+     * @param prioritet Hvilken prioritet det forespørres kvittering for. De ulike prioritene kan ses på som egne køer for kvitteringer. Dersom en forsendelse er sendt med normal prioritet, vil den kun dukke opp dersom det spørres om kvittering på normal prioritet.
+     */
     public static Builder builder(Prioritet prioritet) {
         return new Builder(prioritet);
     }
@@ -20,7 +18,7 @@ public class KvitteringForespoersel {
     public static class Builder {
         private final KvitteringForespoersel target;
 
-        public Builder(Prioritet prioritet) {
+        private Builder(Prioritet prioritet) {
             target = new KvitteringForespoersel(prioritet);
         }
 

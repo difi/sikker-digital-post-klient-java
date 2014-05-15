@@ -5,6 +5,7 @@ import org.junit.Test;
 import sun.security.x509.X509CertImpl;
 
 import java.io.ByteArrayInputStream;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,7 +15,8 @@ public class SikkerDigitalPostKlientTest {
 
     @Test
     public void test_build_forsendelse() {
-        Avsender avsender = Avsender.builder("984661185", new X509CertImpl()).build();
+        PrivateKey privatnoekkel = null;
+        Avsender avsender = Avsender.builder("984661185", new X509CertImpl(), privatnoekkel).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, new KlientKonfigurasjon());
 
         Varsel epostVarsel = Varsel.builder("Du har mottatt brev i din digitale postkasse")

@@ -11,7 +11,6 @@ public class Dokumentpakke {
     }
 
     private Dokument hoveddokument;
-
     private List<Dokument> vedlegg = Collections.emptyList();
 
     public static Builder builder(Dokument hoveddokument) {
@@ -22,7 +21,7 @@ public class Dokumentpakke {
 
         private final Dokumentpakke target;
 
-        public Builder(Dokument hoveddokument) {
+        private Builder(Dokument hoveddokument) {
             target = new Dokumentpakke(hoveddokument);
         }
 

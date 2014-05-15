@@ -8,40 +8,16 @@ public class DigitalpostInfo {
         this.tittel = tittel;
     }
 
-    /**
-     * Når brevet tilgjengeliggjøres for mottaker.
-     *
-     * Standard er nå.
-     */
     private Date virkningsdato = new Date();
-
-    /**
-     * Ønskes kvittering når brevet blir åpnet av mottaker?
-     *
-     * Standard er false.
-     */
     private boolean aapningskvittering = false;
-
-    /**
-     * Sikkerhetsnivå som kreves for å åpne brevet.
-     *
-     * Standard er {@link Sikkerhetsnivaa#NIVAA_3} (passord).
-     */
     private Sikkerhetsnivaa sikkerhetsnivaa = Sikkerhetsnivaa.NIVAA_3;
-
-    /**
-     * Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
-     */
     private String tittel;
+    private Varsel epostVarsel = null;
+    private Varsel smsVarsel = null;
 
     /**
-     * Varsler som skal sendes til mottaker av brevet.
-     *
-     * Standard er standardoppførselen til postkasseleverandøren.
+     * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
      */
-    private Varsel epostVarsel;
-    private Varsel smsVarsel;
-
     public static Builder builder(String ikkeSensitivTittel) {
         return new Builder(ikkeSensitivTittel);
     }
@@ -50,30 +26,55 @@ public class DigitalpostInfo {
 
         private final DigitalpostInfo target;
 
-        public Builder(String ikkeSensitivTittel) {
+        private Builder(String ikkeSensitivTittel) {
             target = new DigitalpostInfo(ikkeSensitivTittel);
         }
 
+        /**
+         * Når brevet tilgjengeliggjøres for mottaker.
+         *
+         * Standard er nå.
+         */
         public Builder virkningsdato(Date virkningsdato) {
             target.virkningsdato = virkningsdato;
             return this;
         }
 
+        /**
+         * Ønskes kvittering når brevet blir åpnet av mottaker?
+         *
+         * Standard er false.
+         */
         public Builder aapningskvittering(boolean aapningskvittering) {
             target.aapningskvittering = aapningskvittering;
             return this;
         }
 
+        /**
+         * Nødvendig autentiseringsnivå som kreves av mottaker i postkassen for å åpne brevet.
+         *
+         * Standard er {@link Sikkerhetsnivaa#NIVAA_3} (passord).
+         */
         public Builder sikkerhetsnivaa(Sikkerhetsnivaa sikkerhetsnivaa) {
             target.sikkerhetsnivaa = sikkerhetsnivaa;
             return this;
         }
 
+        /**
+         * Minimum e-postvarsel som skal sendes til mottaker av brevet. Postkassen kan velge å sende andre varsler i tillegg.
+         *
+         * Standard er standardoppførselen til postkasseleverandøren.
+         */
         public Builder epostVarsel(Varsel epostVarsel) {
             target.epostVarsel = epostVarsel;
             return this;
         }
 
+        /**
+         * Minimum sms-varsel som skal sendes til mottaker av brevet. Postkassen kan velge å sende andre varsler i tillegg.
+         *
+         * Standard er standardoppførselen til postkasseleverandøren.
+         */
         public Builder smsVarsel(Varsel smsVarsel) {
             target.smsVarsel = smsVarsel;
             return this;
