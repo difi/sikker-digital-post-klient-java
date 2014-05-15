@@ -25,6 +25,7 @@ public class DigitalpostInfo {
     public static class Builder {
 
         private final DigitalpostInfo target;
+        private boolean built = false;
 
         private Builder(String ikkeSensitivTittel) {
             target = new DigitalpostInfo(ikkeSensitivTittel);
@@ -81,6 +82,8 @@ public class DigitalpostInfo {
         }
 
         public DigitalpostInfo build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

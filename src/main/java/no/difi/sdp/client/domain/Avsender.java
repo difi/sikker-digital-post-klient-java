@@ -31,6 +31,7 @@ public class Avsender {
     public static class Builder {
 
         private final Avsender target;
+        private boolean built = false;
 
         private Builder(String orgNummer, X509Certificate sertifikat, PrivateKey privatnoekkel) {
             this.target = new Avsender(orgNummer, sertifikat, privatnoekkel);
@@ -47,6 +48,8 @@ public class Avsender {
         }
 
         public Avsender build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return this.target;
         }
     }

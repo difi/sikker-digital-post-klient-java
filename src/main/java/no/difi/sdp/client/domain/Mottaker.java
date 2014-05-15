@@ -30,12 +30,15 @@ public class Mottaker {
 
     public static class Builder {
         private final Mottaker target;
+        private boolean built = false;
 
         private Builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
             target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
         }
 
         public Mottaker build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

@@ -20,6 +20,7 @@ public class SmsVarsel extends Varsel {
 
     public static class Builder {
         private SmsVarsel target;
+        private boolean built = false;
 
         private Builder(String tekst) {
             target = new SmsVarsel(tekst);
@@ -62,6 +63,8 @@ public class SmsVarsel extends Varsel {
         }
 
         public SmsVarsel build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

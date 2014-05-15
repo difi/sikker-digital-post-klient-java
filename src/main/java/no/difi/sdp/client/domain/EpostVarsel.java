@@ -20,6 +20,7 @@ public class EpostVarsel extends Varsel {
 
     public static class Builder {
         private EpostVarsel target;
+        private boolean built = false;
 
         private Builder(String tekst) {
             target = new EpostVarsel(tekst);
@@ -63,6 +64,8 @@ public class EpostVarsel extends Varsel {
         }
 
         public EpostVarsel build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }

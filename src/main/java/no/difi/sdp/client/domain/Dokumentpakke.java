@@ -20,6 +20,7 @@ public class Dokumentpakke {
     public static class Builder {
 
         private final Dokumentpakke target;
+        private boolean built = false;
 
         private Builder(Dokument hoveddokument) {
             target = new Dokumentpakke(hoveddokument);
@@ -31,6 +32,8 @@ public class Dokumentpakke {
         }
 
         public Dokumentpakke build() {
+            if (built) throw new IllegalStateException("Can't build twice");
+            built = true;
             return target;
         }
     }
