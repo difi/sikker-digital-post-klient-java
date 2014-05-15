@@ -15,9 +15,10 @@ public class Avsender {
     private PrivateKey privatnoekkel;
 
     private String orgNummer;
+    private String avsenderIdentifikator;
+    private String fakturaReferanse;
 
     private AvsenderRolle rolle = AvsenderRolle.BEHANDLINGSANSVARLIG;
-
 
     /**
      * @param orgNummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
@@ -34,7 +35,7 @@ public class Avsender {
         private boolean built = false;
 
         private Builder(String orgNummer, X509Certificate sertifikat, PrivateKey privatnoekkel) {
-            this.target = new Avsender(orgNummer, sertifikat, privatnoekkel);
+            target = new Avsender(orgNummer, sertifikat, privatnoekkel);
         }
 
         /**
@@ -43,7 +44,23 @@ public class Avsender {
          * Standard er {@link AvsenderRolle#BEHANDLINGSANSVARLIG}
          */
         public Builder rolle(AvsenderRolle rolle) {
-            this.target.rolle = rolle;
+            target.rolle = rolle;
+            return this;
+        }
+
+        public Builder fakturaReferanse(String fakturaReferanse) {
+            target.fakturaReferanse = fakturaReferanse;
+            return this;
+        }
+
+        /**
+         * Brukt for å identifisere en ansvarlig enhet innen for en virksomhet.
+         *
+         * @param avsenderIdentifikator Identifikator som er tildelt av Sikker digital posttjeneste ved tilkobling til tjenesten.
+         * @return
+         */
+        public Builder avsenderIdentifikator(String avsenderIdentifikator) {
+            target.avsenderIdentifikator = avsenderIdentifikator;
             return this;
         }
 
