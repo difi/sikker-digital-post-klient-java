@@ -12,9 +12,9 @@ public class DigitalpostInfo {
     private boolean aapningskvittering = false;
     private Sikkerhetsnivaa sikkerhetsnivaa = Sikkerhetsnivaa.NIVAA_3;
     private String tittel;
-    private Varsel epostVarsel = null;
-    private Varsel smsVarsel = null;
-
+    private EpostVarsel epostVarsel = null;
+    private SmsVarsel smsVarsel = null;
+    
     /**
      * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
      */
@@ -65,7 +65,7 @@ public class DigitalpostInfo {
          *
          * Standard er standardoppførselen til postkasseleverandøren.
          */
-        public Builder epostVarsel(Varsel epostVarsel) {
+        public Builder epostVarsel(EpostVarsel epostVarsel) {
             target.epostVarsel = epostVarsel;
             return this;
         }
@@ -75,7 +75,7 @@ public class DigitalpostInfo {
          *
          * Standard er standardoppførselen til postkasseleverandøren.
          */
-        public Builder smsVarsel(Varsel smsVarsel) {
+        public Builder smsVarsel(SmsVarsel smsVarsel) {
             target.smsVarsel = smsVarsel;
             return this;
         }

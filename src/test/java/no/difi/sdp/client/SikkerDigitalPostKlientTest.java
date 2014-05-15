@@ -19,14 +19,22 @@ public class SikkerDigitalPostKlientTest {
         Avsender avsender = Avsender.builder("984661185", new X509CertImpl(), privatnoekkel).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, new KlientKonfigurasjon());
 
-        Varsel epostVarsel = Varsel.builder("Du har mottatt brev i din digitale postkasse")
-                        .varselEtterDager(asList(1, 4, 10)).build();
+        EpostVarsel epostVarsel = EpostVarsel.builder("Du har mottatt brev i din digitale postkasse")
+                .epostadresse("example@email.org")
+                .varselEtterDager(asList(1, 4, 10))
+                .build();
+
+        SmsVarsel smsVarsel = SmsVarsel.builder("Du har mottatt brev i din digitale postkasse")
+                .mobilnummer("4799999999")
+                .spraakkode("SE")
+                .build();
 
         DigitalpostInfo digitalpostInfo = DigitalpostInfo.builder("Ikke-sensitiv tittel for forsendelsen")
                 .virkningsdato(new Date())
                 .aapningskvittering(false)
                 .sikkerhetsnivaa(Sikkerhetsnivaa.NIVAA_3)
                 .epostVarsel(epostVarsel)
+                .smsVarsel(smsVarsel)
                 .build();
 
         Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
@@ -38,8 +46,6 @@ public class SikkerDigitalPostKlientTest {
                 .build();
 
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", new X509CertImpl(), "984661185")
-                .epostadresse("example@email.org")
-                .mobilnummer("+4799999999")
                 .build();
 
         Forsendelse forsendelse = Forsendelse.builder(digitalpostInfo, dokumentpakke, mottaker)

@@ -16,9 +16,6 @@ public class Mottaker {
     private X509Certificate mottakerSertifikat;
     private String orgNummerPostkasse;
 
-    private String mobilnummer;
-    private String epostadresse;
-
     /**
      * Informasjon om mottaker. Vil vanligvis være hentet fra <a href="http://begrep.difi.no/Oppslagstjenesten/">Oppslagstjenesten</a>.
      *
@@ -36,16 +33,6 @@ public class Mottaker {
 
         private Builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
             target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
-        }
-
-        public Builder epostadresse(String epostadresse) {
-            target.epostadresse = epostadresse;
-            return this;
-        }
-
-        public Builder mobilnummer(String mobilnummer) {
-            target.mobilnummer = mobilnummer;
-            return this;
         }
 
         public Mottaker build() {
