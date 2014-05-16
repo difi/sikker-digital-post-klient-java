@@ -2,15 +2,14 @@ package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.*;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
+import no.difi.sdp.client.domain.digital_post.EpostVarsel;
+import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
+import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.NorskPostadresse;
 import no.difi.sdp.client.domain.fysisk_post.PostType;
 import no.difi.sdp.client.domain.fysisk_post.UtenlandskPostadresse;
-import no.difi.sdp.client.domain.digital_post.EpostVarsel;
-import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
-import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import org.junit.Test;
-import sun.security.x509.X509CertImpl;
 
 import java.io.ByteArrayInputStream;
 import java.security.PrivateKey;
@@ -21,10 +20,12 @@ import static java.util.Arrays.asList;
 
 public class SikkerDigitalPostKlientTest {
 
+    private Sertifikat gyldigSertfikat = Sertifikat.fraBase64String("MIIDFDCCAr6gAwIBAgIJALENVFrUMVgcMA0GCSqGSIb3DQEBBQUAMIGQMQswCQYDVQQGEwJOTzENMAsGA1UECBMET3NsbzENMAsGA1UEBxMET3NsbzENMAsGA1UEChMERElGSTENMAsGA1UECxMERElGSTEhMB8GA1UEAxMYU2lra2VyIERpZ2l0YWwgUG9zdCBUZXN0MSIwIAYJKoZIhvcNAQkBFhNkaWZpIGF0IGRpZmkgZG90IG5vMB4XDTE0MDUxNjA4MjQ0MloXDTE0MDYxNTA4MjQ0MlowgZAxCzAJBgNVBAYTAk5PMQ0wCwYDVQQIEwRPc2xvMQ0wCwYDVQQHEwRPc2xvMQ0wCwYDVQQKEwRESUZJMQ0wCwYDVQQLEwRESUZJMSEwHwYDVQQDExhTaWtrZXIgRGlnaXRhbCBQb3N0IFRlc3QxIjAgBgkqhkiG9w0BCQEWE2RpZmkgYXQgZGlmaSBkb3Qgbm8wXDANBgkqhkiG9w0BAQEFAANLADBIAkEA1OteZ0rH+269STIDm2ECmop593A+7v9ih6ydow11wCojGvNnHGjeollzTn+F7caRqLCl7vKr3uttINBFA7E34QIDAQABo4H4MIH1MB0GA1UdDgQWBBRkkkvwgXi/qqQHLyMDttBDCN8PNzCBxQYDVR0jBIG9MIG6gBRkkkvwgXi/qqQHLyMDttBDCN8PN6GBlqSBkzCBkDELMAkGA1UEBhMCTk8xDTALBgNVBAgTBE9zbG8xDTALBgNVBAcTBE9zbG8xDTALBgNVBAoTBERJRkkxDTALBgNVBAsTBERJRkkxITAfBgNVBAMTGFNpa2tlciBEaWdpdGFsIFBvc3QgVGVzdDEiMCAGCSqGSIb3DQEJARYTZGlmaSBhdCBkaWZpIGRvdCBub4IJALENVFrUMVgcMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADQQA43EV/uoAXPEyZSXg+9g/jkxrmhNHeG8evLSM3MqLeS6lO0P6hnGlhoF9GYjqMx7ntYdE8i8jt3a5GRupTIpHB");
+    
     @Test
     public void test_build_digital_forsendelse() {
         PrivateKey privatnoekkel = null;
-        Avsender avsender = Avsender.builder("984661185", Sertifikat.fraX509Certificate(new X509CertImpl()), privatnoekkel)
+        Avsender avsender = Avsender.builder("984661185", gyldigSertfikat, privatnoekkel)
                 .fakturaReferanse("ØK1")
                 .avsenderIdentifikator("12345")
                 .build();
@@ -36,7 +37,7 @@ public class SikkerDigitalPostKlientTest {
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
 
-        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", Sertifikat.fraX509Certificate(new X509CertImpl()), "984661185")
+        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", gyldigSertfikat, "984661185")
                 .build();
 
         SmsVarsel smsVarsel = SmsVarsel.builder("Du har mottatt brev i din digitale postkasse")
@@ -79,12 +80,12 @@ public class SikkerDigitalPostKlientTest {
     @Test
     public void test_build_fysisk_forsendelse() {
         PrivateKey privatnoekkel = null;
-        Avsender avsender = Avsender.builder("984661185", Sertifikat.fraX509Certificate(new X509CertImpl()), privatnoekkel).build();
+        Avsender avsender = Avsender.builder("984661185", gyldigSertfikat, privatnoekkel).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, new KlientKonfigurasjon());
 
         NorskPostadresse norskAdresse = NorskPostadresse.builder("Per Post", "Bedriften AS", "Storgata 15", "0106", "Oslo").build();
         NorskPostadresse returAdresse = NorskPostadresse.builder("Avsender", "Avsenderbedriften AS", "Postboks 15", "2712", "Brandbu").build();
-        FysiskPost fysiskPost = FysiskPost.builder("936441114", Sertifikat.fraX509Certificate(new X509CertImpl()), norskAdresse, returAdresse)
+        FysiskPost fysiskPost = FysiskPost.builder("936441114", gyldigSertfikat, norskAdresse, returAdresse)
                 .postType(PostType.A_POST)
                 .build();
 
@@ -111,12 +112,12 @@ public class SikkerDigitalPostKlientTest {
     @Test
     public void test_build_fysisk_utenlandsforsendelse() {
         PrivateKey privatnoekkel = null;
-        Avsender avsender = Avsender.builder("984661185", Sertifikat.fraX509Certificate(new X509CertImpl()), privatnoekkel).build();
+        Avsender avsender = Avsender.builder("984661185", gyldigSertfikat, privatnoekkel).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, new KlientKonfigurasjon());
 
         UtenlandskPostadresse postadresse = UtenlandskPostadresse.builder("Mr. I. K. Taneja", "Flat No. 100", "Triveni Apartments", "Pitam Pura", "NEW DELHI 110034", "India", "IN").build();
         NorskPostadresse returadresse = NorskPostadresse.builder("Avsender", "Avsenderbedriften AS", "Postboks 15", "2712", "Brandbu").build();
-        FysiskPost fysiskPost = FysiskPost.builder("936441114", Sertifikat.fraX509Certificate(new X509CertImpl()), postadresse, returadresse)
+        FysiskPost fysiskPost = FysiskPost.builder("936441114", gyldigSertfikat, postadresse, returadresse)
                 .postType(PostType.A_POST)
                 .build();
 
