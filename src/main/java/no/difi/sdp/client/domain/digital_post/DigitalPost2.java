@@ -4,9 +4,9 @@ import no.difi.sdp.client.domain.Mottaker;
 
 import java.util.Date;
 
-public class DigitalPost {
+public class DigitalPost2 {
 
-    private DigitalPost(Mottaker mottaker, String tittel) {
+    private DigitalPost2(Mottaker mottaker, String tittel) {
         this.mottaker = mottaker;
         this.tittel = tittel;
     }
@@ -28,11 +28,11 @@ public class DigitalPost {
 
     public static class Builder {
 
-        private final DigitalPost target;
+        private final DigitalPost2 target;
         private boolean built = false;
 
         private Builder(Mottaker mottaker, String ikkeSensitivTittel) {
-            target = new DigitalPost(mottaker, ikkeSensitivTittel);
+            target = new DigitalPost2(mottaker, ikkeSensitivTittel);
         }
 
         /**
@@ -85,7 +85,7 @@ public class DigitalPost {
             return this;
         }
 
-        public DigitalPost build() {
+        public DigitalPost2 build() {
             if (built) throw new IllegalStateException("Can't build twice");
             built = true;
 
