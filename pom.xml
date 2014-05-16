@@ -10,6 +10,7 @@
 		<junit-version>4.11</junit-version>
 		<hamcrest-version>1.3</hamcrest-version>
 		<commons-codec.version>1.9</commons-codec.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<artifactId>sikker-digital-post-klient</artifactId>
