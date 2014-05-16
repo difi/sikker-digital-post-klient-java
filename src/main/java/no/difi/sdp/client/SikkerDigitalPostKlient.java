@@ -34,4 +34,19 @@ public class SikkerDigitalPostKlient {
     public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) {
         return new ForretningsKvittering();
     }
+
+    /**
+     * Bekreft mottak av forretningskvittering gjennom {@link #hentKvittering(KvitteringForespoersel)}.
+     * {@link #hentKvittering(KvitteringForespoersel)} kommer ikke til å returnere en ny kvittering før mottak av den forrige er bekreftet.
+     *
+     * Dette legger opp til følgende arbeidsflyt:
+     * <ol>
+     *     <li>{@link #hentKvittering(KvitteringForespoersel)}</li>
+     *     <li>Gjør intern prosessering av kvitteringen (lagre til database, og så videre)</li>
+     *     <li>Bekreft mottak av kvittering</li>
+     * </ol>
+     */
+    public void bekreftKvittering(ForretningsKvittering forretningsKvittering) {
+
+    }
 }

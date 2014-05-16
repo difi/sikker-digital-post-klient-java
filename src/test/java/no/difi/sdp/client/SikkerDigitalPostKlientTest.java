@@ -70,7 +70,10 @@ public class SikkerDigitalPostKlientTest {
 
 
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
-        postklient.hentKvittering(kvitteringForespoersel);
+
+        ForretningsKvittering forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
+
+        postklient.bekreftKvittering(forretningsKvittering);
     }
 
     @Test
