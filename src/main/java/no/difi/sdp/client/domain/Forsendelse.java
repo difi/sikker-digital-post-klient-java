@@ -23,6 +23,10 @@ public class Forsendelse {
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
 
+    public String getKonversasjonsId() {
+        return konversasjonsId;
+    }
+
     /**
      * @param digitalPost Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
      */
