@@ -1,42 +1,34 @@
 package no.difi.sdp.client.domain;
 
-import no.posten.dpost.offentlig.api.interceptors.KeyStoreInfo;
-
-import java.security.PrivateKey;
-
 public class Avsender {
 
-    private Avsender(String organisasjonsnummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-        this.sertifikat = sertifikat;
+    private Avsender(String organisasjonsnummer, Noekkelpar noekkelpar) {
         this.organisasjonsnummer = organisasjonsnummer;
-        this.privatnoekkel = privatnoekkel;
+        this.noekkelpar = noekkelpar;
     }
 
-    private Sertifikat sertifikat;
-    private PrivateKey privatnoekkel;
-
     private String organisasjonsnummer;
+    private Noekkelpar noekkelpar;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
     private String orgNummerDatabehandler;
 
     private AvsenderRolle rolle = AvsenderRolle.BEHANDLINGSANSVARLIG;
 
-    /**
-     * @param organisasjonsnummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
-     * @param sertifikat Avsenders virksomhetssertifikat.
-     * @param privatnoekkel Den private nøkkelen som tilsvarer den offentlige nøkkelen i avsenders virksomhetssertifikat.
-     */
-    public static Builder builder(String organisasjonsnummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-        return new Builder(organisasjonsnummer, sertifikat, privatnoekkel);
-    }
-
     public String getOrganisasjonsnummer() {
         return organisasjonsnummer;
     }
 
-    public KeyStoreInfo getKeyStore() {
-        return null;
+    public Noekkelpar getNoekkelpar() {
+        return noekkelpar;
+    }
+
+    /**
+     * @param organisasjonsnummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
+     * @param noekkelpar Avsenders nøkkelpar: signert virksomhetssertifikat og tilhørende privatnøkkel.
+     */
+    public static Builder builder(String organisasjonsnummer, Noekkelpar noekkelpar) {
+        return new Builder(organisasjonsnummer, noekkelpar);
     }
 
     public static class Builder {
@@ -44,8 +36,8 @@ public class Avsender {
         private final Avsender target;
         private boolean built = false;
 
-        private Builder(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-            target = new Avsender(orgNummer, sertifikat, privatnoekkel);
+        private Builder(String orgNummer, Noekkelpar noekkelpar) {
+            target = new Avsender(orgNummer, noekkelpar);
         }
 
         /**
