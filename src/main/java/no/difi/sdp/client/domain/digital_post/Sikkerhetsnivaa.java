@@ -10,13 +10,22 @@ public enum Sikkerhetsnivaa {
      *
      * Vanligvis passord.
      */
-    NIVAA_3,
+    NIVAA_3(3),
 
     /**
      * Offentlig godkjent to-faktor elektronisk ID.
      *
      * For eksempel BankID, Buypass eller Commfides.
      */
-    NIVAA_4
+    NIVAA_4(4);
 
+    private Integer nivaa;
+
+    private Sikkerhetsnivaa(Integer nivaa) {
+        this.nivaa = nivaa;
+    }
+
+    public Integer getNivaa() {
+        return this.nivaa;
+    }
 }
