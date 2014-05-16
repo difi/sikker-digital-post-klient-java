@@ -7,8 +7,14 @@ public class SikkerDigitalPostKlient {
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
     }
 
-    public TransportKvittering send(Forsendelse forsendelse) {
-        return new TransportKvittering();
+    /**
+     * Sender en forsendelse til meldingsformidler. En forsendelse kan være digital post eller fysisk post.
+     * Dersom noe feilet i sendingen til meldingsformidler, vil det kastes en exception med beskrivende feilmelding.
+     *
+     * @param forsendelse Et objekt som har all informasjon klar til å kunne sendes (mottakerinformasjon, sertifikater, dokumenter mm),
+     *                    enten digitalt eller fyisk.
+     */
+    public void send(Forsendelse forsendelse) {
     }
 
     /**
