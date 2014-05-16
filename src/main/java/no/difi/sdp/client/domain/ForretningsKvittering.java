@@ -12,4 +12,5 @@ public class ForretningsKvittering {
      */
     private VarslingFeiletKvittering varslingFeiletKvittering;
 
+    private String konversasjonsId;
 }
