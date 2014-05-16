@@ -19,6 +19,34 @@ public class DigitalPost {
     private EpostVarsel epostVarsel;
     private SmsVarsel smsVarsel;
 
+    public Mottaker getMottaker() {
+        return mottaker;
+    }
+
+    public Date getVirkningsdato() {
+        return virkningsdato;
+    }
+
+    public boolean isAapningskvittering() {
+        return aapningskvittering;
+    }
+
+    public Sikkerhetsnivaa getSikkerhetsnivaa() {
+        return sikkerhetsnivaa;
+    }
+
+    public String getTittel() {
+        return tittel;
+    }
+
+    public EpostVarsel getEpostVarsel() {
+        return epostVarsel;
+    }
+
+    public SmsVarsel getSmsVarsel() {
+        return smsVarsel;
+    }
+
     /**
      * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
      */

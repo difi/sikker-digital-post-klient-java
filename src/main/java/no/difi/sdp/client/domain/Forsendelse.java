@@ -27,6 +27,22 @@ public class Forsendelse {
         return konversasjonsId;
     }
 
+    public DigitalPost getDigitalPost() {
+        return digitalPost;
+    }
+
+    public FysiskPost getFysiskPost() {
+        return fysiskPost;
+    }
+
+    public Dokumentpakke getDokumentpakke() {
+        return dokumentpakke;
+    }
+
+    public Prioritet getPrioritet() {
+        return prioritet;
+    }
+
     /**
      * @param digitalPost Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
      */
