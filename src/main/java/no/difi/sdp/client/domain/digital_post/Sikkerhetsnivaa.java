@@ -1,14 +1,21 @@
 package no.difi.sdp.client.domain.digital_post;
 
+/**
+ * Sikkerhetsnivå som beskrevet på
+ */
 public enum Sikkerhetsnivaa {
 
     /**
-     * Passord
+     * "Mellomhøyt" sikkerhetsnivå.
+     *
+     * Vanligvis passord.
      */
     NIVAA_3,
 
     /**
-     * For eksempel BankID
+     * Offentlig godkjent to-faktor elektronisk ID.
+     *
+     * For eksempel BankID, Buypass eller Commfides.
      */
     NIVAA_4
 
