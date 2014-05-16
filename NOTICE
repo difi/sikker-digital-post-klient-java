@@ -8,6 +8,9 @@ Licensed under Apache 2 - http://www.apache.org/licenses/LICENSE-2.0.html
 
 This software includes third party software subject to the following licenses:
 
+  Apache Commons Codec under The Apache Software License, Version 2.0
+  FEST Fluent Assertions (Core) under Apache License, Version 2.0
+  FEST Util under Apache License, Version 2.0
   Hamcrest Core under New BSD License
   JUnit under Common Public License Version 1.0
   Sikker digital post klient under The Apache Software License, Version 2.0

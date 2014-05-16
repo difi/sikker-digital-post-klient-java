@@ -9,6 +9,7 @@
 	<properties>
 		<junit-version>4.11</junit-version>
 		<hamcrest-version>1.3</hamcrest-version>
+		<commons-codec.version>1.9</commons-codec.version>
 	</properties>
 
 	<artifactId>sikker-digital-post-klient</artifactId>
@@ -30,6 +31,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit-version}</version>
@@ -39,6 +46,12 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
 			<version>${hamcrest-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert-core</artifactId>
+			<version>2.0M10</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -161,8 +174,9 @@
 										<exclude>*:*:*:jar:compile</exclude>
 									</excludes>
 									<includes>
+										<include>commons-codec:commons-codec:${commons-codec.version}</include>
 										<include>junit:junit:${junit-version}</include>
-										<include>org.hamcrest:hamcrest-core:jar:${hamcrest-version}</include>
+										<include>org.hamcrest:hamcrest-core:${hamcrest-version}</include>
 									</includes>
 									<searchTransitive>true</searchTransitive>
 									<message>Maven-avhengigheter har forandret seg. Sjekk at alle lisenser er OK før distribusjon. Husk også å oppdatere fila «NOTICE».

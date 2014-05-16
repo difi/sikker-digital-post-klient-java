@@ -1,10 +1,10 @@
 package no.difi.sdp.client.domain.fysisk_post;
 
-import java.security.cert.X509Certificate;
+import no.difi.sdp.client.domain.Sertifikat;
 
 public class FysiskPost {
 
-    private FysiskPost(String orgNummerPrintleverandoer, X509Certificate printleverandoerSertifikat, NorskPostadresse norskPostadresse, UtenlandskPostadresse utenlandskPostadresse, NorskPostadresse returadresse) {
+    private FysiskPost(String orgNummerPrintleverandoer, Sertifikat printleverandoerSertifikat, NorskPostadresse norskPostadresse, UtenlandskPostadresse utenlandskPostadresse, NorskPostadresse returadresse) {
         if ((norskPostadresse != null && utenlandskPostadresse != null) || (norskPostadresse == null && utenlandskPostadresse == null)) {
             throw new IllegalArgumentException("Must set either norsk postadresse or utenlandsk postadresse");
         }
@@ -17,7 +17,7 @@ public class FysiskPost {
     }
 
     private String orgNummerPrintleverandoer;
-    private X509Certificate printleverandoerSertifikat;
+    private Sertifikat printleverandoerSertifikat;
 
     private UtenlandskPostadresse utenlandskAdresse;
     private NorskPostadresse norskAdresse;
@@ -26,11 +26,11 @@ public class FysiskPost {
     private PostType postType;
 
 
-    public static Builder builder(String orgNummerPrintleverandoer, X509Certificate printleverandoerSertifikat, NorskPostadresse norskAdresse, NorskPostadresse returadresse) {
+    public static Builder builder(String orgNummerPrintleverandoer, Sertifikat printleverandoerSertifikat, NorskPostadresse norskAdresse, NorskPostadresse returadresse) {
         return new Builder(orgNummerPrintleverandoer, printleverandoerSertifikat, norskAdresse, null, returadresse);
     }
 
-    public static Builder builder(String orgNummerPrintleverandoer, X509Certificate printleverandoerSertifikat, UtenlandskPostadresse utenlandskAdresse, NorskPostadresse returadresse) {
+    public static Builder builder(String orgNummerPrintleverandoer, Sertifikat printleverandoerSertifikat, UtenlandskPostadresse utenlandskAdresse, NorskPostadresse returadresse) {
         return new Builder(orgNummerPrintleverandoer, printleverandoerSertifikat, null, utenlandskAdresse, returadresse);
     }
 
@@ -39,7 +39,7 @@ public class FysiskPost {
         private final FysiskPost target;
         private boolean built = false;
 
-        private Builder(String orgNummerPrintleverandoer, X509Certificate printleverandoerSertifikat, NorskPostadresse norskAdresse, UtenlandskPostadresse utenlandskAdresse, NorskPostadresse returadresse) {
+        private Builder(String orgNummerPrintleverandoer, Sertifikat printleverandoerSertifikat, NorskPostadresse norskAdresse, UtenlandskPostadresse utenlandskAdresse, NorskPostadresse returadresse) {
             target = new FysiskPost(orgNummerPrintleverandoer, printleverandoerSertifikat, norskAdresse, utenlandskAdresse, returadresse);
         }
 

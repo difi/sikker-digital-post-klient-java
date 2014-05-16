@@ -1,10 +1,8 @@
 package no.difi.sdp.client.domain;
 
-import java.security.cert.X509Certificate;
-
 public class Mottaker {
 
-    private Mottaker(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
+    private Mottaker(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String orgNummerPostkasse) {
         this.personidentifikator = personidentifikator;
         this.postkasseadresse = postkasseadresse;
         this.mottakerSertifikat = mottakerSertifikat;
@@ -13,7 +11,7 @@ public class Mottaker {
 
     private String personidentifikator;
     private String postkasseadresse;
-    private X509Certificate mottakerSertifikat;
+    private Sertifikat mottakerSertifikat;
     private String orgNummerPostkasse;
 
     /**
@@ -24,7 +22,7 @@ public class Mottaker {
      * @param mottakerSertifikat Mottakers sertifikat.
      * @param orgNummerPostkasse Identifikator (organisasjonsnummer) til virksomheten som er sluttmottaker i meldingsprosessen.
      */
-    public static Builder builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
+    public static Builder builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String orgNummerPostkasse) {
         return new Builder(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
     }
 
@@ -32,7 +30,7 @@ public class Mottaker {
         private final Mottaker target;
         private boolean built = false;
 
-        private Builder(String personidentifikator, String postkasseadresse, X509Certificate mottakerSertifikat, String orgNummerPostkasse) {
+        private Builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String orgNummerPostkasse) {
             target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, orgNummerPostkasse);
         }
 

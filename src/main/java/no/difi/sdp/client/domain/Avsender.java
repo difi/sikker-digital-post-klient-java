@@ -1,17 +1,16 @@
 package no.difi.sdp.client.domain;
 
 import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
 
 public class Avsender {
 
-    private Avsender(String orgNummer, X509Certificate sertifikat, PrivateKey privatnoekkel) {
+    private Avsender(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
         this.sertifikat = sertifikat;
         this.orgNummer = orgNummer;
         this.privatnoekkel = privatnoekkel;
     }
 
-    private X509Certificate sertifikat;
+    private Sertifikat sertifikat;
     private PrivateKey privatnoekkel;
 
     private String orgNummer;
@@ -26,7 +25,7 @@ public class Avsender {
      * @param sertifikat Avsenders virksomhetssertifikat.
      * @param privatnoekkel Den private nøkkelen som tilsvarer den offentlige nøkkelen i avsenders virksomhetssertifikat.
      */
-    public static Builder builder(String orgNummer, X509Certificate sertifikat, PrivateKey privatnoekkel) {
+    public static Builder builder(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
         return new Builder(orgNummer, sertifikat, privatnoekkel);
     }
 
@@ -35,7 +34,7 @@ public class Avsender {
         private final Avsender target;
         private boolean built = false;
 
-        private Builder(String orgNummer, X509Certificate sertifikat, PrivateKey privatnoekkel) {
+        private Builder(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
             target = new Avsender(orgNummer, sertifikat, privatnoekkel);
         }
 
@@ -58,7 +57,6 @@ public class Avsender {
          * Brukt for å identifisere en ansvarlig enhet innen for en virksomhet.
          *
          * @param avsenderIdentifikator Identifikator som er tildelt av Sikker digital posttjeneste ved tilkobling til tjenesten.
-         * @return
          */
         public Builder avsenderIdentifikator(String avsenderIdentifikator) {
             target.avsenderIdentifikator = avsenderIdentifikator;
@@ -66,9 +64,7 @@ public class Avsender {
         }
 
         /**
-         *
          * @param orgNummerDatabehandler Identifikator (organisasjonsnummer) til avsender eller avtalepart hos avsender, ansvarlig for pakking og sikring av postforsendelser.
-         * @return
          */
         public Builder orgNummerDatabehandler(String orgNummerDatabehandler) {
             target.orgNummerDatabehandler = orgNummerDatabehandler;
