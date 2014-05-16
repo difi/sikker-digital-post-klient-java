@@ -1,19 +1,21 @@
 package no.difi.sdp.client.domain;
 
+import no.posten.dpost.offentlig.api.interceptors.KeyStoreInfo;
+
 import java.security.PrivateKey;
 
 public class Avsender {
 
-    private Avsender(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
+    private Avsender(String organisasjonsnummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
         this.sertifikat = sertifikat;
-        this.orgNummer = orgNummer;
+        this.organisasjonsnummer = organisasjonsnummer;
         this.privatnoekkel = privatnoekkel;
     }
 
     private Sertifikat sertifikat;
     private PrivateKey privatnoekkel;
 
-    private String orgNummer;
+    private String organisasjonsnummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
     private String orgNummerDatabehandler;
@@ -21,12 +23,20 @@ public class Avsender {
     private AvsenderRolle rolle = AvsenderRolle.BEHANDLINGSANSVARLIG;
 
     /**
-     * @param orgNummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
+     * @param organisasjonsnummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
      * @param sertifikat Avsenders virksomhetssertifikat.
      * @param privatnoekkel Den private nøkkelen som tilsvarer den offentlige nøkkelen i avsenders virksomhetssertifikat.
      */
-    public static Builder builder(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-        return new Builder(orgNummer, sertifikat, privatnoekkel);
+    public static Builder builder(String organisasjonsnummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
+        return new Builder(organisasjonsnummer, sertifikat, privatnoekkel);
+    }
+
+    public String getOrganisasjonsnummer() {
+        return organisasjonsnummer;
+    }
+
+    public KeyStoreInfo getKeyStore() {
+        return null;
     }
 
     public static class Builder {

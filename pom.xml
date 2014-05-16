@@ -36,6 +36,11 @@
 			<artifactId>commons-codec</artifactId>
 			<version>${commons-codec.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>no.posten.dpost.offentlig</groupId>
+			<artifactId>api-client</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

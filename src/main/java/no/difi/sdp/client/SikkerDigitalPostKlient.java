@@ -1,10 +1,25 @@
 package no.difi.sdp.client;
 
-import no.difi.sdp.client.domain.*;
+import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.ForretningsKvittering;
+import no.difi.sdp.client.domain.Forsendelse;
+import no.difi.sdp.client.domain.KvitteringForespoersel;
+import no.posten.dpost.offentlig.api.MessageSender;
+import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
 public class SikkerDigitalPostKlient {
 
+    private final Organisasjonsnummer digipostMeldingsformidler = new Organisasjonsnummer("TODO");
+    private final MessageSender messageSender;
+
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
+        try {
+            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot() + "/api/", avsender.getKeyStore(),
+                    new Organisasjonsnummer(avsender.getOrganisasjonsnummer()), digipostMeldingsformidler).build();
+        } catch (Exception e) {
+            // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
+            throw new RuntimeException("Could not create MessageSender", e);
+        }
     }
 
     /**
