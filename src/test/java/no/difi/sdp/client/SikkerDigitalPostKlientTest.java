@@ -1,6 +1,7 @@
 package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.*;
+import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.NorskPostadresse;
 import no.difi.sdp.client.domain.fysisk_post.PostType;
@@ -8,7 +9,6 @@ import no.difi.sdp.client.domain.fysisk_post.UtenlandskPostadresse;
 import no.difi.sdp.client.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
 import no.difi.sdp.client.domain.digital_post.SmsVarsel;
-import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import org.junit.Test;
 import sun.security.x509.X509CertImpl;
 
