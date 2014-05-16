@@ -14,7 +14,7 @@ public class SikkerDigitalPostKlient {
 
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
         try {
-            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot() + "/api/", avsender.getKeyStore(),
+            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot() + "/api/", avsender.getNoekkelpar().getKeyStoreInfo(),
                     new Organisasjonsnummer(avsender.getOrganisasjonsnummer()), digipostMeldingsformidler).build();
         } catch (Exception e) {
             // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
