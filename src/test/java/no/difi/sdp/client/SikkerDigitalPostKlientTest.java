@@ -12,6 +12,7 @@ import no.difi.sdp.client.domain.fysisk_post.UtenlandskPostadresse;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -42,6 +43,7 @@ public class SikkerDigitalPostKlientTest {
     }
 
     @Test
+    @Ignore
     public void test_build_digital_forsendelse() {
         Avsender avsender = Avsender.builder("984661185", avsendersNoekkelpar)
                 .fakturaReferanse("ØK1")
@@ -96,6 +98,7 @@ public class SikkerDigitalPostKlientTest {
     }
 
     @Test
+    @Ignore
     public void test_build_fysisk_forsendelse() {
         Avsender avsender = Avsender.builder("984661185", avsendersNoekkelpar).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
@@ -127,6 +130,7 @@ public class SikkerDigitalPostKlientTest {
     }
 
     @Test
+    @Ignore
     public void test_build_fysisk_utenlandsforsendelse() {
         Avsender avsender = Avsender.builder("984661185", avsendersNoekkelpar).build();
         SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
