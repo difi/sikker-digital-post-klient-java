@@ -8,6 +8,10 @@ public class KvitteringForespoersel {
 
     private Prioritet prioritet;
 
+    public Prioritet getPrioritet() {
+        return prioritet;
+    }
+
     /**
      * @param prioritet Hvilken prioritet det forespørres kvittering for. De ulike prioritene kan ses på som egne køer for kvitteringer. Dersom en forsendelse er sendt med normal prioritet, vil den kun dukke opp dersom det spørres om kvittering på normal prioritet.
      */

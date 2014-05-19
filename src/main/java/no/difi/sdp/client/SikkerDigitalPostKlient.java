@@ -4,9 +4,15 @@ import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.ForretningsKvittering;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.KvitteringForespoersel;
+import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
+import no.difi.sdp.client.internal.KvitteringBuilder;
 import no.posten.dpost.offentlig.api.MessageSender;
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
+import no.posten.dpost.offentlig.api.representations.EbmsMottaker;
+import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
+import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
 import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
 public class SikkerDigitalPostKlient {
@@ -15,9 +21,11 @@ public class SikkerDigitalPostKlient {
     private final MessageSender messageSender;
     private final Avsender avsender;
     private final EbmsForsendelseBuilder ebmsForsendelseBuilder;
+    private final KvitteringBuilder kvitteringBuilder;
 
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
         ebmsForsendelseBuilder = new EbmsForsendelseBuilder();
+        kvitteringBuilder = new KvitteringBuilder();
         this.avsender = avsender;
         try {
             messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot() + "/api/", avsender.getNoekkelpar().getKeyStoreInfo(),
@@ -59,7 +67,19 @@ public class SikkerDigitalPostKlient {
      *
      */
     public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) {
-        return new ForretningsKvittering();
+        //todo: intervall
+
+        EbmsMottaker meldingsformidler = new EbmsMottaker(digipostMeldingsformidler);
+
+        EbmsOutgoingMessage.Prioritet prioritet = EbmsOutgoingMessage.Prioritet.STANDARD;
+        if (kvitteringForespoersel.getPrioritet() == Prioritet.PRIORITERT) {
+            prioritet = EbmsOutgoingMessage.Prioritet.PRIORITERT;
+        }
+
+        EbmsPullRequest forespoersel = new EbmsPullRequest(meldingsformidler, prioritet);
+
+        EbmsApplikasjonsKvittering applikasjonsKvittering = messageSender.hentKvittering(forespoersel);
+        return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
     }
 
     /**
