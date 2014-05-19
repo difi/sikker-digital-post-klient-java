@@ -1,4 +1,4 @@
-package no.difi.sdp.client.domain;
+package no.difi.sdp.client.domain.kvittering;
 
 import java.util.Date;
 

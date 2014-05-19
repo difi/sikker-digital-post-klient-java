@@ -9,6 +9,8 @@ import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.NorskPostadresse;
 import no.difi.sdp.client.domain.fysisk_post.PostType;
 import no.difi.sdp.client.domain.fysisk_post.UtenlandskPostadresse;
+import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
+import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,9 +1,9 @@
 package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.Avsender;
-import no.difi.sdp.client.domain.ForretningsKvittering;
+import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.Forsendelse;
-import no.difi.sdp.client.domain.KvitteringForespoersel;
+import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
 import no.difi.sdp.client.internal.KvitteringBuilder;
