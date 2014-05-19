@@ -6,6 +6,7 @@ import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsresultat;
 import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsstatus;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
@@ -13,11 +14,21 @@ import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
 import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.difi.sdp.client.domain.kvittering.Varslingskanal;
-import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+import no.posten.dpost.offentlig.api.representations.*;
 
 import java.util.Date;
 
 public class KvitteringBuilder {
+
+    public EbmsPullRequest buildEbmsPullRequest(Organisasjonsnummer meldingsformidlerOrgNummer, Prioritet prioritet) {
+        EbmsMottaker meldingsformidler = new EbmsMottaker(meldingsformidlerOrgNummer);
+
+        if (prioritet == Prioritet.PRIORITERT) {
+            return new EbmsPullRequest(meldingsformidler, EbmsOutgoingMessage.Prioritet.PRIORITERT);
+        }
+
+        return new EbmsPullRequest(meldingsformidler);
+    }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
         Object sdpMelding = applikasjonsKvittering.sbd.getAny();
