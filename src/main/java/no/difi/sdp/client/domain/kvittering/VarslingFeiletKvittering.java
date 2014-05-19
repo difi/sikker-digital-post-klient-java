@@ -7,7 +7,7 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    public VarslingFeiletKvittering(Date tidspunkt, String konversasjonsId, Varslingskanal varslingskanal) {
+    private VarslingFeiletKvittering(Date tidspunkt, String konversasjonsId, Varslingskanal varslingskanal) {
         super(tidspunkt, konversasjonsId);
         this.varslingskanal = varslingskanal;
     }

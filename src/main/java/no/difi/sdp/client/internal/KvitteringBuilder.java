@@ -1,6 +1,8 @@
 package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.sdp.client.domain.Feil;
+import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.*;
 import no.posten.dpost.offentlig.api.representations.*;
@@ -49,11 +51,21 @@ public class KvitteringBuilder {
                         .build();
             }
         } else if (sbd.erFeil()) {
-            //todo: mangler domeneobjekt for feilhåndtering
-            return null;
+            SDPFeil feil = sbd.getFeil();
+
+            return Feil.builder(feil.getTidspunkt().toDate(), feil.getKonversasjonsId(), mapFeilType(feil.getFeiltype()))
+                    .detaljer(feil.getDetaljer())
+                    .build();
         }
         //todo: proper exception handling
         throw new RuntimeException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
+    }
+
+    private Feiltype mapFeilType(SDPFeiltype feiltype) {
+        if (feiltype == SDPFeiltype.KLIENT) {
+            return Feiltype.KLIENT;
+        }
+        return Feiltype.SERVER;
     }
 
     private Varslingskanal mapVarslingsKanal(SDPVarslingskanal varslingskanal) {

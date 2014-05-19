@@ -4,7 +4,7 @@ import java.util.Date;
 
 public abstract class ForretningsKvittering {
 
-    public ForretningsKvittering(Date tidspunkt, String konversasjonsId) {
+    protected ForretningsKvittering(Date tidspunkt, String konversasjonsId) {
         this.tidspunkt = tidspunkt;
         this.konversasjonsId = konversasjonsId;
     }

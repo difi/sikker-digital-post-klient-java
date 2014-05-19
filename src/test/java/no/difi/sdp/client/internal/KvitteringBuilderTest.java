@@ -1,6 +1,8 @@
 package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.sdp.client.domain.Feil;
+import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.*;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
@@ -75,13 +77,13 @@ public class KvitteringBuilderTest {
     public void should_build_varsling_feilet_sms_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsVarslingFeiletKvittering(SDPVarslingskanal.SMS);
 
-        ForretningsKvittering forretningsKvittering = kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
+        VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertTrue(forretningsKvittering instanceof VarslingFeiletKvittering);
-        assertNotNull(forretningsKvittering.getKonversasjonsId());
-        assertNotNull(forretningsKvittering.getTidspunkt());
-        assertThat(((VarslingFeiletKvittering)forretningsKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
-        assertThat(((VarslingFeiletKvittering)forretningsKvittering).getVarslingskanal()).isEqualTo(Varslingskanal.SMS);
+        assertTrue(varslingFeiletKvittering instanceof VarslingFeiletKvittering);
+        assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
+        assertNotNull(varslingFeiletKvittering.getTidspunkt());
+        assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
+        assertThat((varslingFeiletKvittering).getVarslingskanal()).isEqualTo(Varslingskanal.SMS);
     }
 
     @Test
@@ -100,12 +102,46 @@ public class KvitteringBuilderTest {
     public void should_build_tilbaketrekking_feilet_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsTilbaketrekkingsKvittering(SDPTilbaketrekkingsstatus.FEILET);
 
-        TilbaketrekkingsKvittering tilbaketrekkingsKvittering = (TilbaketrekkingsKvittering)kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
+        TilbaketrekkingsKvittering tilbaketrekkingsKvittering = (TilbaketrekkingsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
         assertNotNull(tilbaketrekkingsKvittering.getKonversasjonsId());
         assertNotNull(tilbaketrekkingsKvittering.getTidspunkt());
         assertThat((tilbaketrekkingsKvittering).getBeskrivelse()).isEqualTo("Tilbaketrekking av 'Viktig brev'");
         assertThat((tilbaketrekkingsKvittering).getStatus()).isEqualTo(TilbaketrekkingsStatus.FEILET);
+    }
+
+    @Test
+    public void should_build_klient_feil() {
+        EbmsApplikasjonsKvittering ebmsKvittering = createEbmsFeil(SDPFeiltype.KLIENT);
+
+        Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
+
+        assertNotNull(feil.getKonversasjonsId());
+        assertNotNull(feil.getTidspunkt());
+        assertThat(feil.getFeiltype()).isEqualTo(Feiltype.KLIENT);
+        assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
+    }
+
+    @Test
+    public void should_build_server_feil() {
+        EbmsApplikasjonsKvittering ebmsKvittering = createEbmsFeil(SDPFeiltype.SERVER);
+
+        Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
+
+        assertNotNull(feil.getKonversasjonsId());
+        assertNotNull(feil.getTidspunkt());
+        assertThat(feil.getFeiltype()).isEqualTo(Feiltype.SERVER);
+        assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
+    }
+
+    private EbmsApplikasjonsKvittering createEbmsFeil(SDPFeiltype feiltype) {
+        SDPFeil sdpFeil = new SDPFeil()
+                .withTidspunkt(DateTime.now())
+                .withKonversasjonsId(UUID.randomUUID().toString())
+                .withFeiltype(feiltype)
+                .withDetaljer("Feilinformasjon");
+
+        return createEbmsKvittering(sdpFeil);
     }
 
     private EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
@@ -144,13 +180,13 @@ public class KvitteringBuilderTest {
         return createEbmsKvittering(kvittering);
     }
 
-    private EbmsApplikasjonsKvittering createEbmsKvittering(SDPKvittering kvittering) {
+    private EbmsApplikasjonsKvittering createEbmsKvittering(Object any) {
         Organisasjonsnummer avsender = new Organisasjonsnummer("123");
         Organisasjonsnummer mottaker = new Organisasjonsnummer("456");
 
         final StandardBusinessDocument sbd = new StandardBusinessDocument()
                 .withStandardBusinessDocumentHeader(new StandardBusinessDocumentHeader())
-                .withAny(kvittering);
+                .withAny(any);
 
         return EbmsApplikasjonsKvittering.create(avsender, mottaker, sbd).build();
     }

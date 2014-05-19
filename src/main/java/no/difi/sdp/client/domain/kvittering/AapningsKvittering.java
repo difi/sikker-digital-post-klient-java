@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class AapningsKvittering extends ForretningsKvittering {
 
-    public AapningsKvittering(Date tidspunkt, String konversasjonsId) {
+    private AapningsKvittering(Date tidspunkt, String konversasjonsId) {
         super(tidspunkt, konversasjonsId);
     }
 

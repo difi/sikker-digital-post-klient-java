@@ -7,7 +7,7 @@ public class TilbaketrekkingsKvittering extends ForretningsKvittering {
     private String beskrivelse;
     private TilbaketrekkingsStatus status;
 
-    public TilbaketrekkingsKvittering(Date tidspunkt, String konversasjonsId, TilbaketrekkingsStatus status) {
+    private TilbaketrekkingsKvittering(Date tidspunkt, String konversasjonsId, TilbaketrekkingsStatus status) {
         super(tidspunkt, konversasjonsId);
         this.status = status;
     }
