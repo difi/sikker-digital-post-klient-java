@@ -12,6 +12,14 @@ public class TilbaketrekkingsKvittering extends ForretningsKvittering {
         this.status = status;
     }
 
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
+    public TilbaketrekkingsStatus getStatus() {
+        return status;
+    }
+
     public static Builder builder(Date tidspunkt, String konverasjonsId, TilbaketrekkingsStatus status) {
         return new Builder(tidspunkt, konverasjonsId, status);
     }

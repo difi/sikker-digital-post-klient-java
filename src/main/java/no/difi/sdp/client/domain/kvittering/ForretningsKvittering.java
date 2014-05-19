@@ -12,4 +12,11 @@ public abstract class ForretningsKvittering {
     private String konversasjonsId;
     private Date tidspunkt;
 
+    public String getKonversasjonsId() {
+        return konversasjonsId;
+    }
+
+    public Date getTidspunkt() {
+        return tidspunkt;
+    }
 }

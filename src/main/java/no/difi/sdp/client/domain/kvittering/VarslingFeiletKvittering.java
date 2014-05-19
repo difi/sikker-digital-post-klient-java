@@ -12,6 +12,14 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
         this.varslingskanal = varslingskanal;
     }
 
+    public Varslingskanal getVarslingskanal() {
+        return varslingskanal;
+    }
+
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
     public static Builder builder(Date tidspunkt, String konversasjonsId, Varslingskanal varslingskanal) {
         return new Builder(tidspunkt, konversasjonsId, varslingskanal);
     }
@@ -24,8 +32,8 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
             target = new VarslingFeiletKvittering(tidspunkt, konversasjonsId, varslingskanal);
         }
 
-        public Builder feilbeskrivelse(String feilbeskrivelse) {
-            target.beskrivelse = feilbeskrivelse;
+        public Builder beskrivelse(String beskrivelse) {
+            target.beskrivelse = beskrivelse;
             return this;
         }
 

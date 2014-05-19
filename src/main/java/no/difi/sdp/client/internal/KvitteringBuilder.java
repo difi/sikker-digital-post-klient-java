@@ -1,19 +1,8 @@
 package no.difi.sdp.client.internal;
 
-import no.difi.begrep.sdp.schema_v10.SDPFeil;
-import no.difi.begrep.sdp.schema_v10.SDPKvittering;
-import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsresultat;
-import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsstatus;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.begrep.sdp.schema_v10.*;
 import no.difi.sdp.client.domain.Prioritet;
-import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
-import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
-import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
-import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
-import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
-import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
-import no.difi.sdp.client.domain.kvittering.Varslingskanal;
+import no.difi.sdp.client.domain.kvittering.*;
 import no.posten.dpost.offentlig.api.representations.*;
 
 import java.util.Date;
@@ -31,11 +20,13 @@ public class KvitteringBuilder {
     }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        Object sdpMelding = applikasjonsKvittering.sbd.getAny();
+        SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
 
-        if (sdpMelding instanceof SDPKvittering) {
-            SDPKvittering sdpKvittering = (SDPKvittering) sdpMelding;
-            String konversasjonsId = sdpKvittering.getKonversasjonsId();
+        if (sbd.erKvittering()) {
+            SimpleStandardBusinessDocument.SimpleKvittering kvittering = sbd.getKvittering();
+            SDPKvittering sdpKvittering = kvittering.kvittering;
+
+            String konversasjonsId = kvittering.getKonversasjonsId();
             Date tidspunkt = sdpKvittering.getTidspunkt().toDate();
 
             if (sdpKvittering.getAapning() != null) {
@@ -54,13 +45,15 @@ public class KvitteringBuilder {
                 Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
 
                 return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, varslingskanal)
-                        .feilbeskrivelse(varslingfeilet.getBeskrivelse())
+                        .beskrivelse(varslingfeilet.getBeskrivelse())
                         .build();
             }
-        } else if (sdpMelding instanceof SDPFeil) {
-            //todo
+        } else if (sbd.erFeil()) {
+            //todo: mangler domeneobjekt for feilhåndtering
+            return null;
         }
-        return null;
+        //todo: proper exception handling
+        throw new RuntimeException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
     }
 
     private Varslingskanal mapVarslingsKanal(SDPVarslingskanal varslingskanal) {
