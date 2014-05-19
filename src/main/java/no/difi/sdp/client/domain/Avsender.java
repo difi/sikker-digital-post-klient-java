@@ -23,6 +23,14 @@ public class Avsender {
         return noekkelpar;
     }
 
+    public String getAvsenderIdentifikator() {
+        return avsenderIdentifikator;
+    }
+
+    public String getFakturaReferanse() {
+        return fakturaReferanse;
+    }
+
     /**
      * @param organisasjonsnummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
      * @param noekkelpar Avsenders nøkkelpar: signert virksomhetssertifikat og tilhørende privatnøkkel.
@@ -57,6 +65,8 @@ public class Avsender {
 
         /**
          * Brukt for å identifisere en ansvarlig enhet innen for en virksomhet.
+         *
+         * TODO: Denne er mandatory og bør flyttes opp til intialiseringen av builderen
          *
          * @param avsenderIdentifikator Identifikator som er tildelt av Sikker digital posttjeneste ved tilkobling til tjenesten.
          */

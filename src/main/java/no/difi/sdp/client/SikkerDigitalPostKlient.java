@@ -4,15 +4,21 @@ import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.ForretningsKvittering;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.KvitteringForespoersel;
+import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
 import no.posten.dpost.offentlig.api.MessageSender;
+import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
 import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
 public class SikkerDigitalPostKlient {
 
     private final Organisasjonsnummer digipostMeldingsformidler = new Organisasjonsnummer("TODO");
     private final MessageSender messageSender;
+    private final Avsender avsender;
+    private final EbmsForsendelseBuilder ebmsForsendelseBuilder;
 
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
+        ebmsForsendelseBuilder = new EbmsForsendelseBuilder();
+        this.avsender = avsender;
         try {
             messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot() + "/api/", avsender.getNoekkelpar().getKeyStoreInfo(),
                     new Organisasjonsnummer(avsender.getOrganisasjonsnummer()), digipostMeldingsformidler).build();
@@ -30,6 +36,12 @@ public class SikkerDigitalPostKlient {
      *                    enten digitalt eller fyisk.
      */
     public void send(Forsendelse forsendelse) {
+        if (!forsendelse.isDigitalPostforsendelse()) {
+            throw new UnsupportedOperationException("Fysiske forsendelser er ikke implementert");
+        }
+
+        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, forsendelse);
+        messageSender.send(ebmsForsendelse);
     }
 
     /**

@@ -59,7 +59,6 @@ public class SikkerDigitalPostKlientTest {
         SmsVarsel smsVarsel = SmsVarsel.builder("Du har mottatt brev i din digitale postkasse")
                 .mobilnummer("4799999999")
                 .varselEtterDager(asList(1, 7))
-                .spraakkode("SE")
                 .build();
 
         DigitalPost digitalPost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")
@@ -81,6 +80,7 @@ public class SikkerDigitalPostKlientTest {
         Forsendelse forsendelse = Forsendelse.builder(digitalPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId")
                 .prioritet(Prioritet.NORMAL)
+                .spraakkode("NO")
                 .build();
 
         postklient.send(forsendelse);
