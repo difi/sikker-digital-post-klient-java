@@ -135,62 +135,43 @@ public class KvitteringBuilderTest {
     }
 
     private EbmsApplikasjonsKvittering createEbmsFeil(SDPFeiltype feiltype) {
-        SDPFeil sdpFeil = new SDPFeil()
-                .withTidspunkt(DateTime.now())
-                .withKonversasjonsId(UUID.randomUUID().toString())
-                .withFeiltype(feiltype)
-                .withDetaljer("Feilinformasjon");
-
+        SDPFeil sdpFeil = new SDPFeil(randomUUID(), null, DateTime.now(), feiltype, "Feilinformasjon");
         return createEbmsKvittering(sdpFeil);
     }
 
     private EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
-        SDPKvittering kvittering = new SDPKvittering()
-                .withAapning(new SDPAapning())
-                .withTidspunkt(DateTime.now())
-                .withKonversasjonsId(UUID.randomUUID().toString());
-
-        return createEbmsKvittering(kvittering);
+        SDPKvittering aapningsKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), null, null, new SDPAapning(), null);
+        return createEbmsKvittering(aapningsKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
-        SDPKvittering kvittering = new SDPKvittering()
-                .withLevering(new SDPLevering())
-                .withTidspunkt(DateTime.now())
-                .withKonversasjonsId(UUID.randomUUID().toString());
-
-        return createEbmsKvittering(kvittering);
+        SDPKvittering leveringsKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), null, null, null, new SDPLevering());
+        return createEbmsKvittering(leveringsKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(SDPVarslingskanal varslingskanal) {
-        SDPKvittering kvittering = new SDPKvittering()
-                .withVarslingfeilet(new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'"))
-                .withTidspunkt(DateTime.now())
-                .withKonversasjonsId(UUID.randomUUID().toString());
-
-        return createEbmsKvittering(kvittering);
+        SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
+        SDPKvittering varslingFeiletKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), null, sdpVarslingfeilet, null, null);
+        return createEbmsKvittering(varslingFeiletKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsTilbaketrekkingsKvittering(SDPTilbaketrekkingsstatus status) {
-        SDPKvittering kvittering = new SDPKvittering()
-                .withTilbaketrekking(new SDPTilbaketrekkingsresultat(status, "Tilbaketrekking av 'Viktig brev'"))
-                .withTidspunkt(DateTime.now())
-                .withKonversasjonsId(UUID.randomUUID().toString());
-
-        return createEbmsKvittering(kvittering);
+        SDPTilbaketrekkingsresultat sdpTilbaketrekkingsresultat = new SDPTilbaketrekkingsresultat(status, "Tilbaketrekking av 'Viktig brev'");
+        SDPKvittering tilbaketrekkingsKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), sdpTilbaketrekkingsresultat, null, null, null);
+        return createEbmsKvittering(tilbaketrekkingsKvittering);
     }
 
-    private EbmsApplikasjonsKvittering createEbmsKvittering(Object any) {
+    private EbmsApplikasjonsKvittering createEbmsKvittering(Object sdpMelding) {
         Organisasjonsnummer avsender = new Organisasjonsnummer("123");
         Organisasjonsnummer mottaker = new Organisasjonsnummer("456");
 
-        final StandardBusinessDocument sbd = new StandardBusinessDocument()
-                .withStandardBusinessDocumentHeader(new StandardBusinessDocumentHeader())
-                .withAny(any);
+        StandardBusinessDocument sbd = new StandardBusinessDocument(new StandardBusinessDocumentHeader(), sdpMelding);
 
         return EbmsApplikasjonsKvittering.create(avsender, mottaker, sbd).build();
     }
 
-
+    private static String randomUUID() {
+        return UUID.randomUUID().toString();
+    }
 
 }
