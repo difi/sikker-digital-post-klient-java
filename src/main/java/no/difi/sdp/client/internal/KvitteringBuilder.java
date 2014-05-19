@@ -36,29 +36,41 @@ public class KvitteringBuilder {
             } else if (sdpKvittering.getLevering() != null) {
                 return LeveringsKvittering.builder(tidspunkt, konversasjonsId).build();
             } else if (sdpKvittering.getTilbaketrekking() != null) {
-                SDPTilbaketrekkingsresultat tilbaketrekking = sdpKvittering.getTilbaketrekking();
-                TilbaketrekkingsStatus status = mapTilbaketrekkingsStatus(tilbaketrekking.getStatus());
-
-                return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, status)
-                        .beskrivelse(tilbaketrekking.getBeskrivelse())
-                        .build();
+                return tilbaketrekkingsKvittering(sdpKvittering, konversasjonsId, tidspunkt);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
-                SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
-                Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
-
-                return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, varslingskanal)
-                        .beskrivelse(varslingfeilet.getBeskrivelse())
-                        .build();
+                return varslingFeiletKvittering(sdpKvittering, konversasjonsId, tidspunkt);
             }
         } else if (sbd.erFeil()) {
-            SDPFeil feil = sbd.getFeil();
-
-            return Feil.builder(feil.getTidspunkt().toDate(), feil.getKonversasjonsId(), mapFeilType(feil.getFeiltype()))
-                    .detaljer(feil.getDetaljer())
-                    .build();
+            return feil(sbd);
         }
         //todo: proper exception handling
         throw new RuntimeException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
+    }
+
+    private ForretningsKvittering feil(SimpleStandardBusinessDocument sbd) {
+        SDPFeil feil = sbd.getFeil();
+
+        return Feil.builder(feil.getTidspunkt().toDate(), feil.getKonversasjonsId(), mapFeilType(feil.getFeiltype()))
+                .detaljer(feil.getDetaljer())
+                .build();
+    }
+
+    private ForretningsKvittering tilbaketrekkingsKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt) {
+        SDPTilbaketrekkingsresultat tilbaketrekking = sdpKvittering.getTilbaketrekking();
+        TilbaketrekkingsStatus status = mapTilbaketrekkingsStatus(tilbaketrekking.getStatus());
+
+        return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, status)
+                .beskrivelse(tilbaketrekking.getBeskrivelse())
+                .build();
+    }
+
+    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt) {
+        SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
+        Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
+
+        return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, varslingskanal)
+                .beskrivelse(varslingfeilet.getBeskrivelse())
+                .build();
     }
 
     private Feiltype mapFeilType(SDPFeiltype feiltype) {
