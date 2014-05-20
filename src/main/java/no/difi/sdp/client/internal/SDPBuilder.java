@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.w3.xmldsig.Signature;
 
+@SuppressWarnings("ConstantConditions")
 public class SDPBuilder {
 
     /**
@@ -33,7 +34,6 @@ public class SDPBuilder {
         return new SDPDigitalPost(konversasjonsId, signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakke);
     }
 
-    @SuppressWarnings("ConstantConditions")
     private SDPMottaker sdpMottaker(Mottaker mottaker, Forsendelse forsendelse) {
         // Bygg SDP:Mottaker. SDP:Mottaker er av typen difi:person som har en del felter som ikke er relevant i denne konteksten.
         // Vi setter felter i henhold til det som er definert for sdp:melding (http://begrep.difi.no/SikkerDigitalPost/utkast/StandardBusinessDocument/Melding/Person)
