@@ -2,6 +2,7 @@ package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
+import no.difi.sdp.client.domain.kvittering.BekreftelsesKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
@@ -26,8 +27,11 @@ public class SikkerDigitalPostKlient {
 
         this.avsender = avsender;
         try {
-            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot() + "/api/", avsender.getNoekkelpar().getKeyStoreInfo(),
-                    new Organisasjonsnummer(avsender.getOrganisasjonsnummer()), digipostMeldingsformidler).build();
+            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
+                    avsender.getNoekkelpar().getKeyStoreInfo(),
+                    new Organisasjonsnummer(avsender.getOrganisasjonsnummer()),
+                    digipostMeldingsformidler)
+                    .build();
         } catch (Exception e) {
             // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
             throw new RuntimeException("Could not create MessageSender", e);
@@ -65,12 +69,14 @@ public class SikkerDigitalPostKlient {
      *
      */
     public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) {
-        //todo: intervall
-
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(digipostMeldingsformidler, kvitteringForespoersel.getPrioritet());
 
         EbmsApplikasjonsKvittering applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest);
-        return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
+
+        if (applikasjonsKvittering != null) {
+            return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
+        }
+        return null;
     }
 
     /**
@@ -84,7 +90,8 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreftKvittering(ForretningsKvittering forretningsKvittering) {
-
+    public void bekreftKvittering(BekreftelsesKvittering bekreftelsesKvittering) {
+        EbmsApplikasjonsKvittering kvittering = kvitteringBuilder.buildEbmsApplikasjonsKvittering(bekreftelsesKvittering);
+        messageSender.bekreft(kvittering);
     }
 }

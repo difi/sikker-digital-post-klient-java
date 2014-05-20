@@ -11,6 +11,7 @@ public abstract class ForretningsKvittering {
 
     private String konversasjonsId;
     private Date tidspunkt;
+    private String messageId; //todo: mandatory?
 
     public String getKonversasjonsId() {
         return konversasjonsId;

@@ -43,8 +43,14 @@ public class KvitteringBuilder {
         } else if (sbd.erFeil()) {
             return feil(sbd);
         }
+        //todo: returnere message id
         //todo: proper exception handling
         throw new RuntimeException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
+    }
+
+    public EbmsApplikasjonsKvittering buildEbmsApplikasjonsKvittering(BekreftelsesKvittering bekreftelsesKvittering) {
+        //todo
+        return null;
     }
 
     private ForretningsKvittering feil(SimpleStandardBusinessDocument sbd) {
