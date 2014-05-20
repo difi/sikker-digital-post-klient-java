@@ -18,7 +18,6 @@ import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class KvitteringBuilderTest {
 
@@ -79,7 +78,6 @@ public class KvitteringBuilderTest {
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertTrue(varslingFeiletKvittering instanceof VarslingFeiletKvittering);
         assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
         assertNotNull(varslingFeiletKvittering.getTidspunkt());
         assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
