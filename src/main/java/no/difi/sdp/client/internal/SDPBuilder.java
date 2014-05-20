@@ -3,6 +3,7 @@ package no.difi.sdp.client.internal;
 import no.difi.begrep.*;
 import no.difi.begrep.sdp.schema_v10.*;
 import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
@@ -10,7 +11,11 @@ import no.difi.sdp.client.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 public class SDPBuilder {
@@ -19,6 +24,26 @@ public class SDPBuilder {
      * ISO6523-identifikasjon av Brønnøysundregisterets organisasjonsnummer som identifikator.
      */
     private static final String ORGNR_IDENTIFIER = "9908:";
+
+    public SDPManifest createManifest(Avsender avsender, Forsendelse forsendelse) {
+        Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
+
+        DifiPerson difiPerson = new DifiPerson().withPersonidentifikator(mottaker.getPersonidentifikator());
+        SDPMottaker sdpMottaker = new SDPMottaker().withPerson(difiPerson);
+
+        String fakturaReferanse = null; // Ikke send fakturareferanse i manifest
+        SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(avsender), avsender.getAvsenderIdentifikator(), fakturaReferanse);
+
+        String spraakkode = forsendelse.getSpraakkode();
+        SDPDokument sdpHovedDokument = sdpDokument(forsendelse.getDokumentpakke().getHoveddokument(), spraakkode);
+
+        List<SDPDokument> sdpVedlegg = new ArrayList<SDPDokument>();
+        for (Dokument dokument : forsendelse.getDokumentpakke().getVedlegg()) {
+            sdpVedlegg.add(sdpDokument(dokument, spraakkode));
+        }
+
+        return new SDPManifest(sdpMottaker, sdpAvsender, sdpHovedDokument, sdpVedlegg);
+    }
 
     public SDPDigitalPost buildDigitalPost(Avsender avsender, Forsendelse forsendelse) {
         String konversasjonsId = forsendelse.getKonversasjonsId();
@@ -29,9 +54,13 @@ public class SDPBuilder {
 
         Signature signature = new Signature(); // TODO: Hva skal vi signere og hvordan? Legges denne på fra et av filtrene?
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
-        SDPDokumentpakke dokumentpakke = new SDPDokumentpakke(); // TODO: Generere nøkkel og bygge dokumentpakke
+        Reference dokumentpakkefingeravtrykk = new Reference(); // TODO: Generere nøkkel og bygge dokumentpakke
+        return new SDPDigitalPost(konversasjonsId, signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
+    }
 
-        return new SDPDigitalPost(konversasjonsId, signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakke);
+    private SDPDokument sdpDokument(Dokument dokument, String spraakkode) {
+        SDPTittel sdpTittel = new SDPTittel(dokument.getTittel(), spraakkode);
+        return new SDPDokument(sdpTittel, dokument.getFilnavn(), dokument.getMimeType());
     }
 
     private SDPMottaker sdpMottaker(Mottaker mottaker, Forsendelse forsendelse) {
@@ -57,7 +86,11 @@ public class SDPBuilder {
 
         return sdpAvsender
                 .withAvsenderidentifikator(avsender.getAvsenderIdentifikator())
-                .withOrganisasjon(new SDPOrganisasjon().withValue(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer()));
+                .withOrganisasjon(sdpOrganisasjon(avsender));
+    }
+
+    private SDPOrganisasjon sdpOrganisasjon(Avsender avsender) {
+        return new SDPOrganisasjon().withValue(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer());
     }
 
     private DifiKontaktinformasjon kontaktinformasjon(Forsendelse forsendelse) {
@@ -105,4 +138,5 @@ public class SDPBuilder {
         SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getTekst(), spraakkode);
         return new SDPEpostVarsel(epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));
     }
+
 }

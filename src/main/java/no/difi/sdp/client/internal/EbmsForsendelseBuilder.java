@@ -26,7 +26,7 @@ public class EbmsForsendelseBuilder {
         Organisasjonsnummer avsenderOrganisasjonsnummer = new Organisasjonsnummer(avsender.getOrganisasjonsnummer());
         Organisasjonsnummer mottakerOrganisasjonsnummer = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
         SDPDigitalPost sikkerDigitalPost = createSikkerDigitalPost(avsender, forsendelse);
-        InputStream dokumentpakke = asicEGenerator.createStream(forsendelse);
+        InputStream dokumentpakke = asicEGenerator.createStream(avsender, forsendelse);
 
         return EbmsForsendelse.create(avsenderOrganisasjonsnummer, mottakerOrganisasjonsnummer, sikkerDigitalPost, dokumentpakke).build();
     }

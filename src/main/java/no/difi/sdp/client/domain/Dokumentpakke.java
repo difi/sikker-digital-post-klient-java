@@ -13,6 +13,14 @@ public class Dokumentpakke {
     private Dokument hoveddokument;
     private List<Dokument> vedlegg = Collections.emptyList();
 
+    public Dokument getHoveddokument() {
+        return hoveddokument;
+    }
+
+    public List<Dokument> getVedlegg() {
+        return vedlegg;
+    }
+
     public static Builder builder(Dokument hoveddokument) {
         return new Builder(hoveddokument);
     }
