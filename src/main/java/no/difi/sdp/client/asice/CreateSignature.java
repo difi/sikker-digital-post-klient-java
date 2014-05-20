@@ -2,7 +2,6 @@ package no.difi.sdp.client.asice;
 
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.etsi.uri._01903.v1_3.*;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.joda.time.DateTime;
@@ -15,6 +14,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.codec.digest.DigestUtils.sha1;
+import static org.apache.commons.codec.digest.DigestUtils.sha256;
 
 public class CreateSignature {
 
@@ -42,7 +43,7 @@ public class CreateSignature {
 
         X509Certificate certificate = avsender.getNoekkelpar().getSertifikat().getCertificate();
         // TODO: Er det riktig å bruke encoded versjon (ASN.1 DER) av sertifikatet?
-        byte[] certificateDigestValue = DigestUtils.getSha1Digest().digest(avsender.getNoekkelpar().getSertifikat().getEncoded());
+        byte[] certificateDigestValue = sha1(avsender.getNoekkelpar().getSertifikat().getEncoded());
 
         DigestAlgAndValueType certificateDigest = new DigestAlgAndValueType(sha1DigestMethod, certificateDigestValue);
         X509IssuerSerialType certificateIssuer = new X509IssuerSerialType(certificate.getIssuerDN().getName(), certificate.getSerialNumber());
@@ -74,7 +75,6 @@ public class CreateSignature {
     }
 
     private Reference reference(AsicEAttachable file) {
-        // TODO: Hash fila
-        return new Reference(null, sha256DigestMethod, "filhash".getBytes(), null, file.getFileName(), null);
+        return new Reference(null, sha256DigestMethod, sha256(file.getBytes()), null, file.getFileName(), null);
     }
 }
