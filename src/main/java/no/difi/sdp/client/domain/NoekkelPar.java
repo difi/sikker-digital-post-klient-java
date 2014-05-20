@@ -28,4 +28,7 @@ public class Noekkelpar {
         return new Noekkelpar(keyStore, alias, password);
     }
 
+    public Sertifikat getSertifikat() {
+        return Sertifikat.fraKeyStore(keyStore, alias);
+    }
 }

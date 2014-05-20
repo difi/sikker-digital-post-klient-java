@@ -1,24 +1,27 @@
 package no.difi.sdp.client.asice;
 
-import no.difi.begrep.sdp.schema_v10.SDPManifest;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
-import no.difi.sdp.client.internal.SDPBuilder;
+import org.etsi.uri._2918.v1_2.XAdESSignatures;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class AsicEGenerator {
 
-    private final SDPBuilder sdpBuilder;
+    private final CreateManifest createManifest;
+    private final CreateSignature createSignature;
 
     public AsicEGenerator() {
-        sdpBuilder = new SDPBuilder();
+        createManifest = new CreateManifest();
+        createSignature = new CreateSignature();
     }
 
     public InputStream createStream(Avsender avsender, Forsendelse forsendelse) {
         // Generate manifest
-        SDPManifest sdpManifest = sdpBuilder.createManifest(avsender, forsendelse);
+        Manifest manifest = createManifest.createManifest(avsender, forsendelse);
+
+        XAdESSignatures signature = createSignature.createSignature(manifest, avsender, forsendelse);
 
         /**
          * 1. Generate Manifest
