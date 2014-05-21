@@ -1,22 +1,34 @@
 package no.difi.sdp.client.asice.signature;
 
+import no.difi.begrep.sdp.schema_v10.SDPManifest;
 import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.asice.Jaxb;
 import no.difi.sdp.client.asice.Signature;
 import no.difi.sdp.client.domain.Noekkelpar;
+import org.apache.commons.io.IOUtils;
 import org.etsi.uri._01903.v1_3.DataObjectFormat;
 import org.etsi.uri._01903.v1_3.DigestAlgAndValueType;
 import org.etsi.uri._01903.v1_3.QualifyingProperties;
 import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
 import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
+import org.joda.time.DateTimeZone;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3.xmldsig.*;
+import org.w3.xmldsig.Reference;
+import org.w3.xmldsig.SignedInfo;
+import org.w3.xmldsig.X509Data;
+import org.w3.xmldsig.X509IssuerSerialType;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -30,11 +42,20 @@ public class CreateSignatureTest {
     /**
      * SHA256 hash of "hoveddokument-innhold"
      */
-    private byte[] expectedHovedDokumentHash = new byte[] { 93, -36, 99, 92, -27, 39, 21, 31, 33, -127, 30, 77, 6, 49, 92, -48, -114, -61, -100, -126, -64, -70, 70, -38, 67, 93, -126, 62, -125, -7, -115, 123 };
+    private final byte[] expectedHovedDokumentHash = new byte[] { 93, -36, 99, 92, -27, 39, 21, 31, 33, -127, 30, 77, 6, 49, 92, -48, -114, -61, -100, -126, -64, -70, 70, -38, 67, 93, -126, 62, -125, -7, -115, 123 };
+
+    private Marshaller prettyPrintingMarshaller;
 
     @Before
     public void setUp() throws Exception {
         sut = new CreateSignature();
+        prettyPrintingMarshaller = JAXBContext.newInstance(SDPManifest.class, XAdESSignatures.class, X509Data.class, QualifyingProperties.class).createMarshaller();
+        prettyPrintingMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+    }
+
+    @After
+    public void tearDown() {
+        DateTimeUtils.setCurrentMillisSystem();
     }
 
     @Test
@@ -73,6 +94,31 @@ public class CreateSignatureTest {
 
         SignedDataObjectProperties signedDataObjectProperties = xadesProperties.getSignedProperties().getSignedDataObjectProperties();
         verify_signed_data_object_properties(signedDataObjectProperties);
+    }
+
+    @Test
+    public void test_pregenerated_xml() throws Exception {
+        // Note: this is a very brittle test. it is meant to be guiding. If it fails, manually check if the changes to the XML makes sense. If they do, just update the expected XML.
+
+        // The signature partly depends on the exact time the original message was signed
+        DateTime dateTime = new DateTime(2014, 5, 21, 17, 7, 15, 756, DateTimeZone.forOffsetHours(2));
+        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+
+        String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"));
+
+        Noekkelpar noekkelpar = ObjectMother.noekkelpar();
+        List<AsicEAttachable> files = asList(
+                file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
+                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
+        );
+
+        Signature signature = sut.createSignature(noekkelpar, files);
+        XAdESSignatures xAdESSignatures = Jaxb.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())), XAdESSignatures.class);
+
+        StringWriter actualXml = new StringWriter();
+        prettyPrintingMarshaller.marshal(xAdESSignatures, actualXml);
+
+        assertThat(actualXml.toString()).isEqualTo(expectedXml);
     }
 
     private void verify_signed_data_object_properties(SignedDataObjectProperties signedDataObjectProperties) {
