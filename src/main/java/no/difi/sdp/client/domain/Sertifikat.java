@@ -1,5 +1,6 @@
 package no.difi.sdp.client.domain;
 
+import no.difi.sdp.client.domain.exceptions.SertifikatException;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;

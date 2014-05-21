@@ -1,6 +1,6 @@
-package no.difi.sdp.client.domain;
+package no.difi.sdp.client.domain.exceptions;
 
-public class SertifikatException extends RuntimeException {
+public class SertifikatException extends KonfigurasjonException {
     public SertifikatException(String message, Exception e) {
         super(message, e);
     }

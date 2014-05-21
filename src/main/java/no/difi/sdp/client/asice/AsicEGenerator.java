@@ -2,7 +2,6 @@ package no.difi.sdp.client.asice;
 
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
-import org.etsi.uri._2918.v1_2.XAdESSignatures;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -21,7 +20,7 @@ public class AsicEGenerator {
         // Generate manifest
         Manifest manifest = createManifest.createManifest(avsender, forsendelse);
 
-        XAdESSignatures signature = createSignature.createSignature(manifest, avsender, forsendelse);
+        Signature signature = createSignature.createSignature(manifest, avsender, forsendelse);
 
         /**
          * 1. Generate Manifest
