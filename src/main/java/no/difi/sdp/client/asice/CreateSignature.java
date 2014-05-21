@@ -59,7 +59,7 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256;
 public class CreateSignature {
 
     private final String signedPropertiesType = "http://uri.etsi.org/01903#SignedProperties";
-    private final org.w3.xmldsig.DigestMethod sha1DigestMethod = new org.w3.xmldsig.DigestMethod(emptyList(), "http://www.w3.org/2000/09/xmldsig#sha1");
+    private final org.w3.xmldsig.DigestMethod sha1DigestMethod = new org.w3.xmldsig.DigestMethod(emptyList(), DigestMethod.SHA1);
     private final DigestMethod sha256DigestMethod;
     private final CanonicalizationMethod canonicalizationMethod;
     private final SignatureMethod signatureMethod;
@@ -68,7 +68,7 @@ public class CreateSignature {
     public CreateSignature() {
         XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
         try {
-            sha256DigestMethod = xmlSignatureFactory.newDigestMethod("http://www.w3.org/2001/04/xmlenc#sha256", null);
+            sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
             canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod("http://www.w3.org/2006/12/xml-c14n11", (C14NMethodParameterSpec) null);
             signatureMethod = xmlSignatureFactory.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null);
             canonicalXmlTransform = xmlSignatureFactory.newTransform("http://www.w3.org/TR/2001/REC-xml-c14n-20010315", (TransformParameterSpec) null);
