@@ -10,6 +10,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3.xmldsig.X509Data;
 
 import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import java.io.IOException;
 
 public class Jaxb {
@@ -29,6 +30,14 @@ public class Jaxb {
     public static void marshal(Object graph, Result result) {
         try {
             marshaller().marshal(graph, result);
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        }
+    }
+
+    public static <T> T unmarshal(Source source, Class<T> clazz) {
+        try {
+            return (T) unmarshaller().unmarshal(source);
         } catch (IOException e) {
             throw new RuntimeIOException(e);
         }
