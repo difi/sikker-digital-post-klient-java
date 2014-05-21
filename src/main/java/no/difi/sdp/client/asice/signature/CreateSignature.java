@@ -2,10 +2,8 @@ package no.difi.sdp.client.asice.signature;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.asice.Jaxb;
-import no.difi.sdp.client.asice.Manifest;
 import no.difi.sdp.client.asice.Signature;
-import no.difi.sdp.client.domain.Avsender;
-import no.difi.sdp.client.domain.Forsendelse;
+import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
@@ -67,14 +65,11 @@ public class CreateSignature {
         }
     }
 
-    public Signature createSignature(Manifest manifest, Avsender avsender, Forsendelse forsendelse) {
+    public Signature createSignature(Noekkelpar noekkelpar, List<AsicEAttachable> attachedFiles) {
         XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
 
-        // List alle filer i Asic-E meldingen (hoveddokument, vedlegg og manifest)
-        List<AsicEAttachable> files = filesToInclude(manifest, forsendelse);
-
         // Lag signatur-referanse for alle filer
-        List<Reference> references = references(xmlSignatureFactory, files);
+        List<Reference> references = references(xmlSignatureFactory, attachedFiles);
 
         // Lag signatur-referanse for XaDES properties
         references.add(xmlSignatureFactory.newReference(
@@ -85,18 +80,16 @@ public class CreateSignature {
                 null
         ));
 
-        Sertifikat sertifikat = avsender.getNoekkelpar().getSertifikat();
-
         // Generer XAdES-dokument som skal signeres, informasjon om nøkkel brukt til signering og informasjon om hva som er signert
-        Document documentToSign = createXAdESProperties.createPropertiesToSign(files, sertifikat);
-        KeyInfo keyInfo = keyInfo(xmlSignatureFactory, sertifikat);
+        Document documentToSign = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getSertifikat());
+        KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getSertifikat());
         SignedInfo signedInfo = xmlSignatureFactory.newSignedInfo(canonicalizationMethod, signatureMethod, references);
 
         // Definer signatur over XAdES-dokument
         XMLObject xmlObject = xmlSignatureFactory.newXMLObject(Collections.singletonList(new DOMStructure(documentToSign.getDocumentElement())), null, null, null);
         XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, Collections.singletonList(xmlObject), null, null);
 
-        DOMSignContext domSignContext = new DOMSignContext(avsender.getNoekkelpar().getPrivateKey(), documentToSign);
+        DOMSignContext domSignContext = new DOMSignContext(noekkelpar.getPrivateKey(), documentToSign);
         try {
             xmlSignature.sign(domSignContext);
         } catch (MarshalException e) {
@@ -113,14 +106,6 @@ public class CreateSignature {
         Jaxb.marshal(xAdESSignatures, new StreamResult(outputStream));
 
         return new Signature(outputStream.toByteArray());
-    }
-
-    private List<AsicEAttachable> filesToInclude(Manifest manifest, Forsendelse forsendelse) {
-        List<AsicEAttachable> files = new ArrayList<AsicEAttachable>();
-        files.add(forsendelse.getDokumentpakke().getHoveddokument());
-        files.addAll(forsendelse.getDokumentpakke().getVedlegg());
-        files.add(manifest);
-        return files;
     }
 
     private List<Reference> references(XMLSignatureFactory xmlSignatureFactory, List<AsicEAttachable> files) {
