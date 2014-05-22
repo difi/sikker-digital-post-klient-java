@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AsicEGenerator {
+public class CreateAsicE {
 
     private final CreateManifest createManifest;
     private final CreateSignature createSignature;
@@ -30,7 +30,7 @@ public class AsicEGenerator {
 
     private static File debug_writeToDisk = null;
 
-    public AsicEGenerator() {
+    public CreateAsicE() {
         createManifest = new CreateManifest();
         createSignature = new CreateSignature();
         createZip = new CreateZip();
