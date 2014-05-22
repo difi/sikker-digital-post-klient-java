@@ -1,13 +1,13 @@
 package no.difi.sdp.client.asice.signature;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
-import no.difi.sdp.client.util.Jaxb;
 import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
-import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
@@ -27,6 +27,8 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +43,7 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256;
 
 public class CreateSignature {
 
+    private final String asicNamespace = "http://uri.etsi.org/2918/v1.2.1#";
     private final String signedPropertiesType = "http://uri.etsi.org/01903#SignedProperties";
     private final DigestMethod sha256DigestMethod;
     private final CanonicalizationMethod canonicalizationMethod;
@@ -48,9 +51,11 @@ public class CreateSignature {
     private final Transform canonicalXmlTransform;
 
     private final CreateXAdESProperties createXAdESProperties;
+    private final TransformerFactory transformerFactory;
 
     public CreateSignature() {
         createXAdESProperties = new CreateXAdESProperties();
+        transformerFactory = TransformerFactory.newInstance();
         try {
             XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
             sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
@@ -80,29 +85,34 @@ public class CreateSignature {
         ));
 
         // Generer XAdES-dokument som skal signeres, informasjon om nøkkel brukt til signering og informasjon om hva som er signert
-        Document documentToSign = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getSertifikat());
+        Document document = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getSertifikat());
+
         KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getSertifikat());
         SignedInfo signedInfo = xmlSignatureFactory.newSignedInfo(canonicalizationMethod, signatureMethod, references);
 
         // Definer signatur over XAdES-dokument
-        XMLObject xmlObject = xmlSignatureFactory.newXMLObject(Collections.singletonList(new DOMStructure(documentToSign.getDocumentElement())), null, null, null);
+        XMLObject xmlObject = xmlSignatureFactory.newXMLObject(Collections.singletonList(new DOMStructure(document.getDocumentElement())), null, null, null);
         XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, Collections.singletonList(xmlObject), null, null);
 
-        DOMSignContext domSignContext = new DOMSignContext(noekkelpar.getPrivateKey(), documentToSign);
+        DOMSignContext domSignContext = new DOMSignContext(noekkelpar.getPrivateKey(), document);
         try {
             xmlSignature.sign(domSignContext);
         } catch (MarshalException e) {
-            throw new XmlKonfigurasjonException("Klarte ikke å lese Asic-E XML for signering", e);
+            throw new XmlKonfigurasjonException("Klarte ikke å lese ASiC-E XML for signering", e);
         } catch (XMLSignatureException e) {
-            throw new XmlKonfigurasjonException("Klarte ikke å signere Asic-E element.", e);
+            throw new XmlKonfigurasjonException("Klarte ikke å signere ASiC-E element.", e);
         }
 
         // Pakk Signatur inn i XAdES-konvolutt
-        org.w3.xmldsig.Signature signature = Jaxb.unmarshal(new DOMSource(documentToSign), org.w3.xmldsig.Signature.class);
-        XAdESSignatures xAdESSignatures = new XAdESSignatures(Collections.singletonList(signature));
+        wrapSignatureInXADeSEnvelope(document);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Jaxb.marshal(xAdESSignatures, new StreamResult(outputStream));
+        ByteArrayOutputStream outputStream;
+        try {
+            outputStream = new ByteArrayOutputStream();
+            transformerFactory.newTransformer().transform(new DOMSource(document), new StreamResult(outputStream));
+        } catch (TransformerException e) {
+            throw new KonfigurasjonException("Klarte ikke å serialisere XML", e);
+        }
 
         return new Signature(outputStream.toByteArray());
     }
@@ -120,6 +130,13 @@ public class CreateSignature {
         KeyInfoFactory keyInfoFactory = xmlSignatureFactory.getKeyInfoFactory();
         X509Data x509Data = keyInfoFactory.newX509Data(singletonList(sertifikat.getCertificate()));
         return keyInfoFactory.newKeyInfo(singletonList(x509Data));
+    }
+
+    private void wrapSignatureInXADeSEnvelope(Document document) {
+        Node signatureElement = document.removeChild(document.getDocumentElement());
+        Element xadesElement = document.createElementNS(asicNamespace, "XAdESSignatures");
+        xadesElement.appendChild(signatureElement);
+        document.appendChild(xadesElement);
     }
 
 }

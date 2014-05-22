@@ -1,9 +1,7 @@
 package no.difi.sdp.client.asice.signature;
 
-import no.difi.begrep.sdp.schema_v10.SDPManifest;
 import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.asice.AsicEAttachable;
-import no.difi.sdp.client.util.Jaxb;
 import no.difi.sdp.client.domain.Noekkelpar;
 import org.apache.commons.io.IOUtils;
 import org.etsi.uri._01903.v1_3.DataObjectFormat;
@@ -18,16 +16,20 @@ import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.SignedInfo;
-import org.w3.xmldsig.X509Data;
 import org.w3.xmldsig.X509IssuerSerialType;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -43,13 +45,25 @@ public class CreateSignatureTest {
      */
     private final byte[] expectedHovedDokumentHash = new byte[] { 93, -36, 99, 92, -27, 39, 21, 31, 33, -127, 30, 77, 6, 49, 92, -48, -114, -61, -100, -126, -64, -70, 70, -38, 67, 93, -126, 62, -125, -7, -115, 123 };
 
-    private Marshaller prettyPrintingMarshaller;
+    private Noekkelpar noekkelpar;
+    private List<AsicEAttachable> files;
+
+    private static final Jaxb2Marshaller marshaller;
+
+    static {
+        marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(XAdESSignatures.class, QualifyingProperties.class);
+    }
 
     @Before
     public void setUp() throws Exception {
+        noekkelpar = ObjectMother.noekkelpar();
+        files = asList(
+                file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
+                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
+        );
+
         sut = new CreateSignature();
-        prettyPrintingMarshaller = JAXBContext.newInstance(SDPManifest.class, XAdESSignatures.class, X509Data.class, QualifyingProperties.class).createMarshaller();
-        prettyPrintingMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
     }
 
     @After
@@ -59,14 +73,8 @@ public class CreateSignatureTest {
 
     @Test
     public void test_generated_signatures() {
-        Noekkelpar noekkelpar = ObjectMother.noekkelpar();
-        List<AsicEAttachable> files = asList(
-                file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
-                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
-        );
-
         Signature signature = sut.createSignature(noekkelpar, files);
-        XAdESSignatures xAdESSignatures = Jaxb.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())), XAdESSignatures.class);
+        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
 
         assertThat(xAdESSignatures.getSignatures()).hasSize(1);
         org.w3.xmldsig.Signature dSignature = xAdESSignatures.getSignatures().get(0);
@@ -77,14 +85,8 @@ public class CreateSignatureTest {
 
     @Test
     public void test_xades_signed_properties() {
-        Noekkelpar noekkelpar = ObjectMother.noekkelpar();
-        List<AsicEAttachable> files = asList(
-                file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
-                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
-        );
-
         Signature signature = sut.createSignature(noekkelpar, files);
-        XAdESSignatures xAdESSignatures = Jaxb.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())), XAdESSignatures.class);
+        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
         org.w3.xmldsig.Object object = xAdESSignatures.getSignatures().get(0).getObjects().get(0);
 
         QualifyingProperties xadesProperties = (QualifyingProperties) object.getContent().get(0);
@@ -98,26 +100,17 @@ public class CreateSignatureTest {
     @Test
     public void test_pregenerated_xml() throws Exception {
         // Note: this is a very brittle test. it is meant to be guiding. If it fails, manually check if the changes to the XML makes sense. If they do, just update the expected XML.
+        String expected = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"));
 
         // The signature partly depends on the exact time the original message was signed
         DateTime dateTime = new DateTime(2014, 5, 21, 17, 7, 15, 756, DateTimeZone.forOffsetHours(2));
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
 
-        String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"));
-
-        Noekkelpar noekkelpar = ObjectMother.noekkelpar();
-        List<AsicEAttachable> files = asList(
-                file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
-                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
-        );
-
         Signature signature = sut.createSignature(noekkelpar, files);
-        XAdESSignatures xAdESSignatures = Jaxb.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())), XAdESSignatures.class);
 
-        StringWriter actualXml = new StringWriter();
-        prettyPrintingMarshaller.marshal(xAdESSignatures, actualXml);
+        String actual = prettyPrint(signature);
 
-        assertThat(actualXml.toString()).isEqualTo(expectedXml);
+        assertThat(actual).isEqualTo(expected);
     }
 
     private void verify_signed_data_object_properties(SignedDataObjectProperties signedDataObjectProperties) {
@@ -174,6 +167,22 @@ public class CreateSignatureTest {
             public byte[] getBytes() { return contents; }
             public String getMimeType() { return mimeType; }
         };
+    }
+
+    private String prettyPrint(Signature signature) throws TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        StreamSource xmlSource = new StreamSource(new ByteArrayInputStream(signature.getBytes()));
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        DOMResult outputTarget = new DOMResult();
+        transformer.transform(xmlSource, outputTarget);
+
+        final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+        final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+        final LSSerializer writer = impl.createLSSerializer();
+
+        writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+        writer.getDomConfig().setParameter("xml-declaration", Boolean.FALSE);
+
+        return writer.writeToString(outputTarget.getNode());
     }
 
 }

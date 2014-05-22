@@ -1,7 +1,6 @@
 package no.difi.sdp.client.asice.signature;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
-import no.difi.sdp.client.util.Jaxb;
 import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
 import org.etsi.uri._01903.v1_3.CertIDType;
@@ -13,6 +12,8 @@ import org.etsi.uri._01903.v1_3.SignedProperties;
 import org.etsi.uri._01903.v1_3.SignedSignatureProperties;
 import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3.xmldsig.X509IssuerSerialType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,6 +36,13 @@ class CreateXAdESProperties {
 
     private final org.w3.xmldsig.DigestMethod sha1DigestMethod = new org.w3.xmldsig.DigestMethod(emptyList(), DigestMethod.SHA1);
 
+    private static Jaxb2Marshaller marshaller;
+
+    static {
+        marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(QualifyingProperties.class);
+    }
+
     public Document createPropertiesToSign(List<AsicEAttachable> files, Sertifikat sertifikat) {
         X509Certificate certificate = sertifikat.getCertificate();
         // TODO: Er det riktig å bruke encoded versjon (ASN.1 DER) av sertifikatet?
@@ -44,13 +52,14 @@ class CreateXAdESProperties {
         X509IssuerSerialType certificateIssuer = new X509IssuerSerialType(certificate.getIssuerDN().getName(), certificate.getSerialNumber());
         SigningCertificate signingCertificate = new SigningCertificate(singletonList(new CertIDType(certificateDigest, certificateIssuer, null)));
 
-        SignedSignatureProperties signedSignatureProperties = new SignedSignatureProperties().withSigningTime(DateTime.now()).withSigningCertificate(signingCertificate);
+        DateTime now = DateTime.now(DateTimeZone.UTC);
+        SignedSignatureProperties signedSignatureProperties = new SignedSignatureProperties().withSigningTime(now).withSigningCertificate(signingCertificate);
         SignedDataObjectProperties signedDataObjectProperties = new SignedDataObjectProperties().withDataObjectFormats(dataObjectFormats(files));
         SignedProperties signedProperties = new SignedProperties(signedSignatureProperties, signedDataObjectProperties, "SignedProperties");
         QualifyingProperties qualifyingProperties = new QualifyingProperties().withSignedProperties(signedProperties);
 
         DOMResult domResult = new DOMResult();
-        Jaxb.marshal(qualifyingProperties, domResult);
+        marshaller.marshal(qualifyingProperties, domResult);
         Document document = (Document) domResult.getNode();
 
         // Explicitly mark the SignedProperties Id as an Document ID attribute, so that it will be eligble as a reference for signature.

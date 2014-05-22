@@ -1,59 +1,78 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns4:XAdESSignatures xmlns:ns2="http://begrep.difi.no/sdp/schema_v10" xmlns="http://begrep.difi.no" xmlns:ns4="http://uri.etsi.org/2918/v1.2.1#" xmlns:ns3="http://www.w3.org/2000/09/xmldsig#" xmlns:ns5="http://uri.etsi.org/01903/v1.3.2#">
-    <ns3:Signature>
-        <ns3:SignedInfo>
-            <ns3:CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
-            <ns3:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-            <ns3:Reference URI="hoveddokument.pdf">
-                <ns3:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ns3:DigestValue>XdxjXOUnFR8hgR5NBjFc0I7DnILAukbaQ12CPoP5jXs=</ns3:DigestValue>
-            </ns3:Reference>
-            <ns3:Reference URI="manifest.xml">
-                <ns3:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ns3:DigestValue>wEftXp/TkL614dcx9Txw8O1lLxylP8ZS2WohNKbFdQo=</ns3:DigestValue>
-            </ns3:Reference>
-            <ns3:Reference URI="#SignedProperties" Type="http://uri.etsi.org/01903#SignedProperties">
-                <ns3:Transforms>
-                    <ns3:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
-                </ns3:Transforms>
-                <ns3:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ns3:DigestValue>iVhwCR1Nsng0tjmfVoUGYzm+4hEpmC3MDOVSrjOh6DY=</ns3:DigestValue>
-            </ns3:Reference>
-        </ns3:SignedInfo>
-        <ns3:SignatureValue>DE8lvVNWmvn/oZNcIo2DEGtgSYIlXZ87iEHilcBVWzmZjfoU2yEJ0Y/7fgJhbviTs1xDvyjc5LKAyKiAp7BnbAlgGXLihzFcAZtlMkAjatMoSMQiXa5AWa4bWNbZ71jB/MhvXnxcW7+FOMNqeeDuODbQZpfMmhKtr3C8V5I47JeZVjBi8eusDr1nIlufAW6JlrHyUgnHV7I7kOwFiIM/CHn4KUqHVDcroX4i60YcP09RA+Mh6bAriGXPdwkPJVAHZrXXAZySlbGMiAyBoIntRJ6EFRAHaINRM/d2W02Ht+/8dxmFDyLPTfUj76LpZoc0r3CwAmNcMMvOWZbPYB+tqQ==</ns3:SignatureValue>
-        <ns3:KeyInfo>
-            <ns3:X509Data>
-                <ns3:X509Certificate>MIIDYzCCAkugAwIBAgIEIyZ/HzANBgkqhkiG9w0BAQsFADBiMQswCQYDVQQGEwJOTzELMAkGA1UECBMCTk8xDTALBgNVBAcTBE9zbG8xETAPBgNVBAoTCEF2c2VuZGVyMREwDwYDVQQLEwhBdnNlbmRlcjERMA8GA1UEAxMIQXZzZW5kZXIwHhcNMTQwNTIwMTIxMDA3WhcNMTUwNTE1MTIxMDA3WjBiMQswCQYDVQQGEwJOTzELMAkGA1UECBMCTk8xDTALBgNVBAcTBE9zbG8xETAPBgNVBAoTCEF2c2VuZGVyMREwDwYDVQQLEwhBdnNlbmRlcjERMA8GA1UEAxMIQXZzZW5kZXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCOq505/fn9fDCZjvMlSWJNEj0kVLeFo233MEfhOUOhU44Q7ClGLJfEIdMrZCzWR58Eo8Fn90bEIosI8rCvw8XsNaDaeVgZ3PDtXTuA8luL/IphWXfuHxdmFm3LPD0XIQS+V8pgJ215NIScrZGkgBKjb7uVo+usGYUpqkbjl5kctTziRZo0k2i73iJd1+DjPGZ2OzAR1lMb8EEWheiXqE+pRwpHQOkMiRlNrZxDD1mTJR2RLYYp/guW93YbIgJv4mhV3ZpJL8idU2YECkM5p6Wg2wfznCyxZU0E5Us4SvuDPrg48ELe140AtXQb8xyuGrLhCm5JyHhAFJM0IoiGQwqPAgMBAAGjITAfMB0GA1UdDgQWBBSpQuhFDLFSUauhNrCbx+g8QXv9oTANBgkqhkiG9w0BAQsFAAOCAQEAHAENC+ZsxNSXOb6De90uHqkEJFFZF3CfdtRHx23s2wjDFJI4CEY8WHsOD90ynOyDZV/sWcu1Emi1nZ7rEdtt/wKfhIdICBzZ+GkU04niu+jpM9OCk1JS1LU+e+ljz6ZL7OZVegTE6tLI8JwfInf7dBjSBnf69Gs4xRK/TmO5i5KipdivkTGXJCaLf8lwFM3bxM5t0H8AzbrHc0JVVTTXHjbIvgg7JhFuiC1z1vM6hsplOysb9gFP89AvNttWcdSb0rQAVz0rjl+GKzM07Aw4tYBl8j42POtjMCjV5e0TCeNfLfnZ3r9DCSUNlAwhisoXl5gXsb+YU/RPOlg+xh5xRA==</ns3:X509Certificate>
-            </ns3:X509Data>
-        </ns3:KeyInfo>
-        <ns3:Object>
-            <ns5:QualifyingProperties>
-                <ns5:SignedProperties Id="SignedProperties">
-                    <ns5:SignedSignatureProperties>
-                        <ns5:SigningTime>2014-05-21T17:07:15.756+02:00</ns5:SigningTime>
-                        <ns5:SigningCertificate>
-                            <ns5:Cert>
-                                <ns5:CertDigest>
-                                    <ns3:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-                                    <ns3:DigestValue>6Gko40cr8upGenUAxIT6bBVcRfo=</ns3:DigestValue>
-                                </ns5:CertDigest>
-                                <ns5:IssuerSerial>
-                                    <ns3:X509IssuerName>CN=Avsender, OU=Avsender, O=Avsender, L=Oslo, ST=NO, C=NO</ns3:X509IssuerName>
-                                    <ns3:X509SerialNumber>589725471</ns3:X509SerialNumber>
-                                </ns5:IssuerSerial>
-                            </ns5:Cert>
-                        </ns5:SigningCertificate>
-                    </ns5:SignedSignatureProperties>
-                    <ns5:SignedDataObjectProperties>
-                        <ns5:DataObjectFormat ObjectReference="hoveddokument.pdf">
-                            <ns5:MimeType>application/pdf</ns5:MimeType>
-                        </ns5:DataObjectFormat>
-                        <ns5:DataObjectFormat ObjectReference="manifest.xml">
-                            <ns5:MimeType>application/xml</ns5:MimeType>
-                        </ns5:DataObjectFormat>
-                    </ns5:SignedDataObjectProperties>
-                </ns5:SignedProperties>
-            </ns5:QualifyingProperties>
-        </ns3:Object>
-    </ns3:Signature>
-</ns4:XAdESSignatures>
+<XAdESSignatures xmlns="http://uri.etsi.org/2918/v1.2.1#">
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <Reference URI="hoveddokument.pdf">
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>XdxjXOUnFR8hgR5NBjFc0I7DnILAukbaQ12CPoP5jXs=</DigestValue>
+            </Reference>
+            <Reference URI="manifest.xml">
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>wEftXp/TkL614dcx9Txw8O1lLxylP8ZS2WohNKbFdQo=</DigestValue>
+            </Reference>
+            <Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignedProperties">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>49CtDLlXLnnYywje/La5n4qjl4ELv4EdHZAQs55zQS4=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>WajVRJdJ4K+LOP+bBQXBFBnjDS1qZDrw2TvyhXZk8GAISeGKhqC39gJ97qps655xFvks6zbgBrh8
+gxd5U+gxcmDQAZHYVEPwygPa4iNYRwXL159wjuVdKVyf3rSH1Vbq/M7xf3qcHV/xEX3oqkA/ksMa
+R5RNcyrJodJC1VYlrn754lJQAl3vmKPpozxKeDtjyDZk8S6unewAwk3rEsQRoXzDVdvQEVXv9otg
+/v/xxwotfoebuoXN7elzw9sKrG9FQJLHtn1U4dAfR4tUEcMjDSa0toLOPl+GJDOiOCteek7OWcaa
+cMMf4JjhGPiSl5NnHJTec+rAnhTM3PddpsI5eg==</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>MIIDYzCCAkugAwIBAgIEIyZ/HzANBgkqhkiG9w0BAQsFADBiMQswCQYDVQQGEwJOTzELMAkGA1UE
+CBMCTk8xDTALBgNVBAcTBE9zbG8xETAPBgNVBAoTCEF2c2VuZGVyMREwDwYDVQQLEwhBdnNlbmRl
+cjERMA8GA1UEAxMIQXZzZW5kZXIwHhcNMTQwNTIwMTIxMDA3WhcNMTUwNTE1MTIxMDA3WjBiMQsw
+CQYDVQQGEwJOTzELMAkGA1UECBMCTk8xDTALBgNVBAcTBE9zbG8xETAPBgNVBAoTCEF2c2VuZGVy
+MREwDwYDVQQLEwhBdnNlbmRlcjERMA8GA1UEAxMIQXZzZW5kZXIwggEiMA0GCSqGSIb3DQEBAQUA
+A4IBDwAwggEKAoIBAQCOq505/fn9fDCZjvMlSWJNEj0kVLeFo233MEfhOUOhU44Q7ClGLJfEIdMr
+ZCzWR58Eo8Fn90bEIosI8rCvw8XsNaDaeVgZ3PDtXTuA8luL/IphWXfuHxdmFm3LPD0XIQS+V8pg
+J215NIScrZGkgBKjb7uVo+usGYUpqkbjl5kctTziRZo0k2i73iJd1+DjPGZ2OzAR1lMb8EEWheiX
+qE+pRwpHQOkMiRlNrZxDD1mTJR2RLYYp/guW93YbIgJv4mhV3ZpJL8idU2YECkM5p6Wg2wfznCyx
+ZU0E5Us4SvuDPrg48ELe140AtXQb8xyuGrLhCm5JyHhAFJM0IoiGQwqPAgMBAAGjITAfMB0GA1Ud
+DgQWBBSpQuhFDLFSUauhNrCbx+g8QXv9oTANBgkqhkiG9w0BAQsFAAOCAQEAHAENC+ZsxNSXOb6D
+e90uHqkEJFFZF3CfdtRHx23s2wjDFJI4CEY8WHsOD90ynOyDZV/sWcu1Emi1nZ7rEdtt/wKfhIdI
+CBzZ+GkU04niu+jpM9OCk1JS1LU+e+ljz6ZL7OZVegTE6tLI8JwfInf7dBjSBnf69Gs4xRK/TmO5
+i5KipdivkTGXJCaLf8lwFM3bxM5t0H8AzbrHc0JVVTTXHjbIvgg7JhFuiC1z1vM6hsplOysb9gFP
+89AvNttWcdSb0rQAVz0rjl+GKzM07Aw4tYBl8j42POtjMCjV5e0TCeNfLfnZ3r9DCSUNlAwhisoX
+l5gXsb+YU/RPOlg+xh5xRA==</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+        <Object>
+            <QualifyingProperties
+                xmlns="http://uri.etsi.org/01903/v1.3.2#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
+                <SignedProperties Id="SignedProperties">
+                    <SignedSignatureProperties>
+                        <SigningTime>2014-05-21T15:07:15.756Z</SigningTime>
+                        <SigningCertificate>
+                            <Cert>
+                                <CertDigest>
+                                    <ns2:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                    <ns2:DigestValue>6Gko40cr8upGenUAxIT6bBVcRfo=</ns2:DigestValue>
+                                </CertDigest>
+                                <IssuerSerial>
+                                    <ns2:X509IssuerName>CN=Avsender, OU=Avsender, O=Avsender, L=Oslo, ST=NO, C=NO</ns2:X509IssuerName>
+                                    <ns2:X509SerialNumber>589725471</ns2:X509SerialNumber>
+                                </IssuerSerial>
+                            </Cert>
+                        </SigningCertificate>
+                    </SignedSignatureProperties>
+                    <SignedDataObjectProperties>
+                        <DataObjectFormat ObjectReference="hoveddokument.pdf">
+                            <MimeType>application/pdf</MimeType>
+                        </DataObjectFormat>
+                        <DataObjectFormat ObjectReference="manifest.xml">
+                            <MimeType>application/xml</MimeType>
+                        </DataObjectFormat>
+                    </SignedDataObjectProperties>
+                </SignedProperties>
+            </QualifyingProperties>
+        </Object>
+    </Signature>
+</XAdESSignatures>
