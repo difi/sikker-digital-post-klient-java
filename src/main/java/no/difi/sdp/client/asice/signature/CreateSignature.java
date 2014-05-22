@@ -1,8 +1,7 @@
 package no.difi.sdp.client.asice.signature;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
-import no.difi.sdp.client.asice.Jaxb;
-import no.difi.sdp.client.asice.Signature;
+import no.difi.sdp.client.util.Jaxb;
 import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;

@@ -1,5 +1,6 @@
-package no.difi.sdp.client.asice;
+package no.difi.sdp.client.asice.archive;
 
+import no.difi.sdp.client.asice.AsicEAttachable;
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;

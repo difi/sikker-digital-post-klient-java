@@ -1,5 +1,6 @@
-package no.difi.sdp.client.asice;
+package no.difi.sdp.client.asice.archive;
 
+import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -17,7 +18,7 @@ public class CreateZip {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    Archive zipIt(List<AsicEAttachable> files) {
+    public Archive zipIt(List<AsicEAttachable> files) {
         ByteArrayOutputStream archive = null;
         ZipOutputStream zipOutputStream = null;
         try {

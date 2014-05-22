@@ -1,8 +1,9 @@
-package no.difi.sdp.client.asice;
+package no.difi.sdp.client.asice.manifest;
 
 
 import no.difi.begrep.sdp.schema_v10.SDPManifest;
 import no.difi.sdp.client.ByggForsendelseException;
+import no.difi.sdp.client.util.Jaxb;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.internal.SDPBuilder;
@@ -11,7 +12,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-class CreateManifest {
+public class CreateManifest {
 
     private final SDPBuilder sdpBuilder;
 
@@ -30,4 +31,5 @@ class CreateManifest {
             throw new ByggForsendelseException("Kunne ikke lage Asic-E manifest", e);
         }
     }
+
 }

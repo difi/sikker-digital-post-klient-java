@@ -1,4 +1,4 @@
-package no.difi.sdp.client.asice;
+package no.difi.sdp.client.util;
 
 import no.difi.begrep.sdp.schema_v10.SDPManifest;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
@@ -37,6 +37,7 @@ public class Jaxb {
 
     public static <T> T unmarshal(Source source, Class<T> clazz) {
         try {
+            //noinspection unchecked
             return (T) unmarshaller().unmarshal(source);
         } catch (IOException e) {
             throw new RuntimeIOException(e);

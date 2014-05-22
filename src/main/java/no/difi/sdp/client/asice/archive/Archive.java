@@ -1,6 +1,7 @@
-package no.difi.sdp.client.asice;
+package no.difi.sdp.client.asice.archive;
 
 public class Archive {
+
     private byte[] bytes;
 
     public Archive(byte[] bytes) {

@@ -1,7 +1,7 @@
 package no.difi.sdp.client.asice.signature;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
-import no.difi.sdp.client.asice.Jaxb;
+import no.difi.sdp.client.util.Jaxb;
 import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
 import org.etsi.uri._01903.v1_3.CertIDType;
