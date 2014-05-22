@@ -12,7 +12,7 @@ public class Manifest implements AsicEAttachable {
 
     @Override
     public String getFileName() {
-        return "Manifest.xml";
+        return "manifest.xml";
     }
 
     @Override

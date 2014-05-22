@@ -12,7 +12,7 @@ public class Signature implements AsicEAttachable {
 
     @Override
     public String getFileName() {
-        return "signatures.xml";
+        return "META-INF/signatures.xml";
     }
 
     public byte[] getBytes() {
