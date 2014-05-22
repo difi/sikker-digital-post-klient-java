@@ -6,7 +6,6 @@ import no.difi.sdp.client.domain.Forsendelse;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +13,17 @@ public class AsicEGenerator {
 
     private final CreateManifest createManifest;
     private final CreateSignature createSignature;
+    private final CreateZip createZip;
 
     public AsicEGenerator() {
         createManifest = new CreateManifest();
         createSignature = new CreateSignature();
+        createZip = new CreateZip();
     }
 
     public InputStream createStream(Avsender avsender, Forsendelse forsendelse) {
         // Lag Asic-E manifest
         Manifest manifest = createManifest.createManifest(avsender, forsendelse);
-
 
         List<AsicEAttachable> files = new ArrayList<AsicEAttachable>();
         files.add(forsendelse.getDokumentpakke().getHoveddokument());
@@ -32,25 +32,12 @@ public class AsicEGenerator {
 
         // Lag signatur over alle filene i pakka
         Signature signature = createSignature.createSignature(avsender.getNoekkelpar(), files);
+        files.add(signature);
 
-        System.out.println("HALLO");
-        System.out.println();
-        try {
-            System.out.println(new String(signature.getBytes(), "UTF-8"));
-            System.out.println();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        // Zip filene
+        Archive archive = createZip.zipIt(files);
 
-
-        /**
-         * 1. Generate Manifest
-         * 2. Generate Signatures.xml
-         *  * Hashing
-         *  * Signatures
-         * 3. Zip
-         */
-        return new ByteArrayInputStream("todo".getBytes());
+        return new ByteArrayInputStream(archive.getBytes());
     }
 
 }
