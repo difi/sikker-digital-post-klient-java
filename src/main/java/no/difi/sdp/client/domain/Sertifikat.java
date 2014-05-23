@@ -52,7 +52,7 @@ public class Sertifikat {
         }
 
         if (certificate == null) {
-            throw new SertifikatException("Kunne ikke finne sertifikat i keystore. Er du sikker på at det er brukt keystore med et sertifikat?");
+            throw new SertifikatException("Kunne ikke finne sertifikat i keystore. Er du sikker på at det er brukt keystore med et sertifikat og at du har oppgitt riktig alias?");
         }
 
         if (!(certificate instanceof X509Certificate)) {

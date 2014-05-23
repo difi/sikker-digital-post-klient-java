@@ -45,6 +45,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.50</version>
+        </dependency>
+
+        <dependency>
 			<groupId>no.posten.dpost.offentlig</groupId>
 			<artifactId>api-client</artifactId>
 			<version>0.1-SNAPSHOT</version>
