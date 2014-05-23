@@ -13,9 +13,9 @@ import java.security.PrivateKey;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class CreateCryptographicMessageSyntaxTest {
+public class CreateCMSDocumentTest {
 
-    private CreateCryptographicMessageSyntax sut;
+    private CreateCMSDocument sut;
     private PrivateKey privateKey;
     private Sertifikat sertifikat;
 
@@ -28,7 +28,7 @@ public class CreateCryptographicMessageSyntaxTest {
 
     @Test
     public void test_can_be_decrypted_by_recipient() throws Exception {
-        sut = new CreateCryptographicMessageSyntax();
+        sut = new CreateCMSDocument();
         CMSDocument cms = sut.createCMS("message".getBytes(), sertifikat);
 
         CMSEnvelopedDataParser cmsEnvelopeParser = new CMSEnvelopedDataParser(cms.getBytes());

@@ -25,12 +25,12 @@ import java.io.IOException;
 import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 
-public class CreateCryptographicMessageSyntax {
+public class CreateCMSDocument {
 
     private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
     private final AlgorithmIdentifier keyEncryptionScheme;
 
-    public CreateCryptographicMessageSyntax() {
+    public CreateCMSDocument() {
         Security.addProvider(new BouncyCastleProvider());
 
         keyEncryptionScheme = rsaesOaepIdentifier();

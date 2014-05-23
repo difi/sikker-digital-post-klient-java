@@ -14,11 +14,11 @@ import java.io.InputStream;
 public class CreateDokumentpakke {
 
     private final CreateASiCE createASiCE;
-    private final CreateCryptographicMessageSyntax createCMS;
+    private final CreateCMSDocument createCMS;
 
     public CreateDokumentpakke() {
         createASiCE = new CreateASiCE();
-        createCMS = new CreateCryptographicMessageSyntax();
+        createCMS = new CreateCMSDocument();
     }
 
     public InputStream createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
