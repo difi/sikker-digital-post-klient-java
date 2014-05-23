@@ -8,6 +8,7 @@ import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
@@ -31,10 +32,17 @@ import java.security.cert.CertificateEncodingException;
 
 public class CreateDokumentpakke {
 
+    private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
+    private final AlgorithmIdentifier keyEncryptionScheme;
+
     private final CreateASiCEStream createASiCE;
 
     public CreateDokumentpakke() {
         Security.addProvider(new BouncyCastleProvider());
+
+        keyEncryptionScheme = rsaesOaepIdentifier();
+        cmsEncryptionAlgorithm = CMSAlgorithm.AES256_CBC;
+
         createASiCE = new CreateASiCEStream();
     }
 
@@ -50,14 +58,16 @@ public class CreateDokumentpakke {
 
         Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
 
-        CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
         try {
-            JceKeyTransRecipientInfoGenerator recipientInfoGenerator = new JceKeyTransRecipientInfoGenerator(mottakerSertifikat.getCertificate(), rsaesOaepIdentifier());
-            recipientInfoGenerator.setProvider("BC");
+            JceKeyTransRecipientInfoGenerator recipientInfoGenerator = new JceKeyTransRecipientInfoGenerator(mottakerSertifikat.getCertificate(), keyEncryptionScheme)
+                    .setProvider(BouncyCastleProvider.PROVIDER_NAME);
+
+            CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
             envelopedDataGenerator.addRecipientInfoGenerator(recipientInfoGenerator);
             System.out.println(mottakerSertifikat.getCertificate().getPublicKey());
 
-            CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes), new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES256_CBC).build());
+            CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes),
+                    new JceCMSContentEncryptorBuilder(cmsEncryptionAlgorithm).build());
 
             return new ByteArrayInputStream(cmsData.getEncoded());
 

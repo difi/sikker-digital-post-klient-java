@@ -28,7 +28,7 @@ import static java.util.Arrays.asList;
 
 public class SikkerDigitalPostKlientTest {
 
-    private Sertifikat gyldigSertfikat = Sertifikat.fraBase64X509String("MIIDFDCCAr6gAwIBAgIJALENVFrUMVgcMA0GCSqGSIb3DQEBBQUAMIGQMQswCQYDVQQGEwJOTzENMAsGA1UECBMET3NsbzENMAsGA1UEBxMET3NsbzENMAsGA1UEChMERElGSTENMAsGA1UECxMERElGSTEhMB8GA1UEAxMYU2lra2VyIERpZ2l0YWwgUG9zdCBUZXN0MSIwIAYJKoZIhvcNAQkBFhNkaWZpIGF0IGRpZmkgZG90IG5vMB4XDTE0MDUxNjA4MjQ0MloXDTE0MDYxNTA4MjQ0MlowgZAxCzAJBgNVBAYTAk5PMQ0wCwYDVQQIEwRPc2xvMQ0wCwYDVQQHEwRPc2xvMQ0wCwYDVQQKEwRESUZJMQ0wCwYDVQQLEwRESUZJMSEwHwYDVQQDExhTaWtrZXIgRGlnaXRhbCBQb3N0IFRlc3QxIjAgBgkqhkiG9w0BCQEWE2RpZmkgYXQgZGlmaSBkb3Qgbm8wXDANBgkqhkiG9w0BAQEFAANLADBIAkEA1OteZ0rH+269STIDm2ECmop593A+7v9ih6ydow11wCojGvNnHGjeollzTn+F7caRqLCl7vKr3uttINBFA7E34QIDAQABo4H4MIH1MB0GA1UdDgQWBBRkkkvwgXi/qqQHLyMDttBDCN8PNzCBxQYDVR0jBIG9MIG6gBRkkkvwgXi/qqQHLyMDttBDCN8PN6GBlqSBkzCBkDELMAkGA1UEBhMCTk8xDTALBgNVBAgTBE9zbG8xDTALBgNVBAcTBE9zbG8xDTALBgNVBAoTBERJRkkxDTALBgNVBAsTBERJRkkxITAfBgNVBAMTGFNpa2tlciBEaWdpdGFsIFBvc3QgVGVzdDEiMCAGCSqGSIb3DQEJARYTZGlmaSBhdCBkaWZpIGRvdCBub4IJALENVFrUMVgcMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADQQA43EV/uoAXPEyZSXg+9g/jkxrmhNHeG8evLSM3MqLeS6lO0P6hnGlhoF9GYjqMx7ntYdE8i8jt3a5GRupTIpHB");
+    private Sertifikat mottakerSertifikat = Sertifikat.fraBase64X509String("MIIDfzCCAmegAwIBAgIEAN3XETANBgkqhkiG9w0BAQsFADBwMQswCQYDVQQGEwJOTzENMAsGA1UECBMET3NsbzENMAsGA1UEBxMET3NsbzENMAsGA1UEChMERGlmaTENMAsGA1UECxMERGlmaTElMCMGA1UEAxMcU2lra2VyIERpZ2l0YWwgUG9zdCBtb3R0YWtlcjAeFw0xNDA1MjMxMTM4MjBaFw0yNDA1MjAxMTM4MjBaMHAxCzAJBgNVBAYTAk5PMQ0wCwYDVQQIEwRPc2xvMQ0wCwYDVQQHEwRPc2xvMQ0wCwYDVQQKEwREaWZpMQ0wCwYDVQQLEwREaWZpMSUwIwYDVQQDExxTaWtrZXIgRGlnaXRhbCBQb3N0IG1vdHRha2VyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl7FSwdLRSoHKHybxQmlUT9aX7mrqjkNKCEaRzF1w8lswEDK/j3Jmmj4I52HZgsjwobwEsGDA+828Mm+5KOgPVqhzUA7zQmVetaGzkKaE3JS8bcy4tTsrAbbf4N9lBbF6JrbCCUq25sTIkAqyXzCrNaXvtxah2K+8bOIiu8VgsHFNXest9MTxhiomx7dWk3kc/o/pb59S21+/VaM3j9oWUJ+wwkXVJTEuziN1fPYvRSoSKf+Qryx2oAAqanGYvtIBFYAMd9mgC9canMZtnEYUHXaykmLjOvR682P75hmDWNfjLbiB+uyrpzB2H+zuPX75utC40qlN/CFzwU6UtJWQxQIDAQABoyEwHzAdBgNVHQ4EFgQUeCR1OtLrQP5y4rwVJT7dnLrrc5EwDQYJKoZIhvcNAQELBQADggEBAG4sbgwgcxO2CuP2u2WGS85UXH9QOYUqU/IxvHQDgZPUlkVgn4tbouYGrBCNuWWM2F20n29dP32keDVY4s5HoF3aqwuray7zE194q/rkyqDQBaOMCiSALZU4ttKZcrsnxEYTnuVUeeU6EEEFb2wIctj2SJfvfKJ/324PwaJjln2cvxH8NSQ1py7SvFmKYhH7RobgvFzB+S8+BAoKmkBmlDECAYS1Gawixo5+e4VxiH5gqwsVEKdaR6iJzjbr/Az9muyH/pc4DSMf4V3vRaW3E8xYEdPmDydxnrsqdpFdhPF12Tk5ruoKI05ymr479tgcRxCHMt2uBO9OW+OjkMQtebU=");
 
     private SikkerDigitalPostKlient postklient;
 
@@ -53,7 +53,7 @@ public class SikkerDigitalPostKlientTest {
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
 
-        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", gyldigSertfikat, "984661185")
+        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat, "984661185")
                 .build();
 
         SmsVarsel smsVarsel = SmsVarsel.builder("Du har mottatt brev i din digitale postkasse")
@@ -105,7 +105,7 @@ public class SikkerDigitalPostKlientTest {
     public void test_build_fysisk_forsendelse() {
         NorskPostadresse norskAdresse = NorskPostadresse.builder("Per Post", "Bedriften AS", "Storgata 15", "0106", "Oslo").build();
         NorskPostadresse returAdresse = NorskPostadresse.builder("Avsender", "Avsenderbedriften AS", "Postboks 15", "2712", "Brandbu").build();
-        FysiskPost fysiskPost = FysiskPost.builder("936441114", gyldigSertfikat, norskAdresse, returAdresse)
+        FysiskPost fysiskPost = FysiskPost.builder("936441114", mottakerSertifikat, norskAdresse, returAdresse)
                 .postType(PostType.A_POST)
                 .build();
 
@@ -134,7 +134,7 @@ public class SikkerDigitalPostKlientTest {
     public void test_build_fysisk_utenlandsforsendelse() {
         UtenlandskPostadresse postadresse = UtenlandskPostadresse.builder("Mr. I. K. Taneja", "Flat No. 100", "Triveni Apartments", "Pitam Pura", "NEW DELHI 110034", "India", "IN").build();
         NorskPostadresse returadresse = NorskPostadresse.builder("Avsender", "Avsenderbedriften AS", "Postboks 15", "2712", "Brandbu").build();
-        FysiskPost fysiskPost = FysiskPost.builder("936441114", gyldigSertfikat, postadresse, returadresse)
+        FysiskPost fysiskPost = FysiskPost.builder("936441114", mottakerSertifikat, postadresse, returadresse)
                 .postType(PostType.A_POST)
                 .build();
 
