@@ -1,49 +1,23 @@
 package no.difi.sdp.client.internal;
 
-import no.difi.sdp.client.asice.CreateASiCEStream;
+import no.difi.sdp.client.asice.CreateASiCE;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Sertifikat;
-import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
 import org.apache.commons.io.IOUtils;
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.DERNull;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.pkcs.RSAESOAEPparams;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.cms.CMSAlgorithm;
-import org.bouncycastle.cms.CMSEnvelopedData;
-import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSProcessableByteArray;
-import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
-import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Security;
-import java.security.cert.CertificateEncodingException;
 
 public class CreateDokumentpakke {
 
-    private final ASN1ObjectIdentifier cmsEncryptionAlgorithm;
-    private final AlgorithmIdentifier keyEncryptionScheme;
-
-    private final CreateASiCEStream createASiCE;
+    private final CreateASiCE createASiCE;
+    private final CreateCryptographicMessageSyntax createCMS;
 
     public CreateDokumentpakke() {
-        Security.addProvider(new BouncyCastleProvider());
-
-        keyEncryptionScheme = rsaesOaepIdentifier();
-        cmsEncryptionAlgorithm = CMSAlgorithm.AES256_CBC;
-
-        createASiCE = new CreateASiCEStream();
+        createASiCE = new CreateASiCE();
+        createCMS = new CreateCryptographicMessageSyntax();
     }
 
     public InputStream createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
@@ -58,34 +32,7 @@ public class CreateDokumentpakke {
 
         Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
 
-        try {
-            JceKeyTransRecipientInfoGenerator recipientInfoGenerator = new JceKeyTransRecipientInfoGenerator(mottakerSertifikat.getCertificate(), keyEncryptionScheme)
-                    .setProvider(BouncyCastleProvider.PROVIDER_NAME);
-
-            CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
-            envelopedDataGenerator.addRecipientInfoGenerator(recipientInfoGenerator);
-            System.out.println(mottakerSertifikat.getCertificate().getPublicKey());
-
-            CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes),
-                    new JceCMSContentEncryptorBuilder(cmsEncryptionAlgorithm).build());
-
-            return new ByteArrayInputStream(cmsData.getEncoded());
-
-        } catch (CertificateEncodingException e) {
-            throw new KonfigurasjonException("Feil med mottakers sertifikat", e);
-        } catch (CMSException e) {
-            throw new KonfigurasjonException("Kunne ikke generere Cryptographic Message Syntax for dokumentpakke", e);
-        } catch (IOException e) {
-            throw new RuntimeIOException(e);
-        }
-    }
-
-    private AlgorithmIdentifier rsaesOaepIdentifier() {
-        AlgorithmIdentifier hash = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256, DERNull.INSTANCE);
-        AlgorithmIdentifier mask = new AlgorithmIdentifier(PKCSObjectIdentifiers.id_mgf1, hash);
-        AlgorithmIdentifier p_source = new AlgorithmIdentifier(PKCSObjectIdentifiers.id_pSpecified, new DEROctetString(new byte[0]));
-        ASN1Encodable parameters = new RSAESOAEPparams(hash, mask, p_source);
-        return new AlgorithmIdentifier(PKCSObjectIdentifiers.id_RSAES_OAEP, parameters);
+        return createCMS.createCMS(bytes, mottakerSertifikat);
     }
 
 }

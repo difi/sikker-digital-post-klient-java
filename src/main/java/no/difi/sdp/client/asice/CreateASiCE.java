@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateASiCEStream {
+public class CreateASiCE {
 
     private final CreateManifest createManifest;
     private final CreateSignature createSignature;
@@ -30,7 +30,7 @@ public class CreateASiCEStream {
 
     private static File debug_writeToDisk = null;
 
-    public CreateASiCEStream() {
+    public CreateASiCE() {
         createManifest = new CreateManifest();
         createSignature = new CreateSignature();
         createZip = new CreateZip();
