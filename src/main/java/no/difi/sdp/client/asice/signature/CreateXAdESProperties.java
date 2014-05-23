@@ -45,7 +45,6 @@ class CreateXAdESProperties {
 
     public Document createPropertiesToSign(List<AsicEAttachable> files, Sertifikat sertifikat) {
         X509Certificate certificate = sertifikat.getCertificate();
-        // TODO: Er det riktig å bruke encoded versjon (ASN.1 DER) av sertifikatet?
         byte[] certificateDigestValue = sha1(sertifikat.getEncoded());
 
         DigestAlgAndValueType certificateDigest = new DigestAlgAndValueType(sha1DigestMethod, certificateDigestValue);
