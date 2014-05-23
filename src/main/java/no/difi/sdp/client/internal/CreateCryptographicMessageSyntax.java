@@ -19,10 +19,9 @@ import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.OutputEncryptor;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 
@@ -46,7 +45,7 @@ public class CreateCryptographicMessageSyntax {
         return new AlgorithmIdentifier(PKCSObjectIdentifiers.id_RSAES_OAEP, parameters);
     }
 
-    public InputStream createCMS(byte[] bytes, Sertifikat sertifikat) {
+    public CMSDocument createCMS(byte[] bytes, Sertifikat sertifikat) {
         try {
             JceKeyTransRecipientInfoGenerator recipientInfoGenerator = new JceKeyTransRecipientInfoGenerator(sertifikat.getCertificate(), keyEncryptionScheme)
                     .setProvider(BouncyCastleProvider.PROVIDER_NAME);
@@ -54,10 +53,11 @@ public class CreateCryptographicMessageSyntax {
             CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
             envelopedDataGenerator.addRecipientInfoGenerator(recipientInfoGenerator);
 
+            OutputEncryptor contentEncryptor = new JceCMSContentEncryptorBuilder(cmsEncryptionAlgorithm).build();
             CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes),
-                    new JceCMSContentEncryptorBuilder(cmsEncryptionAlgorithm).build());
+                    contentEncryptor);
 
-            return new ByteArrayInputStream(cmsData.getEncoded());
+            return new CMSDocument(cmsData.getEncoded());
 
         } catch (CertificateEncodingException e) {
             throw new KonfigurasjonException("Feil med mottakers sertifikat", e);

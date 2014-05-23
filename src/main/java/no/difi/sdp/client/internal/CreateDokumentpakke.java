@@ -7,6 +7,7 @@ import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,7 +33,8 @@ public class CreateDokumentpakke {
 
         Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
 
-        return createCMS.createCMS(bytes, mottakerSertifikat);
+        CMSDocument cms = createCMS.createCMS(bytes, mottakerSertifikat);
+        return new ByteArrayInputStream(cms.getBytes());
     }
 
 }
