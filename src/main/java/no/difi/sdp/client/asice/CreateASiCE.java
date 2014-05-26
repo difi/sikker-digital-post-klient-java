@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class CreateASiCE {
         createZip = new CreateZip();
     }
 
-    public InputStream createStream(Avsender avsender, Forsendelse forsendelse) {
+    public AsiceDocument createAsice(Avsender avsender, Forsendelse forsendelse) {
         // Lag ASiC-E manifest
         log.info("Creating ASiC-E manifest");
         Manifest manifest = createManifest.createManifest(avsender, forsendelse);
@@ -59,7 +58,7 @@ public class CreateASiCE {
             writeArchiveToDisk(archive);
         }
 
-        return new ByteArrayInputStream(archive.getBytes());
+        return new AsiceDocument(archive.getBytes());
     }
 
 

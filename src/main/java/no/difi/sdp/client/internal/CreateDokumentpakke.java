@@ -1,10 +1,10 @@
 package no.difi.sdp.client.internal;
 
+import no.difi.sdp.client.asice.AsiceDocument;
 import no.difi.sdp.client.asice.CreateASiCE;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Sertifikat;
-import no.difi.sdp.client.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +24,13 @@ public class CreateDokumentpakke {
 
     public InputStream createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
         log.info("Creating dokumentpakke");
-        InputStream asicStream = createASiCE.createStream(avsender, forsendelse);
-
-        byte[] bytes = IOUtils.toByteArrayCloseStream(asicStream);
+        AsiceDocument asiceDocument = createASiCE.createAsice(avsender, forsendelse);
 
         Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
 
         log.info("Creating CMS document");
-        CMSDocument cms = createCMS.createCMS(bytes, mottakerSertifikat);
+        CMSDocument cms = createCMS.createCMS(asiceDocument.getBytes(), mottakerSertifikat);
         return new ByteArrayInputStream(cms.getBytes());
     }
-
-
 
 }
