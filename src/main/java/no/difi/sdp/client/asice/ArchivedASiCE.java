@@ -1,10 +1,10 @@
 package no.difi.sdp.client.asice;
 
-public class ZippedASiCE {
+public class ArchivedASiCE {
 
     private final byte[] bytes;
 
-    public ZippedASiCE(byte[] bytes) {
+    public ArchivedASiCE(byte[] bytes) {
         this.bytes = bytes;
     }
 

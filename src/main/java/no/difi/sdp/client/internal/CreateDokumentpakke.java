@@ -1,6 +1,6 @@
 package no.difi.sdp.client.internal;
 
-import no.difi.sdp.client.asice.ZippedASiCE;
+import no.difi.sdp.client.asice.ArchivedASiCE;
 import no.difi.sdp.client.asice.CreateASiCE;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
@@ -24,12 +24,12 @@ public class CreateDokumentpakke {
 
     public InputStream createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
         log.info("Creating dokumentpakke");
-        ZippedASiCE zippedASiCE = createASiCE.createAsice(avsender, forsendelse);
+        ArchivedASiCE archivedASiCE = createASiCE.createAsice(avsender, forsendelse);
 
         Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
 
         log.info("Creating CMS document");
-        CMSDocument cms = createCMS.createCMS(zippedASiCE.getBytes(), mottakerSertifikat);
+        CMSDocument cms = createCMS.createCMS(archivedASiCE.getBytes(), mottakerSertifikat);
         return new ByteArrayInputStream(cms.getBytes());
     }
 
