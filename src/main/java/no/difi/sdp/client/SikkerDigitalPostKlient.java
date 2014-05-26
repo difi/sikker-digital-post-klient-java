@@ -15,7 +15,7 @@ import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
 public class SikkerDigitalPostKlient {
 
-    private final Organisasjonsnummer digipostMeldingsformidler = new Organisasjonsnummer("TODO");
+    private final Organisasjonsnummer digipostMeldingsformidler = new Organisasjonsnummer("984661185");
     private final MessageSender messageSender;
     private final Avsender avsender;
     private final EbmsForsendelseBuilder ebmsForsendelseBuilder;

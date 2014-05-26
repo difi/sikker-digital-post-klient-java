@@ -44,9 +44,9 @@ public class SikkerDigitalPostKlientTest {
                 .build();
 
         try {
-            KeyStore keyStore = KeyStore.getInstance("jks");
-            keyStore.load(new ClassPathResource("/avsender-keystore.jks").getInputStream(), "password1234".toCharArray());
-            avsendersNoekkelpar = Noekkelpar.fraKeyStore(keyStore, "avsender", "password1234");
+            KeyStore ks = KeyStore.getInstance("JCEKS");
+            ks.load(new ClassPathResource("/meldingsformidler.qa.jce").getInputStream(), "abcd1234".toCharArray());
+            avsendersNoekkelpar = Noekkelpar.fraKeyStore(ks, "meldingsformidler", "abcd1234");
 
             Avsender avsender = Avsender.builder("984661185", avsendersNoekkelpar)
                     .fakturaReferanse("ØK1")

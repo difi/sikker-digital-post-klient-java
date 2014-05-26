@@ -29,9 +29,8 @@ public class KvitteringBuilder {
             SimpleStandardBusinessDocument.SimpleKvittering kvittering = sbd.getKvittering();
             SDPKvittering sdpKvittering = kvittering.kvittering;
 
-            sbd.getCorrelationId();
             //String konversasjonsId = sbd.getCorrelationInformation().getRequestingDocumentInstanceIdentifier();
-            String konversasjonsId = "todo";
+            String konversasjonsId = "todo"; //todo: trenger vi å sette denne?
             Date tidspunkt = sdpKvittering.getTidspunkt().toDate();
 
             if (sdpKvittering.getAapning() != null) {
