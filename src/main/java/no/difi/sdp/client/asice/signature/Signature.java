@@ -21,6 +21,6 @@ public class Signature implements AsicEAttachable {
 
     @Override
     public String getMimeType() {
-        return null;
+        return "application/xml";
     }
 }
