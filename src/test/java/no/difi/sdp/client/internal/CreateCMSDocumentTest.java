@@ -24,11 +24,12 @@ public class CreateCMSDocumentTest {
         Noekkelpar noekkelpar = ObjectMother.noekkelpar();
         privateKey = noekkelpar.getPrivateKey();
         sertifikat = noekkelpar.getSertifikat();
+
+        sut = new CreateCMSDocument();
     }
 
     @Test
     public void test_can_be_decrypted_by_recipient() throws Exception {
-        sut = new CreateCMSDocument();
         CMSDocument cms = sut.createCMS("message".getBytes(), sertifikat);
 
         CMSEnvelopedDataParser cmsEnvelopeParser = new CMSEnvelopedDataParser(cms.getBytes());
