@@ -37,7 +37,7 @@ public class Noekkelpar {
         try {
             Key key = keyStore.getKey(alias, password.toCharArray());
             if (!(key instanceof PrivateKey)) {
-                throw new NoekkelException("Fant symmetrisk nøkkel, men forventet å finne private nøkkel i nøkkelpar.");
+                throw new NoekkelException("Kunne ikke hente privat nøkkel fra key store. Forventet å få en PrivateKey, fikk " + key.getClass().getCanonicalName());
             }
             return (PrivateKey) key;
         } catch (KeyStoreException e) {
