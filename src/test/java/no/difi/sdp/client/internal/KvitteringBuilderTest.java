@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocumentHeader;
 
-import java.util.UUID;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -28,7 +26,7 @@ public class KvitteringBuilderTest {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), Prioritet.NORMAL);
 
         assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
-        assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.STANDARD);
+        assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.NORMAL);
     }
 
     @Test
@@ -133,29 +131,29 @@ public class KvitteringBuilderTest {
     }
 
     private EbmsApplikasjonsKvittering createEbmsFeil(SDPFeiltype feiltype) {
-        SDPFeil sdpFeil = new SDPFeil(randomUUID(), null, DateTime.now(), feiltype, "Feilinformasjon");
+        SDPFeil sdpFeil = new SDPFeil(null, DateTime.now(), feiltype, "Feilinformasjon");
         return createEbmsKvittering(sdpFeil);
     }
 
     private EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
-        SDPKvittering aapningsKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), null, null, new SDPAapning(), null);
+        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPAapning(), null);
         return createEbmsKvittering(aapningsKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
-        SDPKvittering leveringsKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), null, null, null, new SDPLevering());
+        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering());
         return createEbmsKvittering(leveringsKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(SDPVarslingskanal varslingskanal) {
         SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
-        SDPKvittering varslingFeiletKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), null, sdpVarslingfeilet, null, null);
+        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null);
         return createEbmsKvittering(varslingFeiletKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsTilbaketrekkingsKvittering(SDPTilbaketrekkingsstatus status) {
         SDPTilbaketrekkingsresultat sdpTilbaketrekkingsresultat = new SDPTilbaketrekkingsresultat(status, "Tilbaketrekking av 'Viktig brev'");
-        SDPKvittering tilbaketrekkingsKvittering = new SDPKvittering(randomUUID(), null, DateTime.now(), sdpTilbaketrekkingsresultat, null, null, null);
+        SDPKvittering tilbaketrekkingsKvittering = new SDPKvittering(null, DateTime.now(), sdpTilbaketrekkingsresultat, null, null, null);
         return createEbmsKvittering(tilbaketrekkingsKvittering);
     }
 
@@ -166,10 +164,6 @@ public class KvitteringBuilderTest {
         StandardBusinessDocument sbd = new StandardBusinessDocument(new StandardBusinessDocumentHeader(), sdpMelding);
 
         return EbmsApplikasjonsKvittering.create(avsender, mottaker, sbd).build();
-    }
-
-    private static String randomUUID() {
-        return UUID.randomUUID().toString();
     }
 
 }

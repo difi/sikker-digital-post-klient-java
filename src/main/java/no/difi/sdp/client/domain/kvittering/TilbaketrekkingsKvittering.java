@@ -7,8 +7,8 @@ public class TilbaketrekkingsKvittering extends ForretningsKvittering {
     private String beskrivelse;
     private TilbaketrekkingsStatus status;
 
-    private TilbaketrekkingsKvittering(Date tidspunkt, String konversasjonsId, TilbaketrekkingsStatus status) {
-        super(tidspunkt, konversasjonsId);
+    private TilbaketrekkingsKvittering(Date tidspunkt, String konversasjonsId, String refToMessageId, TilbaketrekkingsStatus status) {
+        super(tidspunkt, konversasjonsId, refToMessageId);
         this.status = status;
     }
 
@@ -20,16 +20,16 @@ public class TilbaketrekkingsKvittering extends ForretningsKvittering {
         return status;
     }
 
-    public static Builder builder(Date tidspunkt, String konverasjonsId, TilbaketrekkingsStatus status) {
-        return new Builder(tidspunkt, konverasjonsId, status);
+    public static Builder builder(Date tidspunkt, String konverasjonsId, String refToMessageId, TilbaketrekkingsStatus status) {
+        return new Builder(tidspunkt, konverasjonsId, refToMessageId, status);
     }
 
     public static class Builder {
         private TilbaketrekkingsKvittering target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId, TilbaketrekkingsStatus status) {
-            target = new TilbaketrekkingsKvittering(tidspunkt, konversasjonsId, status);
+        public Builder(Date tidspunkt, String konversasjonsId, String refToMessageId, TilbaketrekkingsStatus status) {
+            target = new TilbaketrekkingsKvittering(tidspunkt, konversasjonsId, refToMessageId, status);
         }
 
         public Builder status(TilbaketrekkingsStatus status) {
