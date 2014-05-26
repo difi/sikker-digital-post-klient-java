@@ -37,7 +37,8 @@ public class CreateASiCE {
     }
 
     public InputStream createStream(Avsender avsender, Forsendelse forsendelse) {
-        // Lag Asic-E manifest
+        // Lag ASiC-E manifest
+        log.info("Creating ASiC-E manifest");
         Manifest manifest = createManifest.createManifest(avsender, forsendelse);
 
         List<AsicEAttachable> files = new ArrayList<AsicEAttachable>();
@@ -46,10 +47,12 @@ public class CreateASiCE {
         files.add(manifest);
 
         // Lag signatur over alle filene i pakka
+        log.info("Signing ASiC-E documents using private key with alias " + avsender.getNoekkelpar().getAlias());
         Signature signature = createSignature.createSignature(avsender.getNoekkelpar(), files);
         files.add(signature);
 
         // Zip filene
+        log.trace("Zipping ASiC-E files. Contains a total of " + files.size() + " files (including the generated manifest and signatures)");
         Archive archive = createZip.zipIt(files);
 
         if (debug_writeToDisk != null) {

@@ -48,4 +48,8 @@ public class Noekkelpar {
             throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Sjekk at passordet er riktig.", e);
         }
     }
+
+    public String getAlias() {
+        return alias;
+    }
 }

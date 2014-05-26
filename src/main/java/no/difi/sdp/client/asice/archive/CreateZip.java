@@ -22,7 +22,6 @@ public class CreateZip {
         ByteArrayOutputStream archive = null;
         ZipOutputStream zipOutputStream = null;
         try {
-            log.trace("Zipping " + files.size() + " files");
             archive = new ByteArrayOutputStream();
             zipOutputStream = new ZipOutputStream(archive, Charsets.UTF_8);
             zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
