@@ -128,7 +128,7 @@ public class CreateSignature {
 
     private KeyInfo keyInfo(XMLSignatureFactory xmlSignatureFactory, Sertifikat sertifikat) {
         KeyInfoFactory keyInfoFactory = xmlSignatureFactory.getKeyInfoFactory();
-        X509Data x509Data = keyInfoFactory.newX509Data(singletonList(sertifikat.getCertificate()));
+        X509Data x509Data = keyInfoFactory.newX509Data(singletonList(sertifikat.getX509Certificate()));
         return keyInfoFactory.newKeyInfo(singletonList(x509Data));
     }
 

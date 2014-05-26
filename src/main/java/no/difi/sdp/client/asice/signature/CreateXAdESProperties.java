@@ -44,7 +44,7 @@ class CreateXAdESProperties {
     }
 
     public Document createPropertiesToSign(List<AsicEAttachable> files, Sertifikat sertifikat) {
-        X509Certificate certificate = sertifikat.getCertificate();
+        X509Certificate certificate = sertifikat.getX509Certificate();
         byte[] certificateDigestValue = sha1(sertifikat.getEncoded());
 
         DigestAlgAndValueType certificateDigest = new DigestAlgAndValueType(sha1DigestMethod, certificateDigestValue);

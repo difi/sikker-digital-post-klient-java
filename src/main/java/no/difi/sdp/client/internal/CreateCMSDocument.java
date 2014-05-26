@@ -47,7 +47,7 @@ public class CreateCMSDocument {
 
     public CMSDocument createCMS(byte[] bytes, Sertifikat sertifikat) {
         try {
-            JceKeyTransRecipientInfoGenerator recipientInfoGenerator = new JceKeyTransRecipientInfoGenerator(sertifikat.getCertificate(), keyEncryptionScheme)
+            JceKeyTransRecipientInfoGenerator recipientInfoGenerator = new JceKeyTransRecipientInfoGenerator(sertifikat.getX509Certificate(), keyEncryptionScheme)
                     .setProvider(BouncyCastleProvider.PROVIDER_NAME);
 
             CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();

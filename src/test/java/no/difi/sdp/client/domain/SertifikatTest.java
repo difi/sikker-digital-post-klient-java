@@ -12,7 +12,7 @@ public class SertifikatTest {
 
         Sertifikat sertifikat = Sertifikat.fraBase64X509String(base64EncodedCertificate);
 
-        assertThat(sertifikat.getCertificate().getSubjectDN().getName())
+        assertThat(sertifikat.getX509Certificate().getSubjectDN().getName())
                 .contains("DIFI")
                 .contains("Sikker Digital Post Test");
     }

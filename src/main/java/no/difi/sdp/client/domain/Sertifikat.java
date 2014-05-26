@@ -10,19 +10,19 @@ import java.security.cert.*;
 
 public class Sertifikat {
 
-    private X509Certificate certificate;
+    private X509Certificate x509Certificate;
 
-    private Sertifikat(X509Certificate certificate) {
-        this.certificate = certificate;
+    private Sertifikat(X509Certificate x509Certificate) {
+        this.x509Certificate = x509Certificate;
     }
 
-    public X509Certificate getCertificate() {
-        return certificate;
+    public X509Certificate getX509Certificate() {
+        return x509Certificate;
     }
 
     public byte[] getEncoded() {
         try {
-            return certificate.getEncoded();
+            return x509Certificate.getEncoded();
         } catch (CertificateEncodingException e) {
             throw new SertifikatException("Kunne ikke hente encoded utgave av sertifikatet", e);
         }
