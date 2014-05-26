@@ -35,7 +35,7 @@ public class CreateASiCE {
         createZip = new CreateZip();
     }
 
-    public AsiceDocument createAsice(Avsender avsender, Forsendelse forsendelse) {
+    public ZippedASiCE createAsice(Avsender avsender, Forsendelse forsendelse) {
         // Lag ASiC-E manifest
         log.info("Creating ASiC-E manifest");
         Manifest manifest = createManifest.createManifest(avsender, forsendelse);
@@ -58,7 +58,7 @@ public class CreateASiCE {
             writeArchiveToDisk(archive);
         }
 
-        return new AsiceDocument(archive.getBytes());
+        return new ZippedASiCE(archive.getBytes());
     }
 
 

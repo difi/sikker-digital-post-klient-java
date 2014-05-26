@@ -1,10 +1,10 @@
 package no.difi.sdp.client.asice;
 
-public class AsiceDocument {
+public class ZippedASiCE {
 
     private final byte[] bytes;
 
-    public AsiceDocument(byte[] bytes) {
+    public ZippedASiCE(byte[] bytes) {
         this.bytes = bytes;
     }
 
