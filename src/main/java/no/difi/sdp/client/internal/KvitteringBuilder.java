@@ -22,26 +22,28 @@ public class KvitteringBuilder {
     }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+        String refToMessageId = applikasjonsKvittering.refToMessageId;
         SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
 
         if (sbd.erKvittering()) {
             SimpleStandardBusinessDocument.SimpleKvittering kvittering = sbd.getKvittering();
             SDPKvittering sdpKvittering = kvittering.kvittering;
 
-            String konversasjonsId = kvittering.getKonversasjonsId();
+            //String konversasjonsId = sbd.getCorrelationInformation().getRequestingDocumentInstanceIdentifier();
+            String konversasjonsId = "todo"; //todo: trenger vi å sette denne?
             Date tidspunkt = sdpKvittering.getTidspunkt().toDate();
 
             if (sdpKvittering.getAapning() != null) {
-                return AapningsKvittering.builder(tidspunkt, konversasjonsId).build();
+                return AapningsKvittering.builder(tidspunkt, konversasjonsId, refToMessageId).build();
             } else if (sdpKvittering.getLevering() != null) {
-                return LeveringsKvittering.builder(tidspunkt, konversasjonsId).build();
+                return LeveringsKvittering.builder(tidspunkt, konversasjonsId, refToMessageId).build();
             } else if (sdpKvittering.getTilbaketrekking() != null) {
-                return tilbaketrekkingsKvittering(sdpKvittering, konversasjonsId, tidspunkt);
+                return tilbaketrekkingsKvittering(sdpKvittering, konversasjonsId, tidspunkt, refToMessageId);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
-                return varslingFeiletKvittering(sdpKvittering, konversasjonsId, tidspunkt);
+                return varslingFeiletKvittering(sdpKvittering, konversasjonsId, tidspunkt, refToMessageId);
             }
         } else if (sbd.erFeil()) {
-            return feil(sbd);
+            return feil(sbd, refToMessageId);
         }
         //todo: returnere message id
         //todo: proper exception handling
@@ -53,28 +55,28 @@ public class KvitteringBuilder {
         return null;
     }
 
-    private ForretningsKvittering feil(SimpleStandardBusinessDocument sbd) {
+    private ForretningsKvittering feil(SimpleStandardBusinessDocument sbd, String refToMessageId) {
         SDPFeil feil = sbd.getFeil();
 
-        return Feil.builder(feil.getTidspunkt().toDate(), feil.getKonversasjonsId(), mapFeilType(feil.getFeiltype()))
+        return Feil.builder(feil.getTidspunkt().toDate(), "todo", refToMessageId, mapFeilType(feil.getFeiltype()))
                 .detaljer(feil.getDetaljer())
                 .build();
     }
 
-    private ForretningsKvittering tilbaketrekkingsKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt) {
+    private ForretningsKvittering tilbaketrekkingsKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String refToMessageId) {
         SDPTilbaketrekkingsresultat tilbaketrekking = sdpKvittering.getTilbaketrekking();
         TilbaketrekkingsStatus status = mapTilbaketrekkingsStatus(tilbaketrekking.getStatus());
 
-        return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, status)
+        return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, refToMessageId, status)
                 .beskrivelse(tilbaketrekking.getBeskrivelse())
                 .build();
     }
 
-    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt) {
+    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String refToMessageId) {
         SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
         Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
 
-        return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, varslingskanal)
+        return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, refToMessageId, varslingskanal)
                 .beskrivelse(varslingfeilet.getBeskrivelse())
                 .build();
     }

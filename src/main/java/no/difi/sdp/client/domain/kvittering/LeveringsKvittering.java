@@ -4,20 +4,20 @@ import java.util.Date;
 
 public class LeveringsKvittering extends ForretningsKvittering {
 
-    private LeveringsKvittering(Date tidspunkt, String konversasjonsId) {
-        super(tidspunkt, konversasjonsId);
+    private LeveringsKvittering(Date tidspunkt, String konversasjonsId, String refToMessageId) {
+        super(tidspunkt, konversasjonsId, refToMessageId);
     }
 
-    public static Builder builder(Date tidspunkt, String konversasjonsId) {
-        return new Builder(tidspunkt, konversasjonsId);
+    public static Builder builder(Date tidspunkt, String konversasjonsId, String refToMessageId) {
+        return new Builder(tidspunkt, konversasjonsId, refToMessageId);
     }
 
     public static class Builder {
         private LeveringsKvittering target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId) {
-            target = new LeveringsKvittering(tidspunkt, konversasjonsId);
+        public Builder(Date tidspunkt, String konversasjonsId, String refToMessageId) {
+            target = new LeveringsKvittering(tidspunkt, konversasjonsId, refToMessageId);
         }
 
         public LeveringsKvittering build() {

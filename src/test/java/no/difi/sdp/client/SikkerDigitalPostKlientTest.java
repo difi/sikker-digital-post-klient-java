@@ -15,6 +15,7 @@ import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.NorskPostadresse;
 import no.difi.sdp.client.domain.fysisk_post.PostType;
 import no.difi.sdp.client.domain.fysisk_post.UtenlandskPostadresse;
+import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static java.util.Arrays.asList;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 public class SikkerDigitalPostKlientTest {
 
@@ -91,7 +93,12 @@ public class SikkerDigitalPostKlientTest {
     public void test_hent_kvittering() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
 
-        postklient.hentKvittering(kvitteringForespoersel);
+        ForretningsKvittering forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
+        if (forretningsKvittering != null) {
+            assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
+            assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
+            assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
+        }
     }
 
     @Test

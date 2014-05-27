@@ -4,14 +4,15 @@ import java.util.Date;
 
 public abstract class ForretningsKvittering {
 
-    protected ForretningsKvittering(Date tidspunkt, String konversasjonsId) {
+    protected ForretningsKvittering(Date tidspunkt, String konversasjonsId, String refToMessageId) {
         this.tidspunkt = tidspunkt;
         this.konversasjonsId = konversasjonsId;
+        this.refToMessageId = refToMessageId;
     }
 
     private String konversasjonsId;
     private Date tidspunkt;
-    private String messageId; //todo: mandatory?
+    private String refToMessageId;
 
     public String getKonversasjonsId() {
         return konversasjonsId;
@@ -19,5 +20,9 @@ public abstract class ForretningsKvittering {
 
     public Date getTidspunkt() {
         return tidspunkt;
+    }
+
+    public String getRefToMessageId() {
+        return refToMessageId;
     }
 }

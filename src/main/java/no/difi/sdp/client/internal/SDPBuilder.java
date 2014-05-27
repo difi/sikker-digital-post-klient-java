@@ -46,11 +46,12 @@ public class SDPBuilder {
     }
 
     public SDPDigitalPost buildDigitalPost(Avsender avsender, Forsendelse forsendelse) {
-        String konversasjonsId = forsendelse.getKonversasjonsId();
         SDPAvsender sdpAvsender = sdpAvsender(avsender);
         SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost().getMottaker(), forsendelse);
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
+
+        String konversasjonsId = forsendelse.getKonversasjonsId();
 
         Signature signature = new Signature(); // TODO: Hva skal vi signere og hvordan? Legges denne på fra et av filtrene?
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
