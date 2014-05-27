@@ -7,6 +7,7 @@ import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
 import no.difi.sdp.client.internal.KvitteringBuilder;
+import no.difi.sdp.client.util.CryptoChecker;
 import no.posten.dpost.offentlig.api.MessageSender;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
@@ -22,6 +23,8 @@ public class SikkerDigitalPostKlient {
     private final KvitteringBuilder kvitteringBuilder;
 
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
+        CryptoChecker.checkCryptoPolicy();
+
         ebmsForsendelseBuilder = new EbmsForsendelseBuilder();
         kvitteringBuilder = new KvitteringBuilder();
 

@@ -1,7 +1,6 @@
 package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
-import no.difi.sdp.client.asice.AsicEGenerator;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
@@ -13,11 +12,11 @@ import java.io.InputStream;
 public class EbmsForsendelseBuilder {
 
     private final SDPBuilder sdpBuilder;
-    private final AsicEGenerator asicEGenerator;
+    private final CreateDokumentpakke createDokumentpakke;
 
     public EbmsForsendelseBuilder() {
         sdpBuilder = new SDPBuilder();
-        asicEGenerator = new AsicEGenerator();
+        createDokumentpakke = new CreateDokumentpakke();
     }
 
     public EbmsForsendelse buildEbmsForsendelse(Avsender avsender, Forsendelse forsendelse) {
@@ -26,7 +25,7 @@ public class EbmsForsendelseBuilder {
         Organisasjonsnummer avsenderOrganisasjonsnummer = new Organisasjonsnummer(avsender.getOrganisasjonsnummer());
         Organisasjonsnummer mottakerOrganisasjonsnummer = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
         SDPDigitalPost sikkerDigitalPost = createSikkerDigitalPost(avsender, forsendelse);
-        InputStream dokumentpakke = asicEGenerator.createStream(avsender, forsendelse);
+        InputStream dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
 
         return EbmsForsendelse.create(avsenderOrganisasjonsnummer, mottakerOrganisasjonsnummer, sikkerDigitalPost, dokumentpakke).build();
     }

@@ -1,19 +1,41 @@
 package no.difi.sdp.client.domain;
 
+import no.difi.sdp.client.asice.AsicEAttachable;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
 import java.io.InputStream;
 
-public class Dokument {
+public class Dokument implements AsicEAttachable {
 
-    private Dokument(String tittel, String filnavn, InputStream dokument) {
+    private Dokument(String tittel, String filnavn, InputStream dokumentStream) {
         this.tittel = tittel;
         this.filnavn = filnavn;
-        this.dokument = dokument;
+        try {
+            this.dokument = IOUtils.toByteArray(dokumentStream);
+        }
+        catch (IOException e) {
+            throw new LastDokumentException();
+        }
+        finally {
+            IOUtils.closeQuietly(dokumentStream);
+        }
     }
 
     private String tittel;
     private String filnavn;
-    private InputStream dokument;
+    private byte[] dokument;
     private String mimeType = "application/pdf";
+
+    @Override
+    public String getFileName() {
+        return getFilnavn();
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return dokument;
+    }
 
     public String getFilnavn() {
         return filnavn;
@@ -61,4 +83,6 @@ public class Dokument {
             return target;
         }
     }
+
+    public class LastDokumentException extends RuntimeException {}
 }
