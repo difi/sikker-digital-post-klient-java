@@ -29,7 +29,7 @@ public class SDPBuilder {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
         DifiPerson difiPerson = new DifiPerson().withPersonidentifikator(mottaker.getPersonidentifikator());
-        SDPMottaker sdpMottaker = new SDPMottaker().withPerson(difiPerson);
+        SDPMottaker sdpMottaker = new SDPMottaker(null, difiPerson);
 
         String fakturaReferanse = null; // Ikke send fakturareferanse i manifest
         SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(avsender), avsender.getAvsenderIdentifikator(), fakturaReferanse);
@@ -51,10 +51,12 @@ public class SDPBuilder {
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
 
+        String konversasjonsId = forsendelse.getKonversasjonsId();
+
         Signature signature = new Signature(); // TODO: Hva skal vi signere og hvordan? Legges denne på fra et av filtrene?
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
         Reference dokumentpakkefingeravtrykk = new Reference(); // TODO: Generere nøkkel og bygge dokumentpakke
-        return new SDPDigitalPost(signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
+        return new SDPDigitalPost(konversasjonsId, signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
     }
 
     private SDPDokument sdpDokument(Dokument dokument, String spraakkode) {
@@ -78,18 +80,15 @@ public class SDPBuilder {
     }
 
     private SDPAvsender sdpAvsender(Avsender avsender) {
-        SDPAvsender sdpAvsender = new SDPAvsender();
-        if (avsender.getFakturaReferanse() != null) {
-            sdpAvsender.setFakturaReferanse(avsender.getFakturaReferanse());
-        }
+        String fakturaReferanse = avsender.getFakturaReferanse();
+        String identifikator = avsender.getAvsenderIdentifikator();
+        SDPOrganisasjon organisasjon = sdpOrganisasjon(avsender);
 
-        return sdpAvsender
-                .withAvsenderidentifikator(avsender.getAvsenderIdentifikator())
-                .withOrganisasjon(sdpOrganisasjon(avsender));
+        return new SDPAvsender(organisasjon, identifikator, fakturaReferanse);
     }
 
     private SDPOrganisasjon sdpOrganisasjon(Avsender avsender) {
-        return new SDPOrganisasjon().withValue(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer());
+        return new SDPOrganisasjon(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer(), SDPIso6523Authority.ISO_6523_ACTORID_UPIS);
     }
 
     private DifiKontaktinformasjon kontaktinformasjon(Forsendelse forsendelse) {
