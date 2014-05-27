@@ -56,7 +56,7 @@ public class SDPBuilder {
         Signature signature = new Signature(); // TODO: Hva skal vi signere og hvordan? Legges denne på fra et av filtrene?
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
         Reference dokumentpakkefingeravtrykk = new Reference(); // TODO: Generere nøkkel og bygge dokumentpakke
-        return new SDPDigitalPost(signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
+        return new SDPDigitalPost(konversasjonsId, signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
     }
 
     private SDPDokument sdpDokument(Dokument dokument, String spraakkode) {
