@@ -37,14 +37,14 @@ public class SikkerDigitalPostKlientTest {
     @Before
     public void setUp() {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/")
-                        //.meldingsformidlerRoot("http://localhost:8049")
+                //.meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/")
+                .meldingsformidlerRoot("http://localhost:8049")
                 .build();
 
-        Avsender avsender = ObjectMother.avsender();
+        //todo: bytte ut med et gyldig Bypass sertifikat når vi har det på plass
+        Avsender avsender = ObjectMother.avsenderMedBypassSertifikat();
 
         postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
-
     }
 
     @Test
@@ -164,6 +164,5 @@ public class SikkerDigitalPostKlientTest {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
         postklient.hentKvittering(kvitteringForespoersel);
     }
-
 
 }

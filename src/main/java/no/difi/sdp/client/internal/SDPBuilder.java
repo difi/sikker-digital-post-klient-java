@@ -1,7 +1,24 @@
 package no.difi.sdp.client.internal;
 
-import no.difi.begrep.*;
-import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.begrep.sdp.schema_v10.SDPAvsender;
+import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
+import no.difi.begrep.sdp.schema_v10.SDPDigitalPostInfo;
+import no.difi.begrep.sdp.schema_v10.SDPDokument;
+import no.difi.begrep.sdp.schema_v10.SDPEpostVarsel;
+import no.difi.begrep.sdp.schema_v10.SDPEpostVarselTekst;
+import no.difi.begrep.sdp.schema_v10.SDPFysiskPostInfo;
+import no.difi.begrep.sdp.schema_v10.SDPIso6523Authority;
+import no.difi.begrep.sdp.schema_v10.SDPManifest;
+import no.difi.begrep.sdp.schema_v10.SDPMottaker;
+import no.difi.begrep.sdp.schema_v10.SDPOrganisasjon;
+import no.difi.begrep.sdp.schema_v10.SDPPerson;
+import no.difi.begrep.sdp.schema_v10.SDPRepetisjoner;
+import no.difi.begrep.sdp.schema_v10.SDPSikkerhetsnivaa;
+import no.difi.begrep.sdp.schema_v10.SDPSmsVarsel;
+import no.difi.begrep.sdp.schema_v10.SDPSmsVarselTekst;
+import no.difi.begrep.sdp.schema_v10.SDPTittel;
+import no.difi.begrep.sdp.schema_v10.SDPVarsler;
+import no.difi.begrep.sdp.schema_v10.SDPVirksomhet;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Forsendelse;
@@ -9,7 +26,6 @@ import no.difi.sdp.client.domain.Mottaker;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client.domain.digital_post.SmsVarsel;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
@@ -28,8 +44,8 @@ public class SDPBuilder {
     public SDPManifest createManifest(Avsender avsender, Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
-        DifiPerson difiPerson = new DifiPerson().withPersonidentifikator(mottaker.getPersonidentifikator());
-        SDPMottaker sdpMottaker = new SDPMottaker(null, difiPerson);
+        SDPPerson sdpPerson = new SDPPerson().withPersonidentifikator(mottaker.getPersonidentifikator());
+        SDPMottaker sdpMottaker = new SDPMottaker(null, sdpPerson);
 
         String fakturaReferanse = null; // Ikke send fakturareferanse i manifest
         SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(avsender), avsender.getAvsenderIdentifikator(), fakturaReferanse);
@@ -51,12 +67,10 @@ public class SDPBuilder {
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
 
-        String konversasjonsId = forsendelse.getKonversasjonsId();
-
         Signature signature = new Signature(); // TODO: Hva skal vi signere og hvordan? Legges denne på fra et av filtrene?
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
         Reference dokumentpakkefingeravtrykk = new Reference(); // TODO: Generere nøkkel og bygge dokumentpakke
-        return new SDPDigitalPost(konversasjonsId, signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
+        return new SDPDigitalPost(signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
     }
 
     private SDPDokument sdpDokument(Dokument dokument, String spraakkode) {
@@ -65,18 +79,14 @@ public class SDPBuilder {
     }
 
     private SDPMottaker sdpMottaker(Mottaker mottaker, Forsendelse forsendelse) {
-        // Bygg SDP:Mottaker. SDP:Mottaker er av typen difi:person som har en del felter som ikke er relevant i denne konteksten.
+        // Bygg SDP:Mottaker. SDP:Mottaker er av typen sdp:person som har en del felter som ikke er relevant i denne konteksten.
         // Vi setter felter i henhold til det som er definert for sdp:melding (http://begrep.difi.no/SikkerDigitalPost/utkast/StandardBusinessDocument/Melding/Person)
         SDPVirksomhet virksomhet = null; // Sending til virksomheter er ikke støttet
-        DifiReservasjon reservasjon = null;
-        DifiStatus difiStatus = null;
-        String beskrivelse = null;
-        String mottakerSertifikat = null;
 
-        DifiKontaktinformasjon kontaktinformasjon = kontaktinformasjon(forsendelse);
-        DifiSikkerDigitalPostAdresse digitalPostAdresse = new DifiSikkerDigitalPostAdresse(mottaker.getPostkasseadresse(), mottaker.getOrganisasjonsnummerPostkasse());
-
-        return new SDPMottaker(virksomhet, new DifiPerson(mottaker.getPersonidentifikator(), reservasjon, difiStatus, beskrivelse, kontaktinformasjon, digitalPostAdresse, mottakerSertifikat));
+        String epost = forsendelse.getDigitalPost().getEpostVarsel().getEpostadresse();
+        String mobil = forsendelse.getDigitalPost().getSmsVarsel().getMobilnummer();
+        SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse(), mobil, epost);
+        return new SDPMottaker(virksomhet, sdpPerson);
     }
 
     private SDPAvsender sdpAvsender(Avsender avsender) {
@@ -89,19 +99,6 @@ public class SDPBuilder {
 
     private SDPOrganisasjon sdpOrganisasjon(Avsender avsender) {
         return new SDPOrganisasjon(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer(), SDPIso6523Authority.ISO_6523_ACTORID_UPIS);
-    }
-
-    private DifiKontaktinformasjon kontaktinformasjon(Forsendelse forsendelse) {
-        DateTime sistOppdatert = null;
-        DateTime sistVerifisert = null;
-
-        String mobilnummer = forsendelse.getDigitalPost().getSmsVarsel().getMobilnummer();
-        DifiMobiltelefonnummer difiMobiltelefonnummer = new DifiMobiltelefonnummer(mobilnummer, sistOppdatert, sistVerifisert);
-
-        String epostadresse = forsendelse.getDigitalPost().getEpostVarsel().getEpostadresse();
-        DifiEpostadresse difiEpostadresse = new DifiEpostadresse(epostadresse, sistOppdatert, sistVerifisert);
-
-        return new DifiKontaktinformasjon(difiMobiltelefonnummer, difiEpostadresse);
     }
 
     private SDPDigitalPostInfo sdpDigitalPostinfo(Forsendelse forsendelse) {

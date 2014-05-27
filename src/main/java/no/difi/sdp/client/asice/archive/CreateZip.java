@@ -2,7 +2,9 @@ package no.difi.sdp.client.asice.archive;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
-import org.apache.commons.codec.Charsets;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class CreateZip {
 
@@ -20,19 +20,20 @@ public class CreateZip {
 
     public Archive zipIt(List<AsicEAttachable> files) {
         ByteArrayOutputStream archive = null;
-        ZipOutputStream zipOutputStream = null;
+        ZipArchiveOutputStream zipOutputStream = null;
         try {
             archive = new ByteArrayOutputStream();
-            zipOutputStream = new ZipOutputStream(archive, Charsets.UTF_8);
-            zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
+            zipOutputStream = new ZipArchiveOutputStream(archive);
+            zipOutputStream.setEncoding(Charsets.UTF_8.name());
+            zipOutputStream.setMethod(ZipArchiveOutputStream.DEFLATED);
             for (AsicEAttachable file : files) {
                 log.trace("Adding " + file.getFileName() + " to archive. Size in bytes before compression: " + file.getBytes().length);
-                ZipEntry zipEntry = new ZipEntry(file.getFileName());
+                ZipArchiveEntry zipEntry = new ZipArchiveEntry(file.getFileName());
                 zipEntry.setSize(file.getBytes().length);
 
-                zipOutputStream.putNextEntry(zipEntry);
+                zipOutputStream.putArchiveEntry(zipEntry);
                 IOUtils.copy(new ByteArrayInputStream(file.getBytes()), zipOutputStream);
-                zipOutputStream.closeEntry();
+                zipOutputStream.closeArchiveEntry();
             }
             zipOutputStream.finish();
             zipOutputStream.close();
