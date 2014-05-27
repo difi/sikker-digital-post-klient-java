@@ -1,32 +1,42 @@
 package no.difi.sdp.client.domain;
 
-import java.security.PrivateKey;
-
 public class Avsender {
 
-    private Avsender(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-        this.sertifikat = sertifikat;
-        this.orgNummer = orgNummer;
-        this.privatnoekkel = privatnoekkel;
+    private Avsender(String organisasjonsnummer, Noekkelpar noekkelpar) {
+        this.organisasjonsnummer = organisasjonsnummer;
+        this.noekkelpar = noekkelpar;
     }
 
-    private Sertifikat sertifikat;
-    private PrivateKey privatnoekkel;
-
-    private String orgNummer;
+    private String organisasjonsnummer;
+    private Noekkelpar noekkelpar;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
     private String orgNummerDatabehandler;
 
     private AvsenderRolle rolle = AvsenderRolle.BEHANDLINGSANSVARLIG;
 
+    public String getOrganisasjonsnummer() {
+        return organisasjonsnummer;
+    }
+
+    public Noekkelpar getNoekkelpar() {
+        return noekkelpar;
+    }
+
+    public String getAvsenderIdentifikator() {
+        return avsenderIdentifikator;
+    }
+
+    public String getFakturaReferanse() {
+        return fakturaReferanse;
+    }
+
     /**
-     * @param orgNummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
-     * @param sertifikat Avsenders virksomhetssertifikat.
-     * @param privatnoekkel Den private nøkkelen som tilsvarer den offentlige nøkkelen i avsenders virksomhetssertifikat.
+     * @param organisasjonsnummer Identifikator (organisasjonsnummer) til virksomheten som initierer (er avsender) i meldingsprosessen.
+     * @param noekkelpar Avsenders nøkkelpar: signert virksomhetssertifikat og tilhørende privatnøkkel.
      */
-    public static Builder builder(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-        return new Builder(orgNummer, sertifikat, privatnoekkel);
+    public static Builder builder(String organisasjonsnummer, Noekkelpar noekkelpar) {
+        return new Builder(organisasjonsnummer, noekkelpar);
     }
 
     public static class Builder {
@@ -34,8 +44,8 @@ public class Avsender {
         private final Avsender target;
         private boolean built = false;
 
-        private Builder(String orgNummer, Sertifikat sertifikat, PrivateKey privatnoekkel) {
-            target = new Avsender(orgNummer, sertifikat, privatnoekkel);
+        private Builder(String orgNummer, Noekkelpar noekkelpar) {
+            target = new Avsender(orgNummer, noekkelpar);
         }
 
         /**
@@ -55,6 +65,8 @@ public class Avsender {
 
         /**
          * Brukt for å identifisere en ansvarlig enhet innen for en virksomhet.
+         *
+         * TODO: Denne er mandatory og bør flyttes opp til intialiseringen av builderen
          *
          * @param avsenderIdentifikator Identifikator som er tildelt av Sikker digital posttjeneste ved tilkobling til tjenesten.
          */

@@ -1,10 +1,41 @@
 package no.difi.sdp.client;
 
-import no.difi.sdp.client.domain.*;
+import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.Forsendelse;
+import no.difi.sdp.client.domain.kvittering.BekreftelsesKvittering;
+import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
+import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
+import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
+import no.difi.sdp.client.internal.KvitteringBuilder;
+import no.posten.dpost.offentlig.api.MessageSender;
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
+import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
+import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
 public class SikkerDigitalPostKlient {
 
+    private final Organisasjonsnummer digipostMeldingsformidler = new Organisasjonsnummer("984661185");
+    private final MessageSender messageSender;
+    private final Avsender avsender;
+    private final EbmsForsendelseBuilder ebmsForsendelseBuilder;
+    private final KvitteringBuilder kvitteringBuilder;
+
     public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
+        ebmsForsendelseBuilder = new EbmsForsendelseBuilder();
+        kvitteringBuilder = new KvitteringBuilder();
+
+        this.avsender = avsender;
+        try {
+            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
+                    avsender.getNoekkelpar().getKeyStoreInfo(),
+                    new Organisasjonsnummer(avsender.getOrganisasjonsnummer()),
+                    digipostMeldingsformidler)
+                    .build();
+        } catch (Exception e) {
+            // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
+            throw new RuntimeException("Could not create MessageSender", e);
+        }
     }
 
     /**
@@ -15,6 +46,12 @@ public class SikkerDigitalPostKlient {
      *                    enten digitalt eller fyisk.
      */
     public void send(Forsendelse forsendelse) {
+        if (!forsendelse.isDigitalPostforsendelse()) {
+            throw new UnsupportedOperationException("Fysiske forsendelser er ikke implementert");
+        }
+
+        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, forsendelse);
+        messageSender.send(ebmsForsendelse);
     }
 
     /**
@@ -32,7 +69,14 @@ public class SikkerDigitalPostKlient {
      *
      */
     public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) {
-        return new ForretningsKvittering();
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(digipostMeldingsformidler, kvitteringForespoersel.getPrioritet());
+
+        EbmsApplikasjonsKvittering applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest);
+
+        if (applikasjonsKvittering != null) {
+            return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
+        }
+        return null;
     }
 
     /**
@@ -46,7 +90,8 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreftKvittering(ForretningsKvittering forretningsKvittering) {
-
+    public void bekreftKvittering(BekreftelsesKvittering bekreftelsesKvittering) {
+        EbmsApplikasjonsKvittering kvittering = kvitteringBuilder.buildEbmsApplikasjonsKvittering(bekreftelsesKvittering);
+        messageSender.bekreft(kvittering);
     }
 }

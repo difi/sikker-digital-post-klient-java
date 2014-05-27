@@ -11,6 +11,10 @@ public class EpostVarsel extends Varsel {
         super(tekst);
     }
 
+    public String getEpostadresse() {
+        return epostadresse;
+    }
+
     /**
      * @param tekst Avsenderstyrt tekst som skal inngå i varselet.
      */
@@ -46,17 +50,6 @@ public class EpostVarsel extends Varsel {
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
             return this;
         }
-
-        /**
-         * Språkkode i henhold til ISO-639-1 (2 bokstaver). Brukes til å informere postkassen om hvilket språk som benyttes, slik at varselet om mulig kan vises i riktig språkkontekst.
-         *
-         * Standard er NO.
-         */
-        public Builder spraakkode(String spraakkode) {
-            target.spraakkode = spraakkode;
-            return this;
-        }
-
 
         public Builder epostadresse(String epostadresse) {
             target.epostadresse = epostadresse;

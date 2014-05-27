@@ -15,6 +15,18 @@ public class Dokument {
     private InputStream dokument;
     private String mimeType = "application/pdf";
 
+    public String getFilnavn() {
+        return filnavn;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public String getTittel() {
+        return tittel;
+    }
+
     /**
      * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
      * @param filnavn Filnavnet til dokumentet.

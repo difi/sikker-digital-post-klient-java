@@ -11,6 +11,13 @@ public abstract class Varsel {
     }
 
     protected String tekst;
-    protected String spraakkode = "NO";
     protected List<Integer> dagerEtter = asList(0);
+
+    public String getTekst() {
+        return tekst;
+    }
+
+    public List<Integer> getDagerEtter() {
+        return dagerEtter;
+    }
 }

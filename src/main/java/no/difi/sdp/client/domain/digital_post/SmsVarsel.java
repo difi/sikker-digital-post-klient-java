@@ -18,6 +18,10 @@ public class SmsVarsel extends Varsel {
         return new Builder(tekst);
     }
 
+    public String getMobilnummer() {
+        return mobilnummer;
+    }
+
     public static class Builder {
         private SmsVarsel target;
         private boolean built = false;
@@ -44,16 +48,6 @@ public class SmsVarsel extends Varsel {
          */
         public Builder varselEtterDager(List<Integer> varselEtterDager) {
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
-            return this;
-        }
-
-        /**
-         * Språkkode i henhold til ISO-639-1 (2 bokstaver). Brukes til å informere postkassen om hvilket språk som benyttes, slik at varselet om mulig kan vises i riktig språkkontekst.
-         *
-         * Standard er NO.
-         */
-        public Builder spraakkode(String spraakkode) {
-            target.spraakkode = spraakkode;
             return this;
         }
 

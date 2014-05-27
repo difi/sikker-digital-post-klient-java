@@ -3,10 +3,7 @@ package no.difi.sdp.client.domain;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
 
 public class Sertifikat {
 
@@ -35,6 +32,11 @@ public class Sertifikat {
         return new Sertifikat(x509Certificate);
     }
 
-    public static class UgyldigSertifikatException extends RuntimeException {
+    public static class UgyldigSertifikatException extends RuntimeException {}
+
+    public static class SertifikatException extends RuntimeException {
+        public SertifikatException(CertificateEncodingException e) {
+            super(e);
+        }
     }
 }

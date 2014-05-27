@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class DefaultValuesTest {
+public class ForsendelseDefaultValuesTest {
 
     private Forsendelse forsendelse;
 
