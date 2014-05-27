@@ -62,7 +62,7 @@ class CreateXAdESProperties {
         Document document = (Document) domResult.getNode();
 
         // Explicitly mark the SignedProperties Id as an Document ID attribute, so that it will be eligble as a reference for signature.
-        // If not, it will not be treated a something to sign.
+        // If not, it will not be treated as something to sign.
         markAsIdProperty(document, "SignedProperties", "Id");
 
         return document;

@@ -90,7 +90,7 @@ public class SDPBuilder {
     }
 
     private SDPOrganisasjon sdpOrganisasjon(Avsender avsender) {
-        return new SDPOrganisasjon().withValue(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer());
+        return new SDPOrganisasjon(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer(), SDPIso6523Authority.ISO_6523_ACTORID_UPIS);
     }
 
     private DifiKontaktinformasjon kontaktinformasjon(Forsendelse forsendelse) {
