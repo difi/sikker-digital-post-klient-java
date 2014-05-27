@@ -11,9 +11,9 @@ public class ObjectMother {
 
     public static Noekkelpar noekkelpar() {
         try {
-            KeyStore keyStore = KeyStore.getInstance("jks");
-            keyStore.load(new ClassPathResource("/avsender-keystore.jks").getInputStream(), "password1234".toCharArray());
-            return Noekkelpar.fraKeyStore(keyStore, "avsender", "password1234");
+            KeyStore keyStore = KeyStore.getInstance("JCEKS");
+            keyStore.load(new ClassPathResource("/meldingsformidler.qa.jce").getInputStream(), "abcd1234".toCharArray());
+            return Noekkelpar.fraKeyStore(keyStore, "meldingsformidler", "abcd1234");
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste keystore", e);
         }
