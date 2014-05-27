@@ -94,9 +94,8 @@ public class CreateSignature {
         XMLObject xmlObject = xmlSignatureFactory.newXMLObject(Collections.singletonList(new DOMStructure(document.getDocumentElement())), null, null, null);
         XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, Collections.singletonList(xmlObject), null, null);
 
-        DOMSignContext domSignContext = new DOMSignContext(noekkelpar.getPrivateKey(), document);
         try {
-            xmlSignature.sign(domSignContext);
+            xmlSignature.sign(new DOMSignContext(noekkelpar.getPrivateKey(), document));
         } catch (MarshalException e) {
             throw new XmlKonfigurasjonException("Klarte ikke å lese ASiC-E XML for signering", e);
         } catch (XMLSignatureException e) {
