@@ -41,8 +41,8 @@ public class SikkerDigitalPostKlientTest {
                 .meldingsformidlerRoot("http://localhost:8049")
                 .build();
 
-        //todo: bytte ut med et gyldig Bypass sertifikat når vi har det på plass
-        Avsender avsender = ObjectMother.avsenderMedBypassSertifikat();
+        //todo: bytte ut med et gyldig Buypass sertifikat når vi har det på plass
+        Avsender avsender = ObjectMother.avsenderMedBuypassSertifikat();
 
         postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }

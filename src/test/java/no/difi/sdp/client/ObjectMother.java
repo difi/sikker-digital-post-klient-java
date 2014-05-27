@@ -36,7 +36,7 @@ public class ObjectMother {
                 .build();
     }
 
-    public static Avsender avsenderMedBypassSertifikat() {
+    public static Avsender avsenderMedBuypassSertifikat() {
         return Avsender.builder("984661185", noekkelparMF())
                 .fakturaReferanse("ØK1")
                 .avsenderIdentifikator("12345")
