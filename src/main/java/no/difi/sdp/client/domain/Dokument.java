@@ -3,6 +3,9 @@ package no.difi.sdp.client.domain;
 import no.difi.sdp.client.asice.AsicEAttachable;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,7 +18,7 @@ public class Dokument implements AsicEAttachable {
             this.dokument = IOUtils.toByteArray(dokumentStream);
         }
         catch (IOException e) {
-            throw new LastDokumentException();
+            throw new LastDokumentException("Kunne ikke lese dokument", e);
         }
         finally {
             IOUtils.closeQuietly(dokumentStream);
@@ -58,6 +61,18 @@ public class Dokument implements AsicEAttachable {
         return new Builder(tittel, filnavn, dokument);
     }
 
+    /**
+     * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
+     * @param file Filen som skal sendes
+     */
+    public static Builder builder(String tittel, File file) {
+        try {
+            return new Builder(tittel, file.getName(), new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new LastDokumentException("Fant ikke fil", e);
+        }
+    }
+
     public static class Builder {
 
         private final Dokument target;
@@ -84,5 +99,9 @@ public class Dokument implements AsicEAttachable {
         }
     }
 
-    public class LastDokumentException extends RuntimeException {}
+    public static class LastDokumentException extends RuntimeException {
+        public LastDokumentException(String message, Exception e) {
+            super(message, e);
+        }
+    }
 }
