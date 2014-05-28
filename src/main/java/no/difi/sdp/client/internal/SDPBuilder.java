@@ -67,9 +67,9 @@ public class SDPBuilder {
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
 
-        // Signatur og fingeravtrykk legges på før sending
+        // Signatur og fingeravtrykk legges på automatisk av klienten hvis de ikke er satt
         Signature signature = null;
-        Reference dokumentpakkefingeravtrykk = new Reference();
+        Reference dokumentpakkefingeravtrykk = null;
 
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
         return new SDPDigitalPost(signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
