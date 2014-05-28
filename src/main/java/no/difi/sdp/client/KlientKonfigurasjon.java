@@ -4,7 +4,7 @@ import java.net.URI;
 
 public class KlientKonfigurasjon {
 
-    private URI meldingsformidlerRoot = URI.create("https://meldingsformidler.digipost.no");
+    private URI meldingsformidlerRoot = URI.create("https://meldingsformidler.digipost.no/api/ebms");
 
     private KlientKonfigurasjon() {}
 

@@ -37,8 +37,8 @@ public class SikkerDigitalPostKlientTest {
     @Before
     public void setUp() {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                //.meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/")
-                .meldingsformidlerRoot("http://localhost:8049")
+                //.meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .meldingsformidlerRoot("http://localhost:8049/ebms")
                 .build();
 
         //todo: bytte ut med et gyldig Buypass sertifikat når vi har det på plass
