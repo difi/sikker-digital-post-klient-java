@@ -81,12 +81,28 @@ public class SDPBuilder {
     private SDPMottaker sdpMottaker(Mottaker mottaker, Forsendelse forsendelse) {
         // Bygg SDP:Mottaker. SDP:Mottaker er av typen sdp:person som har en del felter som ikke er relevant i denne konteksten.
         // Vi setter felter i henhold til det som er definert for sdp:melding (http://begrep.difi.no/SikkerDigitalPost/utkast/StandardBusinessDocument/Melding/Person)
+
         SDPVirksomhet virksomhet = null; // Sending til virksomheter er ikke støttet
 
-        String epost = forsendelse.getDigitalPost().getEpostVarsel().getEpostadresse();
-        String mobil = forsendelse.getDigitalPost().getSmsVarsel().getMobilnummer();
+        String epost = getEpost(forsendelse.getDigitalPost().getEpostVarsel());
+        String mobil = getMobilnummer(forsendelse.getDigitalPost().getSmsVarsel());
         SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse(), mobil, epost);
+
         return new SDPMottaker(virksomhet, sdpPerson);
+    }
+
+    private String getMobilnummer(SmsVarsel smsVarsel) {
+        if (smsVarsel != null) {
+            return smsVarsel.getMobilnummer();
+        }
+        return null;
+    }
+
+    private String getEpost(EpostVarsel epostVarsel) {
+        if (epostVarsel != null) {
+            return epostVarsel.getEpostadresse();
+        }
+        return null;
     }
 
     private SDPAvsender sdpAvsender(Avsender avsender) {
@@ -125,13 +141,19 @@ public class SDPBuilder {
     }
 
     private SDPSmsVarsel sdpSmsVarsel(SmsVarsel smsVarsel, String spraakkode) {
-        SDPSmsVarselTekst smsVarselTekst = new SDPSmsVarselTekst(smsVarsel.getTekst(), spraakkode);
-        return new SDPSmsVarsel(smsVarselTekst, new SDPRepetisjoner(smsVarsel.getDagerEtter()));
+        if (smsVarsel != null) {
+            SDPSmsVarselTekst smsVarselTekst = new SDPSmsVarselTekst(smsVarsel.getTekst(), spraakkode);
+            return new SDPSmsVarsel(smsVarselTekst, new SDPRepetisjoner(smsVarsel.getDagerEtter()));
+        }
+        return null;
     }
 
     private SDPEpostVarsel sdpEpostVarsel(EpostVarsel epostVarsel, String spraakkode) {
-        SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getTekst(), spraakkode);
-        return new SDPEpostVarsel(epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));
+        if (epostVarsel != null) {
+            SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getTekst(), spraakkode);
+            return new SDPEpostVarsel(epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));
+        }
+        return null;
     }
 
 }
