@@ -67,9 +67,11 @@ public class SDPBuilder {
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
 
-        Signature signature = new Signature(); // TODO: Hva skal vi signere og hvordan? Legges denne på fra et av filtrene?
+        // Signatur og fingeravtrykk legges på før sending
+        Signature signature = null;
+        Reference dokumentpakkefingeravtrykk = new Reference();
+
         SDPFysiskPostInfo fysiskPostInfo = null; // TODO: støtte fysisk post
-        Reference dokumentpakkefingeravtrykk = new Reference(); // TODO: Generere nøkkel og bygge dokumentpakke
         return new SDPDigitalPost(signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
     }
 
