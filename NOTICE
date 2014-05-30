@@ -8,10 +8,64 @@ Licensed under Apache 2 - http://www.apache.org/licenses/LICENSE-2.0.html
 
 This software includes third party software subject to the following licenses:
 
+  AOP alliance under Public Domain
   Apache Commons Codec under The Apache Software License, Version 2.0
+  Apache Commons Compress under The Apache Software License, Version 2.0
+  Apache Commons Lang under The Apache Software License, Version 2.0
+  Apache HttpClient under Apache License, Version 2.0
+  Apache HttpCore under Apache License, Version 2.0
+  Apache WSS4J DOM WS-Security under The Apache Software License, Version 2.0
+  Apache WSS4J WS-Security Common under The Apache Software License, Version 2.0
+  Apache XML Security for Java under The Apache Software License, Version 2.0
+  api-client under The Apache Software License, Version 2.0
+  api-commons under The Apache Software License, Version 2.0
+  Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
+  Bouncy Castle Provider under Bouncy Castle Licence
+  Commons IO under The Apache Software License, Version 2.0
+  Commons Logging under The Apache Software License, Version 2.0
+  ehcache under The Apache Software License, Version 2.0
   FEST Fluent Assertions (Core) under Apache License, Version 2.0
   FEST Util under Apache License, Version 2.0
   Hamcrest Core under New BSD License
+  JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
+  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
+  JavaMail 1.4 under The Apache Software License, Version 2.0
+  JavaMail API (no providers) under CDDL/GPLv2+CE
+  javax.xml.soap API under CDDL 1.1 or GPL2 w/ CPE
+  JAXB2 Basics - Runtime under BSD-Style License
+  jaxen under The Apache Software License, Version 2.0
+  JCL 1.1.1 implemented over SLF4J under MIT License
+  Joda-Time under Apache 2
+  JUL to SLF4J bridge under MIT License
   JUnit under Common Public License Version 1.0
+  Log4j Implemented Over SLF4J under Apache Software Licenses
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  offentlig-commons under The Apache Software License, Version 2.0
+  offentlig-xsd under The Apache Software License, Version 2.0
+  OpenSAML-J under Apache 2
+  OpenWS under Apache 2
   Sikker digital post klient under The Apache Software License, Version 2.0
+  SLF4J API Module under MIT License
+  Spring AOP under The Apache Software License, Version 2.0
+  Spring Beans under The Apache Software License, Version 2.0
+  Spring Context under The Apache Software License, Version 2.0
+  Spring Core under The Apache Software License, Version 2.0
+  Spring Object/XML Marshalling under The Apache Software License, Version 2.0
+  Spring Transaction under The Apache Software License, Version 2.0
+  Spring Web under The Apache Software License, Version 2.0
+  Spring Web MVC under The Apache Software License, Version 2.0
+  Spring WS Core under The Apache Software License, Version 2.0
+  Spring WS Security under The Apache Software License, Version 2.0
+  Spring XML under The Apache Software License, Version 2.0
+  spring-expression under The Apache Software License, Version 2.0
+  spring-security-core under The Apache Software License, Version 2.0
+  Stax2 API under The BSD License
+  Streaming API for XML under GNU General Public Library or COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+  Sun Java Streaming XML Parser under CDDL-1.0 or GPL-2.0
+  Woodstox under The Apache Software License, Version 2.0
+  WSDL4J under CPL
+  wsit-rt under The Apache Software License, Version 2.0
+  Xalan Java Serializer under The Apache Software License, Version 2.0
+  XMLTooling-J under Apache 2
 

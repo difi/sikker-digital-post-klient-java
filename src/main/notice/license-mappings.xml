@@ -3,5 +3,41 @@
 	xmlns="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup https://source.jasig.org/schemas/maven-notice-plugin/license-lookup/license-lookup-v1.0.xsd">
-    
+
+    <artifact>
+        <groupId>com.sun.xml.wsit</groupId>
+        <artifactId>wsit-rt</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>no.posten.dpost.offentlig</groupId>
+        <artifactId>api-client</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>no.posten.dpost.offentlig</groupId>
+        <artifactId>api-commons</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>no.posten.dpost.offentlig</groupId>
+        <artifactId>offentlig-commons</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>no.posten.dpost.offentlig</groupId>
+        <artifactId>offentlig-xsd</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <license>The Apache Software License, Version 2.0</license>
+    </artifact>
+
 </license-lookup>

@@ -9,7 +9,11 @@
     <properties>
         <junit-version>4.11</junit-version>
         <hamcrest-version>1.3</hamcrest-version>
+        <spring.version>4.0.5.RELEASE</spring.version>
+        <spring.ws.version>2.1.4.RELEASE</spring.ws.version>
+        <spring.security.version>3.1.6.RELEASE</spring.security.version>
         <commons-codec.version>1.9</commons-codec.version>
+        <digipost.offentlig.version>0.1-SNAPSHOT</digipost.offentlig.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-compress.version>1.8.1</commons-compress.version>
     </properties>
@@ -45,15 +49,60 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
             <version>1.50</version>
         </dependency>
 
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.50</version>
+        </dependency>
+
+        <dependency>
             <groupId>no.posten.dpost.offentlig</groupId>
             <artifactId>api-client</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${digipost.offentlig.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.posten.dpost.offentlig</groupId>
+            <artifactId>offentlig-xsd</artifactId>
+            <version>${digipost.offentlig.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.posten.dpost.offentlig</groupId>
+            <artifactId>api-commons</artifactId>
+            <version>${digipost.offentlig.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.3</version>
         </dependency>
 
         <dependency>
@@ -150,7 +199,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.jasig.maven</groupId>
                 <artifactId>maven-notice-plugin</artifactId>
                 <executions>
@@ -162,8 +211,37 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
-            <!--<plugin>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <header>src/main/resources/header.txt</header>
+                    <strictCheck>true</strictCheck>
+                    <excludes>
+                        <exclude>**/*.pdf</exclude>
+                        <exclude>**/*.p12</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.xsd</exclude>
+                        <exclude>**/*.template</exclude>
+                        <!--todo: hva gjør vi med keytools-->
+                        <exclude>**/*.jks</exclude>
+                        <exclude>**/*.jce</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-license-header</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>test</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -176,8 +254,8 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
-            <!--<plugin>
+            </plugin>
+            <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.3.1</version>
                 <executions>
@@ -194,9 +272,54 @@
                                         <exclude>*:*:*:jar:compile</exclude>
                                     </excludes>
                                     <includes>
+                                        <include>aopalliance:aopalliance:1.0</include>
+                                        <include>com.sun.xml.wsit:wsit-rt:1.1</include>
                                         <include>commons-codec:commons-codec:${commons-codec.version}</include>
+                                        <include>commons-io:commons-io:2.4</include>
+                                        <include>commons-logging:commons-logging:1.1.3</include>
+                                        <include>javax.activation:activation:1.1</include>
+                                        <include>javax.xml.stream:stax-api:1.0</include>
+                                        <include>jaxen:jaxen:1.1.6</include>
+                                        <include>joda-time:joda-time:2.3</include>
                                         <include>junit:junit:${junit-version}</include>
+                                        <include>no.posten.dpost.offentlig:api-client:${digipost.offentlig.version}</include>
+                                        <include>no.posten.dpost.offentlig:api-commons:${digipost.offentlig.version}</include>
+                                        <include>no.posten.dpost.offentlig:offentlig-commons:${digipost.offentlig.version}</include>
+                                        <include>no.posten.dpost.offentlig:offentlig-xsd:${digipost.offentlig.version}</include>
+                                        <include>org.apache.commons:commons-compress:1.8.1</include>
+                                        <include>org.apache.commons:commons-lang3:3.3.1</include>
+                                        <include>org.apache.geronimo.specs:geronimo-javamail_1.4_spec:1.7.1</include>
+                                        <include>org.apache.httpcomponents:httpclient:4.3.2</include>
+                                        <include>org.apache.httpcomponents:httpcore:4.3.2</include>
+                                        <include>org.apache.santuario:xmlsec:2.0.0</include>
+                                        <include>org.apache.wss4j:wss4j-ws-security-common:2.0.0</include>
+                                        <include>org.apache.wss4j:wss4j-ws-security-dom:2.0.0</include>
+                                        <include>org.bouncycastle:bcpkix-jdk15on:1.50</include>
+                                        <include>org.bouncycastle:bcprov-jdk15on:1.50</include>
+                                        <include>org.codehaus.woodstox:stax2-api:3.1.4</include>
+                                        <include>org.codehaus.woodstox:woodstox-core-asl:4.3.0</include>
                                         <include>org.hamcrest:hamcrest-core:${hamcrest-version}</include>
+                                        <include>org.jasypt:jasypt:1.9.1</include>
+                                        <include>org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.6.5.1</include>
+                                        <include>org.opensaml:opensaml:2.6.1</include>
+                                        <include>org.opensaml:openws:1.5.1</include>
+                                        <include>org.opensaml:xmltooling:1.4.1</include>
+                                        <include>org.slf4j:jcl-over-slf4j:1.7.6</include>
+                                        <include>org.slf4j:slf4j-api:1.7.6</include>
+                                        <include>org.springframework:spring-aop:3.2.4.RELEASE</include>
+                                        <include>org.springframework:spring-beans:${spring.version}</include>
+                                        <include>org.springframework:spring-context:${spring.version}</include>
+                                        <include>org.springframework:spring-core:${spring.version}</include>
+                                        <include>org.springframework:spring-expression:3.0.7.RELEASE</include>
+                                        <include>org.springframework:spring-oxm:${spring.version}</include>
+                                        <include>org.springframework:spring-tx:3.2.4.RELEASE</include>
+                                        <include>org.springframework:spring-web:3.2.4.RELEASE</include>
+                                        <include>org.springframework:spring-webmvc:3.2.4.RELEASE</include>
+                                        <include>org.springframework.security:spring-security-core:${spring.security.version}</include>
+                                        <include>org.springframework.ws:spring-xml:${spring.ws.version}</include>
+                                        <include>org.springframework.ws:spring-ws-core:${spring.ws.version}</include>
+                                        <include>org.springframework.ws:spring-ws-security:${spring.ws.version}</include>
+                                        <include>wsdl4j:wsdl4j:1.6.1</include>
                                     </includes>
                                     <searchTransitive>true</searchTransitive>
                                     <message>Maven-avhengigheter har forandret seg. Sjekk at alle lisenser er OK før distribusjon. Husk også å oppdatere fila «NOTICE».
@@ -206,7 +329,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 
