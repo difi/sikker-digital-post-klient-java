@@ -7,37 +7,37 @@
     <artifact>
         <groupId>com.sun.xml.wsit</groupId>
         <artifactId>wsit-rt</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
     <artifact>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
     <artifact>
         <groupId>no.posten.dpost.offentlig</groupId>
         <artifactId>api-client</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
     <artifact>
         <groupId>no.posten.dpost.offentlig</groupId>
         <artifactId>api-commons</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
     <artifact>
         <groupId>no.posten.dpost.offentlig</groupId>
         <artifactId>offentlig-commons</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
     <artifact>
         <groupId>no.posten.dpost.offentlig</groupId>
         <artifactId>offentlig-xsd</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
     <artifact>
         <groupId>org.springframework</groupId>
         <artifactId>spring-expression</artifactId>
-        <license>Unknown license.</license> <!--todo: sjekk opp hva denne skal være-->
+        <license>The Apache Software License, Version 2.0</license>
     </artifact>
 
 </license-lookup>
