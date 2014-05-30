@@ -22,6 +22,7 @@ This software includes third party software subject to the following licenses:
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
   Commons IO under The Apache Software License, Version 2.0
+  Commons Logging under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0
   FEST Fluent Assertions (Core) under Apache License, Version 2.0
   FEST Util under Apache License, Version 2.0
