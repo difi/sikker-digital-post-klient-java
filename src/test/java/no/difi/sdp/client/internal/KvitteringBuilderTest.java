@@ -1,16 +1,36 @@
 package no.difi.sdp.client.internal;
 
-import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.begrep.sdp.schema_v10.SDPAapning;
+import no.difi.begrep.sdp.schema_v10.SDPFeil;
+import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
+import no.difi.begrep.sdp.schema_v10.SDPKvittering;
+import no.difi.begrep.sdp.schema_v10.SDPLevering;
+import no.difi.begrep.sdp.schema_v10.SDPMelding;
+import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsresultat;
+import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsstatus;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Feil;
 import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
-import no.difi.sdp.client.domain.kvittering.*;
+import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
+import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
+import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
+import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
+import no.difi.sdp.client.domain.kvittering.Varslingskanal;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
 import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
 import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
+import no.posten.dpost.offentlig.api.representations.StandardBusinessDocumentFactory;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.BusinessScope;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.DocumentIdentification;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.Partner;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.PartnerIdentification;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.Scope;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocumentHeader;
 
@@ -22,7 +42,6 @@ import static org.junit.Assert.assertNotNull;
 public class KvitteringBuilderTest {
 
     private final KvitteringBuilder kvitteringBuilder = new KvitteringBuilder();
-    private final String konversasjonsId = UUID.randomUUID().toString();
 
     @Test
     public void shoud_build_pull_request_with_standard_priority() {
@@ -164,7 +183,27 @@ public class KvitteringBuilderTest {
         Organisasjonsnummer avsender = new Organisasjonsnummer("123");
         Organisasjonsnummer mottaker = new Organisasjonsnummer("456");
 
-        StandardBusinessDocument sbd = new StandardBusinessDocument(new StandardBusinessDocumentHeader(), sdpMelding);
+        StandardBusinessDocument sbd = new StandardBusinessDocument().withStandardBusinessDocumentHeader(
+                new StandardBusinessDocumentHeader()
+                        .withHeaderVersion("1.0")
+                        .withSenders(new Partner().withIdentifier(new PartnerIdentification(avsender.asIso6523(), Organisasjonsnummer.ISO6523_ACTORID)))
+                        .withReceivers(new Partner().withIdentifier(new PartnerIdentification(mottaker.asIso6523(), Organisasjonsnummer.ISO6523_ACTORID)))
+                        .withDocumentIdentification(new DocumentIdentification()
+                                .withStandard("urn:no:difi:sdp:1.0")
+                                .withTypeVersion("1.0")
+                                .withInstanceIdentifier("instanceIdentifier")
+                                .withType(StandardBusinessDocumentFactory.Type.from((SDPMelding) sdpMelding).toString())
+                                .withCreationDateAndTime(DateTime.now())
+                        )
+                        .withBusinessScope(new BusinessScope()
+                                .withScopes(new Scope()
+                                        .withIdentifier("urn:no:difi:sdp:1.0")
+                                        .withType("ConversationId")
+                                        .withInstanceIdentifier(UUID.randomUUID().toString())
+                                )
+                        )
+        )
+                .withAny(sdpMelding);
 
         return EbmsApplikasjonsKvittering.create(avsender, mottaker, sbd).build();
     }
