@@ -15,19 +15,40 @@
  */
 package no.difi.sdp.client.internal;
 
-import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.begrep.sdp.schema_v10.SDPFeil;
+import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
+import no.difi.begrep.sdp.schema_v10.SDPKvittering;
+import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsresultat;
+import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsstatus;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Feil;
 import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
-import no.difi.sdp.client.domain.kvittering.*;
-import no.posten.dpost.offentlig.api.representations.*;
+import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client.domain.kvittering.BekreftelsesKvittering;
+import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
+import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
+import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
+import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
+import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
+import no.difi.sdp.client.domain.kvittering.Varslingskanal;
+import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
+import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
+import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
+import no.posten.dpost.offentlig.api.representations.SimpleStandardBusinessDocument;
+import no.posten.dpost.offentlig.api.representations.StandardBusinessDocumentFactory;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 
 import java.util.Date;
 
 public class KvitteringBuilder {
 
-    public EbmsPullRequest buildEbmsPullRequest(Organisasjonsnummer meldingsformidlerOrgNummer, Prioritet prioritet) {
-        EbmsMottaker meldingsformidler = new EbmsMottaker(meldingsformidlerOrgNummer);
+    public EbmsPullRequest buildEbmsPullRequest(Organisasjonsnummer digitalpostMeldingsformidler, Prioritet prioritet) {
+        EbmsAktoer meldingsformidler = EbmsAktoer.meldingsformidler(digitalpostMeldingsformidler);
 
         if (prioritet == Prioritet.PRIORITERT) {
             return new EbmsPullRequest(meldingsformidler, EbmsOutgoingMessage.Prioritet.PRIORITERT);
@@ -37,6 +58,7 @@ public class KvitteringBuilder {
     }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+        String messageId = applikasjonsKvittering.messageId;
         String refToMessageId = applikasjonsKvittering.refToMessageId;
         SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
 
@@ -48,49 +70,55 @@ public class KvitteringBuilder {
             Date tidspunkt = sdpKvittering.getTidspunkt().toDate();
 
             if (sdpKvittering.getAapning() != null) {
-                return AapningsKvittering.builder(tidspunkt, konversasjonsId, refToMessageId).build();
+                return AapningsKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId).build();
             } else if (sdpKvittering.getLevering() != null) {
-                return LeveringsKvittering.builder(tidspunkt, konversasjonsId, refToMessageId).build();
+                return LeveringsKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId).build();
             } else if (sdpKvittering.getTilbaketrekking() != null) {
-                return tilbaketrekkingsKvittering(sdpKvittering, konversasjonsId, tidspunkt, refToMessageId);
+                return tilbaketrekkingsKvittering(sdpKvittering, konversasjonsId, tidspunkt, messageId, refToMessageId);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
-                return varslingFeiletKvittering(sdpKvittering, konversasjonsId, tidspunkt, refToMessageId);
+                return varslingFeiletKvittering(sdpKvittering, konversasjonsId, tidspunkt, messageId, refToMessageId);
             }
         } else if (sbd.erFeil()) {
-            return feil(sbd, refToMessageId);
+            return feil(sbd, messageId, refToMessageId);
         }
-        //todo: returnere message id
         //todo: proper exception handling
         throw new RuntimeException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
     }
 
-    public EbmsApplikasjonsKvittering buildEbmsApplikasjonsKvittering(BekreftelsesKvittering bekreftelsesKvittering) {
-        //todo
-        return null;
+    public EbmsApplikasjonsKvittering buildEbmsApplikasjonsKvittering(Avsender avsender, Organisasjonsnummer digitalpostMeldingsformidler, BekreftelsesKvittering bekreftelsesKvittering) {
+        Organisasjonsnummer avsenderOrganisasjonsnummer = new Organisasjonsnummer(avsender.getOrganisasjonsnummer());
+
+        //todo: riktig måte å sette konversasjonsid?
+        StandardBusinessDocument doc = StandardBusinessDocumentFactory
+                .create(avsenderOrganisasjonsnummer, digitalpostMeldingsformidler, "instanceIdentifier", bekreftelsesKvittering.getKonversasjonsId(), null);
+
+        return EbmsApplikasjonsKvittering.create(EbmsAktoer.avsender(avsenderOrganisasjonsnummer), EbmsAktoer.meldingsformidler(digitalpostMeldingsformidler), doc)
+                .withRefToMessageId(bekreftelsesKvittering.getRefToMessageId())
+                .build();
     }
 
-    private ForretningsKvittering feil(SimpleStandardBusinessDocument sbd, String refToMessageId) {
+    private ForretningsKvittering feil(SimpleStandardBusinessDocument sbd, String messageId, String refToMessageId) {
         SDPFeil feil = sbd.getFeil();
 
-        return Feil.builder(feil.getTidspunkt().toDate(), "todo", refToMessageId, mapFeilType(feil.getFeiltype()))
+        return Feil.builder(feil.getTidspunkt().toDate(), sbd.getConversationId(), messageId, refToMessageId, mapFeilType(feil.getFeiltype()))
                 .detaljer(feil.getDetaljer())
                 .build();
     }
 
-    private ForretningsKvittering tilbaketrekkingsKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String refToMessageId) {
+    private ForretningsKvittering tilbaketrekkingsKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String messageId, String refToMessageId) {
         SDPTilbaketrekkingsresultat tilbaketrekking = sdpKvittering.getTilbaketrekking();
         TilbaketrekkingsStatus status = mapTilbaketrekkingsStatus(tilbaketrekking.getStatus());
 
-        return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, refToMessageId, status)
+        return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId, status)
                 .beskrivelse(tilbaketrekking.getBeskrivelse())
                 .build();
     }
 
-    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String refToMessageId) {
+    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String messageId, String refToMessageId) {
         SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
         Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
 
-        return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, refToMessageId, varslingskanal)
+        return VarslingFeiletKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId, varslingskanal)
                 .beskrivelse(varslingfeilet.getBeskrivelse())
                 .build();
     }

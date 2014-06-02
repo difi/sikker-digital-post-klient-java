@@ -24,8 +24,8 @@ public class Feil extends ForretningsKvittering {
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(Date tidspunkt, String konversasjonsId, String refToMessageId, Feiltype feiltype) {
-        super(tidspunkt, konversasjonsId, refToMessageId);
+    private Feil(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Feiltype feiltype) {
+        super(tidspunkt, konversasjonsId, messageId, refToMessageId);
         this.feiltype = feiltype;
     }
 
@@ -37,16 +37,16 @@ public class Feil extends ForretningsKvittering {
         return detaljer;
     }
 
-    public static Builder builder(Date tidspunkt, String konversasjonsId, String refToMessageId, Feiltype feiltype) {
-        return new Builder(tidspunkt, konversasjonsId, refToMessageId, feiltype);
+    public static Builder builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Feiltype feiltype) {
+        return new Builder(tidspunkt, konversasjonsId, messageId, refToMessageId, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId, String refToMessageId, Feiltype feiltype) {
-            target = new Feil(tidspunkt, konversasjonsId, refToMessageId, feiltype);
+        public Builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Feiltype feiltype) {
+            target = new Feil(tidspunkt, konversasjonsId, messageId, refToMessageId, feiltype);
         }
 
         public Builder detaljer(String detaljer) {

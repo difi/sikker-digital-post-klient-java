@@ -22,8 +22,8 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(Date tidspunkt, String konversasjonsId, String refToMessageId, Varslingskanal varslingskanal) {
-        super(tidspunkt, konversasjonsId, refToMessageId);
+    private VarslingFeiletKvittering(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Varslingskanal varslingskanal) {
+        super(tidspunkt, konversasjonsId, messageId, refToMessageId);
         this.varslingskanal = varslingskanal;
     }
 
@@ -35,16 +35,16 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
         return beskrivelse;
     }
 
-    public static Builder builder(Date tidspunkt, String konversasjonsId, String refToMessageId, Varslingskanal varslingskanal) {
-        return new Builder(tidspunkt, konversasjonsId, refToMessageId, varslingskanal);
+    public static Builder builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Varslingskanal varslingskanal) {
+        return new Builder(tidspunkt, konversasjonsId, messageId, refToMessageId, varslingskanal);
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId, String refToMessageId, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(tidspunkt, konversasjonsId, refToMessageId, varslingskanal);
+        public Builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(tidspunkt, konversasjonsId, messageId, refToMessageId, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {

@@ -20,6 +20,7 @@ import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
 import no.posten.dpost.offentlig.api.representations.Dokumentpakke;
+import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
 import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
 import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
@@ -35,15 +36,16 @@ public class EbmsForsendelseBuilder {
         createDokumentpakke = new CreateDokumentpakke();
     }
 
-    public EbmsForsendelse buildEbmsForsendelse(Avsender avsender, Forsendelse forsendelse) {
+    public EbmsForsendelse buildEbmsForsendelse(Avsender avsender, Organisasjonsnummer digipostMeldingsformidler, Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
-        
-        Organisasjonsnummer avsenderOrganisasjonsnummer = new Organisasjonsnummer(avsender.getOrganisasjonsnummer());
-        Organisasjonsnummer mottakerOrganisasjonsnummer = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
+
+        EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(avsender.getOrganisasjonsnummer());
+        EbmsAktoer mottakerAktoer = EbmsAktoer.avsender(mottaker.getOrganisasjonsnummerPostkasse());
+
         SDPDigitalPost sikkerDigitalPost = createSikkerDigitalPost(avsender, forsendelse);
         InputStream dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
 
-        return EbmsForsendelse.create(avsenderOrganisasjonsnummer, mottakerOrganisasjonsnummer, sikkerDigitalPost, new Dokumentpakke(dokumentpakke)).build();
+        return EbmsForsendelse.create(avsenderAktoer, mottakerAktoer, digipostMeldingsformidler, sikkerDigitalPost, new Dokumentpakke(dokumentpakke)).build();
     }
 
     private SDPDigitalPost createSikkerDigitalPost(Avsender avsender, Forsendelse forsendelse) {

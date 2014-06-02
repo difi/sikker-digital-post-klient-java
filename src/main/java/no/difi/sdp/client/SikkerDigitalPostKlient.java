@@ -24,6 +24,7 @@ import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
 import no.difi.sdp.client.internal.KvitteringBuilder;
 import no.difi.sdp.client.util.CryptoChecker;
 import no.posten.dpost.offentlig.api.MessageSender;
+import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
 import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
@@ -47,8 +48,8 @@ public class SikkerDigitalPostKlient {
         try {
             messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
                     avsender.getNoekkelpar().getKeyStoreInfo(),
-                    new Organisasjonsnummer(avsender.getOrganisasjonsnummer()),
-                    digipostMeldingsformidler)
+                    EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
+                    EbmsAktoer.meldingsformidler(digipostMeldingsformidler))
                     .build();
         } catch (Exception e) {
             // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
@@ -68,7 +69,7 @@ public class SikkerDigitalPostKlient {
             throw new UnsupportedOperationException("Fysiske forsendelser er ikke implementert");
         }
 
-        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, forsendelse);
+        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, digipostMeldingsformidler, forsendelse);
         messageSender.send(ebmsForsendelse);
     }
 
@@ -87,9 +88,34 @@ public class SikkerDigitalPostKlient {
      *
      */
     public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) {
+        return hentKvitteringOgBekreftForrige(kvitteringForespoersel, null);
+    }
+
+    /**
+     * Forespør kvittering for forsendelser med mulighet til å samtidig bekrefte på forrige kvittering for å slippe å kjøre eget kall for bekreft.
+     * Kvitteringer blir tilgjengeliggjort etterhvert som de er klare i meldingsofrmidler. Det er ikke mulig å etterspørre kvittering for en
+     * spesifikk forsendelse.
+     *
+     * Dersom det ikke er tilgjengelige kvitteringer skal det ventes følgende tidsintervaller før en ny forespørsel gjøres:
+     * <dl>
+     *     <dt>normal</dt>
+     *     <dd>Minimum 10 minutter</dd>
+     *
+     *     <dt>prioritert</dt>
+     *     <dd>Minimum 1 minutt</dd>
+     * </dl>
+     *
+     */
+    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, BekreftelsesKvittering tidligereKvittering) {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(digipostMeldingsformidler, kvitteringForespoersel.getPrioritet());
 
-        EbmsApplikasjonsKvittering applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest);
+        EbmsApplikasjonsKvittering applikasjonsKvittering;
+        if (tidligereKvittering == null) {
+            applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest);
+        } else {
+            EbmsApplikasjonsKvittering tidligereKvitteringSomSkalBekreftes = kvitteringBuilder.buildEbmsApplikasjonsKvittering(avsender, digipostMeldingsformidler, tidligereKvittering);
+            applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest, tidligereKvitteringSomSkalBekreftes);
+        }
 
         if (applikasjonsKvittering != null) {
             return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
@@ -108,8 +134,8 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreftKvittering(BekreftelsesKvittering bekreftelsesKvittering) {
-        EbmsApplikasjonsKvittering kvittering = kvitteringBuilder.buildEbmsApplikasjonsKvittering(bekreftelsesKvittering);
+    public void bekreft(BekreftelsesKvittering bekreftelsesKvittering) {
+        EbmsApplikasjonsKvittering kvittering = kvitteringBuilder.buildEbmsApplikasjonsKvittering(avsender, digipostMeldingsformidler, bekreftelsesKvittering);
         messageSender.bekreft(kvittering);
     }
 }

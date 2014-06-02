@@ -18,11 +18,19 @@ package no.difi.sdp.client.domain.kvittering;
 public class BekreftelsesKvittering {
 
     private String konversasjonsId;
-    private String messsageId;
+    private String refToMessageId;
 
-    private BekreftelsesKvittering(String konversasjonsId, String messsageId) {
+    private BekreftelsesKvittering(String konversasjonsId, String refToMessageId) {
         this.konversasjonsId = konversasjonsId;
-        this.messsageId = messsageId;
+        this.refToMessageId = refToMessageId;
+    }
+
+    public String getKonversasjonsId() {
+        return konversasjonsId;
+    }
+
+    public String getRefToMessageId() {
+        return refToMessageId;
     }
 
     public static Builder builder(String konversasjonsId, String messageId) {

@@ -34,6 +34,7 @@ import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
 import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.difi.sdp.client.domain.kvittering.Varslingskanal;
+import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
 import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
@@ -220,7 +221,7 @@ public class KvitteringBuilderTest {
         )
                 .withAny(sdpMelding);
 
-        return EbmsApplikasjonsKvittering.create(avsender, mottaker, sbd).build();
+        return EbmsApplikasjonsKvittering.create(EbmsAktoer.avsender(avsender), EbmsAktoer.postkasse(mottaker), sbd).build();
     }
 
 }
