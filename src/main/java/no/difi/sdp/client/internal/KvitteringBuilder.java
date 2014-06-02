@@ -18,8 +18,6 @@ package no.difi.sdp.client.internal;
 import no.difi.begrep.sdp.schema_v10.SDPFeil;
 import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
-import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsresultat;
-import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsstatus;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Avsender;
@@ -30,8 +28,6 @@ import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.BekreftelsesKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
-import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
-import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.difi.sdp.client.domain.kvittering.Varslingskanal;
 import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
@@ -73,8 +69,6 @@ public class KvitteringBuilder {
                 return AapningsKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId).build();
             } else if (sdpKvittering.getLevering() != null) {
                 return LeveringsKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId).build();
-            } else if (sdpKvittering.getTilbaketrekking() != null) {
-                return tilbaketrekkingsKvittering(sdpKvittering, konversasjonsId, tidspunkt, messageId, refToMessageId);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
                 return varslingFeiletKvittering(sdpKvittering, konversasjonsId, tidspunkt, messageId, refToMessageId);
             }
@@ -105,15 +99,6 @@ public class KvitteringBuilder {
                 .build();
     }
 
-    private ForretningsKvittering tilbaketrekkingsKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String messageId, String refToMessageId) {
-        SDPTilbaketrekkingsresultat tilbaketrekking = sdpKvittering.getTilbaketrekking();
-        TilbaketrekkingsStatus status = mapTilbaketrekkingsStatus(tilbaketrekking.getStatus());
-
-        return TilbaketrekkingsKvittering.builder(tidspunkt, konversasjonsId, messageId, refToMessageId, status)
-                .beskrivelse(tilbaketrekking.getBeskrivelse())
-                .build();
-    }
-
     private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, String konversasjonsId, Date tidspunkt, String messageId, String refToMessageId) {
         SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
         Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
@@ -137,10 +122,4 @@ public class KvitteringBuilder {
         return Varslingskanal.SMS;
     }
 
-    private TilbaketrekkingsStatus mapTilbaketrekkingsStatus(SDPTilbaketrekkingsstatus status) {
-        if (status == SDPTilbaketrekkingsstatus.OK) {
-            return TilbaketrekkingsStatus.OK;
-        }
-        return TilbaketrekkingsStatus.FEILET;
-    }
 }

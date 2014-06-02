@@ -30,8 +30,6 @@ import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
-import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsKvittering;
-import no.difi.sdp.client.domain.kvittering.TilbaketrekkingsStatus;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.difi.sdp.client.domain.kvittering.Varslingskanal;
 import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
@@ -118,30 +116,6 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.getTidspunkt());
         assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
         assertThat((varslingFeiletKvittering).getVarslingskanal()).isEqualTo(Varslingskanal.SMS);
-    }
-
-    @Test
-    public void should_build_tilbaketrekking_ok_kvittering() {
-        EbmsApplikasjonsKvittering ebmsKvittering = createEbmsTilbaketrekkingsKvittering(SDPTilbaketrekkingsstatus.OK);
-
-        TilbaketrekkingsKvittering tilbaketrekkingsKvittering = (TilbaketrekkingsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
-
-        assertNotNull(tilbaketrekkingsKvittering.getKonversasjonsId());
-        assertNotNull(tilbaketrekkingsKvittering.getTidspunkt());
-        assertThat(tilbaketrekkingsKvittering.getBeskrivelse()).isEqualTo("Tilbaketrekking av 'Viktig brev'");
-        assertThat(tilbaketrekkingsKvittering.getStatus()).isEqualTo(TilbaketrekkingsStatus.OK);
-    }
-
-    @Test
-    public void should_build_tilbaketrekking_feilet_kvittering() {
-        EbmsApplikasjonsKvittering ebmsKvittering = createEbmsTilbaketrekkingsKvittering(SDPTilbaketrekkingsstatus.FEILET);
-
-        TilbaketrekkingsKvittering tilbaketrekkingsKvittering = (TilbaketrekkingsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
-
-        assertNotNull(tilbaketrekkingsKvittering.getKonversasjonsId());
-        assertNotNull(tilbaketrekkingsKvittering.getTidspunkt());
-        assertThat((tilbaketrekkingsKvittering).getBeskrivelse()).isEqualTo("Tilbaketrekking av 'Viktig brev'");
-        assertThat((tilbaketrekkingsKvittering).getStatus()).isEqualTo(TilbaketrekkingsStatus.FEILET);
     }
 
     @Test
