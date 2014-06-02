@@ -7,32 +7,12 @@
     <artifact>
         <groupId>com.sun.xml.wsit</groupId>
         <artifactId>wsit-rt</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
+        <license>CDDL v1.1</license>
     </artifact>
     <artifact>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
-    </artifact>
-    <artifact>
-        <groupId>no.posten.dpost.offentlig</groupId>
-        <artifactId>api-client</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
-    </artifact>
-    <artifact>
-        <groupId>no.posten.dpost.offentlig</groupId>
-        <artifactId>api-commons</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
-    </artifact>
-    <artifact>
-        <groupId>no.posten.dpost.offentlig</groupId>
-        <artifactId>offentlig-commons</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
-    </artifact>
-    <artifact>
-        <groupId>no.posten.dpost.offentlig</groupId>
-        <artifactId>offentlig-xsd</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
+        <license>Jaxen license (http://jaxen.codehaus.org/license.html)</license>
     </artifact>
     <artifact>
         <groupId>org.springframework</groupId>
