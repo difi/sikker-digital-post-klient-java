@@ -36,19 +36,19 @@ public class EbmsForsendelseBuilder {
         createDokumentpakke = new CreateDokumentpakke();
     }
 
-    public EbmsForsendelse buildEbmsForsendelse(Avsender avsender, Organisasjonsnummer digipostMeldingsformidler, Forsendelse forsendelse) {
+    public EbmsForsendelse buildEbmsForsendelse(final Avsender avsender, final Organisasjonsnummer digipostMeldingsformidler, final Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
         EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(avsender.getOrganisasjonsnummer());
-        EbmsAktoer mottakerAktoer = EbmsAktoer.avsender(mottaker.getOrganisasjonsnummerPostkasse());
+        Organisasjonsnummer postkasse = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
 
         SDPDigitalPost sikkerDigitalPost = createSikkerDigitalPost(avsender, forsendelse);
         InputStream dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
 
-        return EbmsForsendelse.create(avsenderAktoer, mottakerAktoer, digipostMeldingsformidler, sikkerDigitalPost, new Dokumentpakke(dokumentpakke)).build();
+        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(digipostMeldingsformidler), postkasse, sikkerDigitalPost, new Dokumentpakke(dokumentpakke)).build();
     }
 
-    private SDPDigitalPost createSikkerDigitalPost(Avsender avsender, Forsendelse forsendelse) {
+    private SDPDigitalPost createSikkerDigitalPost(final Avsender avsender, final Forsendelse forsendelse) {
         return sdpBuilder.buildDigitalPost(avsender, forsendelse);
     }
 }
