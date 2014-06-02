@@ -15,35 +15,30 @@
  */
 package no.difi.sdp.client.domain.kvittering;
 
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+
 import java.util.Date;
 
 public abstract class ForretningsKvittering {
 
-    protected ForretningsKvittering(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId) {
-        this.tidspunkt = tidspunkt;
-        this.konversasjonsId = konversasjonsId;
-        this.messageId = messageId;
-        this.refToMessageId = refToMessageId;
+    protected ForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+        this.applikasjonsKvittering = applikasjonsKvittering;
     }
 
-    private String konversasjonsId;
-    private Date tidspunkt;
-    private String messageId;
-    private String refToMessageId;
+    public final EbmsApplikasjonsKvittering applikasjonsKvittering;
 
     public String getKonversasjonsId() {
-        return konversasjonsId;
+        return applikasjonsKvittering.getStandardBusinessDocument().getConversationId();
     }
 
-    public Date getTidspunkt() {
-        return tidspunkt;
-    }
+    public abstract Date getTidspunkt();
 
     public String getMessageId() {
-        return messageId;
+        return applikasjonsKvittering.messageId;
     }
 
     public String getRefToMessageId() {
-        return refToMessageId;
+        return applikasjonsKvittering.refToMessageId;
     }
+
 }

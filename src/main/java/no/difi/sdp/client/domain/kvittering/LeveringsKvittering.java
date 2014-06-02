@@ -15,24 +15,30 @@
  */
 package no.difi.sdp.client.domain.kvittering;
 
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+
 import java.util.Date;
 
 public class LeveringsKvittering extends ForretningsKvittering {
 
-    private LeveringsKvittering(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId) {
-        super(tidspunkt, konversasjonsId, messageId, refToMessageId);
+    private LeveringsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+        super(applikasjonsKvittering);
     }
 
-    public static Builder builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId) {
-        return new Builder(tidspunkt, konversasjonsId, messageId, refToMessageId);
+    public Date getTidspunkt() {
+        return applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt().toDate();
+    }
+
+    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+        return new Builder(applikasjonsKvittering);
     }
 
     public static class Builder {
         private LeveringsKvittering target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId) {
-            target = new LeveringsKvittering(tidspunkt, konversasjonsId, messageId, refToMessageId);
+        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+            target = new LeveringsKvittering(applikasjonsKvittering);
         }
 
         public LeveringsKvittering build() {

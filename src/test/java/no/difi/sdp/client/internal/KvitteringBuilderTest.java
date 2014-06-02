@@ -15,13 +15,7 @@
  */
 package no.difi.sdp.client.internal;
 
-import no.difi.begrep.sdp.schema_v10.SDPAapning;
-import no.difi.begrep.sdp.schema_v10.SDPFeil;
 import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
-import no.difi.begrep.sdp.schema_v10.SDPKvittering;
-import no.difi.begrep.sdp.schema_v10.SDPLevering;
-import no.difi.begrep.sdp.schema_v10.SDPMelding;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Feil;
 import no.difi.sdp.client.domain.Feiltype;
@@ -30,24 +24,16 @@ import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.difi.sdp.client.domain.kvittering.Varslingskanal;
-import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
 import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
 import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
-import no.posten.dpost.offentlig.api.representations.StandardBusinessDocumentFactory;
-import org.joda.time.DateTime;
 import org.junit.Test;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.BusinessScope;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.DocumentIdentification;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.Partner;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.PartnerIdentification;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.Scope;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocumentHeader;
 
-import java.util.UUID;
-
+import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;
+import static no.difi.sdp.client.ObjectMother.createEbmsFeil;
+import static no.difi.sdp.client.ObjectMother.createEbmsLeveringsKvittering;
+import static no.difi.sdp.client.ObjectMother.createEbmsVarslingFeiletKvittering;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -138,56 +124,6 @@ public class KvitteringBuilderTest {
         assertNotNull(feil.getTidspunkt());
         assertThat(feil.getFeiltype()).isEqualTo(Feiltype.SERVER);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
-    }
-
-    private EbmsApplikasjonsKvittering createEbmsFeil(SDPFeiltype feiltype) {
-        SDPFeil sdpFeil = new SDPFeil(null, DateTime.now(), feiltype, "Feilinformasjon");
-        return createEbmsKvittering(sdpFeil);
-    }
-
-    private EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
-        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPAapning(), null);
-        return createEbmsKvittering(aapningsKvittering);
-    }
-
-    private EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
-        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering());
-        return createEbmsKvittering(leveringsKvittering);
-    }
-
-    private EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(SDPVarslingskanal varslingskanal) {
-        SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
-        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null);
-        return createEbmsKvittering(varslingFeiletKvittering);
-    }
-
-    private EbmsApplikasjonsKvittering createEbmsKvittering(Object sdpMelding) {
-        Organisasjonsnummer avsender = new Organisasjonsnummer("123");
-        Organisasjonsnummer mottaker = new Organisasjonsnummer("456");
-
-        StandardBusinessDocument sbd = new StandardBusinessDocument().withStandardBusinessDocumentHeader(
-                new StandardBusinessDocumentHeader()
-                        .withHeaderVersion("1.0")
-                        .withSenders(new Partner().withIdentifier(new PartnerIdentification(avsender.asIso6523(), Organisasjonsnummer.ISO6523_ACTORID)))
-                        .withReceivers(new Partner().withIdentifier(new PartnerIdentification(mottaker.asIso6523(), Organisasjonsnummer.ISO6523_ACTORID)))
-                        .withDocumentIdentification(new DocumentIdentification()
-                                .withStandard("urn:no:difi:sdp:1.0")
-                                .withTypeVersion("1.0")
-                                .withInstanceIdentifier("instanceIdentifier")
-                                .withType(StandardBusinessDocumentFactory.Type.from((SDPMelding) sdpMelding).toString())
-                                .withCreationDateAndTime(DateTime.now())
-                        )
-                        .withBusinessScope(new BusinessScope()
-                                .withScopes(new Scope()
-                                        .withIdentifier("urn:no:difi:sdp:1.0")
-                                        .withType("ConversationId")
-                                        .withInstanceIdentifier(UUID.randomUUID().toString())
-                                )
-                        )
-        )
-                .withAny(sdpMelding);
-
-        return EbmsApplikasjonsKvittering.create(EbmsAktoer.avsender(avsender), EbmsAktoer.postkasse(mottaker), sbd).build();
     }
 
 }

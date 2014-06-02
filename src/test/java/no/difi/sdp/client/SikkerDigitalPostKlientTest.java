@@ -30,6 +30,7 @@ import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.NorskPostadresse;
 import no.difi.sdp.client.domain.fysisk_post.PostType;
 import no.difi.sdp.client.domain.fysisk_post.UtenlandskPostadresse;
+import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import org.junit.Before;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static java.util.Arrays.asList;
+import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class SikkerDigitalPostKlientTest {
@@ -118,8 +120,24 @@ public class SikkerDigitalPostKlientTest {
 
     @Test
     @Ignore
-    public void test_bekreft_kvittering() {
+    public void test_hent_kvittering_og_bekreft_forrige() {
+        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
+        ForretningsKvittering forrigeKvittering = AapningsKvittering.builder(createEbmsAapningsKvittering()).build();
 
+        ForretningsKvittering forretningsKvittering = postklient.hentKvitteringOgBekreftForrige(kvitteringForespoersel, forrigeKvittering);
+        if (forretningsKvittering != null) {
+            assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
+            assertThat(forretningsKvittering.getMessageId()).isNotEmpty();
+            assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
+            assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
+        }
+    }
+
+    @Test
+    @Ignore
+    public void test_bekreft_kvittering() {
+        ForretningsKvittering forrigeKvittering = AapningsKvittering.builder(createEbmsAapningsKvittering()).build();
+        postklient.bekreft(forrigeKvittering);
     }
 
     @Test

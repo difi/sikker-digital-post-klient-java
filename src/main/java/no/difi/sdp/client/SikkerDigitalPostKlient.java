@@ -17,7 +17,6 @@ package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
-import no.difi.sdp.client.domain.kvittering.BekreftelsesKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
@@ -106,15 +105,14 @@ public class SikkerDigitalPostKlient {
      * </dl>
      *
      */
-    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, BekreftelsesKvittering tidligereKvittering) {
+    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(digipostMeldingsformidler, kvitteringForespoersel.getPrioritet());
 
         EbmsApplikasjonsKvittering applikasjonsKvittering;
-        if (tidligereKvittering == null) {
+        if (forrigeKvittering == null) {
             applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest);
         } else {
-            EbmsApplikasjonsKvittering tidligereKvitteringSomSkalBekreftes = kvitteringBuilder.buildEbmsApplikasjonsKvittering(avsender, digipostMeldingsformidler, tidligereKvittering);
-            applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest, tidligereKvitteringSomSkalBekreftes);
+            applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest, forrigeKvittering.applikasjonsKvittering);
         }
 
         if (applikasjonsKvittering != null) {
@@ -134,8 +132,8 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreft(BekreftelsesKvittering bekreftelsesKvittering) {
-        EbmsApplikasjonsKvittering kvittering = kvitteringBuilder.buildEbmsApplikasjonsKvittering(avsender, digipostMeldingsformidler, bekreftelsesKvittering);
+    public void bekreft(ForretningsKvittering forrigeKvittering) {
+        EbmsApplikasjonsKvittering kvittering = forrigeKvittering.applikasjonsKvittering;
         messageSender.bekreft(kvittering);
     }
 }

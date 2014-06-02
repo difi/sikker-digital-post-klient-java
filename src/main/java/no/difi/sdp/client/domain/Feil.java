@@ -16,6 +16,7 @@
 package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 
 import java.util.Date;
 
@@ -24,9 +25,13 @@ public class Feil extends ForretningsKvittering {
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Feiltype feiltype) {
-        super(tidspunkt, konversasjonsId, messageId, refToMessageId);
+    private Feil(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
+        super(applikasjonsKvittering);
         this.feiltype = feiltype;
+    }
+
+    public Date getTidspunkt() {
+        return applikasjonsKvittering.getStandardBusinessDocument().getFeil().getTidspunkt().toDate();
     }
 
     public Feiltype getFeiltype() {
@@ -37,16 +42,16 @@ public class Feil extends ForretningsKvittering {
         return detaljer;
     }
 
-    public static Builder builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Feiltype feiltype) {
-        return new Builder(tidspunkt, konversasjonsId, messageId, refToMessageId, feiltype);
+    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
+        return new Builder(applikasjonsKvittering, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Feiltype feiltype) {
-            target = new Feil(tidspunkt, konversasjonsId, messageId, refToMessageId, feiltype);
+        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
+            target = new Feil(applikasjonsKvittering, feiltype);
         }
 
         public Builder detaljer(String detaljer) {

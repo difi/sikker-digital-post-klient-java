@@ -15,6 +15,8 @@
  */
 package no.difi.sdp.client.domain.kvittering;
 
+import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+
 import java.util.Date;
 
 public class VarslingFeiletKvittering extends ForretningsKvittering {
@@ -22,9 +24,13 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Varslingskanal varslingskanal) {
-        super(tidspunkt, konversasjonsId, messageId, refToMessageId);
+    private VarslingFeiletKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
+        super(applikasjonsKvittering);
         this.varslingskanal = varslingskanal;
+    }
+
+    public Date getTidspunkt() {
+        return applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt().toDate();
     }
 
     public Varslingskanal getVarslingskanal() {
@@ -35,16 +41,16 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
         return beskrivelse;
     }
 
-    public static Builder builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Varslingskanal varslingskanal) {
-        return new Builder(tidspunkt, konversasjonsId, messageId, refToMessageId, varslingskanal);
+    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
+        return new Builder(applikasjonsKvittering, varslingskanal);
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(Date tidspunkt, String konversasjonsId, String messageId, String refToMessageId, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(tidspunkt, konversasjonsId, messageId, refToMessageId, varslingskanal);
+        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(applikasjonsKvittering, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {
