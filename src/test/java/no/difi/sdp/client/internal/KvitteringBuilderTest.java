@@ -21,8 +21,6 @@ import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPLevering;
 import no.difi.begrep.sdp.schema_v10.SDPMelding;
-import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsresultat;
-import no.difi.begrep.sdp.schema_v10.SDPTilbaketrekkingsstatus;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Feil;
@@ -161,12 +159,6 @@ public class KvitteringBuilderTest {
         SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
         SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null);
         return createEbmsKvittering(varslingFeiletKvittering);
-    }
-
-    private EbmsApplikasjonsKvittering createEbmsTilbaketrekkingsKvittering(SDPTilbaketrekkingsstatus status) {
-        SDPTilbaketrekkingsresultat sdpTilbaketrekkingsresultat = new SDPTilbaketrekkingsresultat(status, "Tilbaketrekking av 'Viktig brev'");
-        SDPKvittering tilbaketrekkingsKvittering = new SDPKvittering(null, DateTime.now(), sdpTilbaketrekkingsresultat, null, null, null);
-        return createEbmsKvittering(tilbaketrekkingsKvittering);
     }
 
     private EbmsApplikasjonsKvittering createEbmsKvittering(Object sdpMelding) {
