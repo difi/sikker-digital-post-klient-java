@@ -268,7 +268,6 @@
                                         <include>junit:junit:${junit-version}</include>
                                         <include>no.posten.dpost.offentlig:api-client:${digipost.offentlig.version}</include>
                                         <include>no.posten.dpost.offentlig:api-commons:${digipost.offentlig.version}</include>
-                                        <include>no.posten.dpost.offentlig:offentlig-commons:${digipost.offentlig.version}</include>
                                         <include>no.posten.dpost.offentlig:offentlig-xsd:${digipost.offentlig.version}</include>
                                         <include>org.apache.commons:commons-compress:1.8.1</include>
                                         <include>org.apache.commons:commons-lang3:3.3.1</include>
