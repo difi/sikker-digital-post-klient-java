@@ -12,7 +12,7 @@
     <artifact>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
-        <license>Jaxen license (http://jaxen.codehaus.org/license.html)</license>
+        <license>The BSD 3-Clause License</license>
     </artifact>
     <artifact>
         <groupId>org.springframework</groupId>
