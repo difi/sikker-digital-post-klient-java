@@ -18,12 +18,10 @@ package no.difi.sdp.client.internal;
 import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Feil;
-import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
-import no.difi.sdp.client.domain.kvittering.Varslingskanal;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
 import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
@@ -87,7 +85,7 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.getTidspunkt());
 
         assertThat(varslingFeiletKvittering.getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
-        assertThat(varslingFeiletKvittering.getVarslingskanal()).isEqualTo(Varslingskanal.EPOST);
+        assertThat(varslingFeiletKvittering.getVarslingskanal()).isEqualTo(VarslingFeiletKvittering.Varslingskanal.EPOST);
     }
 
     @Test
@@ -99,7 +97,7 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
         assertNotNull(varslingFeiletKvittering.getTidspunkt());
         assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
-        assertThat((varslingFeiletKvittering).getVarslingskanal()).isEqualTo(Varslingskanal.SMS);
+        assertThat((varslingFeiletKvittering).getVarslingskanal()).isEqualTo(VarslingFeiletKvittering.Varslingskanal.SMS);
     }
 
     @Test
@@ -110,7 +108,7 @@ public class KvitteringBuilderTest {
 
         assertNotNull(feil.getKonversasjonsId());
         assertNotNull(feil.getTidspunkt());
-        assertThat(feil.getFeiltype()).isEqualTo(Feiltype.KLIENT);
+        assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.KLIENT);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
     }
 
@@ -122,7 +120,7 @@ public class KvitteringBuilderTest {
 
         assertNotNull(feil.getKonversasjonsId());
         assertNotNull(feil.getTidspunkt());
-        assertThat(feil.getFeiltype()).isEqualTo(Feiltype.SERVER);
+        assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.SERVER);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
     }
 

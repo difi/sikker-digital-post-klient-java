@@ -21,13 +21,11 @@ import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Feil;
-import no.difi.sdp.client.domain.Feiltype;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
-import no.difi.sdp.client.domain.kvittering.Varslingskanal;
 import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
 import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
 import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
@@ -77,25 +75,25 @@ public class KvitteringBuilder {
 
     private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, EbmsApplikasjonsKvittering applikasjonsKvittering) {
         SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
-        Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
+        VarslingFeiletKvittering.Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
 
         return VarslingFeiletKvittering.builder(applikasjonsKvittering, varslingskanal)
                 .beskrivelse(varslingfeilet.getBeskrivelse())
                 .build();
     }
 
-    private Feiltype mapFeilType(SDPFeiltype feiltype) {
+    private Feil.Feiltype mapFeilType(SDPFeiltype feiltype) {
         if (feiltype == SDPFeiltype.KLIENT) {
-            return Feiltype.KLIENT;
+            return Feil.Feiltype.KLIENT;
         }
-        return Feiltype.SERVER;
+        return Feil.Feiltype.SERVER;
     }
 
-    private Varslingskanal mapVarslingsKanal(SDPVarslingskanal varslingskanal) {
+    private VarslingFeiletKvittering.Varslingskanal mapVarslingsKanal(SDPVarslingskanal varslingskanal) {
         if (varslingskanal == SDPVarslingskanal.EPOST) {
-            return Varslingskanal.EPOST;
+            return VarslingFeiletKvittering.Varslingskanal.EPOST;
         }
-        return Varslingskanal.SMS;
+        return VarslingFeiletKvittering.Varslingskanal.SMS;
     }
 
 }
