@@ -22,7 +22,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Sikker digital post klient</name>
-    <groupId>no.difi</groupId>
+    <groupId>no.difi.sdp</groupId>
     <description>
         Klient for sending av sikker digital post fra offentlige virksomheter.
     </description>
@@ -44,6 +44,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${commons-compress.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.1</version>
         </dependency>
 
         <dependency>
