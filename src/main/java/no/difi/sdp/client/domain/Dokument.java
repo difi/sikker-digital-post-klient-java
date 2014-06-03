@@ -24,6 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class Dokument implements AsicEAttachable {
 
     private Dokument(String tittel, String filnavn, InputStream dokumentStream) {
@@ -94,6 +96,18 @@ public class Dokument implements AsicEAttachable {
         private boolean built = false;
 
         private Builder(String tittel, String filnavn, InputStream dokument) {
+            if (isEmpty(tittel)) {
+                throw new IllegalArgumentException("Tittel på dokument må angis");
+            }
+
+            if (isEmpty(filnavn)) {
+                throw new IllegalArgumentException("Filnavn på dokument må angis");
+            }
+
+            if (dokument == null) {
+                throw new IllegalArgumentException("Input stream er null, kan ikke opprette Dokument");
+            }
+
             target = new Dokument(tittel, filnavn, dokument);
         }
 
@@ -103,6 +117,9 @@ public class Dokument implements AsicEAttachable {
          * Standard er application/pdf.
          */
         public Builder mimeType(String mimeType) {
+            if (isEmpty(mimeType)) {
+                throw new IllegalArgumentException("MIME settes automatisk til application/pdf dersom det ikke angis, må ikke nullstilles");
+            }
             target.mimeType = mimeType;
             return this;
         }

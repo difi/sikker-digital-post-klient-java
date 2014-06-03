@@ -22,15 +22,12 @@ public class SmsVarsel extends Varsel {
 
     private String mobilnummer;
 
-    private SmsVarsel(String tekst) {
-        super(tekst);
+    private SmsVarsel() {
+        super();
     }
 
-    /**
-     * @param tekst Avsenderstyrt tekst som skal inngå i varselet.
-     */
-    public static Builder builder(String tekst) {
-        return new Builder(tekst);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getMobilnummer() {
@@ -41,8 +38,8 @@ public class SmsVarsel extends Varsel {
         private SmsVarsel target;
         private boolean built = false;
 
-        private Builder(String tekst) {
-            target = new SmsVarsel(tekst);
+        private Builder() {
+            target = new SmsVarsel();
         }
 
         /**
@@ -62,10 +59,24 @@ public class SmsVarsel extends Varsel {
          * Standard er ett varsel samtidig som brevet blir tilgjengeliggjort for mottaker.
          */
         public Builder varselEtterDager(List<Integer> varselEtterDager) {
+            if (varselEtterDager == null) {
+                throw new IllegalArgumentException("Repetisjoner for varsler kan ikke nullstilles");
+            }
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
             return this;
         }
 
+        /**
+         * Avsenderstyrt tekst som skal inngå i varselet.
+         */
+        public Builder tekst(String tekst) {
+            target.tekst = tekst;
+            return this;
+        }
+
+        /**
+         * Et mobiltelefonnummer som skal brukes i varselet.
+         */
         public Builder mobilnummer(String mobilnummer) {
             target.mobilnummer = mobilnummer;
             return this;

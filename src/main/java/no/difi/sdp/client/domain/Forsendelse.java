@@ -20,13 +20,11 @@ import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class Forsendelse {
 
     private Forsendelse(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
-        if ((fysiskPost != null && digitalPost != null) || (fysiskPost == null && digitalPost == null)) {
-            throw new IllegalArgumentException("Can only specify exactly one of digitalPost and fysiskPost");
-        }
-
         this.digitalPost = digitalPost;
         this.fysiskPost = fysiskPost;
         this.dokumentpakke = dokumentpakke;
@@ -69,12 +67,13 @@ public class Forsendelse {
 
     /**
      * @param digitalPost Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
+     * @param dokumentpakke Pakke med hoveddokument og evt vedlegg som skal sendes.
      */
-    public static Builder builder(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+    public static Builder digital(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
         return new Builder(digitalPost, null, dokumentpakke);
     }
 
-    public static Builder builder(FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+    public static Builder fysisk(FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
         return new Builder(null, fysiskPost, dokumentpakke);
     }
 
@@ -84,15 +83,27 @@ public class Forsendelse {
         private boolean built = false;
 
         private Builder(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+            if ((fysiskPost != null && digitalPost != null) || (fysiskPost == null && digitalPost == null)) {
+                throw new IllegalArgumentException("Kan kun være enten fysisk post eller digital post");
+            }
+
+            if (dokumentpakke == null) {
+                throw new IllegalArgumentException("Kan ikke lage forsendelse uten dokumentpakke");
+            }
+
             this.target = new Forsendelse(digitalPost, fysiskPost, dokumentpakke);
         }
 
         /**
-         * ID for forsendelsen. Skal være unik for en avsender.
+         * Unik ID opprettet og definert i en initiell melding og siden bruk i alle tilhørende kvitteringer knyttet til den opprinnelige meldingen.
+         * Skal være unik for en avsender.
          *
          * Standard er {@link java.util.UUID#randomUUID()}}.
          */
         public Builder konversasjonsId(String konversasjonsId) {
+            if (isEmpty(konversasjonsId)) {
+                throw new IllegalArgumentException("Konversasjonsid genereres automatisk dersom det ikke angis, må ikke nullstilles");
+            }
             target.konversasjonsId = konversasjonsId;
             return this;
         }
@@ -101,6 +112,9 @@ public class Forsendelse {
          * Standard er {@link no.difi.sdp.client.domain.Prioritet#NORMAL}
          */
         public Builder prioritet(Prioritet prioritet) {
+            if (prioritet == null) {
+                throw new IllegalArgumentException("Standard prioritet er NORMAL, kan ikke nullstilles");
+            }
             target.prioritet = prioritet;
             return this;
         }
@@ -111,10 +125,12 @@ public class Forsendelse {
          * Standard er NO.
          */
         public Builder spraakkode(String spraakkode) {
+            if (isEmpty(spraakkode)) {
+                throw new IllegalArgumentException("Språk settes automatisk til NO dersom det ikke angis, må ikke nullstilles");
+            }
             target.spraakkode = spraakkode;
             return this;
         }
-
 
         public Forsendelse build() {
             if (built) throw new IllegalStateException("Can't build twice");

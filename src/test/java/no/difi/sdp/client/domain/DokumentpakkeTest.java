@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client.domain.digital_post;
+package no.difi.sdp.client.domain;
 
-import java.util.List;
+import org.junit.Test;
 
-import static java.util.Arrays.asList;
+public class DokumentpakkeTest {
 
-public abstract class Varsel {
-
-    protected Varsel() {
+    @Test(expected = IllegalArgumentException.class)
+    public void test_kan_ikke_lage_dokumentpakke_uten_hoveddokument() {
+        Dokumentpakke.builder(null).build();
     }
 
-    protected String tekst;
-    protected List<Integer> dagerEtter = asList(0);
-
-    public String getTekst() {
-        return tekst;
-    }
-
-    public List<Integer> getDagerEtter() {
-        return dagerEtter;
-    }
 }

@@ -67,7 +67,8 @@ public class SikkerDigitalPostKlientTest {
     @Test
     @Ignore
     public void test_build_digital_forsendelse() {
-        EpostVarsel epostVarsel = EpostVarsel.builder("Du har mottatt brev i din digitale postkasse")
+        EpostVarsel epostVarsel = EpostVarsel.builder()
+                .tekst("Du har mottatt brev i din digitale postkasse")
                 .epostadresse("example@email.org")
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
@@ -75,7 +76,8 @@ public class SikkerDigitalPostKlientTest {
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat, "984661185")
                 .build();
 
-        SmsVarsel smsVarsel = SmsVarsel.builder("Du har mottatt brev i din digitale postkasse")
+        SmsVarsel smsVarsel = SmsVarsel.builder()
+                .tekst("Du har mottatt brev i din digitale postkasse")
                 .mobilnummer("4799999999")
                 .varselEtterDager(asList(1, 7))
                 .build();
@@ -96,7 +98,7 @@ public class SikkerDigitalPostKlientTest {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Forsendelse forsendelse = Forsendelse.builder(digitalPost, dokumentpakke)
+        Forsendelse forsendelse = Forsendelse.digital(digitalPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId")
                 .prioritet(Prioritet.NORMAL)
                 .spraakkode("NO")
@@ -157,7 +159,7 @@ public class SikkerDigitalPostKlientTest {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Forsendelse forsendelse = Forsendelse.builder(fysiskPost, dokumentpakke)
+        Forsendelse forsendelse = Forsendelse.fysisk(fysiskPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId")
                 .prioritet(Prioritet.NORMAL)
                 .build();
@@ -186,7 +188,7 @@ public class SikkerDigitalPostKlientTest {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Forsendelse forsendelse = Forsendelse.builder(fysiskPost, dokumentpakke)
+        Forsendelse forsendelse = Forsendelse.fysisk(fysiskPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId")
                 .prioritet(Prioritet.NORMAL)
                 .build();

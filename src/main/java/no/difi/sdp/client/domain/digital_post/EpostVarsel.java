@@ -22,27 +22,24 @@ public class EpostVarsel extends Varsel {
 
     private String epostadresse;
 
-    private EpostVarsel(String tekst) {
-        super(tekst);
+    private EpostVarsel() {
+        super();
     }
 
     public String getEpostadresse() {
         return epostadresse;
     }
 
-    /**
-     * @param tekst Avsenderstyrt tekst som skal inngå i varselet.
-     */
-    public static Builder builder(String tekst) {
-        return new Builder(tekst);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
         private EpostVarsel target;
         private boolean built = false;
 
-        private Builder(String tekst) {
-            target = new EpostVarsel(tekst);
+        private Builder() {
+            target = new EpostVarsel();
         }
 
         /**
@@ -62,10 +59,24 @@ public class EpostVarsel extends Varsel {
          * Standard er ett varsel samtidig som brevet blir tilgjengeliggjort for mottaker.
          */
         public Builder varselEtterDager(List<Integer> varselEtterDager) {
+            if (varselEtterDager == null) {
+                throw new IllegalArgumentException("Repetisjoner for varsler kan ikke nullstilles");
+            }
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
             return this;
         }
 
+        /**
+         * Avsenderstyrt tekst som skal inngå i varselet.
+         */
+        public Builder tekst(String tekst) {
+            target.tekst = tekst;
+            return this;
+        }
+
+        /**
+         * En epostadresse som skal brukes i varselet.
+         */
         public Builder epostadresse(String epostadresse) {
             target.epostadresse = epostadresse;
             return this;

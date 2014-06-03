@@ -19,18 +19,20 @@ import no.difi.sdp.client.domain.Mottaker;
 
 import java.util.Date;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class DigitalPost {
 
-    private DigitalPost(Mottaker mottaker, String tittel) {
+    private DigitalPost(Mottaker mottaker, String ikkeSensitivTittel) {
         this.mottaker = mottaker;
-        this.tittel = tittel;
+        this.ikkeSensitivTittel = ikkeSensitivTittel;
     }
 
     private Mottaker mottaker;
     private Date virkningsdato;
     private boolean aapningskvittering;
     private Sikkerhetsnivaa sikkerhetsnivaa = Sikkerhetsnivaa.NIVAA_4;
-    private String tittel;
+    private String ikkeSensitivTittel;
     private EpostVarsel epostVarsel;
     private SmsVarsel smsVarsel;
 
@@ -50,8 +52,8 @@ public class DigitalPost {
         return sikkerhetsnivaa;
     }
 
-    public String getTittel() {
-        return tittel;
+    public String getIkkeSensitivTittel() {
+        return ikkeSensitivTittel;
     }
 
     public EpostVarsel getEpostVarsel() {
@@ -63,7 +65,9 @@ public class DigitalPost {
     }
 
     /**
-     * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet. Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
+     * @param mottaker Mottaker av digital post.
+     * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet.
+     *                           Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
      */
     public static Builder builder(Mottaker mottaker, String ikkeSensitivTittel) {
         return new Builder(mottaker, ikkeSensitivTittel);
@@ -75,6 +79,14 @@ public class DigitalPost {
         private boolean built = false;
 
         private Builder(Mottaker mottaker, String ikkeSensitivTittel) {
+            if (mottaker == null) {
+                throw new IllegalArgumentException("Mottaker må spesifiseres for digital post");
+            }
+
+            if (isEmpty(ikkeSensitivTittel)) {
+                throw new IllegalArgumentException("Ikke sensitiv tittel må være satt for digital post");
+            }
+
             target = new DigitalPost(mottaker, ikkeSensitivTittel);
         }
 
@@ -104,6 +116,9 @@ public class DigitalPost {
          * Standard er {@link Sikkerhetsnivaa#NIVAA_3} (passord).
          */
         public Builder sikkerhetsnivaa(Sikkerhetsnivaa sikkerhetsnivaa) {
+            if (sikkerhetsnivaa == null) {
+                throw new IllegalArgumentException("Sikkerhetsnivå må være satt til 3 eller 4");
+            }
             target.sikkerhetsnivaa = sikkerhetsnivaa;
             return this;
         }
