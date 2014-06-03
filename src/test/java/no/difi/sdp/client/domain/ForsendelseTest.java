@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import static no.difi.sdp.client.ObjectMother.mottaker;
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class ForsendelseDefaultValuesTest {
+public class ForsendelseTest {
 
     private DigitalPost digitalPost;
     private Dokumentpakke dokumentpakke;
