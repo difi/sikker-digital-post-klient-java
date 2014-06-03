@@ -20,11 +20,9 @@ import no.difi.sdp.client.asice.CreateASiCE;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Sertifikat;
+import no.posten.dpost.offentlig.api.representations.Dokumentpakke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
 public class CreateDokumentpakke {
 
@@ -37,7 +35,7 @@ public class CreateDokumentpakke {
         createCMS = new CreateCMSDocument();
     }
 
-    public InputStream createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
+    public Dokumentpakke createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
         log.info("Creating dokumentpakke");
         ArchivedASiCE archivedASiCE = createASiCE.createAsice(avsender, forsendelse);
 
@@ -45,7 +43,7 @@ public class CreateDokumentpakke {
 
         log.info("Creating CMS document");
         CMSDocument cms = createCMS.createCMS(archivedASiCE.getBytes(), mottakerSertifikat);
-        return new ByteArrayInputStream(cms.getBytes());
+        return new Dokumentpakke(cms.getBytes());
     }
 
 }

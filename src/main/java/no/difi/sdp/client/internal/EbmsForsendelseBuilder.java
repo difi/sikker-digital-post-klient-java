@@ -24,8 +24,6 @@ import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
 import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
 import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
 
-import java.io.InputStream;
-
 public class EbmsForsendelseBuilder {
 
     private final SDPBuilder sdpBuilder;
@@ -43,9 +41,9 @@ public class EbmsForsendelseBuilder {
         Organisasjonsnummer postkasse = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
 
         SDPDigitalPost sikkerDigitalPost = createSikkerDigitalPost(avsender, forsendelse);
-        InputStream dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
+        Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
 
-        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(digipostMeldingsformidler), postkasse, sikkerDigitalPost, new Dokumentpakke(dokumentpakke)).build();
+        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(digipostMeldingsformidler), postkasse, sikkerDigitalPost, dokumentpakke).build();
     }
 
     private SDPDigitalPost createSikkerDigitalPost(final Avsender avsender, final Forsendelse forsendelse) {
