@@ -15,4 +15,4 @@ For å starte sending av digital post må følgende være på plass:
 Tekniske krav:
 
 * Java 1.6 eller nyere
-(* Maven for å hente ned sikker-digital-post-klient)
+* (Maven for å hente ned sikker-digital-post-klient)
