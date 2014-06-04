@@ -22,10 +22,10 @@ import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
-import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
-import no.posten.dpost.offentlig.api.representations.EbmsOutgoingMessage;
-import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
-import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
+import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import no.digipost.api.representations.EbmsOutgoingMessage;
+import no.digipost.api.representations.EbmsPullRequest;
+import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Test;
 
 import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;

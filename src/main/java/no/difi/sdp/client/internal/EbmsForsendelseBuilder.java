@@ -19,10 +19,10 @@ import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
-import no.posten.dpost.offentlig.api.representations.Dokumentpakke;
-import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
-import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
-import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
+import no.digipost.api.representations.Dokumentpakke;
+import no.digipost.api.representations.EbmsAktoer;
+import no.digipost.api.representations.EbmsForsendelse;
+import no.digipost.api.representations.Organisasjonsnummer;
 
 public class EbmsForsendelseBuilder {
 

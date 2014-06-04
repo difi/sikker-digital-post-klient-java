@@ -20,7 +20,7 @@ import no.difi.sdp.client.asice.CreateASiCE;
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Sertifikat;
-import no.posten.dpost.offentlig.api.representations.Dokumentpakke;
+import no.digipost.api.representations.Dokumentpakke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

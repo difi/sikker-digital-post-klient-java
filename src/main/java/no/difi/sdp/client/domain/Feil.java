@@ -16,7 +16,7 @@
 package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
-import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
+import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 
 import java.util.Date;
 

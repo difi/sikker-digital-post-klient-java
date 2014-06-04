@@ -101,25 +101,9 @@ public class SDPBuilder {
 
         SDPVirksomhet virksomhet = null; // Sending til virksomheter er ikke støttet
 
-        String epost = getEpost(forsendelse.getDigitalPost().getEpostVarsel());
-        String mobil = getMobilnummer(forsendelse.getDigitalPost().getSmsVarsel());
-        SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse(), mobil, epost);
+        SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse());
 
         return new SDPMottaker(virksomhet, sdpPerson);
-    }
-
-    private String getMobilnummer(SmsVarsel smsVarsel) {
-        if (smsVarsel != null) {
-            return smsVarsel.getMobilnummer();
-        }
-        return null;
-    }
-
-    private String getEpost(EpostVarsel epostVarsel) {
-        if (epostVarsel != null) {
-            return epostVarsel.getEpostadresse();
-        }
-        return null;
     }
 
     private SDPAvsender sdpAvsender(Avsender avsender) {
@@ -160,7 +144,7 @@ public class SDPBuilder {
     private SDPSmsVarsel sdpSmsVarsel(SmsVarsel smsVarsel, String spraakkode) {
         if (smsVarsel != null) {
             SDPSmsVarselTekst smsVarselTekst = new SDPSmsVarselTekst(smsVarsel.getTekst(), spraakkode);
-            return new SDPSmsVarsel(smsVarselTekst, new SDPRepetisjoner(smsVarsel.getDagerEtter()));
+            return new SDPSmsVarsel(smsVarsel.getMobilnummer(), smsVarselTekst, new SDPRepetisjoner(smsVarsel.getDagerEtter()));
         }
         return null;
     }
@@ -168,7 +152,7 @@ public class SDPBuilder {
     private SDPEpostVarsel sdpEpostVarsel(EpostVarsel epostVarsel, String spraakkode) {
         if (epostVarsel != null) {
             SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getTekst(), spraakkode);
-            return new SDPEpostVarsel(epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));
+            return new SDPEpostVarsel(epostVarsel.getEpostadresse(), epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));
         }
         return null;
     }

@@ -22,12 +22,12 @@ import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.internal.EbmsForsendelseBuilder;
 import no.difi.sdp.client.internal.KvitteringBuilder;
 import no.difi.sdp.client.util.CryptoChecker;
-import no.posten.dpost.offentlig.api.MessageSender;
-import no.posten.dpost.offentlig.api.representations.EbmsAktoer;
-import no.posten.dpost.offentlig.api.representations.EbmsApplikasjonsKvittering;
-import no.posten.dpost.offentlig.api.representations.EbmsForsendelse;
-import no.posten.dpost.offentlig.api.representations.EbmsPullRequest;
-import no.posten.dpost.offentlig.api.representations.Organisasjonsnummer;
+import no.digipost.api.MessageSender;
+import no.digipost.api.representations.EbmsAktoer;
+import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import no.digipost.api.representations.EbmsForsendelse;
+import no.digipost.api.representations.EbmsPullRequest;
+import no.digipost.api.representations.Organisasjonsnummer;
 
 public class SikkerDigitalPostKlient {
 

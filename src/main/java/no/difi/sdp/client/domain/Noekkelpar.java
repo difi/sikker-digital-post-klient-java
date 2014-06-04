@@ -16,7 +16,7 @@
 package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.exceptions.NoekkelException;
-import no.posten.dpost.offentlig.api.interceptors.KeyStoreInfo;
+import no.digipost.api.interceptors.KeyStoreInfo;
 
 import java.security.*;
 
