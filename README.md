@@ -1,7 +1,9 @@
 sikker-digital-post-klient
 ==========================
 
-Klient for sending av sikker digital post for det offentlige.
+Dette er en Java klient for sending av sikker digital post for det offentlige.
+Formålet er å forenkle integrasjonen som må utføres av avsendervirksomheter.
+For mer informasjon om sikker digital post se http://begrep.difi.no/SikkerDigitalPost/.
 
 Forutsetninger
 --------------
@@ -16,3 +18,8 @@ Tekniske krav:
 
 * Java 1.6 eller nyere
 * (Maven for å hente ned sikker-digital-post-klient)
+
+Spørsmål
+------------------
+
+Registrer gjerne spørsmål og kommentarer under Issues.
