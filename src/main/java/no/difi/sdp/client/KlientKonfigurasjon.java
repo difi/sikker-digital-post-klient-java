@@ -17,14 +17,46 @@ package no.difi.sdp.client;
 
 import java.net.URI;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class KlientKonfigurasjon {
 
     private URI meldingsformidlerRoot = URI.create("https://meldingsformidler.digipost.no/api/ebms");
+
+    private String proxyHost;
+    private int proxyPort;
+    private int socketTimeout = 30000;
+    private int connectTimeout = 10000;
+    private int connectionRequestTimeout = 10000;
 
     private KlientKonfigurasjon() {}
 
     public URI getMeldingsformidlerRoot() {
         return meldingsformidlerRoot;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public int getSocketTimeout() {
+        return socketTimeout;
+    }
+
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public int getConnectionRequestTimeout() {
+        return connectionRequestTimeout;
+    }
+
+    public boolean useProxy() {
+        return isEmpty(proxyHost) && proxyPort > 0;
     }
 
     public static Builder builder() {
@@ -41,6 +73,27 @@ public class KlientKonfigurasjon {
 
         public Builder meldingsformidlerRoot(String meldingsformidlerRoot) {
             target.meldingsformidlerRoot = URI.create(meldingsformidlerRoot);
+            return this;
+        }
+
+        public Builder proxy(String proxyHost, int proxyPort) {
+            target.proxyHost = proxyHost;
+            target.proxyPort = proxyPort;
+            return this;
+        }
+
+        public Builder socketTimeout(int socketTimeout) {
+            target.socketTimeout = socketTimeout;
+            return this;
+        }
+
+        public Builder connectionTimeout(int connectionTimeout) {
+            target.connectTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder connectionRequestTimeout(int connectionRequestTimeout) {
+            target.connectionRequestTimeout = connectionRequestTimeout;
             return this;
         }
 

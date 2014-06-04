@@ -56,6 +56,7 @@ public class SikkerDigitalPostKlientTest {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 //.meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .meldingsformidlerRoot("http://localhost:8049/ebms")
+                .connectionTimeout(20000)
                 .build();
 
         //todo: bytte ut med et gyldig Buypass sertifikat når vi har det på plass

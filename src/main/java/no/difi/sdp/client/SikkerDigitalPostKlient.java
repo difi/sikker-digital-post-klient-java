@@ -45,11 +45,20 @@ public class SikkerDigitalPostKlient {
 
         this.avsender = avsender;
         try {
-            messageSender = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
+
+            MessageSender.Builder msBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
                     avsender.getNoekkelpar().getKeyStoreInfo(),
                     EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
                     EbmsAktoer.meldingsformidler(digipostMeldingsformidler))
-                    .build();
+                    .withConnectTimeout(konfigurasjon.getConnectTimeout())
+                    .withSocketTimeout(konfigurasjon.getSocketTimeout())
+                    .withConnectionRequestTimeout(konfigurasjon.getConnectionRequestTimeout());
+
+            if (konfigurasjon.useProxy()) {
+                msBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
+            }
+
+            messageSender = msBuilder.build();
         } catch (Exception e) {
             // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
             throw new RuntimeException("Could not create MessageSender", e);
