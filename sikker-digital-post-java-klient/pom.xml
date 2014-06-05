@@ -18,7 +18,7 @@
         <commons-compress.version>1.8.1</commons-compress.version>
     </properties>
 
-    <artifactId>sikker-digital-post-klient</artifactId>
+    <artifactId>sikker-digital-post-java-klient</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Sikker digital post klient</name>
