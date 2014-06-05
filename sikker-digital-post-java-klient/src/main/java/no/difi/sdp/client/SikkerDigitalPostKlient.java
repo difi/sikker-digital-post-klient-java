@@ -145,4 +145,5 @@ public class SikkerDigitalPostKlient {
         EbmsApplikasjonsKvittering kvittering = forrigeKvittering.applikasjonsKvittering;
         messageSender.bekreft(kvittering);
     }
+
 }
