@@ -143,7 +143,7 @@ public class SDPBuilder {
 
     private SDPSmsVarsel sdpSmsVarsel(SmsVarsel smsVarsel, String spraakkode) {
         if (smsVarsel != null) {
-            SDPSmsVarselTekst smsVarselTekst = new SDPSmsVarselTekst(smsVarsel.getTekst(), spraakkode);
+            SDPSmsVarselTekst smsVarselTekst = new SDPSmsVarselTekst(smsVarsel.getVarslingsTekst(), spraakkode);
             return new SDPSmsVarsel(smsVarsel.getMobilnummer(), smsVarselTekst, new SDPRepetisjoner(smsVarsel.getDagerEtter()));
         }
         return null;
@@ -151,7 +151,7 @@ public class SDPBuilder {
 
     private SDPEpostVarsel sdpEpostVarsel(EpostVarsel epostVarsel, String spraakkode) {
         if (epostVarsel != null) {
-            SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getTekst(), spraakkode);
+            SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getVarslingsTekst(), spraakkode);
             return new SDPEpostVarsel(epostVarsel.getEpostadresse(), epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));
         }
         return null;

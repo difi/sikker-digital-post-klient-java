@@ -16,8 +16,6 @@
 package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
-import no.difi.sdp.client.domain.digital_post.EpostVarsel;
-import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import org.junit.Test;
 
 import static no.difi.sdp.client.ObjectMother.mottaker;
@@ -38,20 +36,6 @@ public class DigitalPostTest {
     public void test_kan_ikke_nullstille_sikkerhetsnivaa() {
         DigitalPost.builder(mottaker(), "Denne tittelen er ikke sensitiv")
                 .sikkerhetsnivaa(null)
-                .build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_nullstille_smsVarsel_repetisjoner() {
-        DigitalPost.builder(mottaker(), "Denne tittelen er ikke sensitiv")
-                .smsVarsel(SmsVarsel.builder().varselEtterDager(null).build())
-                .build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_nullstille_epostVarsel_repetisjoner() {
-        DigitalPost.builder(mottaker(), "Denne tittelen er ikke sensitiv")
-                .epostVarsel(EpostVarsel.builder().varselEtterDager(null).build())
                 .build();
     }
 

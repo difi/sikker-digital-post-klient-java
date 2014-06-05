@@ -68,19 +68,14 @@ public class SikkerDigitalPostKlientTest {
     @Test
     @Ignore
     public void test_build_digital_forsendelse() {
-        EpostVarsel epostVarsel = EpostVarsel.builder()
-                .tekst("Du har mottatt brev i din digitale postkasse")
-                .epostadresse("example@email.org")
+        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", "Du har mottatt brev i din digitale postkasse")
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
 
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat, "984661185")
                 .build();
 
-        SmsVarsel smsVarsel = SmsVarsel.builder()
-                .tekst("Du har mottatt brev i din digitale postkasse")
-                .mobilnummer("4799999999")
-                .varselEtterDager(asList(1, 7))
+        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
                 .build();
 
         DigitalPost digitalPost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")

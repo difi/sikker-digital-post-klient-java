@@ -18,28 +18,44 @@ package no.difi.sdp.client.domain.digital_post;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class EpostVarsel extends Varsel {
 
     private String epostadresse;
 
-    private EpostVarsel() {
-        super();
+    private EpostVarsel(String epostadresse, String varslingsTekst) {
+        super(varslingsTekst);
+        this.epostadresse = epostadresse;
     }
 
     public String getEpostadresse() {
         return epostadresse;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    /**
+     *
+     * @param epostadresse Mottakerens epostadresse som det skal varsles på.
+     * @param varslingsTekst Avsenderstyrt varslingsTekst som skal inngå i varselet.
+     * @return
+     */
+    public static Builder builder(String epostadresse, String varslingsTekst) {
+        return new Builder(epostadresse, varslingsTekst);
     }
 
     public static class Builder {
         private EpostVarsel target;
         private boolean built = false;
 
-        private Builder() {
-            target = new EpostVarsel();
+        private Builder(String epostadresse, String varslingsTekst) {
+            if (isEmpty(epostadresse)) {
+                throw new IllegalArgumentException("Epostadresse må settes for å kunne varsle på epost");
+            }
+
+            if (isEmpty(varslingsTekst)) {
+                throw new IllegalArgumentException("Varslingstekst må settes for epost varsel");
+            }
+            target = new EpostVarsel(epostadresse, varslingsTekst);
         }
 
         /**
@@ -63,22 +79,6 @@ public class EpostVarsel extends Varsel {
                 throw new IllegalArgumentException("Repetisjoner for varsler kan ikke nullstilles");
             }
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
-            return this;
-        }
-
-        /**
-         * Avsenderstyrt tekst som skal inngå i varselet.
-         */
-        public Builder tekst(String tekst) {
-            target.tekst = tekst;
-            return this;
-        }
-
-        /**
-         * En epostadresse som skal brukes i varselet.
-         */
-        public Builder epostadresse(String epostadresse) {
-            target.epostadresse = epostadresse;
             return this;
         }
 

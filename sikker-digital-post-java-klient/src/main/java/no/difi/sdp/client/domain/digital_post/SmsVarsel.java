@@ -18,16 +18,25 @@ package no.difi.sdp.client.domain.digital_post;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class SmsVarsel extends Varsel {
 
     private String mobilnummer;
 
-    private SmsVarsel() {
-        super();
+    private SmsVarsel(String mobilnummer, String varslingsTekst) {
+        super(varslingsTekst);
+        this.mobilnummer = mobilnummer;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    /**
+     *
+     * @param mobilnummer Et mobiltelefonnummer som skal brukes i varselet.
+     * @param varslingsTekst Avsenderstyrt varslingsTekst som skal inngå i varselet.
+     * @return
+     */
+    public static Builder builder(String mobilnummer, String varslingsTekst) {
+        return new Builder(mobilnummer, varslingsTekst);
     }
 
     public String getMobilnummer() {
@@ -38,8 +47,15 @@ public class SmsVarsel extends Varsel {
         private SmsVarsel target;
         private boolean built = false;
 
-        private Builder() {
-            target = new SmsVarsel();
+        private Builder(String mobilnummer, String varslingsTekst) {
+            if (isEmpty(mobilnummer)) {
+                throw new IllegalArgumentException("Mobilnummer må settes for å kunne varsle på SMS");
+            }
+
+            if (isEmpty(varslingsTekst)) {
+                throw new IllegalArgumentException("Varslingstekst må settes for SMS varsel");
+            }
+            target = new SmsVarsel(mobilnummer, varslingsTekst);
         }
 
         /**
@@ -63,22 +79,6 @@ public class SmsVarsel extends Varsel {
                 throw new IllegalArgumentException("Repetisjoner for varsler kan ikke nullstilles");
             }
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
-            return this;
-        }
-
-        /**
-         * Avsenderstyrt tekst som skal inngå i varselet.
-         */
-        public Builder tekst(String tekst) {
-            target.tekst = tekst;
-            return this;
-        }
-
-        /**
-         * Et mobiltelefonnummer som skal brukes i varselet.
-         */
-        public Builder mobilnummer(String mobilnummer) {
-            target.mobilnummer = mobilnummer;
             return this;
         }
 
