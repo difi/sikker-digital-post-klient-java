@@ -24,9 +24,9 @@ Hva ligger i klientbiblioteket
 
 * Bygge meldinger som inneholder EBMS, StandardBusinessDocument, ASIC-E dokumentpakke
 * Sende meldinger:
-** Sende digital post
-** Hente kvittering
-** Bekrefte kvittering
+    * Sende digital post
+    * Hente kvittering
+    * Bekrefte kvittering
 
 Hva ligger _ikke_ i klientbiblioteket
 -------------------------------------
