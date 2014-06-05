@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client.domain;
+package no.difi.sdp.client.domain.digital_post;
 
-import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import org.junit.Test;
 
 import static no.difi.sdp.client.ObjectMother.mottaker;
