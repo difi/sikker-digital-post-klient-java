@@ -1,5 +1,5 @@
-sikker-digital-post-klient
-==========================
+sikker-digital-post-java-klient
+===============================
 
 Dette er en Java klient for sending av sikker digital post for det offentlige.
 Formålet er å forenkle integrasjonen som må utføres av avsendervirksomheter.
