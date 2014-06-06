@@ -40,7 +40,15 @@ Hvordan ta dette i bruk
 -----------------------
 
 Når vi får releaset til Maven Central kan artifakten lastes ned derfra.
-Vi sier ifra når dette er ute og oppdaterer dokumentasjonen.
+I øyeblikket har vi kun fått ut en SNAPSHOT versjon ute i Maven central snapshot repo, se https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-4.MavenRepositories.
+
+Legg til følgende i POM:
+
+<dependency>
+    <groupId>no.difi.sdp</groupId>
+    <artifactId>sikker-digital-post-java-klient</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
 
 
 Spørsmål
