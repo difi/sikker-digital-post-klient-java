@@ -323,9 +323,9 @@
     </build>
 
     <scm>
-        <connection>scm:git:git@github.com:digipost/sikker-digital-post-klient.git</connection>
-        <developerConnection>scm:git:git@github.com:digipost/sikker-digital-post-klient.git</developerConnection>
-        <url>scm:git:git@github.com:digipost/sikker-digital-post-klient</url>
+        <connection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</connection>
+        <developerConnection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</developerConnection>
+        <url>scm:git:git@github.com:difi/sikker-digital-post-klient</url>
         <tag>HEAD</tag>
     </scm>
 
