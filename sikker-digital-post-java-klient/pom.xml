@@ -13,7 +13,7 @@
         <spring.ws.version>2.1.4.RELEASE</spring.ws.version>
         <spring.security.version>3.1.6.RELEASE</spring.security.version>
         <commons-codec.version>1.9</commons-codec.version>
-        <digipost.offentlig.version>0.1-SNAPSHOT</digipost.offentlig.version>
+        <sdp-shared.version>0.1</sdp-shared.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-compress.version>1.8.1</commons-compress.version>
     </properties>
@@ -73,17 +73,17 @@
         <dependency>
             <groupId>no.digipost</groupId>
             <artifactId>api-client</artifactId>
-            <version>${digipost.offentlig.version}</version>
+            <version>${sdp-shared.version}</version>
         </dependency>
         <dependency>
             <groupId>no.digipost</groupId>
             <artifactId>offentlig-xsd</artifactId>
-            <version>${digipost.offentlig.version}</version>
+            <version>${sdp-shared.version}</version>
         </dependency>
         <dependency>
             <groupId>no.digipost</groupId>
             <artifactId>api-commons</artifactId>
-            <version>${digipost.offentlig.version}</version>
+            <version>${sdp-shared.version}</version>
         </dependency>
 
         <dependency>
@@ -272,9 +272,9 @@
                                         <include>jaxen:jaxen:1.1.6</include>
                                         <include>joda-time:joda-time:2.3</include>
                                         <include>junit:junit:${junit-version}</include>
-                                        <include>no.digipost:api-client:${digipost.offentlig.version}</include>
-                                        <include>no.digipost:api-commons:${digipost.offentlig.version}</include>
-                                        <include>no.digipost:offentlig-xsd:${digipost.offentlig.version}</include>
+                                        <include>no.digipost:api-client:${sdp-shared.version}</include>
+                                        <include>no.digipost:api-commons:${sdp-shared.version}</include>
+                                        <include>no.digipost:offentlig-xsd:${sdp-shared.version}</include>
                                         <include>org.apache.commons:commons-compress:1.8.1</include>
                                         <include>org.apache.commons:commons-lang3:3.3.1</include>
                                         <include>org.apache.geronimo.specs:geronimo-javamail_1.4_spec:1.7.1</include>
