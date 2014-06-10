@@ -44,25 +44,20 @@ public class SikkerDigitalPostKlient {
         kvitteringBuilder = new KvitteringBuilder();
 
         this.avsender = avsender;
-        try {
 
-            MessageSender.Builder msBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
-                    avsender.getNoekkelpar().getKeyStoreInfo(),
-                    EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
-                    EbmsAktoer.meldingsformidler(digipostMeldingsformidler))
-                    .withConnectTimeout(konfigurasjon.getConnectTimeout())
-                    .withSocketTimeout(konfigurasjon.getSocketTimeout())
-                    .withConnectionRequestTimeout(konfigurasjon.getConnectionRequestTimeout());
+        MessageSender.Builder msBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
+                avsender.getNoekkelpar().getKeyStoreInfo(),
+                EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
+                EbmsAktoer.meldingsformidler(digipostMeldingsformidler))
+                .withConnectTimeout(konfigurasjon.getConnectTimeout())
+                .withSocketTimeout(konfigurasjon.getSocketTimeout())
+                .withConnectionRequestTimeout(konfigurasjon.getConnectionRequestTimeout());
 
-            if (konfigurasjon.useProxy()) {
-                msBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
-            }
-
-            messageSender = msBuilder.build();
-        } catch (Exception e) {
-            // TODO: Either throw something more specific from MessageSender or wrap in relevant exception
-            throw new RuntimeException("Could not create MessageSender", e);
+        if (konfigurasjon.useProxy()) {
+            msBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
         }
+
+        messageSender = msBuilder.build();
     }
 
     /**
@@ -74,7 +69,7 @@ public class SikkerDigitalPostKlient {
      */
     public void send(Forsendelse forsendelse) {
         if (!forsendelse.isDigitalPostforsendelse()) {
-            throw new UnsupportedOperationException("Fysiske forsendelser er ikke implementert");
+            throw new UnsupportedOperationException("Fysiske forsendelser er ikke støttet");
         }
 
         EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, digipostMeldingsformidler, forsendelse);
