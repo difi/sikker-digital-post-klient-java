@@ -16,6 +16,7 @@
 package no.difi.sdp.client;
 
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -25,9 +26,9 @@ public class KlientKonfigurasjon {
 
     private String proxyHost;
     private int proxyPort;
-    private int socketTimeout = 30000;
-    private int connectTimeout = 10000;
-    private int connectionRequestTimeout = 10000;
+    private long socketTimeoutInMillis = TimeUnit.SECONDS.toMillis(30);
+    private long connectTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
+    private long connectionRequestTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
 
     private KlientKonfigurasjon() {}
 
@@ -43,16 +44,16 @@ public class KlientKonfigurasjon {
         return proxyPort;
     }
 
-    public int getSocketTimeout() {
-        return socketTimeout;
+    public long getSocketTimeoutInMillis() {
+        return socketTimeoutInMillis;
     }
 
-    public int getConnectTimeout() {
-        return connectTimeout;
+    public long getConnectTimeoutInMillis() {
+        return connectTimeoutInMillis;
     }
 
-    public int getConnectionRequestTimeout() {
-        return connectionRequestTimeout;
+    public long getConnectionRequestTimeoutInMillis() {
+        return connectionRequestTimeoutInMillis;
     }
 
     public boolean useProxy() {
@@ -82,18 +83,18 @@ public class KlientKonfigurasjon {
             return this;
         }
 
-        public Builder socketTimeout(int socketTimeout) {
-            target.socketTimeout = socketTimeout;
+        public Builder socketTimeout(int socketTimeout, TimeUnit timeUnit) {
+            target.socketTimeoutInMillis = timeUnit.toMillis(socketTimeout);
             return this;
         }
 
-        public Builder connectionTimeout(int connectionTimeout) {
-            target.connectTimeout = connectionTimeout;
+        public Builder connectionTimeout(int connectionTimeout, TimeUnit timeUnit) {
+            target.connectTimeoutInMillis = timeUnit.toMillis(connectionTimeout);
             return this;
         }
 
-        public Builder connectionRequestTimeout(int connectionRequestTimeout) {
-            target.connectionRequestTimeout = connectionRequestTimeout;
+        public Builder connectionRequestTimeout(int connectionRequestTimeout, TimeUnit timeUnit) {
+            target.connectionRequestTimeoutInMillis = timeUnit.toMillis(connectionRequestTimeout);
             return this;
         }
 

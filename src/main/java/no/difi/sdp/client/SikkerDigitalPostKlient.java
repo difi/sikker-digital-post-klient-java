@@ -32,6 +32,7 @@ import no.digipost.api.representations.Organisasjonsnummer;
 public class SikkerDigitalPostKlient {
 
     private final Organisasjonsnummer digipostMeldingsformidler = new Organisasjonsnummer("984661185");
+
     private final MessageSender messageSender;
     private final Avsender avsender;
     private final EbmsForsendelseBuilder ebmsForsendelseBuilder;
@@ -49,9 +50,9 @@ public class SikkerDigitalPostKlient {
                 avsender.getNoekkelpar().getKeyStoreInfo(),
                 EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
                 EbmsAktoer.meldingsformidler(digipostMeldingsformidler))
-                .withConnectTimeout(konfigurasjon.getConnectTimeout())
-                .withSocketTimeout(konfigurasjon.getSocketTimeout())
-                .withConnectionRequestTimeout(konfigurasjon.getConnectionRequestTimeout());
+                .withConnectTimeout((int) konfigurasjon.getConnectTimeoutInMillis())
+                .withSocketTimeout((int) konfigurasjon.getSocketTimeoutInMillis())
+                .withConnectionRequestTimeout((int) konfigurasjon.getConnectionRequestTimeoutInMillis());
 
         if (konfigurasjon.useProxy()) {
             msBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
