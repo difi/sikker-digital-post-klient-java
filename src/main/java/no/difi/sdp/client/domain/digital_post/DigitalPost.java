@@ -113,7 +113,7 @@ public class DigitalPost {
         /**
          * Nødvendig autentiseringsnivå som kreves av mottaker i postkassen for å åpne brevet.
          *
-         * Standard er {@link Sikkerhetsnivaa#NIVAA_3} (passord).
+         * Standard er {@link Sikkerhetsnivaa#NIVAA_4} (BankID eller tilsvarende).
          */
         public Builder sikkerhetsnivaa(Sikkerhetsnivaa sikkerhetsnivaa) {
             if (sikkerhetsnivaa == null) {
