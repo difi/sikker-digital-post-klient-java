@@ -17,9 +17,6 @@ package no.difi.sdp.client.domain.digital_post;
 
 import no.difi.begrep.sdp.schema_v10.SDPSikkerhetsnivaa;
 
-/**
- * Sikkerhetsnivå som beskrevet på
- */
 public enum Sikkerhetsnivaa {
 
     /**

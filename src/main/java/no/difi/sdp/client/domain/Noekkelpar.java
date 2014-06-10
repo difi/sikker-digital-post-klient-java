@@ -22,15 +22,15 @@ import java.security.*;
 
 public class Noekkelpar {
 
+    private KeyStore keyStore;
+    private String alias;
+    private String password;
+
     private Noekkelpar(KeyStore keyStore, String alias, String password) {
         this.keyStore = keyStore;
         this.alias = alias;
         this.password = password;
     }
-
-    private KeyStore keyStore;
-    private String alias;
-    private String password;
 
     public KeyStore getKeyStore() {
         return keyStore;

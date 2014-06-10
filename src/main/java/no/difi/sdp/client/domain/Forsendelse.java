@@ -24,18 +24,18 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Forsendelse {
 
-    private Forsendelse(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
-        this.digitalPost = digitalPost;
-        this.fysiskPost = fysiskPost;
-        this.dokumentpakke = dokumentpakke;
-    }
-
     private DigitalPost digitalPost;
     private FysiskPost fysiskPost;
     private Dokumentpakke dokumentpakke;
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
     private String spraakkode = "NO";
+
+    private Forsendelse(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+        this.digitalPost = digitalPost;
+        this.fysiskPost = fysiskPost;
+        this.dokumentpakke = dokumentpakke;
+    }
 
     public String getKonversasjonsId() {
         return konversasjonsId;

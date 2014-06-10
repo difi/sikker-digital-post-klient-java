@@ -34,7 +34,7 @@ public class EbmsForsendelseBuilder {
         createDokumentpakke = new CreateDokumentpakke();
     }
 
-    public EbmsForsendelse buildEbmsForsendelse(final Avsender avsender, final Organisasjonsnummer digipostMeldingsformidler, final Forsendelse forsendelse) {
+    public EbmsForsendelse buildEbmsForsendelse(Avsender avsender, Organisasjonsnummer digipostMeldingsformidler, Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
         EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(avsender.getOrganisasjonsnummer());

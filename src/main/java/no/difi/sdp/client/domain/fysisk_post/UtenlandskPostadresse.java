@@ -17,6 +17,14 @@ package no.difi.sdp.client.domain.fysisk_post;
 
 public class UtenlandskPostadresse {
 
+    private String navn;
+    private String adresselinje1;
+    private String adresselinje2;
+    private String adresselinje3;
+    private String adresselinje4;
+    private String land;
+    private String landkode;
+
     private UtenlandskPostadresse(String navn, String adresselinje1, String adresselinje2, String adresselinje3, String adresselinje4, String land, String landkode) {
         this.navn = navn;
         this.adresselinje1 = adresselinje1;
@@ -26,14 +34,6 @@ public class UtenlandskPostadresse {
         this.land = land;
         this.landkode = landkode;
     }
-
-    private String navn;
-    private String adresselinje1;
-    private String adresselinje2;
-    private String adresselinje3;
-    private String adresselinje4;
-    private String land;
-    private String landkode;
 
     public static Builder builder(String navn, String adresselinje1, String adresselinje2, String adresselinje3, String adresselinje4, String land, String landkode) {
         return new Builder(navn, adresselinje1, adresselinje2, adresselinje3, adresselinje4, land, landkode);

@@ -30,10 +30,8 @@ public class SmsVarsel extends Varsel {
     }
 
     /**
-     *
-     * @param mobilnummer Et mobiltelefonnummer som skal brukes i varselet.
-     * @param varslingsTekst Avsenderstyrt varslingsTekst som skal inngå i varselet.
-     * @return
+     * @param mobilnummer Mobiltelefonnummer varselet skal sendes til.
+     * @param varslingsTekst Avsenderstyrt varslingstekst som skal inngå i varselet.
      */
     public static Builder builder(String mobilnummer, String varslingsTekst) {
         return new Builder(mobilnummer, varslingsTekst);

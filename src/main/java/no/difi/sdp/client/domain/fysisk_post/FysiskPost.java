@@ -19,6 +19,15 @@ import no.difi.sdp.client.domain.Sertifikat;
 
 public class FysiskPost {
 
+    private String orgNummerPrintleverandoer;
+    private Sertifikat printleverandoerSertifikat;
+
+    private UtenlandskPostadresse utenlandskAdresse;
+    private NorskPostadresse norskAdresse;
+    private NorskPostadresse returadresse;
+
+    private PostType postType;
+
     private FysiskPost(String orgNummerPrintleverandoer, Sertifikat printleverandoerSertifikat, NorskPostadresse norskPostadresse, UtenlandskPostadresse utenlandskPostadresse, NorskPostadresse returadresse) {
         if ((norskPostadresse != null && utenlandskPostadresse != null) || (norskPostadresse == null && utenlandskPostadresse == null)) {
             throw new IllegalArgumentException("Must set either norsk postadresse or utenlandsk postadresse");
@@ -30,16 +39,6 @@ public class FysiskPost {
         this.printleverandoerSertifikat = printleverandoerSertifikat;
         this.returadresse = returadresse;
     }
-
-    private String orgNummerPrintleverandoer;
-    private Sertifikat printleverandoerSertifikat;
-
-    private UtenlandskPostadresse utenlandskAdresse;
-    private NorskPostadresse norskAdresse;
-    private NorskPostadresse returadresse;
-
-    private PostType postType;
-
 
     public static Builder builder(String orgNummerPrintleverandoer, Sertifikat printleverandoerSertifikat, NorskPostadresse norskAdresse, NorskPostadresse returadresse) {
         return new Builder(orgNummerPrintleverandoer, printleverandoerSertifikat, norskAdresse, null, returadresse);

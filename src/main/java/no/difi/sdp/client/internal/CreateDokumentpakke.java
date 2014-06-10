@@ -28,6 +28,7 @@ public class CreateDokumentpakke {
 
     private final CreateASiCE createASiCE;
     private final CreateCMSDocument createCMS;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public CreateDokumentpakke() {

@@ -21,12 +21,12 @@ import java.util.List;
 
 public class Dokumentpakke {
 
+    private Dokument hoveddokument;
+    private List<Dokument> vedlegg = Collections.emptyList();
+
     private Dokumentpakke(Dokument hoveddokument) {
         this.hoveddokument = hoveddokument;
     }
-
-    private Dokument hoveddokument;
-    private List<Dokument> vedlegg = Collections.emptyList();
 
     public Dokument getHoveddokument() {
         return hoveddokument;

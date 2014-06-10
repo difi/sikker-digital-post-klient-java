@@ -23,11 +23,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class DigitalPost {
 
-    private DigitalPost(Mottaker mottaker, String ikkeSensitivTittel) {
-        this.mottaker = mottaker;
-        this.ikkeSensitivTittel = ikkeSensitivTittel;
-    }
-
     private Mottaker mottaker;
     private Date virkningsdato;
     private boolean aapningskvittering;
@@ -35,6 +30,11 @@ public class DigitalPost {
     private String ikkeSensitivTittel;
     private EpostVarsel epostVarsel;
     private SmsVarsel smsVarsel;
+
+    private DigitalPost(Mottaker mottaker, String ikkeSensitivTittel) {
+        this.mottaker = mottaker;
+        this.ikkeSensitivTittel = ikkeSensitivTittel;
+    }
 
     public Mottaker getMottaker() {
         return mottaker;
@@ -67,7 +67,7 @@ public class DigitalPost {
     /**
      * @param mottaker Mottaker av digital post.
      * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet.
-     *                           Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autenisert med tilstrekkelig autentiseringsnivå.
+     *                           Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autentisert med tilstrekkelig autentiseringsnivå.
      */
     public static Builder builder(Mottaker mottaker, String ikkeSensitivTittel) {
         return new Builder(mottaker, ikkeSensitivTittel);
@@ -113,7 +113,7 @@ public class DigitalPost {
         /**
          * Nødvendig autentiseringsnivå som kreves av mottaker i postkassen for å åpne brevet.
          *
-         * Standard er {@link Sikkerhetsnivaa#NIVAA_4} (BankID eller tilsvarende).
+         * Standard er {@link Sikkerhetsnivaa#NIVAA_4}.
          */
         public Builder sikkerhetsnivaa(Sikkerhetsnivaa sikkerhetsnivaa) {
             if (sikkerhetsnivaa == null) {

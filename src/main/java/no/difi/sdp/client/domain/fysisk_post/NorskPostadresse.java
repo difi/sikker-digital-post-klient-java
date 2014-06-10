@@ -17,6 +17,12 @@ package no.difi.sdp.client.domain.fysisk_post;
 
 public class NorskPostadresse {
 
+    private String navn;
+    private String adresselinje1;
+    private String adresselinje2;
+    private String postnummer;
+    private String poststed;
+
     private NorskPostadresse(String navn, String adresselinje1, String adresselinje2, String postnummer, String poststed) {
         this.navn = navn;
         this.adresselinje1 = adresselinje1;
@@ -24,12 +30,6 @@ public class NorskPostadresse {
         this.postnummer = postnummer;
         this.poststed = poststed;
     }
-
-    private String navn;
-    private String adresselinje1;
-    private String adresselinje2;
-    private String postnummer;
-    private String poststed;
 
     public static Builder builder(String navn, String adresselinje1, String adresselinje2, String postnummer, String poststed) {
         return new Builder(navn, adresselinje1, adresselinje2, postnummer, poststed);

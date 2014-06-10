@@ -34,10 +34,8 @@ public class EpostVarsel extends Varsel {
     }
 
     /**
-     *
-     * @param epostadresse Mottakerens epostadresse som det skal varsles på.
-     * @param varslingsTekst Avsenderstyrt varslingsTekst som skal inngå i varselet.
-     * @return
+     * @param epostadresse Mottakerens epostadresse som det skal sendes varsel til.
+     * @param varslingsTekst Avsenderstyrt varslingstekst som skal inngå i varselet.
      */
     public static Builder builder(String epostadresse, String varslingsTekst) {
         return new Builder(epostadresse, varslingsTekst);
@@ -59,7 +57,7 @@ public class EpostVarsel extends Varsel {
         }
 
         /**
-         * Antall dager etter brevet er tilgjengeliggjort for mottaker det første, andre osv varsel skal sendes.
+         * Antall dager etter brevet er tilgjengeliggjort for mottaker første, andre osv varsel skal sendes.
          *
          * Eksempel: 0, 2, 5, 10
          * Hvis brevet blir tilgjengeliggjort 1.7.2014 vil det bli sendt varsel:
@@ -70,7 +68,7 @@ public class EpostVarsel extends Varsel {
          *     <li>11.7.2014</li>
          * </ul>
          *
-         * Det vil ikke bli sendt flere varsler etter mottakeren har åpnet brevet.
+         * Det vil ikke bli sendt flere varsler etter at mottakeren har åpnet brevet.
          *
          * Standard er ett varsel samtidig som brevet blir tilgjengeliggjort for mottaker.
          */

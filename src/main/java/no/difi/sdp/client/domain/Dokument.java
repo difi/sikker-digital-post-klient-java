@@ -28,6 +28,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Dokument implements AsicEAttachable {
 
+    private String tittel;
+    private String filnavn;
+    private byte[] dokument;
+    private String mimeType = "application/pdf";
+
     private Dokument(String tittel, String filnavn, InputStream dokumentStream) {
         this.tittel = tittel;
         this.filnavn = filnavn;
@@ -41,11 +46,6 @@ public class Dokument implements AsicEAttachable {
             IOUtils.closeQuietly(dokumentStream);
         }
     }
-
-    private String tittel;
-    private String filnavn;
-    private byte[] dokument;
-    private String mimeType = "application/pdf";
 
     @Override
     public String getFileName() {
@@ -80,7 +80,7 @@ public class Dokument implements AsicEAttachable {
 
     /**
      * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
-     * @param file Filen som skal sendes
+     * @param file Filen som skal sendes. Navnet på filen vil brukes som filnavn ovenfor mottaker.
      */
     public static Builder builder(String tittel, File file) {
         try {

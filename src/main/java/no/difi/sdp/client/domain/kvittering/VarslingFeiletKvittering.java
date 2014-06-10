@@ -21,11 +21,6 @@ import java.util.Date;
 
 public class VarslingFeiletKvittering extends ForretningsKvittering {
 
-    public enum Varslingskanal {
-        SMS,
-        EPOST
-    }
-
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
@@ -68,5 +63,10 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
             built = true;
             return target;
         }
+    }
+
+    public enum Varslingskanal {
+        SMS,
+        EPOST
     }
 }

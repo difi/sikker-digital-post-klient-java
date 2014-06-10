@@ -19,17 +19,17 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Mottaker {
 
+    private String personidentifikator;
+    private String postkasseadresse;
+    private Sertifikat mottakerSertifikat;
+    private String organisasjonsnummerPostkasse;
+
     private Mottaker(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String organisasjonsnummerPostkasse) {
         this.personidentifikator = personidentifikator;
         this.postkasseadresse = postkasseadresse;
         this.mottakerSertifikat = mottakerSertifikat;
         this.organisasjonsnummerPostkasse = organisasjonsnummerPostkasse;
     }
-
-    private String personidentifikator;
-    private String postkasseadresse;
-    private Sertifikat mottakerSertifikat;
-    private String organisasjonsnummerPostkasse;
 
     public String getOrganisasjonsnummerPostkasse() {
         return organisasjonsnummerPostkasse;

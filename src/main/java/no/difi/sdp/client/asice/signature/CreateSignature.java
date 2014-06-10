@@ -56,10 +56,12 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.codec.digest.DigestUtils.sha256;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class CreateSignature {
 
     private final String asicNamespace = "http://uri.etsi.org/2918/v1.2.1#";
     private final String signedPropertiesType = "http://uri.etsi.org/01903#SignedProperties";
+
     private final DigestMethod sha256DigestMethod;
     private final CanonicalizationMethod canonicalizationMethod;
     private final SignatureMethod signatureMethod;

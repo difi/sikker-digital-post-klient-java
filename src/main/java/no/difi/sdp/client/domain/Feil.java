@@ -22,11 +22,6 @@ import java.util.Date;
 
 public class Feil extends ForretningsKvittering {
 
-    public enum Feiltype {
-        KLIENT,
-        SERVER
-    }
-
     private Feiltype feiltype;
     private String detaljer;
 
@@ -71,4 +66,10 @@ public class Feil extends ForretningsKvittering {
         }
 
     }
+
+    public enum Feiltype {
+        KLIENT,
+        SERVER
+    }
+
 }

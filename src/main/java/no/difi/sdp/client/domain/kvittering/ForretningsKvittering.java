@@ -21,11 +21,11 @@ import java.util.Date;
 
 public abstract class ForretningsKvittering {
 
+    public final EbmsApplikasjonsKvittering applikasjonsKvittering;
+
     protected ForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
         this.applikasjonsKvittering = applikasjonsKvittering;
     }
-
-    public final EbmsApplikasjonsKvittering applikasjonsKvittering;
 
     public String getKonversasjonsId() {
         return applikasjonsKvittering.getStandardBusinessDocument().getConversationId();
