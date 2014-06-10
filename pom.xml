@@ -236,7 +236,6 @@
                         <exclude>**/*.xml</exclude>
                         <exclude>**/*.xsd</exclude>
                         <exclude>**/*.template</exclude>
-                        <!--todo: hva gjør vi med keytools-->
                         <exclude>**/*.jks</exclude>
                         <exclude>**/*.jce</exclude>
                     </excludes>

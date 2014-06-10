@@ -40,13 +40,10 @@ public class EbmsForsendelseBuilder {
         EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(avsender.getOrganisasjonsnummer());
         Organisasjonsnummer postkasse = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
 
-        SDPDigitalPost sikkerDigitalPost = createSikkerDigitalPost(avsender, forsendelse);
+        SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(avsender, forsendelse);
         Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
 
         return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(digipostMeldingsformidler), postkasse, sikkerDigitalPost, dokumentpakke).build();
     }
 
-    private SDPDigitalPost createSikkerDigitalPost(final Avsender avsender, final Forsendelse forsendelse) {
-        return sdpBuilder.buildDigitalPost(avsender, forsendelse);
-    }
 }

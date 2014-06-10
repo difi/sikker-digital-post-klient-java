@@ -81,8 +81,6 @@ public class Avsender {
         /**
          * Brukt for å identifisere en ansvarlig enhet innen for en virksomhet.
          *
-         * TODO: Denne er mandatory og bør flyttes opp til intialiseringen av builderen
-         *
          * @param avsenderIdentifikator Identifikator som er tildelt av Sikker digital posttjeneste ved tilkobling til tjenesten.
          */
         public Builder avsenderIdentifikator(String avsenderIdentifikator) {
