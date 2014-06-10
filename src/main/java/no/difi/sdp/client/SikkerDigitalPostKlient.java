@@ -113,17 +113,11 @@ public class SikkerDigitalPostKlient {
     public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(digipostMeldingsformidler, kvitteringForespoersel.getPrioritet());
 
-        EbmsApplikasjonsKvittering applikasjonsKvittering;
         if (forrigeKvittering == null) {
-            applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest);
+            return kvitteringBuilder.buildForretningsKvittering(messageSender.hentKvittering(ebmsPullRequest));
         } else {
-            applikasjonsKvittering = messageSender.hentKvittering(ebmsPullRequest, forrigeKvittering.applikasjonsKvittering);
+            return kvitteringBuilder.buildForretningsKvittering(messageSender.hentKvittering(ebmsPullRequest, forrigeKvittering.applikasjonsKvittering));
         }
-
-        if (applikasjonsKvittering != null) {
-            return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
-        }
-        return null;
     }
 
     /**
