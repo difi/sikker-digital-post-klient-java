@@ -40,6 +40,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
 import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;
@@ -54,9 +55,8 @@ public class SikkerDigitalPostKlientTest {
     @Before
     public void setUp() {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                //.meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
-                .meldingsformidlerRoot("http://localhost:8049/ebms")
-                .connectionTimeout(20000)
+                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
         //todo: bytte ut med et gyldig Buypass sertifikat når vi har det på plass
