@@ -330,7 +330,9 @@
                                         <include>wsdl4j:wsdl4j:1.6.1</include>
                                     </includes>
                                     <searchTransitive>true</searchTransitive>
-                                    <message>Maven-avhengigheter har forandret seg. Sjekk at alle lisenser er OK før distribusjon. Husk også å oppdatere fila «NOTICE».
+                                    <message>
+                                        Maven-avhengighetene har forandret seg. Sjekk at dette virkelige er nødvendige avhengigheter (inkludert transitive) og at lisenser er OK.
+                                        Være spesielt OBS på lisenser som krever at man open sourcer egen kode, som for eksempel GPL-lisensene.
                                     </message>
                                 </bannedDependencies>
                             </rules>
