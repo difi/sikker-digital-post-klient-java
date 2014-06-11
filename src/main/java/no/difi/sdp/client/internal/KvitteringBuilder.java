@@ -20,7 +20,7 @@ import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
-import no.difi.sdp.client.domain.Feil;
+import no.difi.sdp.client.domain.kvittering.Feil;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;

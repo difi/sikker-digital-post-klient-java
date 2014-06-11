@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client.domain;
+package no.difi.sdp.client.domain.kvittering;
 
-import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 
 import java.util.Date;
@@ -33,6 +32,7 @@ public class Feil extends ForretningsKvittering {
     public Date getTidspunkt() {
         return applikasjonsKvittering.getStandardBusinessDocument().getFeil().getTidspunkt().toDate();
     }
+
 
     public Feiltype getFeiltype() {
         return feiltype;
@@ -68,7 +68,15 @@ public class Feil extends ForretningsKvittering {
     }
 
     public enum Feiltype {
+
+        /**
+         * Feil som har oppstått som følge av en feil hos klienten.
+         */
         KLIENT,
+
+        /**
+         * Feil som har oppstått som følge av feil hos klienten. Bør meldes til sentralforvalter.
+         */
         SERVER
     }
 
