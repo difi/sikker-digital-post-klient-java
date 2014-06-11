@@ -26,23 +26,17 @@ import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
-import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-import no.digipost.api.representations.EbmsOutgoingMessage;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.SimpleStandardBusinessDocument;
 
+import static no.digipost.api.representations.EbmsAktoer.meldingsformidler;
+
 public class KvitteringBuilder {
 
     public EbmsPullRequest buildEbmsPullRequest(Organisasjonsnummer digitalpostMeldingsformidler, Prioritet prioritet) {
-        EbmsAktoer meldingsformidler = EbmsAktoer.meldingsformidler(digitalpostMeldingsformidler);
-
-        if (prioritet == Prioritet.PRIORITERT) {
-            return new EbmsPullRequest(meldingsformidler, EbmsOutgoingMessage.Prioritet.PRIORITERT);
-        }
-
-        return new EbmsPullRequest(meldingsformidler);
+        return new EbmsPullRequest(meldingsformidler(digitalpostMeldingsformidler), prioritet.getEbmsPrioritet());
     }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
