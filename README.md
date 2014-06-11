@@ -1,5 +1,5 @@
-sikker-digital-post-java-klient
-===============================
+Sikker Digital Post Javaklient
+==============================
 
 Dette er en Java klient for sending av sikker digital post for det offentlige.
 Formålet er å forenkle integrasjonen som må utføres av avsendervirksomheter.
@@ -49,6 +49,25 @@ Legg til følgende i POM:
     <artifactId>sikker-digital-post-java-klient</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
+
+Debugging
+---------
+
+***Merk: innstillingene under er ikke anbefalt i produksjonsmiljøer.***
+
+Den underliggende http-klienten har støtte for å logge meldingene som sendes over nettverket. Sett `org.apache.http.wire` til `debug` eller lavere for å slå på denne loggingen.
+
+Biblioteket har innebygd støtte for å outputte den genererte ASiC-E Dokumentpakken til disk for debug-formål:
+
+```java
+try {
+    File tempFile = File.createTempFile("dokumentpakke", "debug");
+    CreateASiCE.debug_writeArchiveToDisk(tempFile);
+    System.out.println(tempFile);
+} catch (IOException e) {
+    throw new RuntimeException("Kunne ikke lagre dokumentpakke", e);
+}
+```
 
 
 Spørsmål
