@@ -12,7 +12,7 @@
         <spring.ws.version>2.1.4.RELEASE</spring.ws.version>
         <spring.security.version>3.1.6.RELEASE</spring.security.version>
         <commons-codec.version>1.9</commons-codec.version>
-        <sdp-shared.version>0.1</sdp-shared.version>
+        <sdp-shared.version>0.2-SNAPSHOT</sdp-shared.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-compress.version>1.8.1</commons-compress.version>
     </properties>
@@ -71,17 +71,17 @@
 
         <dependency>
             <groupId>no.digipost</groupId>
-            <artifactId>api-client</artifactId>
+            <artifactId>sdp-api-client</artifactId>
             <version>${sdp-shared.version}</version>
         </dependency>
         <dependency>
             <groupId>no.digipost</groupId>
-            <artifactId>offentlig-xsd</artifactId>
+            <artifactId>sdp-xsd</artifactId>
             <version>${sdp-shared.version}</version>
         </dependency>
         <dependency>
             <groupId>no.digipost</groupId>
-            <artifactId>api-commons</artifactId>
+            <artifactId>sdp-api-commons</artifactId>
             <version>${sdp-shared.version}</version>
         </dependency>
 
