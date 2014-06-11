@@ -97,7 +97,7 @@ public class SikkerDigitalPostKlient {
 
     /**
      * Forespør kvittering for forsendelser med mulighet til å samtidig bekrefte på forrige kvittering for å slippe å kjøre eget kall for bekreft.
-     * Kvitteringer blir tilgjengeliggjort etterhvert som de er klare i meldingsofrmidler. Det er ikke mulig å etterspørre kvittering for en
+     * Kvitteringer blir tilgjengeliggjort etterhvert som de er klare i meldingsformidler. Det er ikke mulig å etterspørre kvittering for en
      * spesifikk forsendelse.
      *
      * Dersom det ikke er tilgjengelige kvitteringer skal det ventes følgende tidsintervaller før en ny forespørsel gjøres:
