@@ -15,6 +15,8 @@
  */
 package no.difi.sdp.client;
 
+import no.digipost.api.representations.Organisasjonsnummer;
+
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +25,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class KlientKonfigurasjon {
 
     private URI meldingsformidlerRoot = URI.create("https://meldingsformidler.digipost.no/api/ebms");
+    private final Organisasjonsnummer meldingsformidlerOrganisasjon = new Organisasjonsnummer("984661185");
 
     private String proxyHost;
     private int proxyPort;
@@ -62,6 +65,10 @@ public class KlientKonfigurasjon {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public Organisasjonsnummer getMeldingsformidlerOrganisasjon() {
+        return meldingsformidlerOrganisasjon;
     }
 
     public static class Builder {
