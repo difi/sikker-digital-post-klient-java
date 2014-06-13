@@ -18,7 +18,14 @@ package no.difi.sdp.client.domain;
 import no.difi.sdp.client.domain.exceptions.NoekkelException;
 import no.digipost.api.interceptors.KeyStoreInfo;
 
-import java.security.*;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+
 
 public class Noekkelpar {
 
@@ -32,6 +39,10 @@ public class Noekkelpar {
         this.password = password;
     }
 
+    public String getAlias() {
+        return alias;
+    }
+
     public KeyStore getKeyStore() {
         return keyStore;
     }
@@ -40,13 +51,18 @@ public class Noekkelpar {
         return new KeyStoreInfo(keyStore, alias, password);
     }
 
-    public static Noekkelpar fraKeyStore(KeyStore keyStore, String alias, String password) {
-        return new Noekkelpar(keyStore, alias, password);
-    }
-
     public Sertifikat getSertifikat() {
         return Sertifikat.fraKeyStore(keyStore, alias);
     }
+
+    public Certificate[] getCertificateChain() {
+        try {
+            return keyStore.getCertificateChain(alias);
+        } catch (KeyStoreException e) {
+            throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Er KeyStore initialisiert?", e);
+        }
+    }
+
 
     public PrivateKey getPrivateKey() {
         try {
@@ -64,7 +80,7 @@ public class Noekkelpar {
         }
     }
 
-    public String getAlias() {
-        return alias;
+    public static Noekkelpar fraKeyStore(KeyStore keyStore, String alias, String password) {
+        return new Noekkelpar(keyStore, alias, password);
     }
 }

@@ -17,7 +17,6 @@ package no.difi.sdp.client.asice.signature;
 
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.Noekkelpar;
-import no.difi.sdp.client.domain.Sertifikat;
 import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
 import org.w3c.dom.Document;
@@ -49,10 +48,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.codec.digest.DigestUtils.sha256;
 
@@ -104,7 +105,7 @@ public class CreateSignature {
         // Generer XAdES-dokument som skal signeres, informasjon om nøkkel brukt til signering og informasjon om hva som er signert
         Document document = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getSertifikat());
 
-        KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getSertifikat());
+        KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getCertificateChain());
         SignedInfo signedInfo = xmlSignatureFactory.newSignedInfo(canonicalizationMethod, signatureMethod, references);
 
         // Definer signatur over XAdES-dokument
@@ -142,9 +143,9 @@ public class CreateSignature {
         return references;
     }
 
-    private KeyInfo keyInfo(XMLSignatureFactory xmlSignatureFactory, Sertifikat sertifikat) {
+    private KeyInfo keyInfo(XMLSignatureFactory xmlSignatureFactory, Certificate[] sertifikater) {
         KeyInfoFactory keyInfoFactory = xmlSignatureFactory.getKeyInfoFactory();
-        X509Data x509Data = keyInfoFactory.newX509Data(singletonList(sertifikat.getX509Certificate()));
+        X509Data x509Data = keyInfoFactory.newX509Data(asList(sertifikater));
         return keyInfoFactory.newKeyInfo(singletonList(x509Data));
     }
 
