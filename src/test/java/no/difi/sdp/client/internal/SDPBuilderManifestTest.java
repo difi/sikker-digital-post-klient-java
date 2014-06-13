@@ -27,10 +27,11 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.xml.transform.StringResult;
 
 import javax.xml.bind.Marshaller;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -69,10 +70,10 @@ public class SDPBuilderManifestTest {
 
         SDPManifest manifest = sut.createManifest(avsender, forsendelse);
 
-        StringResult xmlResult = new StringResult();
-        marshaller.marshal(manifest, xmlResult);
+        ByteArrayOutputStream xmlBytes = new ByteArrayOutputStream();
+        marshaller.marshal(manifest, new StreamResult(xmlBytes));
 
-        assertThat(xmlResult.toString()).isEqualTo(expectedXml);
+        assertThat(xmlBytes.toString()).isEqualTo(expectedXml);
     }
 
 }
