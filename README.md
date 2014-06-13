@@ -44,11 +44,13 @@ I øyeblikket har vi kun fått ut en SNAPSHOT versjon ute i Maven central snapsh
 
 Legg til følgende i POM:
 
+```xml
 <dependency>
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-java-klient</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
+```
 
 Debugging
 ---------
