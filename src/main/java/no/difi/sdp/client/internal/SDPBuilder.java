@@ -59,9 +59,7 @@ public class SDPBuilder {
     public SDPManifest createManifest(Avsender avsender, Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
-        SDPPerson sdpPerson = new SDPPerson().withPersonidentifikator(mottaker.getPersonidentifikator());
-        SDPMottaker sdpMottaker = new SDPMottaker(null, sdpPerson);
-
+        SDPMottaker sdpMottaker = sdpMottaker(mottaker);
         String fakturaReferanse = null; // Ikke send fakturareferanse i manifest
         SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(avsender), avsender.getAvsenderIdentifikator(), fakturaReferanse);
 
@@ -78,7 +76,7 @@ public class SDPBuilder {
 
     public SDPDigitalPost buildDigitalPost(Avsender avsender, Forsendelse forsendelse) {
         SDPAvsender sdpAvsender = sdpAvsender(avsender);
-        SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost().getMottaker(), forsendelse);
+        SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost().getMottaker());
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
 
@@ -95,12 +93,8 @@ public class SDPBuilder {
         return new SDPDokument(sdpTittel, dokument.getFilnavn(), dokument.getMimeType());
     }
 
-    private SDPMottaker sdpMottaker(Mottaker mottaker, Forsendelse forsendelse) {
-        // Bygg SDP:Mottaker. SDP:Mottaker er av typen sdp:person som har en del felter som ikke er relevant i denne konteksten.
-        // Vi setter felter i henhold til det som er definert for sdp:melding (http://begrep.difi.no/SikkerDigitalPost/utkast/StandardBusinessDocument/Melding/Person)
-
+    private SDPMottaker sdpMottaker(Mottaker mottaker) {
         SDPVirksomhet virksomhet = null; // Sending til virksomheter er ikke støttet
-
         SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse());
 
         return new SDPMottaker(virksomhet, sdpPerson);

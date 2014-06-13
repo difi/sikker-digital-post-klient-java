@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class Dokumentpakke {
 
     private Dokument hoveddokument;
@@ -55,6 +57,10 @@ public class Dokumentpakke {
         public Builder vedlegg(List<Dokument> vedlegg) {
             target.vedlegg = new ArrayList<Dokument>(vedlegg);
             return this;
+        }
+
+        public Builder vedlegg(Dokument... vedlegg) {
+            return this.vedlegg(asList(vedlegg));
         }
 
         public Dokumentpakke build() {

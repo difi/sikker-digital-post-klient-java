@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<manifest xmlns="http://begrep.difi.no/sdp/schema_v10">
+    <mottaker>
+        <person>
+            <personidentifikator>11077941012</personidentifikator>
+            <postkasseadresse>123456</postkasseadresse>
+        </person>
+    </mottaker>
+    <avsender>
+        <organisasjon authority="iso6523-actorid-upis">9908:123456789</organisasjon>
+        <avsenderidentifikator>0123456789</avsenderidentifikator>
+    </avsender>
+    <hoveddokument href="vedtak_2398324.pdf" mime="application/pdf">
+        <tittel lang="NO">Vedtak</tittel>
+    </hoveddokument>
+    <vedlegg href="info.html" mime="text/html">
+        <tittel lang="NO">informasjon</tittel>
+    </vedlegg>
+    <vedlegg href="journal.txt" mime="text/plain">
+        <tittel lang="NO">journal</tittel>
+    </vedlegg>
+</manifest>
