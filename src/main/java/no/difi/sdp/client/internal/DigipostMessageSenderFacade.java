@@ -17,6 +17,8 @@ package no.difi.sdp.client.internal;
 
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.exceptions.EbmsException;
+import no.digipost.api.EbmsClientException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
 import no.digipost.api.interceptors.WsSecurityInterceptor;
@@ -30,7 +32,6 @@ public class DigipostMessageSenderFacade {
     private final MessageSender messageSender;
 
     public DigipostMessageSenderFacade(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
-
         KeyStoreInfo keyStoreInfo = avsender.getNoekkelpar().getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
@@ -51,19 +52,68 @@ public class DigipostMessageSenderFacade {
         messageSender = msBuilder.build();
     }
 
-    public void send(EbmsForsendelse ebmsForsendelse) {
-        messageSender.send(ebmsForsendelse);
+    public void send(final EbmsForsendelse ebmsForsendelse) {
+        performRequest(new VoidRequest() {
+            @Override
+            public void exec() {
+                messageSender.send(ebmsForsendelse);
+            }
+        });
     }
 
-    public EbmsApplikasjonsKvittering hentKvittering(EbmsPullRequest ebmsPullRequest) {
-        return messageSender.hentKvittering(ebmsPullRequest);
+    public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest) {
+        return performRequest(new Request<EbmsApplikasjonsKvittering>() {
+            @Override
+            public EbmsApplikasjonsKvittering exec() {
+                return messageSender.hentKvittering(ebmsPullRequest);
+            }
+        });
     }
 
-    public EbmsApplikasjonsKvittering hentKvittering(EbmsPullRequest ebmsPullRequest, EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        return messageSender.hentKvittering(ebmsPullRequest, applikasjonsKvittering);
+    public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest, final EbmsApplikasjonsKvittering applikasjonsKvittering) {
+        return performRequest(new Request<EbmsApplikasjonsKvittering>() {
+            @Override
+            public EbmsApplikasjonsKvittering exec() {
+                return messageSender.hentKvittering(ebmsPullRequest, applikasjonsKvittering);
+            }
+        });
     }
 
-    public void bekreft(EbmsApplikasjonsKvittering kvittering) {
-        messageSender.bekreft(kvittering);
+    public void bekreft(final EbmsApplikasjonsKvittering kvittering) {
+        performRequest(new VoidRequest() {
+            @Override
+            public void exec() {
+                messageSender.bekreft(kvittering);
+            }
+        });
+
     }
+
+    private void performRequest(final VoidRequest request) {
+        this.performRequest(new Request<Object>() {
+            @Override
+            public Object exec() {
+                request.exec();
+                return null;
+            }
+        });
+    }
+
+    private <T> T performRequest(Request<T> request) {
+        try {
+            return request.exec();
+        }
+        catch (EbmsClientException e) {
+            throw new EbmsException(e);
+        }
+    }
+
+    private interface VoidRequest {
+        void exec();
+    }
+
+    private interface Request<T> {
+        T exec();
+    }
+
 }
