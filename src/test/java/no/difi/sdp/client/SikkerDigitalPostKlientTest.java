@@ -55,7 +55,7 @@ public class SikkerDigitalPostKlientTest {
     @Before
     public void setUp() {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .meldingsformidlerRoot("http://localhost:8049/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 

@@ -15,7 +15,7 @@
  */
 package no.difi.sdp.client.domain.exceptions;
 
-public class KonfigurasjonException extends RuntimeException {
+public class KonfigurasjonException extends SikkerDigitalPostException {
 
     public KonfigurasjonException(String message, Exception e) {
         super(message, e);
