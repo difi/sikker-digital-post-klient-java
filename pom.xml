@@ -325,12 +325,11 @@
                                         <include>org.opensaml:opensaml:2.6.1</include>
                                         <include>org.opensaml:openws:1.5.1</include>
                                         <include>org.opensaml:xmltooling:1.4.1</include>
-                                        <include>org.slf4j:jcl-over-slf4j:1.7.6</include>
-                                        <include>org.slf4j:slf4j-api:1.7.6</include>
                                         <include>wsdl4j:wsdl4j:1.6.1</include>
                                         <include>no.digipost:sdp-api-client</include>
                                         <include>no.digipost:sdp-api-commons</include>
                                         <include>no.digipost:sdp-xsd</include>
+                                        <include>org.slf4j</include>
                                         <include>org.apache.commons</include>
                                         <include>org.apache.geronimo.specs</include>
                                         <include>org.apache.httpcomponents</include>
