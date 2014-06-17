@@ -59,20 +59,10 @@ import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
-    public static Noekkelpar noekkelparMF() {
-        try {
-            KeyStore keyStore = KeyStore.getInstance("JCEKS");
-            keyStore.load(new ClassPathResource("/meldingsformidler.qa.jce").getInputStream(), "abcd1234".toCharArray());
-            return Noekkelpar.fraKeyStore(keyStore, "meldingsformidler", "abcd1234");
-        } catch (Exception e) {
-            throw new RuntimeException("Kunne ikke laste keystore", e);
-        }
-    }
-
      public static Noekkelpar noekkelpar() {
         try {
             KeyStore keyStore = KeyStore.getInstance("jks");
-            keyStore.load(new ClassPathResource("/avsender-keystore.jks").getInputStream(), "password1234".toCharArray());
+            keyStore.load(new ClassPathResource("/selfsigned-keystore.jks").getInputStream(), "password1234".toCharArray());
             return Noekkelpar.fraKeyStore(keyStore, "avsender", "password1234");
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste keystore", e);
@@ -120,8 +110,8 @@ public class ObjectMother {
                 .build();
     }
 
-    public static Avsender avsenderMedBuypassSertifikat() {
-        return Avsender.builder("984661185", noekkelparMF())
+    public static Avsender avsenderMedSertifikat(Noekkelpar noekkelpar) {
+        return Avsender.builder("984661185", noekkelpar)
                 .fakturaReferanse("ØK1")
                 .avsenderIdentifikator("12345")
                 .build();

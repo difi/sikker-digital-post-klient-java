@@ -26,7 +26,6 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 
-
 public class Noekkelpar {
 
     private KeyStore keyStore;
@@ -62,7 +61,6 @@ public class Noekkelpar {
             throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Er KeyStore initialisiert?", e);
         }
     }
-
 
     public PrivateKey getPrivateKey() {
         try {

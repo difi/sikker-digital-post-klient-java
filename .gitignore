@@ -3,6 +3,7 @@ target
 .classpath
 .project
 *.iml
+src/test/resources/keystore.jce
 
 #Ignore all intellij files
 .idea/*
