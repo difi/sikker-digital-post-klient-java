@@ -1,13 +1,13 @@
 <XAdESSignatures xmlns="http://uri.etsi.org/2918/v1.2.1#">
-    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <Signature Id="Signature" xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
             <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
             <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-            <Reference URI="hoveddokument.pdf">
+            <Reference Id="hoveddokument.pdf" URI="hoveddokument.pdf">
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                 <DigestValue>XdxjXOUnFR8hgR5NBjFc0I7DnILAukbaQ12CPoP5jXs=</DigestValue>
             </Reference>
-            <Reference URI="manifest.xml">
+            <Reference Id="manifest.xml" URI="manifest.xml">
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                 <DigestValue>wEftXp/TkL614dcx9Txw8O1lLxylP8ZS2WohNKbFdQo=</DigestValue>
             </Reference>
@@ -16,14 +16,14 @@
                     <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                 </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <DigestValue>49CtDLlXLnnYywje/La5n4qjl4ELv4EdHZAQs55zQS4=</DigestValue>
+                <DigestValue>un/GCRL73ur9vH+zv9+N5GjzJS/UDmMDEqTezKAAl3U=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>WajVRJdJ4K+LOP+bBQXBFBnjDS1qZDrw2TvyhXZk8GAISeGKhqC39gJ97qps655xFvks6zbgBrh8
-gxd5U+gxcmDQAZHYVEPwygPa4iNYRwXL159wjuVdKVyf3rSH1Vbq/M7xf3qcHV/xEX3oqkA/ksMa
-R5RNcyrJodJC1VYlrn754lJQAl3vmKPpozxKeDtjyDZk8S6unewAwk3rEsQRoXzDVdvQEVXv9otg
-/v/xxwotfoebuoXN7elzw9sKrG9FQJLHtn1U4dAfR4tUEcMjDSa0toLOPl+GJDOiOCteek7OWcaa
-cMMf4JjhGPiSl5NnHJTec+rAnhTM3PddpsI5eg==</SignatureValue>
+        <SignatureValue>KpGTcMG6fLDz1/Bh5suPlAwOg3QYXhG3o3tOKoVcnERWLlDcL+ZTdcT+k08JWzjVpLLukfbyp79W
++UPev+lrlFNDqBclxC3rwh9S2N8lAtwTq8PHJpSpU5jMR/CS/m8IYb6usGClBfdoXwgiwuf2TtCk
+pr33AgeUEUY7CVZ0l8BQJdzIzdxaYuIHAlFtIVs27eMISRMvcnAcZ7Wu7QvDDluOYKQFIzK/T8CR
+C7TZantSKLmEdet/vEU0hqHnhtjYzQW7iewWfrp3fgM7XtyA2ypc23X7AOOQ7BxAudPd8EUetY2b
++SNCtKFkdy3WWbyqLVgPY4FrI66PFFKOXUV7sw==</SignatureValue>
         <KeyInfo>
             <X509Data>
                 <X509Certificate>MIIDYzCCAkugAwIBAgIEIyZ/HzANBgkqhkiG9w0BAQsFADBiMQswCQYDVQQGEwJOTzELMAkGA1UE
@@ -45,7 +45,7 @@ l5gXsb+YU/RPOlg+xh5xRA==</X509Certificate>
             </X509Data>
         </KeyInfo>
         <Object>
-            <QualifyingProperties
+            <QualifyingProperties Target="Signature"
                 xmlns="http://uri.etsi.org/01903/v1.3.2#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
                 <SignedProperties Id="SignedProperties">
                     <SignedSignatureProperties>
@@ -64,10 +64,10 @@ l5gXsb+YU/RPOlg+xh5xRA==</X509Certificate>
                         </SigningCertificate>
                     </SignedSignatureProperties>
                     <SignedDataObjectProperties>
-                        <DataObjectFormat ObjectReference="hoveddokument.pdf">
+                        <DataObjectFormat ObjectReference="#hoveddokument.pdf">
                             <MimeType>application/pdf</MimeType>
                         </DataObjectFormat>
-                        <DataObjectFormat ObjectReference="manifest.xml">
+                        <DataObjectFormat ObjectReference="#manifest.xml">
                             <MimeType>application/xml</MimeType>
                         </DataObjectFormat>
                     </SignedDataObjectProperties>

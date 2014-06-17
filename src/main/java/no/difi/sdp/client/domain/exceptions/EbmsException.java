@@ -23,10 +23,24 @@ public class EbmsException extends TransportException {
     private final String errorDescription;
 
     public EbmsException(EbmsClientException e) {
-        super(e.getError().getDescription().getValue(), AntattSkyldig.fraSoapFault(e.getSoapError()), e);
+        super(createMessage(e), AntattSkyldig.fraSoapFault(e.getSoapError()), e);
 
         errorCode = e.getError().getErrorCode();
         errorDescription = e.getError().getDescription().getValue();
+    }
+
+    private static String createMessage(EbmsClientException e) {
+        String message = "";
+        if (e.getError() != null) {
+            message += e.getError().getErrorCode();
+
+            if (e.getError().getDescription() != null) {
+                message += " - " + e.getMessage();
+            }
+
+            return message;
+        }
+        return "An unknown ebMS error has occured.";
     }
 
     public String getErrorCode() {

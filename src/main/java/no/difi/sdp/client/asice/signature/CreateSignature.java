@@ -110,7 +110,7 @@ public class CreateSignature {
 
         // Definer signatur over XAdES-dokument
         XMLObject xmlObject = xmlSignatureFactory.newXMLObject(Collections.singletonList(new DOMStructure(document.getDocumentElement())), null, null, null);
-        XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, Collections.singletonList(xmlObject), null, null);
+        XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, Collections.singletonList(xmlObject), "Signature", null);
 
         try {
             xmlSignature.sign(new DOMSignContext(noekkelpar.getPrivateKey(), document));
@@ -137,7 +137,7 @@ public class CreateSignature {
     private List<Reference> references(XMLSignatureFactory xmlSignatureFactory, List<AsicEAttachable> files) {
         List<Reference> references = new ArrayList<Reference>();
         for (AsicEAttachable file : files) {
-            Reference reference = xmlSignatureFactory.newReference(file.getFileName(), sha256DigestMethod, null, null, null, sha256(file.getBytes()));
+            Reference reference = xmlSignatureFactory.newReference(file.getFileName(), sha256DigestMethod, null, null, file.getFileName(), sha256(file.getBytes()));
             references.add(reference);
         }
         return references;

@@ -67,10 +67,10 @@ class CreateXAdESProperties {
         SigningCertificate signingCertificate = new SigningCertificate(singletonList(new CertIDType(certificateDigest, certificateIssuer, null)));
 
         DateTime now = DateTime.now(DateTimeZone.UTC);
-        SignedSignatureProperties signedSignatureProperties = new SignedSignatureProperties().withSigningTime(now).withSigningCertificate(signingCertificate);
-        SignedDataObjectProperties signedDataObjectProperties = new SignedDataObjectProperties().withDataObjectFormats(dataObjectFormats(files));
+        SignedSignatureProperties signedSignatureProperties = new SignedSignatureProperties(now, signingCertificate, null, null, null, null);
+        SignedDataObjectProperties signedDataObjectProperties = new SignedDataObjectProperties(dataObjectFormats(files), null, null, null, null);
         SignedProperties signedProperties = new SignedProperties(signedSignatureProperties, signedDataObjectProperties, "SignedProperties");
-        QualifyingProperties qualifyingProperties = new QualifyingProperties().withSignedProperties(signedProperties);
+        QualifyingProperties qualifyingProperties = new QualifyingProperties(signedProperties, null, "Signature", null);
 
         DOMResult domResult = new DOMResult();
         marshaller.marshal(qualifyingProperties, domResult);
@@ -86,7 +86,7 @@ class CreateXAdESProperties {
     private List<DataObjectFormat> dataObjectFormats(List<AsicEAttachable> files) {
         List<DataObjectFormat> dataObjectFormats = new ArrayList<DataObjectFormat>();
         for (AsicEAttachable file : files) {
-            dataObjectFormats.add(new DataObjectFormat().withMimeType(file.getMimeType()).withObjectReference(file.getFileName()));
+            dataObjectFormats.add(new DataObjectFormat(null, null, file.getMimeType(), null, "#" + file.getFileName()));
         }
         return dataObjectFormats;
     }
