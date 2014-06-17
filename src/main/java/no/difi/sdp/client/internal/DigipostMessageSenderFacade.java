@@ -18,6 +18,7 @@ package no.difi.sdp.client.internal;
 import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.exceptions.SikkerDigitalPostException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
 import no.digipost.api.interceptors.WsSecurityInterceptor;
@@ -109,7 +110,7 @@ public class DigipostMessageSenderFacade {
                 throw mappedException;
             }
 
-            throw e;
+            throw new SikkerDigitalPostException("An unhandled exception occured while performing request", e);
         }
     }
 
