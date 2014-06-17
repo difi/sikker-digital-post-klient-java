@@ -121,4 +121,11 @@ public class SikkerDigitalPostKlient {
         digipostMessageSenderFacade.bekreft(kvittering);
     }
 
+    /**
+     * Registrer egen ExceptionMapper.
+     */
+    public void setExceptionMapper(ExceptionMapper exceptionMapper) {
+        this.digipostMessageSenderFacade.setExceptionMapper(exceptionMapper);
+    }
+
 }

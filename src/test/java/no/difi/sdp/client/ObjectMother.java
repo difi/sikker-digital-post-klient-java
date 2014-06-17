@@ -24,9 +24,17 @@ import no.difi.begrep.sdp.schema_v10.SDPMelding;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.Dokument;
+import no.difi.sdp.client.domain.Dokumentpakke;
+import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
 import no.difi.sdp.client.domain.Noekkelpar;
+import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.Sertifikat;
+import no.difi.sdp.client.domain.digital_post.DigitalPost;
+import no.difi.sdp.client.domain.digital_post.EpostVarsel;
+import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
+import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
@@ -41,8 +49,13 @@ import org.unece.cefact.namespaces.standardbusinessdocumentheader.Scope;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocumentHeader;
 
+import java.io.ByteArrayInputStream;
 import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
+
+import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
@@ -64,6 +77,40 @@ public class ObjectMother {
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste keystore", e);
         }
+    }
+
+    public static Forsendelse forsendelse() {
+        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", "Du har mottatt brev i din digitale postkasse")
+                .varselEtterDager(asList(1, 4, 10))
+                .build();
+
+        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185")
+                .build();
+
+        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
+                .build();
+
+        DigitalPost digitalPost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")
+                .virkningsdato(new Date())
+                .aapningskvittering(false)
+                .sikkerhetsnivaa(Sikkerhetsnivaa.NIVAA_3)
+                .epostVarsel(epostVarsel)
+                .smsVarsel(smsVarsel)
+                .build();
+
+        Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
+                .mimeType("application/pdf")
+                .build();
+
+        Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument)
+                .vedlegg(new ArrayList<Dokument>())
+                .build();
+
+        return Forsendelse.digital(digitalPost, dokumentpakke)
+                .konversasjonsId("konversasjonsId")
+                .prioritet(Prioritet.NORMAL)
+                .spraakkode("NO")
+                .build();
     }
 
     public static Avsender avsender() {

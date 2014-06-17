@@ -15,10 +15,9 @@
  */
 package no.difi.sdp.client.internal;
 
+import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.Avsender;
-import no.difi.sdp.client.domain.exceptions.EbmsException;
-import no.digipost.api.EbmsClientException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
 import no.digipost.api.interceptors.WsSecurityInterceptor;
@@ -30,6 +29,7 @@ import no.digipost.api.representations.EbmsPullRequest;
 public class DigipostMessageSenderFacade {
 
     private final MessageSender messageSender;
+    private ExceptionMapper exceptionMapper = new ExceptionMapper();;
 
     public DigipostMessageSenderFacade(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
         KeyStoreInfo keyStoreInfo = avsender.getNoekkelpar().getKeyStoreInfo();
@@ -103,8 +103,13 @@ public class DigipostMessageSenderFacade {
         try {
             return request.exec();
         }
-        catch (EbmsClientException e) {
-            throw new EbmsException(e);
+        catch (RuntimeException e) {
+            RuntimeException mappedException = exceptionMapper.mapException(e);
+            if (mappedException != null) {
+                throw mappedException;
+            }
+
+            throw e;
         }
     }
 
@@ -116,4 +121,7 @@ public class DigipostMessageSenderFacade {
         T exec();
     }
 
+    public void setExceptionMapper(ExceptionMapper exceptionMapper) {
+        this.exceptionMapper = exceptionMapper;
+    }
 }

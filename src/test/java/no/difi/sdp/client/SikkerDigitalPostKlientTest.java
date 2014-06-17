@@ -19,13 +19,8 @@ import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Dokumentpakke;
 import no.difi.sdp.client.domain.Forsendelse;
-import no.difi.sdp.client.domain.Mottaker;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.Sertifikat;
-import no.difi.sdp.client.domain.digital_post.DigitalPost;
-import no.difi.sdp.client.domain.digital_post.EpostVarsel;
-import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
-import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.NorskPostadresse;
 import no.difi.sdp.client.domain.fysisk_post.PostType;
@@ -40,14 +35,15 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.util.Arrays.asList;
 import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;
+import static no.difi.sdp.client.ObjectMother.forsendelse;
+import static no.difi.sdp.client.domain.exceptions.TransportException.AntattSkyldig.UKJENT;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Fail.fail;
 
 public class SikkerDigitalPostKlientTest {
 
@@ -65,7 +61,7 @@ public class SikkerDigitalPostKlientTest {
     @Before
     public void setUp() {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .meldingsformidlerRoot("https://10.255.255.1/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
@@ -76,39 +72,28 @@ public class SikkerDigitalPostKlientTest {
     }
 
     @Test
+    public void haandter_connection_timeouts() {
+        String lokalTimeoutUrl = "http://10.255.255.1/";
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
+                .meldingsformidlerRoot(lokalTimeoutUrl)
+                .connectionTimeout(1, TimeUnit.MILLISECONDS)
+                .build();
+
+        postklient = new SikkerDigitalPostKlient(ObjectMother.avsender(), klientKonfigurasjon);
+
+        try {
+            postklient.send(forsendelse());
+            fail("Should fail");
+        }
+        catch (TransportIOException e) {
+            assertThat(e.getAntattSkyldig()).isEqualTo(UKJENT);
+        }
+    }
+
+    @Test
     @Ignore
     public void test_build_digital_forsendelse() {
-        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", "Du har mottatt brev i din digitale postkasse")
-                .varselEtterDager(asList(1, 4, 10))
-                .build();
-
-        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat, "984661185")
-                .build();
-
-        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
-                .build();
-
-        DigitalPost digitalPost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")
-                .virkningsdato(new Date())
-                .aapningskvittering(false)
-                .sikkerhetsnivaa(Sikkerhetsnivaa.NIVAA_3)
-                .epostVarsel(epostVarsel)
-                .smsVarsel(smsVarsel)
-                .build();
-
-        Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
-                .mimeType("application/pdf")
-                .build();
-
-        Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument)
-                .vedlegg(new ArrayList<Dokument>())
-                .build();
-
-        Forsendelse forsendelse = Forsendelse.digital(digitalPost, dokumentpakke)
-                .konversasjonsId("konversasjonsId")
-                .prioritet(Prioritet.NORMAL)
-                .spraakkode("NO")
-                .build();
+        Forsendelse forsendelse = forsendelse();
 
         postklient.send(forsendelse);
     }
