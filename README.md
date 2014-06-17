@@ -19,6 +19,17 @@ Tekniske krav:
 * Java 1.6 eller nyere
 * (Maven for å hente ned sikker-digital-post-klient)
 
+Installasjon
+------------
+
+For å bruke klienten må det settes opp en keystore med et gyldig virksomhetssertifikat. Keystoren må innehold sertifikatkjeden helt opp til rot-CAen for sertifikatutstederen.
+
+Bruk Java Keytool for å opprette et keystore fra en PKCS#12-fil (.p12):
+
+```bash
+keytool -importkeystore -srckeystore pcks12-fil.p12 -srcstoretype pkcs12 -destkeystore min-keystore.jce -deststoretype jceks
+```
+
 Hva ligger i klientbiblioteket
 ------------------------------
 
@@ -27,13 +38,6 @@ Hva ligger i klientbiblioteket
     * Sende digital post
     * Hente kvittering
     * Bekrefte kvittering
-
-Hva ligger _ikke_ i klientbiblioteket
--------------------------------------
-
-* Oppslag mot Oppslagstjenesten for å hente ut informasjon om mottakeren
-* .NET versjon
-* Validering utover mandatory felter, feks gyldig format osv
 
 
 Hvordan ta dette i bruk
