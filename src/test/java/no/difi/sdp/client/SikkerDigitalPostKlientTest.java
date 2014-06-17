@@ -36,11 +36,14 @@ import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.Arrays.asList;
 import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;
@@ -51,6 +54,13 @@ public class SikkerDigitalPostKlientTest {
     private Sertifikat mottakerSertifikat = ObjectMother.mottakerSertifikat();
 
     private SikkerDigitalPostKlient postklient;
+
+    static {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        Logger.getLogger("org.jcp.xml.dsig").setLevel(Level.INFO);
+        Logger.getLogger("com.sun.org.apache.xml.internal.security").setLevel(Level.INFO);
+        SLF4JBridgeHandler.install();
+    }
 
     @Before
     public void setUp() {
