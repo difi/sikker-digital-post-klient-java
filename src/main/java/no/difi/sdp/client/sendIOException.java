@@ -15,11 +15,11 @@
  */
 package no.difi.sdp.client;
 
-import no.difi.sdp.client.domain.exceptions.TransportException;
+import no.difi.sdp.client.domain.exceptions.SendException;
 
-public class TransportIOException extends TransportException {
+public class SendIOException extends SendException {
 
-    public TransportIOException(Exception e) {
+    public SendIOException(Exception e) {
         super(e.getMessage(), AntattSkyldig.UKJENT, e);
     }
 

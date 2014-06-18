@@ -20,7 +20,7 @@ import org.junit.Test;
 import java.util.concurrent.TimeUnit;
 
 import static no.difi.sdp.client.ObjectMother.forsendelse;
-import static no.difi.sdp.client.domain.exceptions.TransportException.AntattSkyldig.UKJENT;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Fail.fail;
 
@@ -40,7 +40,7 @@ public class SikkerDigitalPostKlientTest {
             postklient.send(forsendelse());
             fail("Should fail");
         }
-        catch (TransportIOException e) {
+        catch (SendIOException e) {
             assertThat(e.getAntattSkyldig()).isEqualTo(UKJENT);
         }
     }

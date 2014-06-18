@@ -17,13 +17,13 @@ package no.difi.sdp.client.domain.exceptions;
 
 import no.digipost.api.EbmsClientException;
 
-public class EbmsException extends TransportException {
+public class EbmsException extends SendException {
 
     private final String errorCode;
     private final String errorDescription;
 
     public EbmsException(EbmsClientException e) {
-        super(createMessage(e), AntattSkyldig.fraSoapFault(e.getSoapError()), e);
+        super(createMessage(e), AntattSkyldig.fraSoapFaultCode(e.getSoapError().getFaultCode()), e);
 
         errorCode = e.getError().getErrorCode();
         errorDescription = e.getError().getDescription().getValue();

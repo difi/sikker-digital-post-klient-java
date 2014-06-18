@@ -17,6 +17,7 @@ package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
+import no.difi.sdp.client.domain.exceptions.SendException;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.internal.DigipostMessageSenderFacade;
@@ -53,7 +54,7 @@ public class SikkerDigitalPostKlient {
      * @param forsendelse Et objekt som har all informasjon klar til å kunne sendes (mottakerinformasjon, sertifikater, dokumenter mm),
      *                    enten digitalt eller fyisk.
      */
-    public void send(Forsendelse forsendelse) {
+    public void send(Forsendelse forsendelse) throws SendException {
         if (!forsendelse.isDigitalPostforsendelse()) {
             throw new UnsupportedOperationException("Fysiske forsendelser er ikke støttet");
         }
@@ -76,7 +77,7 @@ public class SikkerDigitalPostKlient {
      * </dl>
      *
      */
-    public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) {
+    public ForretningsKvittering hentKvittering(KvitteringForespoersel kvitteringForespoersel) throws SendException {
         return hentKvitteringOgBekreftForrige(kvitteringForespoersel, null);
     }
 
@@ -95,7 +96,7 @@ public class SikkerDigitalPostKlient {
      * </dl>
      *
      */
-    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) {
+    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) throws SendException {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), kvitteringForespoersel.getPrioritet());
 
         if (forrigeKvittering == null) {
@@ -116,7 +117,7 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreft(ForretningsKvittering forrigeKvittering) {
+    public void bekreft(ForretningsKvittering forrigeKvittering) throws SendException {
         EbmsApplikasjonsKvittering kvittering = forrigeKvittering.applikasjonsKvittering;
         digipostMessageSenderFacade.bekreft(kvittering);
     }

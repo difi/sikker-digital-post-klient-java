@@ -15,13 +15,16 @@
  */
 package no.difi.sdp.client.domain.exceptions;
 
-import org.springframework.ws.soap.SoapMessage;
+import javax.xml.namespace.QName;
 
-public class TransportException extends SikkerDigitalPostException {
+/**
+ * Felles superklasse for alle Exceptions som oppstår under sending/mottak av forespørsler mot meldingsformidler.
+ */
+public class SendException extends SikkerDigitalPostException {
 
     private final AntattSkyldig antattSkyldig;
 
-    public TransportException(String message, AntattSkyldig antattSkyldig, Exception e) {
+    public SendException(String message, AntattSkyldig antattSkyldig, Exception e) {
         super(message, e);
         this.antattSkyldig = antattSkyldig;
     }
@@ -50,12 +53,12 @@ public class TransportException extends SikkerDigitalPostException {
          */
         UKJENT;
 
-        public static AntattSkyldig fraSoapFault(SoapMessage soapError) {
-            if (soapError == null || soapError.getFaultCode() == null) {
+        public static AntattSkyldig fraSoapFaultCode(QName soapFaultCode) {
+            if (soapFaultCode == null) {
                 return UKJENT;
             }
 
-            String localPart = soapError.getFaultCode().getLocalPart();
+            String localPart = soapFaultCode.getLocalPart();
             if ("Receiver".equals(localPart)) {
                 return SERVER;
             } else if("Sender".equals(localPart)) {

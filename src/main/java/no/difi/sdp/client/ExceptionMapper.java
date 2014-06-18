@@ -16,8 +16,11 @@
 package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.exceptions.EbmsException;
+import no.difi.sdp.client.domain.exceptions.SendException;
+import no.difi.sdp.client.domain.exceptions.SoapFaultException;
 import no.digipost.api.EbmsClientException;
 import org.springframework.ws.client.WebServiceIOException;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 
 /**
  * Exception mapper for sending av sikker digital post. Gjør subclassing av denne for implementere egen/tilpasset feilhåndtering.
@@ -26,17 +29,20 @@ import org.springframework.ws.client.WebServiceIOException;
 public class ExceptionMapper {
 
     /**
-     * Oversetter Exceptions kastet fra de underliggende lagene.
+     * Oversetter Exceptions kastet fra de underliggende lagene under sending av post.
      *
      * @param e original exception
      * @return Mappet exception som skal kastes. null dersom ingen mapping er gjort og opprinnelig exception skal brukes.
      */
-    public RuntimeException mapException(Exception e) {
+    public SendException mapException(Exception e) {
         if (e instanceof EbmsClientException) {
             return new EbmsException((EbmsClientException) e);
         }
-        else if(e instanceof WebServiceIOException) {
-            return new TransportIOException(e);
+        else if (e instanceof WebServiceIOException) {
+            return new SendIOException(e);
+        }
+        else if (e instanceof SoapFaultClientException) {
+            return new SoapFaultException((SoapFaultClientException) e);
         }
         return null;
     }

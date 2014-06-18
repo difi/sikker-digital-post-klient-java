@@ -18,7 +18,7 @@ package no.difi.sdp.client.internal;
 import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.Avsender;
-import no.difi.sdp.client.domain.exceptions.SikkerDigitalPostException;
+import no.difi.sdp.client.domain.exceptions.SendException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
 import no.digipost.api.interceptors.WsSecurityInterceptor;
@@ -26,6 +26,8 @@ import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
+
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
 public class DigipostMessageSenderFacade {
 
@@ -100,7 +102,7 @@ public class DigipostMessageSenderFacade {
         });
     }
 
-    private <T> T performRequest(Request<T> request) {
+    private <T> T performRequest(Request<T> request) throws SendException {
         try {
             return request.exec();
         }
@@ -110,7 +112,7 @@ public class DigipostMessageSenderFacade {
                 throw mappedException;
             }
 
-            throw new SikkerDigitalPostException("An unhandled exception occured while performing request", e);
+            throw new SendException("An unhandled exception occured while performing request", UKJENT, e);
         }
     }
 
