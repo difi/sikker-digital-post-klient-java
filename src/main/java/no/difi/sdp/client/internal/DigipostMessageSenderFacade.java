@@ -30,7 +30,7 @@ import no.digipost.api.representations.EbmsPullRequest;
 public class DigipostMessageSenderFacade {
 
     private final MessageSender messageSender;
-    private ExceptionMapper exceptionMapper = new ExceptionMapper();;
+    private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
     public DigipostMessageSenderFacade(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
         KeyStoreInfo keyStoreInfo = avsender.getNoekkelpar().getKeyStoreInfo();
