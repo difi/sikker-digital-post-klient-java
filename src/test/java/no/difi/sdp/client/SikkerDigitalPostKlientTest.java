@@ -15,7 +15,6 @@
  */
 package no.difi.sdp.client;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -27,18 +26,6 @@ import static org.fest.assertions.api.Fail.fail;
 
 public class SikkerDigitalPostKlientTest {
 
-    private SikkerDigitalPostKlient postklient;
-
-    @Before
-    public void setUp() {
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
-                .connectionTimeout(20, TimeUnit.SECONDS)
-                .build();
-
-        postklient = new SikkerDigitalPostKlient(ObjectMother.avsender(), klientKonfigurasjon);
-    }
-
     @Test
     public void haandter_connection_timeouts() {
         String lokalTimeoutUrl = "http://10.255.255.1/";
@@ -47,7 +34,7 @@ public class SikkerDigitalPostKlientTest {
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .build();
 
-        postklient = new SikkerDigitalPostKlient(ObjectMother.avsender(), klientKonfigurasjon);
+        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(ObjectMother.avsender(), klientKonfigurasjon);
 
         try {
             postklient.send(forsendelse());
