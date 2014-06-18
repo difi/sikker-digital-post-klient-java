@@ -99,11 +99,18 @@ public class SikkerDigitalPostKlient {
     public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) throws SendException {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), kvitteringForespoersel.getPrioritet());
 
+        EbmsApplikasjonsKvittering applikasjonsKvittering;
         if (forrigeKvittering == null) {
-            return kvitteringBuilder.buildForretningsKvittering(digipostMessageSenderFacade.hentKvittering(ebmsPullRequest));
+            applikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest);
         } else {
-            return kvitteringBuilder.buildForretningsKvittering(digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering.applikasjonsKvittering));
+            applikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering.applikasjonsKvittering);
         }
+
+        if (applikasjonsKvittering == null) {
+            return null;
+        }
+
+        return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
     }
 
     /**
