@@ -41,4 +41,10 @@ public abstract class ForretningsKvittering {
         return applikasjonsKvittering.refToMessageId;
     }
 
+    @Override
+    /**
+     * Subklasser skal ha en meningsfylt toString som beskriver kvitteringen.
+     */
+    public abstract String toString();
+
 }

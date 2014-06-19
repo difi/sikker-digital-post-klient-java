@@ -13,4 +13,8 @@
     <logger name="java.security" level="TRACE"/>
     <logger name="com.sun.org.apache.xml.internal.security" level="TRACE"/>
 
+    <logger name="org.apache.http.wire" level="TRACE"/>
+    <logger name="no.digipost" level="TRACE"/>
+    <logger name="org.springframework.ws.soap.server.endpoint.interceptor.SoapEnvelopeLoggingInterceptor" level="INFO"/>
+
 </configuration>

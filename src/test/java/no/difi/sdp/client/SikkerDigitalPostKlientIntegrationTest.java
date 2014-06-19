@@ -90,11 +90,20 @@ public class SikkerDigitalPostKlientIntegrationTest {
     public void test_hent_kvittering() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
 
-        ForretningsKvittering forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
-        if (forretningsKvittering != null) {
-            assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
-            assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
-            assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
+        for (int i = 0; i < 10; i++) {
+            ForretningsKvittering forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
+
+            if (forretningsKvittering != null) {
+                System.out.println("Kvittering!");
+                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getRefToMessageId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
+                assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
+                assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
+                assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
+            }
+            else {
+                System.out.println("Ingen kvittering");
+                break;
+            }
         }
     }
 

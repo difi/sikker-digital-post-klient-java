@@ -16,6 +16,7 @@
 package no.difi.sdp.client.domain.kvittering;
 
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 
@@ -30,7 +31,8 @@ public class Feil extends ForretningsKvittering {
     }
 
     public Date getTidspunkt() {
-        return applikasjonsKvittering.getStandardBusinessDocument().getFeil().getTidspunkt().toDate();
+        DateTime tidspunkt = applikasjonsKvittering.getStandardBusinessDocument().getFeil().getTidspunkt();
+        return tidspunkt != null ? tidspunkt.toDate() : null;
     }
 
 
@@ -40,6 +42,15 @@ public class Feil extends ForretningsKvittering {
 
     public String getDetaljer() {
         return detaljer;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "konversasjonsId=" + getKonversasjonsId() +
+                ", feiltype=" + feiltype +
+                ", detaljer='" + detaljer + '\'' +
+                '}';
     }
 
     public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {

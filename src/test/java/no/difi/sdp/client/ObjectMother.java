@@ -97,7 +97,7 @@ public class ObjectMother {
                 .build();
 
         return Forsendelse.digital(digitalPost, dokumentpakke)
-                .konversasjonsId("konversasjonsId")
+                .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
                 .prioritet(Prioritet.NORMAL)
                 .spraakkode("NO")
                 .build();

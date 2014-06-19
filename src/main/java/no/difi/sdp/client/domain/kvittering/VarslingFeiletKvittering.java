@@ -41,6 +41,15 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
         return beskrivelse;
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "konversasjonsId=" + getKonversasjonsId() +
+                ", varslingskanal=" + varslingskanal +
+                ", beskrivelse='" + beskrivelse + '\'' +
+                '}';
+    }
+
     public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
         return new Builder(applikasjonsKvittering, varslingskanal);
     }
