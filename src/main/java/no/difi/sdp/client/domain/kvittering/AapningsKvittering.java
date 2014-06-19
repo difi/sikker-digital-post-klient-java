@@ -29,6 +29,13 @@ public class AapningsKvittering extends ForretningsKvittering {
         return applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt().toDate();
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "konversasjonsId=" + getKonversasjonsId() +
+                '}';
+    }
+
     public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering) {
         return new Builder(applikasjonsKvittering);
     }
