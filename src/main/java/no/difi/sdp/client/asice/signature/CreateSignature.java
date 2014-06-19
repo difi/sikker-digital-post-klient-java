@@ -89,7 +89,6 @@ public class CreateSignature {
 
     public Signature createSignature(Noekkelpar noekkelpar, List<AsicEAttachable> attachedFiles) {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
-        System.out.println(xmlSignatureFactory.getProvider().getName());
 
         // Lag signatur-referanse for alle filer
         List<Reference> references = references(xmlSignatureFactory, attachedFiles);
