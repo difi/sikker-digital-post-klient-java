@@ -23,6 +23,10 @@ import no.digipost.api.representations.Dokumentpakke;
 import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.Organisasjonsnummer;
+import no.digipost.api.representations.StandardBusinessDocumentFactory;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
+
+import java.util.UUID;
 
 public class EbmsForsendelseBuilder {
 
@@ -43,7 +47,11 @@ public class EbmsForsendelseBuilder {
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(avsender, forsendelse);
         Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
 
-        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(meldingsformidler), postkasse, sikkerDigitalPost, dokumentpakke).build();
+        Organisasjonsnummer avsenderOrg = new Organisasjonsnummer(avsender.getOrganisasjonsnummer());
+        String meldingsId = UUID.randomUUID().toString();
+        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(avsenderOrg, postkasse, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
+
+        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(meldingsformidler), postkasse, standardBusinessDocument, dokumentpakke).build();
     }
 
 }
