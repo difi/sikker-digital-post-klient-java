@@ -48,9 +48,9 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -75,7 +75,7 @@ public class CreateSignature {
         createXAdESProperties = new CreateXAdESProperties();
         transformerFactory = TransformerFactory.newInstance();
         try {
-            XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
+            XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
             sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
             canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod("http://www.w3.org/2006/12/xml-c14n11", (C14NMethodParameterSpec) null);
             signatureMethod = xmlSignatureFactory.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null);
@@ -88,7 +88,8 @@ public class CreateSignature {
     }
 
     public Signature createSignature(Noekkelpar noekkelpar, List<AsicEAttachable> attachedFiles) {
-        XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
+        XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
+        System.out.println(xmlSignatureFactory.getProvider().getName());
 
         // Lag signatur-referanse for alle filer
         List<Reference> references = references(xmlSignatureFactory, attachedFiles);
@@ -109,8 +110,8 @@ public class CreateSignature {
         SignedInfo signedInfo = xmlSignatureFactory.newSignedInfo(canonicalizationMethod, signatureMethod, references);
 
         // Definer signatur over XAdES-dokument
-        XMLObject xmlObject = xmlSignatureFactory.newXMLObject(Collections.singletonList(new DOMStructure(document.getDocumentElement())), null, null, null);
-        XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, Collections.singletonList(xmlObject), "Signature", null);
+        XMLObject xmlObject = xmlSignatureFactory.newXMLObject(singletonList(new DOMStructure(document.getDocumentElement())), null, null, null);
+        XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, singletonList(xmlObject), "Signature", null);
 
         try {
             xmlSignature.sign(new DOMSignContext(noekkelpar.getPrivateKey(), document));
@@ -154,6 +155,14 @@ public class CreateSignature {
         Element xadesElement = document.createElementNS(asicNamespace, "XAdESSignatures");
         xadesElement.appendChild(signatureElement);
         document.appendChild(xadesElement);
+    }
+
+    private XMLSignatureFactory getSignatureFactory() {
+        try {
+            return XMLSignatureFactory.getInstance("DOM", "XMLDSig");
+        } catch (NoSuchProviderException e) {
+            throw new KonfigurasjonException("Fant ikke XML Digital Signature-provider. Biblioteket avhenger av default Java-provider.");
+        }
     }
 
 }

@@ -101,6 +101,7 @@ public class CreateSignatureTest {
     @Test
     public void test_xades_signed_properties() {
         Signature signature = sut.createSignature(noekkelpar, files);
+
         XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
         org.w3.xmldsig.Object object = xAdESSignatures.getSignatures().get(0).getObjects().get(0);
 
