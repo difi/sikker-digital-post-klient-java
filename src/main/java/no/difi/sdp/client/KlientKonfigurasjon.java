@@ -29,6 +29,7 @@ public class KlientKonfigurasjon {
 
     private String proxyHost;
     private int proxyPort;
+    private int maxConnectionPoolSize = 10;
     private long socketTimeoutInMillis = TimeUnit.SECONDS.toMillis(30);
     private long connectTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
     private long connectionRequestTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
@@ -57,6 +58,10 @@ public class KlientKonfigurasjon {
 
     public long getConnectionRequestTimeoutInMillis() {
         return connectionRequestTimeoutInMillis;
+    }
+
+    public int getMaxConnectionPoolSize() {
+        return maxConnectionPoolSize;
     }
 
     public boolean useProxy() {
@@ -102,6 +107,11 @@ public class KlientKonfigurasjon {
 
         public Builder connectionRequestTimeout(int connectionRequestTimeout, TimeUnit timeUnit) {
             target.connectionRequestTimeoutInMillis = timeUnit.toMillis(connectionRequestTimeout);
+            return this;
+        }
+
+        public Builder maxConnectionPoolSize(int maxConnectionPoolSize) {
+            target.maxConnectionPoolSize = maxConnectionPoolSize;
             return this;
         }
 

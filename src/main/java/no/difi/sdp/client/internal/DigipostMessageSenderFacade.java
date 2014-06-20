@@ -46,7 +46,9 @@ public class DigipostMessageSenderFacade {
                 EbmsAktoer.meldingsformidler(konfigurasjon.getMeldingsformidlerOrganisasjon()))
                 .withConnectTimeout((int) konfigurasjon.getConnectTimeoutInMillis())
                 .withSocketTimeout((int) konfigurasjon.getSocketTimeoutInMillis())
-                .withConnectionRequestTimeout((int) konfigurasjon.getConnectionRequestTimeoutInMillis());
+                .withConnectionRequestTimeout((int) konfigurasjon.getConnectionRequestTimeoutInMillis())
+                .withDefaultMaxPerRoute(konfigurasjon.getMaxConnectionPoolSize()) // Vi vil i praksis bare kjøre én route med denne klienten.
+                .withMaxTotal(konfigurasjon.getMaxConnectionPoolSize());
 
         if (konfigurasjon.useProxy()) {
             msBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
