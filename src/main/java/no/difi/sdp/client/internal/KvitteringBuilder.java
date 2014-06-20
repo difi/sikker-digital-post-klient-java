@@ -21,6 +21,7 @@ import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.exceptions.SikkerDigitalPostException;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.Feil;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
@@ -56,8 +57,8 @@ public class KvitteringBuilder {
         } else if (sbd.erFeil()) {
             return feil(applikasjonsKvittering);
         }
-        //todo: proper exception handling
-        throw new RuntimeException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
+
+        throw new SikkerDigitalPostException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
     }
 
     private ForretningsKvittering feil(EbmsApplikasjonsKvittering applikasjonsKvittering) {
