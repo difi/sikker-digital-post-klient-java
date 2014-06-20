@@ -15,6 +15,7 @@
  */
 package no.difi.sdp.client;
 
+import no.difi.sdp.client.domain.exceptions.SendIOException;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;

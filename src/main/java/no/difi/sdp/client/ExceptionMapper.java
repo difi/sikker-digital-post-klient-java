@@ -17,6 +17,7 @@ package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.exceptions.EbmsException;
 import no.difi.sdp.client.domain.exceptions.SendException;
+import no.difi.sdp.client.domain.exceptions.SendIOException;
 import no.difi.sdp.client.domain.exceptions.SoapFaultException;
 import no.digipost.api.EbmsClientException;
 import org.springframework.ws.client.WebServiceIOException;
