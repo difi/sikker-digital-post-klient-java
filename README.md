@@ -22,7 +22,8 @@ Tekniske krav:
 Installasjon
 ------------
 
-For å bruke klienten må det settes opp en keystore med et gyldig virksomhetssertifikat. Keystoren må innehold sertifikatkjeden helt opp til rot-CAen for sertifikatutstederen.
+For å bruke klienten må det settes opp en keystore med et gyldig virksomhetssertifikat. Keystoren må inneholde sertifikatkjeden helt opp til rot-CAen for sertifikatutstederen.
+En PKCS#12-fil fra en sertifikatutsteder vil normalt inneholde alle de nødvendige sertifikatene.
 
 Bruk Java Keytool for å opprette et keystore fra en PKCS#12-fil (.p12):
 
