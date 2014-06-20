@@ -97,7 +97,7 @@ public class SikkerDigitalPostKlient {
      *
      */
     public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) throws SendException {
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), kvitteringForespoersel.getPrioritet());
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), avsender, kvitteringForespoersel);
 
         EbmsApplikasjonsKvittering applikasjonsKvittering;
         if (forrigeKvittering == null) {

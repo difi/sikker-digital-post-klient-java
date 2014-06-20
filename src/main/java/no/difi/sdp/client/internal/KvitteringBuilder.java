@@ -20,10 +20,11 @@ import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
-import no.difi.sdp.client.domain.kvittering.Feil;
-import no.difi.sdp.client.domain.Prioritet;
+import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client.domain.kvittering.Feil;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
+import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
@@ -35,8 +36,8 @@ import static no.digipost.api.representations.EbmsAktoer.meldingsformidler;
 
 public class KvitteringBuilder {
 
-    public EbmsPullRequest buildEbmsPullRequest(Organisasjonsnummer digitalpostMeldingsformidler, Prioritet prioritet) {
-        return new EbmsPullRequest(meldingsformidler(digitalpostMeldingsformidler), prioritet.getEbmsPrioritet());
+    public EbmsPullRequest buildEbmsPullRequest(Organisasjonsnummer meldingsformidler, Avsender avsender, KvitteringForespoersel kvitteringForespoersel) {
+        return new EbmsPullRequest(meldingsformidler(meldingsformidler), kvitteringForespoersel.getPrioritet().getEbmsPrioritet(), avsender.getMpcId());
     }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {

@@ -21,8 +21,10 @@ import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Dokumentpakke;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
+import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.digipost.api.representations.EbmsForsendelse;
+import no.digipost.api.representations.EbmsOutgoingMessage;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +57,21 @@ public class EbmsForsendelseBuilderTest {
         // Hovedpoenget her er at det henger sammen å bygge et request uten optional-felter satt (at vi ikke får NullPointerException).
         assertThat(ebmsForsendelse.getAvsender().orgnr.asIso6523()).isEqualTo("9908:991825827");
         assertThat(ebmsForsendelse.getDokumentpakke().getContentType()).isEqualTo("application/cms");
+    }
+
+    @Test
+    public void korrekt_mpc() {
+        // Mpc består av prioritet og mpc-id som brukes til å skille mellom forskjellige MPC-køer hos samme avsender
+
+        Avsender avsender = Avsender.builder("991825827", ObjectMother.noekkelpar()).withMpcId("mpcId").build();
+        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185").build();
+        DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
+        Forsendelse forsendelse = Forsendelse.digital(digitalpost, ObjectMother.dokumentpakke()).prioritet(Prioritet.PRIORITERT).build();
+
+        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, new Organisasjonsnummer("984661185"), forsendelse);
+
+        assertThat(ebmsForsendelse.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
+        assertThat(ebmsForsendelse.mpcId).isEqualTo("mpcId");
     }
 
 }

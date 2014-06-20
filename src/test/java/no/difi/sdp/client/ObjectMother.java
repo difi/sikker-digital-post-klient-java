@@ -98,7 +98,7 @@ public class ObjectMother {
 
         return Forsendelse.digital(digitalPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
-                .prioritet(Prioritet.NORMAL)
+                .prioritet(Prioritet.PRIORITERT)
                 .spraakkode("NO")
                 .build();
     }
@@ -147,6 +147,11 @@ public class ObjectMother {
         return createEbmsKvittering(varslingFeiletKvittering);
     }
 
+    public static Dokumentpakke dokumentpakke() {
+        Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
+        return Dokumentpakke.builder(dokument).build();
+    }
+
     public static EbmsApplikasjonsKvittering createEbmsKvittering(Object sdpMelding) {
         Organisasjonsnummer avsender = new Organisasjonsnummer("123");
         Organisasjonsnummer mottaker = new Organisasjonsnummer("456");
@@ -175,5 +180,4 @@ public class ObjectMother {
 
         return EbmsApplikasjonsKvittering.create(EbmsAktoer.avsender(avsender), EbmsAktoer.postkasse(mottaker), sbd).build();
     }
-
 }

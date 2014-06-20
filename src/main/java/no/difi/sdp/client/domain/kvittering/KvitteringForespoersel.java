@@ -19,11 +19,11 @@ import no.difi.sdp.client.domain.Prioritet;
 
 public class KvitteringForespoersel {
 
+    private Prioritet prioritet;
+
     private KvitteringForespoersel(Prioritet prioritet) {
         this.prioritet = prioritet;
     }
-
-    private Prioritet prioritet;
 
     public Prioritet getPrioritet() {
         return prioritet;

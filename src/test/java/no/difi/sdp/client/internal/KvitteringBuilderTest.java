@@ -17,9 +17,11 @@ package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.kvittering.Feil;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
@@ -40,19 +42,25 @@ public class KvitteringBuilderTest {
     private final KvitteringBuilder kvitteringBuilder = new KvitteringBuilder();
 
     @Test
-    public void shoud_build_pull_request_with_standard_priority() {
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), Prioritet.NORMAL);
+    public void should_build_pull_request_with_standard_priority_and_mpc() {
+        Avsender avsender = Avsender.builder("123456789", null).withMpcId("mpcId").build();
+        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), avsender, kvitteringForespoersel);
 
         assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
         assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.NORMAL);
+        assertThat(ebmsPullRequest.mpcId).isEqualTo("mpcId");
     }
 
     @Test
-    public void shoud_build_pull_request_with_standard_high_priority() {
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), Prioritet.PRIORITERT);
+    public void should_build_pull_request_with_standard_high_priority_and_null_mpc() {
+        Avsender avsender = Avsender.builder("123456789", null).build();
+        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).build();
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), avsender, kvitteringForespoersel);
 
         assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
         assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
+        assertThat(ebmsPullRequest.mpcId).isNull();
     }
 
     @Test

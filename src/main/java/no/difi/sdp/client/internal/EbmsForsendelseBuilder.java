@@ -51,7 +51,10 @@ public class EbmsForsendelseBuilder {
         String meldingsId = UUID.randomUUID().toString();
         StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(avsenderOrg, postkasse, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 
-        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(meldingsformidler), postkasse, standardBusinessDocument, dokumentpakke).build();
+        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(meldingsformidler), postkasse, standardBusinessDocument, dokumentpakke)
+                .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())
+                .withMpcId(avsender.getMpcId())
+                .build();
     }
 
 }

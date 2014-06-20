@@ -21,6 +21,7 @@ public class Avsender {
     private Noekkelpar noekkelpar;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
+    private String mpcId;
 
     private Avsender(String organisasjonsnummer, Noekkelpar noekkelpar) {
         this.organisasjonsnummer = organisasjonsnummer;
@@ -41,6 +42,10 @@ public class Avsender {
 
     public String getFakturaReferanse() {
         return fakturaReferanse;
+    }
+
+    public String getMpcId() {
+        return mpcId;
     }
 
     /**
@@ -72,6 +77,15 @@ public class Avsender {
          */
         public Builder avsenderIdentifikator(String avsenderIdentifikator) {
             target.avsenderIdentifikator = avsenderIdentifikator;
+            return this;
+        }
+
+        /**
+         * Brukes til å skille mellom ulike kvitteringskøer for samme avsenderorganisasjon. En forsendelse sendt med en gitt MpcId vil kun motta
+         * kvitteringer med samme MpcId. {@link no.difi.sdp.client.domain.kvittering.KvitteringForespoersel.Builder#withMpcId}.
+         */
+        public Builder withMpcId(String mpcId) {
+            target.mpcId = mpcId;
             return this;
         }
 
