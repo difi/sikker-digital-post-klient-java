@@ -85,4 +85,4 @@ try {
 Spørsmål
 ------------------
 
-Registrer gjerne spørsmål og kommentarer under <a href="issues">Issues</a>.
+Registrer gjerne spørsmål og kommentarer under Issues.
