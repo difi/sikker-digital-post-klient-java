@@ -48,17 +48,12 @@ public class SikkerDigitalPostKlient {
     }
 
     /**
-     * Sender en forsendelse til meldingsformidler. En forsendelse kan være digital post eller fysisk post.
-     * Dersom noe feilet i sendingen til meldingsformidler, vil det kastes en exception med beskrivende feilmelding.
+     * Sender en forsendelse til meldingsformidler. Dersom noe feilet i sendingen til meldingsformidler, vil det kastes en exception med beskrivende feilmelding.
      *
      * @param forsendelse Et objekt som har all informasjon klar til å kunne sendes (mottakerinformasjon, sertifikater, dokumenter mm),
      *                    enten digitalt eller fyisk.
      */
     public void send(Forsendelse forsendelse) throws SendException {
-        if (!forsendelse.isDigitalPostforsendelse()) {
-            throw new UnsupportedOperationException("Fysiske forsendelser er ikke støttet");
-        }
-
         EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, konfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
         digipostMessageSenderFacade.send(ebmsForsendelse);
     }

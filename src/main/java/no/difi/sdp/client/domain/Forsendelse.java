@@ -16,7 +16,6 @@
 package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
-import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 
 import java.util.UUID;
 
@@ -25,15 +24,13 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class Forsendelse {
 
     private DigitalPost digitalPost;
-    private FysiskPost fysiskPost;
     private Dokumentpakke dokumentpakke;
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
     private String spraakkode = "NO";
 
-    private Forsendelse(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+    private Forsendelse(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
         this.digitalPost = digitalPost;
-        this.fysiskPost = fysiskPost;
         this.dokumentpakke = dokumentpakke;
     }
 
@@ -41,16 +38,8 @@ public class Forsendelse {
         return konversasjonsId;
     }
 
-    public boolean isDigitalPostforsendelse() {
-        return digitalPost != null;
-    }
-
     public DigitalPost getDigitalPost() {
         return digitalPost;
-    }
-
-    public FysiskPost getFysiskPost() {
-        return fysiskPost;
     }
 
     public Dokumentpakke getDokumentpakke() {
@@ -70,11 +59,7 @@ public class Forsendelse {
      * @param dokumentpakke Pakke med hoveddokument og evt vedlegg som skal sendes.
      */
     public static Builder digital(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
-        return new Builder(digitalPost, null, dokumentpakke);
-    }
-
-    public static Builder fysisk(FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
-        return new Builder(null, fysiskPost, dokumentpakke);
+        return new Builder(digitalPost, dokumentpakke);
     }
 
     public static class Builder {
@@ -82,16 +67,13 @@ public class Forsendelse {
         private final Forsendelse target;
         private boolean built = false;
 
-        private Builder(DigitalPost digitalPost, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
-            if ((fysiskPost != null && digitalPost != null) || (fysiskPost == null && digitalPost == null)) {
-                throw new IllegalArgumentException("Kan kun være enten fysisk post eller digital post");
-            }
+        private Builder(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
 
             if (dokumentpakke == null) {
                 throw new IllegalArgumentException("Kan ikke lage forsendelse uten dokumentpakke");
             }
 
-            this.target = new Forsendelse(digitalPost, fysiskPost, dokumentpakke);
+            this.target = new Forsendelse(digitalPost, dokumentpakke);
         }
 
         /**

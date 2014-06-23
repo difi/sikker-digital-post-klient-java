@@ -67,11 +67,6 @@ public class ForsendelseTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_lage_forsendelse_uten_digital_post() {
-        Forsendelse.digital(null, dokumentpakke).build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void test_kan_ikke_lage_forsendelse_uten_dokumentpakke() {
         Forsendelse.digital(digitalPost, null).build();
     }
