@@ -15,25 +15,17 @@
  */
 package no.difi.sdp.client.domain;
 
-public class Avsender {
+/**
+ * Behandlingsansvarlig som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
+ */
+public class Behandlingsansvarlig {
 
-    private String organisasjonsnummer;
-    private Noekkelpar noekkelpar;
+    private final String organisasjonsnummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
-    private String mpcId;
 
-    private Avsender(String organisasjonsnummer, Noekkelpar noekkelpar) {
+    public Behandlingsansvarlig(String organisasjonsnummer) {
         this.organisasjonsnummer = organisasjonsnummer;
-        this.noekkelpar = noekkelpar;
-    }
-
-    public String getOrganisasjonsnummer() {
-        return organisasjonsnummer;
-    }
-
-    public Noekkelpar getNoekkelpar() {
-        return noekkelpar;
     }
 
     public String getAvsenderIdentifikator() {
@@ -44,25 +36,21 @@ public class Avsender {
         return fakturaReferanse;
     }
 
-    public String getMpcId() {
-        return mpcId;
+    public String getOrganisasjonsnummer() {
+        return organisasjonsnummer;
     }
 
-    /**
-     * @param organisasjonsnummer Organisasjonsnummeret til avsender av brevet.
-     * @param noekkelpar Avsenders nøkkelpar: signert virksomhetssertifikat og tilhørende privatnøkkel.
-     */
-    public static Builder builder(String organisasjonsnummer, Noekkelpar noekkelpar) {
-        return new Builder(organisasjonsnummer, noekkelpar);
+    public static Builder builder(String organisasjonsnummer) {
+        return new Builder(organisasjonsnummer);
     }
 
     public static class Builder {
 
-        private final Avsender target;
+        private final Behandlingsansvarlig target;
         private boolean built = false;
 
-        private Builder(String orgNummer, Noekkelpar noekkelpar) {
-            target = new Avsender(orgNummer, noekkelpar);
+        private Builder(String organisasjonsnummer) {
+            target = new Behandlingsansvarlig(organisasjonsnummer);
         }
 
         public Builder fakturaReferanse(String fakturaReferanse) {
@@ -80,21 +68,11 @@ public class Avsender {
             return this;
         }
 
-        /**
-         * Brukes til å skille mellom ulike kvitteringskøer for samme avsenderorganisasjon. En forsendelse gjort med en
-         * MPC Id vil kun dukke opp i kvitteringskøen med samme MPC Id.
-         *
-         * Standardverdi er blank MPC Id.
-         */
-        public Builder withMpcId(String mpcId) {
-            target.mpcId = mpcId;
-            return this;
-        }
-
-        public Avsender build() {
+        public Behandlingsansvarlig build() {
             if (built) throw new IllegalStateException("Can't build twice");
             built = true;
             return this.target;
         }
     }
+
 }

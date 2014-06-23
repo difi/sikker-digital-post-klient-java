@@ -16,9 +16,9 @@
 package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
-import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.digipost.api.representations.Dokumentpakke;
 import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsForsendelse;
@@ -38,22 +38,22 @@ public class EbmsForsendelseBuilder {
         createDokumentpakke = new CreateDokumentpakke();
     }
 
-    public EbmsForsendelse buildEbmsForsendelse(Avsender avsender, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
+    public EbmsForsendelse buildEbmsForsendelse(TekniskAvsender tekniskAvsender, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
-        EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(avsender.getOrganisasjonsnummer());
+        EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(tekniskAvsender.getOrganisasjonsnummer());
         Organisasjonsnummer postkasse = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
 
-        SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(avsender, forsendelse);
-        Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(avsender, forsendelse);
+        SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
+        Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(tekniskAvsender, forsendelse);
 
-        Organisasjonsnummer avsenderOrg = new Organisasjonsnummer(avsender.getOrganisasjonsnummer());
+        Organisasjonsnummer standardBusinessDocumentAvsender = new Organisasjonsnummer(tekniskAvsender.getOrganisasjonsnummer());
         String meldingsId = UUID.randomUUID().toString();
-        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(avsenderOrg, postkasse, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
+        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(standardBusinessDocumentAvsender, postkasse, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 
         return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(meldingsformidler), postkasse, standardBusinessDocument, dokumentpakke)
                 .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())
-                .withMpcId(avsender.getMpcId())
+                .withMpcId(forsendelse.getMpcId())
                 .build();
     }
 

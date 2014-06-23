@@ -16,7 +16,8 @@
 package no.difi.sdp.client.internal;
 
 import no.difi.sdp.client.ObjectMother;
-import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.Behandlingsansvarlig;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Dokumentpakke;
 import no.difi.sdp.client.domain.Forsendelse;
@@ -45,12 +46,13 @@ public class EbmsForsendelseBuilderTest {
 
     @Test
     public void bygg_minimalt_request() {
-        Avsender avsender = Avsender.builder("991825827", ObjectMother.noekkelpar()).build();
+        TekniskAvsender avsender = TekniskAvsender.builder("991825827", ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185").build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
         Dokumentpakke dokumentpakke = Dokumentpakke.builder(dokument).build();
-        Forsendelse forsendelse = Forsendelse.digital(digitalpost, dokumentpakke).build();
+        Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("936796702").build();
+        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalpost, dokumentpakke).build();
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, new Organisasjonsnummer("984661185"), forsendelse);
 
@@ -62,11 +64,11 @@ public class EbmsForsendelseBuilderTest {
     @Test
     public void korrekt_mpc() {
         // Mpc består av prioritet og mpc-id som brukes til å skille mellom forskjellige MPC-køer hos samme avsender
-
-        Avsender avsender = Avsender.builder("991825827", ObjectMother.noekkelpar()).withMpcId("mpcId").build();
+        TekniskAvsender avsender = TekniskAvsender.builder("991825827", ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185").build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
-        Forsendelse forsendelse = Forsendelse.digital(digitalpost, ObjectMother.dokumentpakke()).prioritet(Prioritet.PRIORITERT).build();
+        Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("991825827").build();
+        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalpost, ObjectMother.dokumentpakke()).mpcId("mpcId").prioritet(Prioritet.PRIORITERT).build();
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, new Organisasjonsnummer("984661185"), forsendelse);
 

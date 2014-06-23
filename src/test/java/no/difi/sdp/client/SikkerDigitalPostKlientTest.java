@@ -35,7 +35,7 @@ public class SikkerDigitalPostKlientTest {
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .build();
 
-        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(ObjectMother.avsender(), klientKonfigurasjon);
+        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(ObjectMother.tekniskAvsender(), klientKonfigurasjon);
 
         try {
             postklient.send(forsendelse());

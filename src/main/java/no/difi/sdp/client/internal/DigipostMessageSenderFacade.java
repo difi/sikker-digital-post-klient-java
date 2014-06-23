@@ -17,7 +17,7 @@ package no.difi.sdp.client.internal;
 
 import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
-import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.exceptions.SendException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
@@ -34,7 +34,7 @@ public class DigipostMessageSenderFacade {
     private final MessageSender messageSender;
     private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
-    public DigipostMessageSenderFacade(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
+    public DigipostMessageSenderFacade(TekniskAvsender avsender, KlientKonfigurasjon konfigurasjon) {
         KeyStoreInfo keyStoreInfo = avsender.getNoekkelpar().getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();

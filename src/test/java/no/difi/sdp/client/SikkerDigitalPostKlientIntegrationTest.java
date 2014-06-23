@@ -15,7 +15,7 @@
  */
 package no.difi.sdp.client;
 
-import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.Prioritet;
@@ -61,7 +61,7 @@ public class SikkerDigitalPostKlientIntegrationTest {
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
-        Avsender avsender = ObjectMother.avsenderMedSertifikat(avsenderNoekkelpar());
+        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(avsenderNoekkelpar());
 
         postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }

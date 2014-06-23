@@ -17,9 +17,9 @@ package no.difi.sdp.client.internal;
 
 import no.difi.sdp.client.asice.ArchivedASiCE;
 import no.difi.sdp.client.asice.CreateASiCE;
-import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Sertifikat;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.digipost.api.representations.Dokumentpakke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +36,9 @@ public class CreateDokumentpakke {
         createCMS = new CreateCMSDocument();
     }
 
-    public Dokumentpakke createDokumentpakke(Avsender avsender, Forsendelse forsendelse) {
+    public Dokumentpakke createDokumentpakke(TekniskAvsender tekniskAvsender, Forsendelse forsendelse) {
         log.info("Creating dokumentpakke");
-        ArchivedASiCE archivedASiCE = createASiCE.createAsice(avsender, forsendelse);
+        ArchivedASiCE archivedASiCE = createASiCE.createAsice(tekniskAvsender, forsendelse);
 
         Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
 

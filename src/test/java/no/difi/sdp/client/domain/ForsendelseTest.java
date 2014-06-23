@@ -15,6 +15,7 @@
  */
 package no.difi.sdp.client.domain;
 
+import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
 import org.junit.Before;
@@ -47,7 +48,9 @@ public class ForsendelseTest {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        forsendelse = Forsendelse.digital(digitalPost, dokumentpakke)
+        Behandlingsansvarlig behandlingsansvarlig = ObjectMother.behandlingsansvarlig();
+
+        forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
                 .build();
     }
 

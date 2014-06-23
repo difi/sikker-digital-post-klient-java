@@ -15,8 +15,8 @@
  */
 package no.difi.sdp.client;
 
-import no.difi.sdp.client.domain.Avsender;
 import no.difi.sdp.client.domain.Forsendelse;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.exceptions.SendException;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
@@ -30,21 +30,29 @@ import no.digipost.api.representations.EbmsPullRequest;
 
 public class SikkerDigitalPostKlient {
 
-    private final Avsender avsender;
+    private final TekniskAvsender tekniskAvsender;
     private final EbmsForsendelseBuilder ebmsForsendelseBuilder;
     private final KvitteringBuilder kvitteringBuilder;
     private final DigipostMessageSenderFacade digipostMessageSenderFacade;
     private final KlientKonfigurasjon konfigurasjon;
 
-    public SikkerDigitalPostKlient(Avsender avsender, KlientKonfigurasjon konfigurasjon) {
+    /**
+     *
+     * @param tekniskAvsender teknisk avsender er den parten som har ansvarlig for den tekniske utførelsen av sendingen.
+     *                        Teknisk avsender er den aktøren som står for utførelsen av den tekniske sendingen.
+     *                        Hvis sendingen utføres av en databehandler vil dette være databehandleren.
+     *                        Hvis sendingen utføres av behandlingsansvarlige selv er dette den behandlingsansvarlige.
+     *                        Se <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikt over aktører</a> for mer informasjon.
+     */
+    public SikkerDigitalPostKlient(TekniskAvsender tekniskAvsender, KlientKonfigurasjon konfigurasjon) {
         CryptoChecker.checkCryptoPolicy();
 
         this.ebmsForsendelseBuilder = new EbmsForsendelseBuilder();
         this.kvitteringBuilder = new KvitteringBuilder();
-        this.digipostMessageSenderFacade = new DigipostMessageSenderFacade(avsender, konfigurasjon);
+        this.digipostMessageSenderFacade = new DigipostMessageSenderFacade(tekniskAvsender, konfigurasjon);
 
         this.konfigurasjon = konfigurasjon;
-        this.avsender = avsender;
+        this.tekniskAvsender = tekniskAvsender;
     }
 
     /**
@@ -54,7 +62,7 @@ public class SikkerDigitalPostKlient {
      *                    enten digitalt eller fyisk.
      */
     public void send(Forsendelse forsendelse) throws SendException {
-        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(avsender, konfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
+        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(tekniskAvsender, konfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
         digipostMessageSenderFacade.send(ebmsForsendelse);
     }
 
@@ -92,7 +100,7 @@ public class SikkerDigitalPostKlient {
      *
      */
     public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) throws SendException {
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), avsender, kvitteringForespoersel);
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), kvitteringForespoersel);
 
         EbmsApplikasjonsKvittering applikasjonsKvittering;
         if (forrigeKvittering == null) {

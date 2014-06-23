@@ -34,7 +34,7 @@ import no.difi.begrep.sdp.schema_v10.SDPSmsVarselTekst;
 import no.difi.begrep.sdp.schema_v10.SDPTittel;
 import no.difi.begrep.sdp.schema_v10.SDPVarsler;
 import no.difi.begrep.sdp.schema_v10.SDPVirksomhet;
-import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.Behandlingsansvarlig;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Mottaker;
@@ -56,12 +56,12 @@ public class SDPBuilder {
      */
     private static final String ORGNR_IDENTIFIER = "9908:";
 
-    public SDPManifest createManifest(Avsender avsender, Forsendelse forsendelse) {
+    public SDPManifest createManifest(Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
         SDPMottaker sdpMottaker = sdpMottaker(mottaker);
         String fakturaReferanse = null; // Ikke send fakturareferanse i manifest
-        SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(avsender), avsender.getAvsenderIdentifikator(), fakturaReferanse);
+        SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(forsendelse.getBehandlingsansvarlig()), forsendelse.getBehandlingsansvarlig().getAvsenderIdentifikator(), fakturaReferanse);
 
         String spraakkode = forsendelse.getSpraakkode();
         SDPDokument sdpHovedDokument = sdpDokument(forsendelse.getDokumentpakke().getHoveddokument(), spraakkode);
@@ -74,8 +74,8 @@ public class SDPBuilder {
         return new SDPManifest(sdpMottaker, sdpAvsender, sdpHovedDokument, sdpVedlegg);
     }
 
-    public SDPDigitalPost buildDigitalPost(Avsender avsender, Forsendelse forsendelse) {
-        SDPAvsender sdpAvsender = sdpAvsender(avsender);
+    public SDPDigitalPost buildDigitalPost(Forsendelse forsendelse) {
+        SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getBehandlingsansvarlig());
         SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost().getMottaker());
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
@@ -100,7 +100,7 @@ public class SDPBuilder {
         return new SDPMottaker(virksomhet, sdpPerson);
     }
 
-    private SDPAvsender sdpAvsender(Avsender avsender) {
+    private SDPAvsender sdpAvsender(Behandlingsansvarlig avsender) {
         String fakturaReferanse = avsender.getFakturaReferanse();
         String identifikator = avsender.getAvsenderIdentifikator();
         SDPOrganisasjon organisasjon = sdpOrganisasjon(avsender);
@@ -108,7 +108,7 @@ public class SDPBuilder {
         return new SDPAvsender(organisasjon, identifikator, fakturaReferanse);
     }
 
-    private SDPOrganisasjon sdpOrganisasjon(Avsender avsender) {
+    private SDPOrganisasjon sdpOrganisasjon(Behandlingsansvarlig avsender) {
         return new SDPOrganisasjon(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer(), SDPIso6523Authority.ISO_6523_ACTORID_UPIS);
     }
 

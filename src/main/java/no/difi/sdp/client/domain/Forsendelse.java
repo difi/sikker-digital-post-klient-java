@@ -23,11 +23,14 @@ public class Forsendelse {
 
     private DigitalPost digitalPost;
     private Dokumentpakke dokumentpakke;
+    private Behandlingsansvarlig behandlingsansvarlig;
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
     private String spraakkode = "NO";
+    private String mpcId;
 
-    private Forsendelse(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+    private Forsendelse(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+        this.behandlingsansvarlig = behandlingsansvarlig;
         this.digitalPost = digitalPost;
         this.dokumentpakke = dokumentpakke;
     }
@@ -52,12 +55,22 @@ public class Forsendelse {
         return spraakkode;
     }
 
+    public String getMpcId() {
+        return mpcId;
+    }
+
+    public Behandlingsansvarlig getBehandlingsansvarlig() {
+        return behandlingsansvarlig;
+    }
+
     /**
+     * @param behandlingsansvarlig Ansvarlig avsender av forsendelsen. Dette vil i de aller fleste tilfeller være
+     *                             den offentlige virksomheten som er ansvarlig for brevet som skal sendes.
      * @param digitalPost Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
      * @param dokumentpakke Pakke med hoveddokument og evt vedlegg som skal sendes.
      */
-    public static Builder digital(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
-        return new Builder(digitalPost, dokumentpakke);
+    public static Builder digital(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+        return new Builder(behandlingsansvarlig, digitalPost, dokumentpakke);
     }
 
     public static class Builder {
@@ -65,8 +78,8 @@ public class Forsendelse {
         private final Forsendelse target;
         private boolean built = false;
 
-        private Builder(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
-            this.target = new Forsendelse(digitalPost, dokumentpakke);
+        private Builder(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+            this.target = new Forsendelse(behandlingsansvarlig, digitalPost, dokumentpakke);
         }
 
         /**
@@ -95,6 +108,19 @@ public class Forsendelse {
          */
         public Builder spraakkode(String spraakkode) {
             target.spraakkode = spraakkode;
+            return this;
+        }
+
+        /**
+         * Brukes til å skille mellom ulike kvitteringskøer for samme tekniske avsender. En forsendelse gjort med en
+         * MPC Id vil kun dukke opp i kvitteringskøen med samme MPC Id.
+         *
+         * Standardverdi er blank MPC Id.
+         *
+         * @see no.difi.sdp.client.domain.kvittering.KvitteringForespoersel.Builder#mpcId(String)
+         */
+        public Builder mpcId(String mpcId) {
+            target.mpcId = mpcId;
             return this;
         }
 
