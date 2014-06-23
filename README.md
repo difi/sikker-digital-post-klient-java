@@ -17,7 +17,7 @@ For å starte sending av digital post må følgende være på plass:
 Tekniske krav:
 
 * Java 1.6 eller nyere
-* (Maven for å hente ned sikker-digital-post-klient)
+* (Maven for å hente ned sikker-digital-post-java-klient)
 
 Sertifikater
 ------------
@@ -49,8 +49,7 @@ Hva ligger i klientbiblioteket
 Hvordan ta dette i bruk
 -----------------------
 
-Når vi får releaset til Maven Central kan artifakten lastes ned derfra.
-I øyeblikket har vi kun fått ut en SNAPSHOT versjon ute i Maven central snapshot repo, se https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-4.MavenRepositories.
+Artifakten kan lastes ned fra Maven central.
 
 Legg til følgende i POM:
 
@@ -58,7 +57,7 @@ Legg til følgende i POM:
 <dependency>
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-java-klient</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
 </dependency>
 ```
 
