@@ -81,8 +81,10 @@ public class Avsender {
         }
 
         /**
-         * Brukes til å skille mellom ulike kvitteringskøer for samme avsenderorganisasjon. En forsendelse sendt med en gitt MpcId vil kun motta
-         * kvitteringer med samme MpcId. {@link no.difi.sdp.client.domain.kvittering.KvitteringForespoersel.Builder#withMpcId}.
+         * Brukes til å skille mellom ulike kvitteringskøer for samme avsenderorganisasjon. En forsendelse gjort med en
+         * MPC Id vil kun dukke opp i kvitteringskøen med samme MPC Id.
+         *
+         * Standardverdi er blank MPC Id.
          */
         public Builder withMpcId(String mpcId) {
             target.mpcId = mpcId;
