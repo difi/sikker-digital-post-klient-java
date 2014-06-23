@@ -15,8 +15,6 @@
  */
 package no.difi.sdp.client.domain;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 public class Mottaker {
 
     private String personidentifikator;
@@ -64,22 +62,6 @@ public class Mottaker {
         private boolean built = false;
 
         private Builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String organisasjonsnummerPostkasse) {
-            if (isEmpty(personidentifikator)) {
-                throw new IllegalArgumentException("Personidentifikator må spesifiseres for mottaker");
-            }
-
-            if (isEmpty(postkasseadresse)) {
-                throw new IllegalArgumentException("Postkasseadresse må spesifiseres for mottaker");
-            }
-
-            if (mottakerSertifikat == null) {
-                throw new IllegalArgumentException("Mottakersertifikat må angis for mottaker");
-            }
-
-            if (isEmpty(organisasjonsnummerPostkasse)) {
-                throw new IllegalArgumentException("Organisasjonsnummer til postkassen til mottakeren må angis");
-            }
-
             target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, organisasjonsnummerPostkasse);
         }
 

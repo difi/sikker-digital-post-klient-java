@@ -48,9 +48,6 @@ public class Dokumentpakke {
         private boolean built = false;
 
         private Builder(Dokument hoveddokument) {
-            if (hoveddokument == null) {
-                throw new IllegalArgumentException("Hoveddokument må være med for å kunne bygge dokumentpakke");
-            }
             target = new Dokumentpakke(hoveddokument);
         }
 

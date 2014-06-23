@@ -18,8 +18,6 @@ package no.difi.sdp.client.domain.digital_post;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 public class SmsVarsel extends Varsel {
 
     private String mobilnummer;
@@ -46,13 +44,6 @@ public class SmsVarsel extends Varsel {
         private boolean built = false;
 
         private Builder(String mobilnummer, String varslingsTekst) {
-            if (isEmpty(mobilnummer)) {
-                throw new IllegalArgumentException("Mobilnummer må settes for å kunne varsle på SMS");
-            }
-
-            if (isEmpty(varslingsTekst)) {
-                throw new IllegalArgumentException("Varslingstekst må settes for SMS varsel");
-            }
             target = new SmsVarsel(mobilnummer, varslingsTekst);
         }
 
@@ -73,9 +64,6 @@ public class SmsVarsel extends Varsel {
          * Standard er ett varsel samtidig som brevet blir tilgjengeliggjort for mottaker.
          */
         public Builder varselEtterDager(List<Integer> varselEtterDager) {
-            if (varselEtterDager == null) {
-                throw new IllegalArgumentException("Repetisjoner for varsler kan ikke nullstilles");
-            }
             target.dagerEtter = new ArrayList<Integer>(varselEtterDager);
             return this;
         }

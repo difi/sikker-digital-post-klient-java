@@ -66,29 +66,4 @@ public class ForsendelseTest {
         assertThat(forsendelse.getKonversasjonsId()).isNotEmpty();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_lage_forsendelse_uten_dokumentpakke() {
-        Forsendelse.digital(digitalPost, null).build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_nullstille_konversasjonsid_til_null() {
-        Forsendelse.digital(digitalPost, dokumentpakke)
-                .konversasjonsId(null)
-                .build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_nullstille_konversasjonsid_til_tom() {
-        Forsendelse.digital(digitalPost, dokumentpakke)
-                .konversasjonsId("")
-                .build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void test_kan_ikke_nullstille_prioritet() {
-        Forsendelse.digital(digitalPost, dokumentpakke)
-                .prioritet(null)
-                .build();
-    }
 }

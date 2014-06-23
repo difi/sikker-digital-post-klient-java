@@ -19,8 +19,6 @@ import no.difi.sdp.client.domain.digital_post.DigitalPost;
 
 import java.util.UUID;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 public class Forsendelse {
 
     private DigitalPost digitalPost;
@@ -68,11 +66,6 @@ public class Forsendelse {
         private boolean built = false;
 
         private Builder(DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
-
-            if (dokumentpakke == null) {
-                throw new IllegalArgumentException("Kan ikke lage forsendelse uten dokumentpakke");
-            }
-
             this.target = new Forsendelse(digitalPost, dokumentpakke);
         }
 
@@ -83,9 +76,6 @@ public class Forsendelse {
          * Standard er {@link java.util.UUID#randomUUID()}}.
          */
         public Builder konversasjonsId(String konversasjonsId) {
-            if (isEmpty(konversasjonsId)) {
-                throw new IllegalArgumentException("Konversasjonsid genereres automatisk dersom det ikke angis, må ikke nullstilles");
-            }
             target.konversasjonsId = konversasjonsId;
             return this;
         }
@@ -94,9 +84,6 @@ public class Forsendelse {
          * Standard er {@link no.difi.sdp.client.domain.Prioritet#NORMAL}
          */
         public Builder prioritet(Prioritet prioritet) {
-            if (prioritet == null) {
-                throw new IllegalArgumentException("Standard prioritet er NORMAL, kan ikke nullstilles");
-            }
             target.prioritet = prioritet;
             return this;
         }
@@ -107,9 +94,6 @@ public class Forsendelse {
          * Standard er NO.
          */
         public Builder spraakkode(String spraakkode) {
-            if (isEmpty(spraakkode)) {
-                throw new IllegalArgumentException("Språk settes automatisk til NO dersom det ikke angis, må ikke nullstilles");
-            }
             target.spraakkode = spraakkode;
             return this;
         }

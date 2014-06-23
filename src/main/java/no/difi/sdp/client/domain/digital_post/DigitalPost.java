@@ -19,8 +19,6 @@ import no.difi.sdp.client.domain.Mottaker;
 
 import java.util.Date;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 public class DigitalPost {
 
     private Mottaker mottaker;
@@ -79,14 +77,6 @@ public class DigitalPost {
         private boolean built = false;
 
         private Builder(Mottaker mottaker, String ikkeSensitivTittel) {
-            if (mottaker == null) {
-                throw new IllegalArgumentException("Mottaker må spesifiseres for digital post");
-            }
-
-            if (isEmpty(ikkeSensitivTittel)) {
-                throw new IllegalArgumentException("Ikke sensitiv tittel må være satt for digital post");
-            }
-
             target = new DigitalPost(mottaker, ikkeSensitivTittel);
         }
 
@@ -116,9 +106,6 @@ public class DigitalPost {
          * Standard er {@link Sikkerhetsnivaa#NIVAA_4}.
          */
         public Builder sikkerhetsnivaa(Sikkerhetsnivaa sikkerhetsnivaa) {
-            if (sikkerhetsnivaa == null) {
-                throw new IllegalArgumentException("Sikkerhetsnivå må være satt til 3 eller 4");
-            }
             target.sikkerhetsnivaa = sikkerhetsnivaa;
             return this;
         }
