@@ -72,7 +72,7 @@ Dette kan være nyttig i større organisasjoner som har flere avsenderenheter. I
 ### Logging av request og respons
 
 Klienten støtter registrering av spring-ws interceptors som kan brukes til logging av request og respons, samt annen feilhåndtering.
-Eksempelet under viser hvordan dette kan benyttes til å logge utgående requests til System.out.
+Eksempelet under viser hvordan dette kan benyttes til å logge utgående requests til `System.out` ved hjelp av `javax.xml.transform`.
 
 ```java
 KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
