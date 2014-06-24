@@ -16,6 +16,7 @@
 package no.difi.sdp.client;
 
 import no.digipost.api.representations.Organisasjonsnummer;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,7 @@ public class KlientKonfigurasjon {
     private long socketTimeoutInMillis = TimeUnit.SECONDS.toMillis(30);
     private long connectTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
     private long connectionRequestTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
+    private ClientInterceptor[] interceptors = new ClientInterceptor[0];
 
     private KlientKonfigurasjon() {}
 
@@ -76,6 +78,10 @@ public class KlientKonfigurasjon {
         return meldingsformidlerOrganisasjon;
     }
 
+    public ClientInterceptor[] getInterceptors() {
+        return interceptors;
+    }
+
     public static class Builder {
 
         private final KlientKonfigurasjon target;
@@ -112,6 +118,11 @@ public class KlientKonfigurasjon {
 
         public Builder maxConnectionPoolSize(int maxConnectionPoolSize) {
             target.maxConnectionPoolSize = maxConnectionPoolSize;
+            return this;
+        }
+
+        public Builder interceptors(ClientInterceptor... interceptors) {
+            target.interceptors = interceptors;
             return this;
         }
 

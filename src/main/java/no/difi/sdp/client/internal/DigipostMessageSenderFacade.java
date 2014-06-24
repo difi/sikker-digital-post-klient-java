@@ -21,11 +21,13 @@ import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.exceptions.SendException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
+import no.digipost.api.interceptors.TransactionLogClientInterceptor;
 import no.digipost.api.interceptors.WsSecurityInterceptor;
 import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
@@ -39,7 +41,7 @@ public class DigipostMessageSenderFacade {
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
 
-        MessageSender.Builder msBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
+        MessageSender.Builder messageSenderBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
                 keyStoreInfo,
                 wsSecurityInterceptor,
                 EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
@@ -51,10 +53,16 @@ public class DigipostMessageSenderFacade {
                 .withMaxTotal(konfigurasjon.getMaxConnectionPoolSize());
 
         if (konfigurasjon.useProxy()) {
-            msBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
+            messageSenderBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
         }
 
-        messageSender = msBuilder.build();
+
+        for (ClientInterceptor clientInterceptor : konfigurasjon.getInterceptors()) {
+            // TransactionLogClientInterceptoren bør alltid ligge ytterst for å sikre riktig transaksjonslogging (i tilfelle en custom interceptor modifiserer requestet)
+            messageSenderBuilder.withMeldingInterceptorBefore(TransactionLogClientInterceptor.class, clientInterceptor);
+        }
+
+        messageSender = messageSenderBuilder.build();
     }
 
     public void send(final EbmsForsendelse ebmsForsendelse) {

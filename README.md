@@ -66,15 +66,48 @@ Legg til følgende i POM:
 Tips og triks
 -------------
 
+### MPC Id (adskilte køer for en avsender)
+
 Sett en unik MPC Id på Avsender for unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer.
 Dette kan være nyttig i større organisasjoner som har flere avsenderenheter. I tillegg kan det være ekstremt nyttig i utvikling for å unngå at utviklere og testmiljøer går i beina på hverandre.
+
+### Logging av request og respons
+
+Klienten støtter registrering av spring-ws interceptors som kan brukes til logging av request og respons, samt annen feilhåndtering.
+Eksempelet under viser hvordan dette kan benyttes til å logge utgående requests til `System.out` ved hjelp av `javax.xml.transform`.
+
+```java
+KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
+    .interceptors(new ClientInterceptor() {
+        @Override
+        public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+            Source payloadSource = messageContext.getRequest().getPayloadSource();
+            try {
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                StringWriter writer = new StringWriter();
+                transformer.transform(payloadSource, new StreamResult(writer));
+                System.out.println(writer.toString());
+            } catch (Exception e) {
+                System.err.print("Klarte ikke logge request");
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException { return true; }
+        public boolean handleFault(MessageContext messageContext) throws WebServiceClientException { return true; }
+        public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException { }
+    })
+    .build();
+```
 
 Debugging
 ---------
 
 ***Merk: innstillingene under er ikke anbefalt i produksjonsmiljøer.***
 
-Den underliggende http-klienten har støtte for å logge meldingene som sendes over nettverket. Sett `org.apache.http.wire` til `debug` eller lavere for å slå på denne loggingen.
+Den underliggende http-klienten har støtte for å logge meldingene som sendes over nettverket. Sett `org.apache.http.wire` til `debug` eller lavere for å slå på denne loggingen. 
+Alternativt kan logging av requests gjøres ved hjelp av interceptors som beskrevet lengre oppe.
 
 Biblioteket har innebygd støtte for å outputte den genererte ASiC-E Dokumentpakken til disk for debug-formål:
 

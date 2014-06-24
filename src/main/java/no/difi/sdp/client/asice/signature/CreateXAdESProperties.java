@@ -70,7 +70,7 @@ class CreateXAdESProperties {
         SignedSignatureProperties signedSignatureProperties = new SignedSignatureProperties(now, signingCertificate, null, null, null, null);
         SignedDataObjectProperties signedDataObjectProperties = new SignedDataObjectProperties(dataObjectFormats(files), null, null, null, null);
         SignedProperties signedProperties = new SignedProperties(signedSignatureProperties, signedDataObjectProperties, "SignedProperties");
-        QualifyingProperties qualifyingProperties = new QualifyingProperties(signedProperties, null, "Signature", null);
+        QualifyingProperties qualifyingProperties = new QualifyingProperties(signedProperties, null, "#Signature", null);
 
         DOMResult domResult = new DOMResult();
         marshaller.marshal(qualifyingProperties, domResult);
