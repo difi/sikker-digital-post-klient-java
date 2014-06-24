@@ -17,7 +17,9 @@ For å starte sending av digital post må følgende være på plass:
 Tekniske krav:
 
 * Java 1.6 eller nyere
+* Legge inn JCE Unlimited Strength JAR for å støtte lengre nøkkellengde på plattformen. Se https://www.google.no/search?q=java+cryptography+extension+unlimited+strength. Last ned og legg inn den som er riktig for din Java versjon. Se README i zipen for mer informasjon.
 * (Maven for å hente ned sikker-digital-post-java-klient)
+
 
 Sertifikater
 ------------
