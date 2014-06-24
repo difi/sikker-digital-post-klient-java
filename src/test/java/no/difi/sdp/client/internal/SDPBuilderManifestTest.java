@@ -16,7 +16,6 @@
 package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPManifest;
-import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.domain.Behandlingsansvarlig;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Dokumentpakke;
@@ -34,6 +33,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
+import static no.difi.sdp.client.ObjectMother.mottakerSertifikat;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class SDPBuilderManifestTest {
@@ -59,14 +59,16 @@ public class SDPBuilderManifestTest {
 
         Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("123456789").fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
 
-        Mottaker mottaker = Mottaker.builder("11077941012", "123456", ObjectMother.mottakerSertifikat(), "984661185").build();
+        Mottaker mottaker = Mottaker.builder("11077941012", "123456", mottakerSertifikat(), "984661185").build();
 
-        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, DigitalPost.builder(mottaker, "Ikke sensitiv tittel").build(),
+        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig,
+                DigitalPost.builder(mottaker, "Ikke sensitiv tittel").build(),
                 Dokumentpakke.builder(Dokument.builder("Vedtak", "vedtak_2398324.pdf", new ByteArrayInputStream("vedtak".getBytes())).mimeType("application/pdf").build()).
                         vedlegg(
                                 Dokument.builder("informasjon", "info.html", new ByteArrayInputStream("info".getBytes())).mimeType("text/html").build(),
                                 Dokument.builder("journal", "journal.txt", new ByteArrayInputStream("journal".getBytes())).mimeType("text/plain").build())
-                .build()).build();
+                        .build())
+                .build();
 
         SDPManifest manifest = sut.createManifest(forsendelse);
 
