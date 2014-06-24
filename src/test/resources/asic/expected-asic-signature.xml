@@ -45,7 +45,7 @@ l5gXsb+YU/RPOlg+xh5xRA==</X509Certificate>
             </X509Data>
         </KeyInfo>
         <Object>
-            <QualifyingProperties Target="Signature"
+            <QualifyingProperties Target="#Signature"
                 xmlns="http://uri.etsi.org/01903/v1.3.2#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
                 <SignedProperties Id="SignedProperties">
                     <SignedSignatureProperties>
