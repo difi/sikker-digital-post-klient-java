@@ -20,6 +20,7 @@ import no.difi.sdp.client.domain.Prioritet;
 public class KvitteringForespoersel {
 
     private Prioritet prioritet;
+    private String mpcId;
 
     private KvitteringForespoersel(Prioritet prioritet) {
         this.prioritet = prioritet;
@@ -37,12 +38,29 @@ public class KvitteringForespoersel {
         return new Builder(prioritet);
     }
 
+    public String getMpcId() {
+        return mpcId;
+    }
+
     public static class Builder {
         private final KvitteringForespoersel target;
         private boolean built = false;
 
         private Builder(Prioritet prioritet) {
             target = new KvitteringForespoersel(prioritet);
+        }
+
+        /**
+         * Brukes til å skille mellom ulike kvitteringskøer for samme tekniske avsender. En forsendelse gjort med en
+         * MPC Id vil kun dukke opp i kvitteringskøen med samme MPC Id.
+         *
+         * Standardverdi er blank MPC Id.
+         *
+         * @see no.difi.sdp.client.domain.Forsendelse.Builder#mpcId(String)
+         */
+        public Builder mpcId(String mpcId) {
+            target.mpcId = mpcId;
+            return this;
         }
 
         public KvitteringForespoersel build() {

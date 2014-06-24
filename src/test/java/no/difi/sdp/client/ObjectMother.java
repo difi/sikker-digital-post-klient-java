@@ -23,7 +23,8 @@ import no.difi.begrep.sdp.schema_v10.SDPLevering;
 import no.difi.begrep.sdp.schema_v10.SDPMelding;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
-import no.difi.sdp.client.domain.Avsender;
+import no.difi.sdp.client.domain.Behandlingsansvarlig;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Dokumentpakke;
 import no.difi.sdp.client.domain.Forsendelse;
@@ -96,24 +97,29 @@ public class ObjectMother {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        return Forsendelse.digital(digitalPost, dokumentpakke)
+        Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig();
+
+        return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
                 .prioritet(Prioritet.PRIORITERT)
                 .spraakkode("NO")
                 .build();
     }
 
-    public static Avsender avsender() {
-        return Avsender.builder("984661185", noekkelpar())
+    public static Behandlingsansvarlig behandlingsansvarlig() {
+        return Behandlingsansvarlig.builder("991825827")
+                .avsenderIdentifikator("avsenderId")
                 .fakturaReferanse("ØK1")
-                .avsenderIdentifikator("12345")
                 .build();
     }
 
-    public static Avsender avsenderMedSertifikat(Noekkelpar noekkelpar) {
-        return Avsender.builder("984661185", noekkelpar)
-                .fakturaReferanse("ØK1")
-                .avsenderIdentifikator("12345")
+    public static TekniskAvsender tekniskAvsender() {
+        return TekniskAvsender.builder("984661185", noekkelpar())
+                .build();
+    }
+
+    public static TekniskAvsender tekniskAvsenderMedSertifikat(Noekkelpar noekkelpar) {
+        return TekniskAvsender.builder("984661185", noekkelpar)
                 .build();
     }
 
