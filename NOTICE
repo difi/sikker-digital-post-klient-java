@@ -38,6 +38,7 @@ This software includes third party software subject to the following licenses:
   JUL to SLF4J bridge under MIT License
   JUnit under Common Public License Version 1.0
   Log4j Implemented Over SLF4J under Apache Software Licenses
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   MIME streaming extension under CDDL 1.1 or GPL2 w/ CPE
   OpenSAML-J under Apache 2
