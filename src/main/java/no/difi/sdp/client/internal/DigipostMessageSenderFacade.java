@@ -56,6 +56,7 @@ public class DigipostMessageSenderFacade {
             messageSenderBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
         }
 
+        messageSenderBuilder.withHttpRequestInterceptors(new AddClientVersionInterceptor());
 
         for (ClientInterceptor clientInterceptor : konfigurasjon.getInterceptors()) {
             // TransactionLogClientInterceptoren bør alltid ligge ytterst for å sikre riktig transaksjonslogging (i tilfelle en custom interceptor modifiserer requestet)
