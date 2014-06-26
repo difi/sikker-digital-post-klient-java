@@ -33,8 +33,21 @@ Bruk Java Keytool for å opprette et keystore fra en PKCS#12-fil (.p12):
 keytool -importkeystore -srckeystore pcks12-fil.p12 -srcstoretype pkcs12 -destkeystore min-keystore.jce -deststoretype jceks
 ```
 
-Eksempelkode
-------------
+Kom i gang (getting started)
+----------------------------
+
+Grensesnittet mot klienten er `SikkerDigitalPostKlient.java`. Alle objektene denne tar inn som input følger et enkelt builder-pattern. 
+Argumentene som tas inn av `builder`-metoden er obligatoriske, mens det kan settes frivillige felter på builder-objektet som returneres.
+
+I eksempelet under er brevtittel og brevfil obligatorisk, mens mime type er frivillig.
+
+```java
+Dokument dokument = Dokument.builder("Svar på søknad", brevfil)
+        .mimeType("application/pdf")
+        .build();
+```
+
+### Eksempelkode
 
 Det er satt opp et <a href="https://github.com/digipost/sikker-digital-post-test-sender">eksempelprosjekt</a> som viser bruk av hele klienten til å gjennomføre sending av brev og henting av kvitteringer.
 
