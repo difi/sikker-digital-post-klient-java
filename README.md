@@ -14,7 +14,7 @@ For å starte sending av digital post må følgende være på plass:
 * Avsender må være registrert hos postkassene
 * Avsender må ha et gyldig virksomhetssertifikat
 
-Tekniske krav:
+### Tekniske krav
 
 * Java 1.6 eller nyere
 * Legge inn JCE Unlimited Strength JAR for å støtte lengre nøkkellengde på plattformen. Se https://www.google.no/search?q=java+cryptography+extension+unlimited+strength. Last ned og legg inn den som er riktig for din Java versjon. Se README i zipen for mer informasjon.
@@ -62,6 +62,21 @@ Legg til følgende i POM:
     <version>0.1</version>
 </dependency>
 ```
+
+Feilhåndtering
+--------------
+
+Exception-hierarkiet i klienten er plassert under `SikkerDigitalPostException`. Deretter er de grovt kategorisert i `KonfigurasjonException` og `SendException`.
+ 
+`KonfigurasjonException` er typisk feil relatert til konfigurasjon av klienten, som for eksempel manglende støtte for XML-standarder i Java-installasjonen, ugyldig keystore og så videre. 
+
+`SendException` brukes for feil relatert til gjennomføringen av en sending. Disse blir forsøkt markert med om feilen skyldes forhold på klienten eller serveren. 
+Dersom en `SendException` skyldes feil på klienten vil det generelt ikke være hensiktsmessig å gjøre en automatisk retry av forsendelsen.
+ 
+### Custom mapping av feil
+
+Det er mulig å registrerte en `ExceptionMapper` for oversetting av feil som oppstår i forbindelse med sending av post. Dette gjøres med `SikkerDigitalPostKlient.setExceptionMapper()`.
+
 
 Tips og triks
 -------------
