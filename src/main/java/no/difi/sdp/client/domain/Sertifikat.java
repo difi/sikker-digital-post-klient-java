@@ -45,12 +45,17 @@ public class Sertifikat {
 
     public static Sertifikat fraBase64X509String(String base64) {
         try {
-            X509Certificate x509Certificate = (X509Certificate) CertificateFactory
-                    .getInstance("X509")
-                    .generateCertificate(new ByteArrayInputStream(Base64.decodeBase64(base64)));
-            return new Sertifikat(x509Certificate);
+            return lagSertifikat(Base64.decodeBase64(base64));
         } catch (CertificateException e) {
             throw new SertifikatException("Kunne ikke lese sertifikat fra base64-streng", e);
+        }
+    }
+
+    public static Sertifikat fraByteArray(byte[] certificate) {
+        try {
+            return lagSertifikat(certificate);
+        } catch (CertificateException e) {
+            throw new SertifikatException("Kunne ikke lese sertifikat fra byte array", e);
         }
     }
 
@@ -75,5 +80,12 @@ public class Sertifikat {
         }
 
         return new Sertifikat((X509Certificate) certificate);
+    }
+
+    private static Sertifikat lagSertifikat(byte[] certificate) throws CertificateException {
+        X509Certificate x509Certificate = (X509Certificate) CertificateFactory
+                .getInstance("X509")
+                .generateCertificate(new ByteArrayInputStream(certificate));
+        return new Sertifikat(x509Certificate);
     }
 }
