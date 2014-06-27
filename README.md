@@ -49,7 +49,7 @@ Dokument dokument = Dokument.builder("Svar på søknad", brevfil)
 
 ### Eksempelkode
 
-Det er satt opp et <a href="https://github.com/digipost/sikker-digital-post-test-sender">eksempelprosjekt</a> som viser bruk av hele klienten til å gjennomføre sending av brev og henting av kvitteringer.
+Det er satt opp et <a href="https://github.com/difi/sdp-klient-eksempel-java-jetty">eksempelprosjekt</a> som viser bruk av hele klienten til å gjennomføre sending av brev og henting av kvitteringer.
 
 Hva ligger i klientbiblioteket
 ------------------------------
