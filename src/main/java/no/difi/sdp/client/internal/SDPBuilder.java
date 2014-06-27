@@ -121,7 +121,7 @@ public class SDPBuilder {
 
         boolean aapningskvittering = digitalPost.isAapningskvittering();
         SDPSikkerhetsnivaa sikkerhetsnivaa = digitalPost.getSikkerhetsnivaa().getXmlValue();
-        SDPTittel tittel = new SDPTittel(digitalPost.getIkkeSensitivTittel(), null);
+        SDPTittel tittel = new SDPTittel(digitalPost.getIkkeSensitivTittel(), forsendelse.getSpraakkode());
         SDPVarsler varsler = sdpVarsler(forsendelse);
         return new SDPDigitalPostInfo(virkningsdato, aapningskvittering, sikkerhetsnivaa, tittel, varsler);
     }
