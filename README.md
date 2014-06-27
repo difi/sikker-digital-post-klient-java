@@ -171,9 +171,3 @@ try {
     throw new RuntimeException("Kunne ikke lagre dokumentpakke", e);
 }
 ```
-
-
-Spørsmål
-------------------
-
-Registrer gjerne spørsmål og kommentarer under Issues.
