@@ -16,8 +16,13 @@
 package no.difi.sdp.client;
 
 import no.difi.sdp.client.domain.exceptions.SendIOException;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.protocol.HttpContext;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static no.difi.sdp.client.ObjectMother.forsendelse;
@@ -44,6 +49,38 @@ public class SikkerDigitalPostKlientTest {
         }
         catch (SendIOException e) {
             assertThat(e.getAntattSkyldig()).isEqualTo(UKJENT);
+        }
+    }
+
+    @Test
+    public void kall_http_interceptors() {
+        final StringBuffer interceptorString = new StringBuffer();
+
+        String lokalTimeoutUrl = "http://10.255.255.1/";
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
+                .meldingsformidlerRoot(lokalTimeoutUrl)
+                .connectionTimeout(1, TimeUnit.MILLISECONDS)
+                .httpRequestInterceptors(new HttpRequestInterceptor() {
+                    @Override
+                    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                        interceptorString.append("First interceptor called");
+                    }
+                }, new HttpRequestInterceptor() {
+                    @Override
+                    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                        interceptorString.append(", and second too!");
+                    }
+                })
+                .build();
+
+        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(tekniskAvsender(), klientKonfigurasjon);
+
+        try {
+            postklient.send(forsendelse());
+            fail("Fails");
+        }
+        catch (SendIOException e) {
+            assertThat(interceptorString.toString()).isEqualTo("First interceptor called, and second too!");
         }
     }
 

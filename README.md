@@ -106,7 +106,7 @@ Eksempelet under viser hvordan dette kan benyttes til å logge utgående request
 
 ```java
 KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-    .interceptors(new ClientInterceptor() {
+    .soapInterceptors(new ClientInterceptor() {
         @Override
         public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
             Source payloadSource = messageContext.getRequest().getPayloadSource();
@@ -128,6 +128,29 @@ KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
     })
     .build();
 ```
+
+### Interceptors
+
+I tillegg til spring-ws interceptors støtter også klienten registrering av HttpRequestInterceptor og HttpResponseInterceptor for direkte tilgang til underliggende http request og response:
+
+```java
+KlientKonfigurasjon.builder()
+    .httpRequestInterceptors(new HttpRequestInterceptor() {
+        @Override
+        public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+            System.out.println("Utgående request!");
+        }
+    })
+    .httpResponseInterceptors(new HttpResponseInterceptor() {
+        @Override
+        public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+            System.out.println("Innkommende request!");
+        }
+    })
+    .build();
+```
+
+
 
 Debugging
 ---------

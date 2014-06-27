@@ -30,10 +30,13 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.xml.Schemas;
+import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.xml.sax.SAXParseException;
+
+import java.util.Arrays;
 
 import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
 import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.SERVER;
@@ -64,11 +67,16 @@ public class DigipostMessageSenderFacade {
             messageSenderBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
         }
 
-        messageSenderBuilder.withHttpRequestInterceptors(new AddClientVersionInterceptor());
+        // Legg til http request interceptors fra konfigurasjon pluss vår egen.
+        HttpRequestInterceptor[] httpRequestInterceptors = Arrays.copyOf(konfigurasjon.getHttpRequestInterceptors(), konfigurasjon.getHttpRequestInterceptors().length + 1);
+        httpRequestInterceptors[httpRequestInterceptors.length - 1] = new AddClientVersionInterceptor();
+        messageSenderBuilder.withHttpRequestInterceptors(httpRequestInterceptors);
+
+        messageSenderBuilder.withHttpResponseInterceptors(konfigurasjon.getHttpResponseInterceptors());
 
         messageSenderBuilder.withMeldingInterceptorBefore(TransactionLogClientInterceptor.class, payloadValidatingInterceptor());
 
-        for (ClientInterceptor clientInterceptor : konfigurasjon.getInterceptors()) {
+        for (ClientInterceptor clientInterceptor : konfigurasjon.getSoapInterceptors()) {
             // TransactionLogClientInterceptoren bør alltid ligge ytterst for å sikre riktig transaksjonslogging (i tilfelle en custom interceptor modifiserer requestet)
             messageSenderBuilder.withMeldingInterceptorBefore(TransactionLogClientInterceptor.class, clientInterceptor);
         }

@@ -15,10 +15,10 @@
  */
 package no.difi.sdp.client;
 
-import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.Prioritet;
+import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;

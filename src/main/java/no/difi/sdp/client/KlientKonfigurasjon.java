@@ -16,6 +16,8 @@
 package no.difi.sdp.client;
 
 import no.digipost.api.representations.Organisasjonsnummer;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponseInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import java.net.URI;
@@ -34,7 +36,9 @@ public class KlientKonfigurasjon {
     private long socketTimeoutInMillis = TimeUnit.SECONDS.toMillis(30);
     private long connectTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
     private long connectionRequestTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
-    private ClientInterceptor[] interceptors = new ClientInterceptor[0];
+    private ClientInterceptor[] soapInterceptors = new ClientInterceptor[0];
+    private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
+    private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
 
     private KlientKonfigurasjon() {}
 
@@ -78,8 +82,16 @@ public class KlientKonfigurasjon {
         return meldingsformidlerOrganisasjon;
     }
 
-    public ClientInterceptor[] getInterceptors() {
-        return interceptors;
+    public ClientInterceptor[] getSoapInterceptors() {
+        return soapInterceptors;
+    }
+
+    public HttpRequestInterceptor[] getHttpRequestInterceptors() {
+        return httpRequestInterceptors;
+    }
+
+    public HttpResponseInterceptor[] getHttpResponseInterceptors() {
+        return httpResponseInterceptors;
     }
 
     public static class Builder {
@@ -121,8 +133,18 @@ public class KlientKonfigurasjon {
             return this;
         }
 
-        public Builder interceptors(ClientInterceptor... interceptors) {
-            target.interceptors = interceptors;
+        public Builder soapInterceptors(ClientInterceptor... soapInterceptors) {
+            target.soapInterceptors = soapInterceptors;
+            return this;
+        }
+
+        public Builder httpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptors) {
+            target.httpRequestInterceptors = httpRequestInterceptors;
+            return this;
+        }
+
+        public Builder httpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptors) {
+            target.httpResponseInterceptors = httpResponseInterceptors;
             return this;
         }
 
