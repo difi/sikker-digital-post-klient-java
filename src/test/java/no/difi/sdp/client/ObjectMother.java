@@ -71,23 +71,7 @@ public class ObjectMother {
     }
 
     public static Forsendelse forsendelse() {
-        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", "Du har mottatt brev i din digitale postkasse")
-                .varselEtterDager(asList(1, 4, 10))
-                .build();
-
-        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), "984661185")
-                .build();
-
-        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
-                .build();
-
-        DigitalPost digitalPost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")
-                .virkningsdato(new Date())
-                .aapningskvittering(false)
-                .sikkerhetsnivaa(Sikkerhetsnivaa.NIVAA_3)
-                .epostVarsel(epostVarsel)
-                .smsVarsel(smsVarsel)
-                .build();
+        DigitalPost digitalPost = digitalPost();
 
         Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
                 .mimeType("application/pdf")
@@ -103,6 +87,26 @@ public class ObjectMother {
                 .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
                 .prioritet(Prioritet.PRIORITERT)
                 .spraakkode("NO")
+                .build();
+    }
+
+    public static DigitalPost digitalPost() {
+        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", "Du har mottatt brev i din digitale postkasse")
+                .varselEtterDager(asList(1, 4, 10))
+                .build();
+
+        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), "984661185")
+                .build();
+
+        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
+                .build();
+
+        return DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")
+                .virkningsdato(new Date())
+                .aapningskvittering(false)
+                .sikkerhetsnivaa(Sikkerhetsnivaa.NIVAA_3)
+                .epostVarsel(epostVarsel)
+                .smsVarsel(smsVarsel)
                 .build();
     }
 
