@@ -20,7 +20,7 @@ import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.SendException;
-import no.difi.sdp.client.domain.exceptions.XmlValidationException;
+import no.difi.sdp.client.domain.exceptions.XmlValideringException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
 import no.digipost.api.interceptors.TransactionLogClientInterceptor;
@@ -156,10 +156,10 @@ public class DigipostMessageSenderFacade {
                 protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
                     if (messageContext.hasResponse()) {
                         // Feil i responsen, sannsynligvis serveren sin skyld
-                        throw new XmlValidationException("XML validation errors in response from server", errors, SERVER);
+                        throw new XmlValideringException("XML validation errors in response from server", errors, SERVER);
                     }
                     else {
-                        throw new XmlValidationException("XML validation errors in request. Maybe some fields are not being set or are set with null values?", errors, KLIENT);
+                        throw new XmlValideringException("XML validation errors in request. Maybe some fields are not being set or are set with null values?", errors, KLIENT);
                     }
 
                 }

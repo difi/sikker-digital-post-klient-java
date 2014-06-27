@@ -18,10 +18,17 @@ package no.difi.sdp.client.asice.signature;
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
+import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
+import no.difi.sdp.client.domain.exceptions.XmlValideringException;
+import no.digipost.api.xml.Schemas;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.validation.SchemaLoaderUtils;
+import org.springframework.xml.validation.XmlValidatorFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
@@ -41,11 +48,14 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.validation.Schema;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -55,6 +65,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
 import static org.apache.commons.codec.digest.DigestUtils.sha256;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -70,6 +81,7 @@ public class CreateSignature {
 
     private final CreateXAdESProperties createXAdESProperties;
     private final TransformerFactory transformerFactory;
+    private final Schema schema;
 
     public CreateSignature() {
         createXAdESProperties = new CreateXAdESProperties();
@@ -85,9 +97,17 @@ public class CreateSignature {
         } catch (InvalidAlgorithmParameterException e) {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
         }
+
+        try {
+            schema = SchemaLoaderUtils.loadSchema(new Resource[]{ Schemas.ASICE_SCHEMA }, XmlValidatorFactory.SCHEMA_W3C_XML);
+        } catch (IOException e) {
+            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures", e);
+        } catch (SAXException e) {
+            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures", e);
+        }
     }
 
-    public Signature createSignature(Noekkelpar noekkelpar, List<AsicEAttachable> attachedFiles) {
+    public Signature createSignature(Noekkelpar noekkelpar, List<AsicEAttachable> attachedFiles) throws XmlValideringException {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
 
         // Lag signatur-referanse for alle filer
@@ -126,9 +146,15 @@ public class CreateSignature {
         ByteArrayOutputStream outputStream;
         try {
             outputStream = new ByteArrayOutputStream();
-            transformerFactory.newTransformer().transform(new DOMSource(document), new StreamResult(outputStream));
+            Transformer transformer = transformerFactory.newTransformer();
+            schema.newValidator().validate(new DOMSource(document));
+            transformer.transform(new DOMSource(document), new StreamResult(outputStream));
         } catch (TransformerException e) {
             throw new KonfigurasjonException("Klarte ikke å serialisere XML", e);
+        } catch (SAXException e) {
+            throw new XmlValideringException("Kunne ikke validere generert signatures.xml. Sjekk at input er gyldig og at det ikke er ugyldige tegn i filnavn o.l.", KLIENT, e);
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
         }
 
         return new Signature(outputStream.toByteArray());
