@@ -113,8 +113,9 @@ public class SDPBuilder {
     }
 
     private SDPDigitalPostInfo sdpDigitalPostinfo(Forsendelse forsendelse) {
-        LocalDate virkningsdato = null;
         DigitalPost digitalPost = forsendelse.getDigitalPost();
+
+        LocalDate virkningsdato = null;
         if (digitalPost.getVirkningsdato() != null) {
             virkningsdato = new LocalDate(digitalPost.getVirkningsdato());
         }
@@ -123,6 +124,7 @@ public class SDPBuilder {
         SDPSikkerhetsnivaa sikkerhetsnivaa = digitalPost.getSikkerhetsnivaa().getXmlValue();
         SDPTittel tittel = new SDPTittel(digitalPost.getIkkeSensitivTittel(), forsendelse.getSpraakkode());
         SDPVarsler varsler = sdpVarsler(forsendelse);
+
         return new SDPDigitalPostInfo(virkningsdato, aapningskvittering, sikkerhetsnivaa, tittel, varsler);
     }
 

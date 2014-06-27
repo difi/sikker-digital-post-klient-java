@@ -41,17 +41,21 @@ public class EbmsForsendelseBuilder {
     public EbmsForsendelse buildEbmsForsendelse(TekniskAvsender tekniskAvsender, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
 
-        EbmsAktoer avsenderAktoer = EbmsAktoer.avsender(tekniskAvsender.getOrganisasjonsnummer());
-        Organisasjonsnummer postkasse = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
+        //EBMS
+        EbmsAktoer ebmsAvsender = EbmsAktoer.avsender(tekniskAvsender.getOrganisasjonsnummer());
+        EbmsAktoer ebmsMottaker = EbmsAktoer.meldingsformidler(meldingsformidler);
 
+        //SBD
+        String meldingsId = UUID.randomUUID().toString();
+        Organisasjonsnummer sbdhMottaker = new Organisasjonsnummer(mottaker.getOrganisasjonsnummerPostkasse());
+        Organisasjonsnummer sbdhAvsender = new Organisasjonsnummer(tekniskAvsender.getOrganisasjonsnummer());
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
+        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
+
+        //Dokumentpakke
         Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(tekniskAvsender, forsendelse);
 
-        Organisasjonsnummer standardBusinessDocumentAvsender = new Organisasjonsnummer(tekniskAvsender.getOrganisasjonsnummer());
-        String meldingsId = UUID.randomUUID().toString();
-        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(standardBusinessDocumentAvsender, postkasse, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
-
-        return EbmsForsendelse.create(avsenderAktoer, EbmsAktoer.meldingsformidler(meldingsformidler), postkasse, standardBusinessDocument, dokumentpakke)
+        return EbmsForsendelse.create(ebmsAvsender, ebmsMottaker, sbdhMottaker, standardBusinessDocument, dokumentpakke)
                 .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())
                 .withMpcId(forsendelse.getMpcId())
                 .build();
