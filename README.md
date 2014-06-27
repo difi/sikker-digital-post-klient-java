@@ -1,28 +1,46 @@
-Sikker Digital Post Javaklient
+Sikker Digital Post Java klient
 ==============================
 
 Dette er en Java-klient for sending av sikker digital post for det offentlige.
 Formålet er å forenkle integrasjonen som må utføres av avsendervirksomheter.
 For mer informasjon om sikker digital post se http://begrep.difi.no/SikkerDigitalPost/.
 
-Forutsetninger
---------------
+Klientbiblioteket tilbyr et enkelt grensesnitt for å generere og sende digital post, samt hente og bekrefte kvitteringer.
+Det er også mulig å bruke det på et lavere nivå til f.eks. opprettelse av dokumentpakke.
 
-For å starte sending av digital post må følgende være på plass:
+For å starte sending av digital post må:
 
 * Avsender må være registrert hos Meldingsformidler
 * Avsender må være registrert hos postkassene
 * Avsender må ha et gyldig virksomhetssertifikat
 
+
+Getting started
+---------------
+
+### Eksempelkode
+
+Det er satt opp et <a href="https://github.com/difi/sdp-klient-eksempel-java-jetty">eksempelprosjekt</a> som viser bruk av hele klienten til å gjennomføre sending av brev og henting av kvitteringer.
+
 ### Tekniske krav
 
 * Java 1.6 eller nyere
 * Legge inn JCE Unlimited Strength JAR for å støtte lengre nøkkellengde på plattformen. Se https://www.google.no/search?q=java+cryptography+extension+unlimited+strength. Last ned og legg inn den som er riktig for din Java versjon. Se README i zipen for mer informasjon.
-* (Maven for å hente ned sikker-digital-post-java-klient)
+* Maven for å laste ned sikker-digital-post-java-klient
 
+### Last ned artifakten
 
-Sertifikater
-------------
+Legg til følgende i POM:
+
+```xml
+<dependency>
+    <groupId>no.difi.sdp</groupId>
+    <artifactId>sikker-digital-post-java-klient</artifactId>
+    <version>0.1</version>
+</dependency>
+```
+
+### Sertifikater
 
 For å bruke klienten må det settes opp en keystore med et gyldig virksomhetssertifikat. Keystoren må inneholde sertifikatkjeden helt opp til rot-CAen for sertifikatutstederen.
 En PKCS#12-fil fra en sertifikatutsteder vil normalt inneholde alle de nødvendige sertifikatene.
@@ -33,47 +51,38 @@ Bruk Java Keytool for å opprette et keystore fra en PKCS#12-fil (.p12):
 keytool -importkeystore -srckeystore pcks12-fil.p12 -srcstoretype pkcs12 -destkeystore min-keystore.jce -deststoretype jceks
 ```
 
-Kom i gang (getting started)
-----------------------------
+### Generere og sende digital post
 
-Grensesnittet mot klienten er `SikkerDigitalPostKlient.java`. Alle objektene denne tar inn som input følger et enkelt builder-pattern. 
+Grensesnittet mot klienten er `SikkerDigitalPostKlient.java`. Alle objektene denne tar inn som input følger et enkelt builder-pattern.
 Argumentene som tas inn av `builder`-metoden er obligatoriske, mens det kan settes frivillige felter på builder-objektet som returneres.
 
-I eksempelet under er brevtittel og brevfil obligatorisk, mens mime type er frivillig.
+I eksempelet under er brevtittel og brevfil obligatorisk, mens mime type er frivillig:
 
 ```java
 Dokument dokument = Dokument.builder("Svar på søknad", brevfil)
         .mimeType("application/pdf")
         .build();
 ```
+Digital post genereres ved å lage opprette `Forsendelse.java`:
 
-### Eksempelkode
+```java
+//Bygg opp behandlingsansvarlig, digitalPost og dokumentpakke med builder pattern som beskrevet over
+Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
+                .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
+                .prioritet(Prioritet.PRIORITERT)
+                .spraakkode("NO")
+                .build();
+```
 
-Det er satt opp et <a href="https://github.com/difi/sdp-klient-eksempel-java-jetty">eksempelprosjekt</a> som viser bruk av hele klienten til å gjennomføre sending av brev og henting av kvitteringer.
+`KlientKonfigurasjon.java` er en klasse der man kan konfigurere opp en del parametre som proxy, connection timeout, socket timeout, interceptors mm.
+Det er en del default verdier satt her allerede. Man kan feks også overstyre hvilken meldingsformidler(adresse) man vil sende mot.
 
-Hva ligger i klientbiblioteket
-------------------------------
+For å utføre sende sendingen kaller man ganske enkelt `send`i `SikkerDigitalPostKlient.java`:
 
-* Bygge meldinger som inneholder EBMS, StandardBusinessDocument, ASIC-E dokumentpakke
-* Sende meldinger:
-    * Sende digital post
-    * Hente kvittering
-    * Bekrefte kvittering
-
-
-Hvordan ta dette i bruk
------------------------
-
-Artifakten kan lastes ned fra Maven central.
-
-Legg til følgende i POM:
-
-```xml
-<dependency>
-    <groupId>no.difi.sdp</groupId>
-    <artifactId>sikker-digital-post-java-klient</artifactId>
-    <version>0.1</version>
-</dependency>
+```java
+//
+SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
+postklient.send(forsendelse);
 ```
 
 Feilhåndtering
@@ -150,10 +159,7 @@ KlientKonfigurasjon.builder()
     .build();
 ```
 
-
-
-Debugging
----------
+### Debugging
 
 ***Merk: innstillingene under er ikke anbefalt i produksjonsmiljøer.***
 
