@@ -75,7 +75,7 @@ public class ObjectMother {
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
 
-        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185")
+        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), "984661185")
                 .build();
 
         SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
