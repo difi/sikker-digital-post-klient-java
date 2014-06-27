@@ -36,7 +36,11 @@ public class ExceptionMapper {
      * @return Mappet exception som skal kastes. null dersom ingen mapping er gjort og opprinnelig exception skal brukes.
      */
     public SendException mapException(Exception e) {
-        if (e instanceof EbmsClientException) {
+        // Don't attempt to map SendExceptions, they are already correct type
+        if (e instanceof SendException) {
+            return (SendException) e;
+        }
+        else if (e instanceof EbmsClientException) {
             return new EbmsException((EbmsClientException) e);
         }
         else if (e instanceof WebServiceIOException) {

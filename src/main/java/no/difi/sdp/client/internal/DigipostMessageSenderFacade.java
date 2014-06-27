@@ -18,7 +18,9 @@ package no.difi.sdp.client.internal;
 import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.TekniskAvsender;
+import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.SendException;
+import no.difi.sdp.client.domain.exceptions.XmlValidationException;
 import no.digipost.api.MessageSender;
 import no.digipost.api.interceptors.KeyStoreInfo;
 import no.digipost.api.interceptors.TransactionLogClientInterceptor;
@@ -27,8 +29,14 @@ import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
+import no.digipost.api.xml.Schemas;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor;
+import org.springframework.ws.context.MessageContext;
+import org.xml.sax.SAXParseException;
 
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.SERVER;
 import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
 public class DigipostMessageSenderFacade {
@@ -57,6 +65,8 @@ public class DigipostMessageSenderFacade {
         }
 
         messageSenderBuilder.withHttpRequestInterceptors(new AddClientVersionInterceptor());
+
+        messageSenderBuilder.withMeldingInterceptorBefore(TransactionLogClientInterceptor.class, payloadValidatingInterceptor());
 
         for (ClientInterceptor clientInterceptor : konfigurasjon.getInterceptors()) {
             // TransactionLogClientInterceptoren bør alltid ligge ytterst for å sikre riktig transaksjonslogging (i tilfelle en custom interceptor modifiserer requestet)
@@ -138,4 +148,30 @@ public class DigipostMessageSenderFacade {
     public void setExceptionMapper(ExceptionMapper exceptionMapper) {
         this.exceptionMapper = exceptionMapper;
     }
+
+    private PayloadValidatingInterceptor payloadValidatingInterceptor() {
+        try {
+            PayloadValidatingInterceptor payloadValidatingInterceptor = new PayloadValidatingInterceptor() {
+                @Override
+                protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
+                    if (messageContext.hasResponse()) {
+                        // Feil i responsen, sannsynligvis serveren sin skyld
+                        throw new XmlValidationException("XML validation errors in response from server", errors, SERVER);
+                    }
+                    else {
+                        throw new XmlValidationException("XML validation errors in request. Maybe some fields are not being set or are set with null values?", errors, KLIENT);
+                    }
+
+                }
+            };
+            payloadValidatingInterceptor.setSchemas(Schemas.schemaResources());
+            payloadValidatingInterceptor.setValidateRequest(true);
+            payloadValidatingInterceptor.setValidateResponse(true);
+            payloadValidatingInterceptor.afterPropertiesSet();
+            return payloadValidatingInterceptor;
+        } catch (Exception e) {
+            throw new KonfigurasjonException("Unable to initialize payload validating interecptor", e);
+        }
+    }
+
 }
