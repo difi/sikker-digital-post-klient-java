@@ -66,7 +66,7 @@ Dokument dokument = Dokument.builder("Svar på søknad", brevfil)
 Digital post genereres ved å lage opprette `Forsendelse.java`:
 
 ```java
-//Bygg opp behandlingsansvarlig, digitalPost og dokumentpakke med builder pattern som beskrevet over
+//Bygg opp Behandlingsansvarlig, DigitalPost og Dokumentpakke med builder pattern som beskrevet over
 Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
                 .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
                 .prioritet(Prioritet.PRIORITERT)
@@ -80,7 +80,7 @@ Det er en del default verdier satt her allerede. Man kan feks også overstyre hv
 For å utføre sende sendingen kaller man ganske enkelt `send`i `SikkerDigitalPostKlient.java`:
 
 ```java
-//
+//Opprett Avsender og KlientKonfigurasjon med builder pattern som beskrevet over
 SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
 postklient.send(forsendelse);
 ```
