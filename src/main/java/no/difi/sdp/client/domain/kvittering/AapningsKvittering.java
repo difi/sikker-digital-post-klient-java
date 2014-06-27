@@ -16,6 +16,7 @@
 package no.difi.sdp.client.domain.kvittering;
 
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 
@@ -26,7 +27,8 @@ public class AapningsKvittering extends ForretningsKvittering {
     }
 
     public Date getTidspunkt() {
-        return applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt().toDate();
+        DateTime tidspunkt = applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt();
+        return tidspunkt != null ? tidspunkt.toDate() : null;
     }
 
     @Override

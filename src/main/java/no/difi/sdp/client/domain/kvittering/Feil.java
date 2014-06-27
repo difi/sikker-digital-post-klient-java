@@ -35,7 +35,6 @@ public class Feil extends ForretningsKvittering {
         return tidspunkt != null ? tidspunkt.toDate() : null;
     }
 
-
     public Feiltype getFeiltype() {
         return feiltype;
     }

@@ -9,6 +9,7 @@
     <avsender>
         <organisasjon authority="iso6523-actorid-upis">9908:123456789</organisasjon>
         <avsenderidentifikator>0123456789</avsenderidentifikator>
+        <fakturaReferanse>ØK1</fakturaReferanse>
     </avsender>
     <hoveddokument href="vedtak_2398324.pdf" mime="application/pdf">
         <tittel lang="NO">Vedtak</tittel>

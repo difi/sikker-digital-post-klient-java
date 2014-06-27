@@ -57,15 +57,19 @@ public class SDPBuilder {
     private static final String ORGNR_IDENTIFIER = "9908:";
 
     public SDPManifest createManifest(Forsendelse forsendelse) {
+        //Mottaker
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
-
         SDPMottaker sdpMottaker = sdpMottaker(mottaker);
-        String fakturaReferanse = null; // Ikke send fakturareferanse i manifest
-        SDPAvsender sdpAvsender = new SDPAvsender(sdpOrganisasjon(forsendelse.getBehandlingsansvarlig()), forsendelse.getBehandlingsansvarlig().getAvsenderIdentifikator(), fakturaReferanse);
+
+        //Avsender
+        SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getBehandlingsansvarlig());
 
         String spraakkode = forsendelse.getSpraakkode();
+
+        //Hoveddokument
         SDPDokument sdpHovedDokument = sdpDokument(forsendelse.getDokumentpakke().getHoveddokument(), spraakkode);
 
+        //Vedlegg
         List<SDPDokument> sdpVedlegg = new ArrayList<SDPDokument>();
         for (Dokument dokument : forsendelse.getDokumentpakke().getVedlegg()) {
             sdpVedlegg.add(sdpDokument(dokument, spraakkode));
