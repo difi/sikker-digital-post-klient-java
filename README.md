@@ -14,6 +14,7 @@ For å starte sending av digital post må:
 * Avsender må være registrert hos postkassene
 * Avsender må ha et gyldig virksomhetssertifikat
 
+Mottaker av digital post må slås opp i kontaktregisteret. Dette håndteres ikke av klienten.
 
 Getting started
 ---------------
