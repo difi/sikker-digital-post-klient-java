@@ -66,10 +66,9 @@ Dokument dokument = Dokument.builder("Svar på søknad", brevfil)
 Digital post genereres ved å lage opprette `Forsendelse.java`:
 
 ```java
-//Bygg opp Behandlingsansvarlig, DigitalPost og Dokumentpakke med builder pattern som beskrevet over
+//Opprett Behandlingsansvarlig, DigitalPost og Dokumentpakke med builder pattern som beskrevet over
 Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
-                .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
-                .prioritet(Prioritet.PRIORITERT)
+                .prioritet(Prioritet.NORMAL)
                 .spraakkode("NO")
                 .build();
 ```
@@ -83,6 +82,21 @@ For å utføre sende sendingen kaller man ganske enkelt `send`i `SikkerDigitalPo
 //Opprett Avsender og KlientKonfigurasjon med builder pattern som beskrevet over
 SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
 postklient.send(forsendelse);
+```
+
+Ved henting og bekreftelse av kvittering har man muligheten til å gjøre dette enten i to separate operasjoner eller hente neste kvittering samt bekrefte forrige i én og samme operasjon.
+Første eksempel:
+
+```java
+KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
+ForretningsKvittering forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
+
+postklient.bekreft(forretningsKvittering);
+```
+
+Andre eksempel:
+```java
+ForretningsKvittering forretningsKvittering = postklient.hentKvitteringOgBekreftForrige(kvitteringForespoersel, forrigeKvittering);
 ```
 
 Feilhåndtering
@@ -164,7 +178,7 @@ KlientKonfigurasjon.builder()
 ***Merk: innstillingene under er ikke anbefalt i produksjonsmiljøer.***
 
 Den underliggende http-klienten har støtte for å logge meldingene som sendes over nettverket. Sett `org.apache.http.wire` til `debug` eller lavere for å slå på denne loggingen. 
-Alternativt kan logging av requests gjøres ved hjelp av interceptors som beskrevet lengre oppe.
+Alternativt kan logging av requests gjøres ved hjelp av interceptors som beskrevet over.
 
 Biblioteket har innebygd støtte for å outputte den genererte ASiC-E Dokumentpakken til disk for debug-formål:
 
