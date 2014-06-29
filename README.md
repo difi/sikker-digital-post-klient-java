@@ -125,6 +125,10 @@ Det er mulig å registrerte en `ExceptionMapper` for oversetting av feil som opp
 Tips og triks
 -------------
 
+### Dependencies
+
+Klientbiblioteket baserer seg på Digipost-biblioteket <a href="https://github.com/digipost/sdp-shared">sdp-shared</a> for sending. Under utvikling vil dette typisk være en SNAPSHOT-avhengighet som må releases i forkant av en ny lansering av klientbiblioteket.
+
 ### MPC Id (adskilte køer for en avsender)
 
 Sett en unik MPC Id på Avsender for unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer.
