@@ -29,17 +29,9 @@ Det er satt opp et <a href="https://github.com/difi/sdp-klient-eksempel-java-jet
 * Legge inn JCE Unlimited Strength JAR for å støtte lengre nøkkellengde på plattformen. Se https://www.google.no/search?q=java+cryptography+extension+unlimited+strength. Last ned og legg inn den som er riktig for din Java versjon. Se README i zipen for mer informasjon.
 * Maven for å laste ned sikker-digital-post-java-klient
 
-### Last ned artifakten
+### Legg inn biblioteket som avhengighet
 
-Legg til følgende i POM:
-
-```xml
-<dependency>
-    <groupId>no.difi.sdp</groupId>
-    <artifactId>sikker-digital-post-java-klient</artifactId>
-    <version>0.1</version>
-</dependency>
-```
+Biblioteket er releaset som en avhengighet til <a href="http://mvnrepository.com/artifact/no.difi.sdp/sikker-digital-post-java-klient">maven central</a>.
 
 ### Sertifikater
 
