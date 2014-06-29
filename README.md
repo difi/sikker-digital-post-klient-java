@@ -52,6 +52,13 @@ Bruk Java Keytool for å opprette et keystore fra en PKCS#12-fil (.p12):
 keytool -importkeystore -srckeystore pcks12-fil.p12 -srcstoretype pkcs12 -destkeystore min-keystore.jce -deststoretype jceks
 ```
 
+#### Tiltrodde rotsertifikater
+
+I tillegg til avsenders eget sertifikat må det installeres rotsertifikater som avsenderen stoler på til å identifisere meldingsformidler og postkasser.
+Oversikt over disse sertifikatene finnes i <a href="http://begrep.difi.no/SikkerDigitalPost/sikkerhet/sertifikathandtering">begrepskatalogen</a>.
+
+Tiltrodde rotsertifikater kan enten installeres avsenders egen keystore eller i <a href="http://docs.oracle.com/cd/E19830-01/819-4712/ablqw/index.html">Java sin truststore</a>.
+
 ### Generere og sende digital post
 
 Grensesnittet mot klienten er `SikkerDigitalPostKlient.java`. Alle objektene denne tar inn som input følger et enkelt builder-pattern.
