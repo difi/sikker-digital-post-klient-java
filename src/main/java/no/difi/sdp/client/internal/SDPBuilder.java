@@ -56,7 +56,7 @@ public class SDPBuilder {
      */
     private static final String ORGNR_IDENTIFIER = "9908:";
 
-    public SDPManifest createManifest(Forsendelse forsendelse) {
+    public SDPManifest createManifest(final Forsendelse forsendelse) {
         //Mottaker
         Mottaker mottaker = forsendelse.getDigitalPost().getMottaker();
         SDPMottaker sdpMottaker = sdpMottaker(mottaker);
@@ -78,7 +78,7 @@ public class SDPBuilder {
         return new SDPManifest(sdpMottaker, sdpAvsender, sdpHovedDokument, sdpVedlegg);
     }
 
-    public SDPDigitalPost buildDigitalPost(Forsendelse forsendelse) {
+    public SDPDigitalPost buildDigitalPost(final Forsendelse forsendelse) {
         SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getBehandlingsansvarlig());
         SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost().getMottaker());
 
@@ -92,19 +92,19 @@ public class SDPBuilder {
         return new SDPDigitalPost(signature, sdpAvsender, sdpMottaker, sdpDigitalPostInfo, fysiskPostInfo, dokumentpakkefingeravtrykk);
     }
 
-    private SDPDokument sdpDokument(Dokument dokument, String spraakkode) {
+    private SDPDokument sdpDokument(final Dokument dokument, final String spraakkode) {
         SDPTittel sdpTittel = new SDPTittel(dokument.getTittel(), spraakkode);
         return new SDPDokument(sdpTittel, dokument.getFilnavn(), dokument.getMimeType());
     }
 
-    private SDPMottaker sdpMottaker(Mottaker mottaker) {
+    private SDPMottaker sdpMottaker(final Mottaker mottaker) {
         SDPVirksomhet virksomhet = null; // Sending til virksomheter er ikke støttet
         SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse());
 
         return new SDPMottaker(virksomhet, sdpPerson);
     }
 
-    private SDPAvsender sdpAvsender(Behandlingsansvarlig avsender) {
+    private SDPAvsender sdpAvsender(final Behandlingsansvarlig avsender) {
         String fakturaReferanse = avsender.getFakturaReferanse();
         String identifikator = avsender.getAvsenderIdentifikator();
         SDPOrganisasjon organisasjon = sdpOrganisasjon(avsender);
@@ -112,11 +112,11 @@ public class SDPBuilder {
         return new SDPAvsender(organisasjon, identifikator, fakturaReferanse);
     }
 
-    private SDPOrganisasjon sdpOrganisasjon(Behandlingsansvarlig avsender) {
+    private SDPOrganisasjon sdpOrganisasjon(final Behandlingsansvarlig avsender) {
         return new SDPOrganisasjon(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer(), SDPIso6523Authority.ISO_6523_ACTORID_UPIS);
     }
 
-    private SDPDigitalPostInfo sdpDigitalPostinfo(Forsendelse forsendelse) {
+    private SDPDigitalPostInfo sdpDigitalPostinfo(final Forsendelse forsendelse) {
         DigitalPost digitalPost = forsendelse.getDigitalPost();
 
         LocalDate virkningsdato = null;
@@ -132,7 +132,7 @@ public class SDPBuilder {
         return new SDPDigitalPostInfo(virkningsdato, aapningskvittering, sikkerhetsnivaa, tittel, varsler);
     }
 
-    private SDPVarsler sdpVarsler(Forsendelse forsendelse) {
+    private SDPVarsler sdpVarsler(final Forsendelse forsendelse) {
         String spraakkode = forsendelse.getSpraakkode();
 
         SDPEpostVarsel epostVarsel = sdpEpostVarsel(forsendelse.getDigitalPost().getEpostVarsel(), spraakkode);
@@ -141,7 +141,7 @@ public class SDPBuilder {
         return new SDPVarsler(epostVarsel, smsVarsel);
     }
 
-    private SDPSmsVarsel sdpSmsVarsel(SmsVarsel smsVarsel, String spraakkode) {
+    private SDPSmsVarsel sdpSmsVarsel(final SmsVarsel smsVarsel, final String spraakkode) {
         if (smsVarsel != null) {
             SDPSmsVarselTekst smsVarselTekst = new SDPSmsVarselTekst(smsVarsel.getVarslingsTekst(), spraakkode);
             return new SDPSmsVarsel(smsVarsel.getMobilnummer(), smsVarselTekst, new SDPRepetisjoner(smsVarsel.getDagerEtter()));
@@ -149,7 +149,7 @@ public class SDPBuilder {
         return null;
     }
 
-    private SDPEpostVarsel sdpEpostVarsel(EpostVarsel epostVarsel, String spraakkode) {
+    private SDPEpostVarsel sdpEpostVarsel(final EpostVarsel epostVarsel, final String spraakkode) {
         if (epostVarsel != null) {
             SDPEpostVarselTekst epostVarselTekst = new SDPEpostVarselTekst(epostVarsel.getVarslingsTekst(), spraakkode);
             return new SDPEpostVarsel(epostVarsel.getEpostadresse(), epostVarselTekst, new SDPRepetisjoner(epostVarsel.getDagerEtter()));

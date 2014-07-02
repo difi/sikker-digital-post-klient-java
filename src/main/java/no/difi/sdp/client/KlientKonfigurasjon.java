@@ -32,6 +32,7 @@ public class KlientKonfigurasjon {
 
     private String proxyHost;
     private int proxyPort;
+	private String proxyScheme = "https";
     private int maxConnectionPoolSize = 10;
     private long socketTimeoutInMillis = TimeUnit.SECONDS.toMillis(30);
     private long connectTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
@@ -53,6 +54,10 @@ public class KlientKonfigurasjon {
     public int getProxyPort() {
         return proxyPort;
     }
+
+	public String getProxyScheme() {
+		return proxyScheme;
+	}
 
     public long getSocketTimeoutInMillis() {
         return socketTimeoutInMillis;
@@ -102,48 +107,54 @@ public class KlientKonfigurasjon {
             target = new KlientKonfigurasjon();
         }
 
-        public Builder meldingsformidlerRoot(String meldingsformidlerRoot) {
+        public Builder meldingsformidlerRoot(final String meldingsformidlerRoot) {
             target.meldingsformidlerRoot = URI.create(meldingsformidlerRoot);
             return this;
         }
 
-        public Builder proxy(String proxyHost, int proxyPort) {
+        public Builder proxy(final String proxyHost, final int proxyPort) {
             target.proxyHost = proxyHost;
             target.proxyPort = proxyPort;
             return this;
         }
+        public Builder proxy(final String proxyHost, final int proxyPort, final String proxyScheme) {
+            target.proxyHost = proxyHost;
+            target.proxyPort = proxyPort;
+            target.proxyScheme = proxyScheme;
+            return this;
+        }
 
-        public Builder socketTimeout(int socketTimeout, TimeUnit timeUnit) {
+        public Builder socketTimeout(final int socketTimeout, final TimeUnit timeUnit) {
             target.socketTimeoutInMillis = timeUnit.toMillis(socketTimeout);
             return this;
         }
 
-        public Builder connectionTimeout(int connectionTimeout, TimeUnit timeUnit) {
+        public Builder connectionTimeout(final int connectionTimeout, final TimeUnit timeUnit) {
             target.connectTimeoutInMillis = timeUnit.toMillis(connectionTimeout);
             return this;
         }
 
-        public Builder connectionRequestTimeout(int connectionRequestTimeout, TimeUnit timeUnit) {
+        public Builder connectionRequestTimeout(final int connectionRequestTimeout, final TimeUnit timeUnit) {
             target.connectionRequestTimeoutInMillis = timeUnit.toMillis(connectionRequestTimeout);
             return this;
         }
 
-        public Builder maxConnectionPoolSize(int maxConnectionPoolSize) {
+        public Builder maxConnectionPoolSize(final int maxConnectionPoolSize) {
             target.maxConnectionPoolSize = maxConnectionPoolSize;
             return this;
         }
 
-        public Builder soapInterceptors(ClientInterceptor... soapInterceptors) {
+        public Builder soapInterceptors(final ClientInterceptor... soapInterceptors) {
             target.soapInterceptors = soapInterceptors;
             return this;
         }
 
-        public Builder httpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptors) {
+        public Builder httpRequestInterceptors(final HttpRequestInterceptor... httpRequestInterceptors) {
             target.httpRequestInterceptors = httpRequestInterceptors;
             return this;
         }
 
-        public Builder httpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptors) {
+        public Builder httpResponseInterceptors(final HttpResponseInterceptor... httpResponseInterceptors) {
             target.httpResponseInterceptors = httpResponseInterceptors;
             return this;
         }
@@ -152,4 +163,5 @@ public class KlientKonfigurasjon {
             return target;
         }
     }
+
 }

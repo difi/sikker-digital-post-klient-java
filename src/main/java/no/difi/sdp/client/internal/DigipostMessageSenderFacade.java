@@ -47,7 +47,7 @@ public class DigipostMessageSenderFacade {
     private final MessageSender messageSender;
     private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
-    public DigipostMessageSenderFacade(TekniskAvsender avsender, KlientKonfigurasjon konfigurasjon) {
+    public DigipostMessageSenderFacade(final TekniskAvsender avsender, final KlientKonfigurasjon konfigurasjon) {
         KeyStoreInfo keyStoreInfo = avsender.getNoekkelpar().getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
@@ -64,7 +64,7 @@ public class DigipostMessageSenderFacade {
                 .withMaxTotal(konfigurasjon.getMaxConnectionPoolSize());
 
         if (konfigurasjon.useProxy()) {
-            messageSenderBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort());
+            messageSenderBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort(), konfigurasjon.getProxyScheme());
         }
 
         // Legg til http request interceptors fra konfigurasjon pluss vår egen.
@@ -131,7 +131,7 @@ public class DigipostMessageSenderFacade {
         });
     }
 
-    private <T> T performRequest(Request<T> request) throws SendException {
+    private <T> T performRequest(final Request<T> request) throws SendException {
         try {
             return request.exec();
         }
@@ -153,7 +153,7 @@ public class DigipostMessageSenderFacade {
         T exec();
     }
 
-    public void setExceptionMapper(ExceptionMapper exceptionMapper) {
+    public void setExceptionMapper(final ExceptionMapper exceptionMapper) {
         this.exceptionMapper = exceptionMapper;
     }
 
