@@ -43,6 +43,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.codec.digest.DigestUtils.sha1;
@@ -84,11 +85,12 @@ class CreateXAdESProperties {
     }
 
     private List<DataObjectFormat> dataObjectFormats(List<AsicEAttachable> files) {
-        List<DataObjectFormat> dataObjectFormats = new ArrayList<DataObjectFormat>();
-        for (AsicEAttachable file : files) {
-            dataObjectFormats.add(new DataObjectFormat(null, null, file.getMimeType(), null, "#" + file.getFileName()));
+        List<DataObjectFormat> result = new ArrayList<DataObjectFormat>();
+        for (int i = 0; i < files.size(); i++) {
+            String signatureElementIdReference = format("#ID_%s", i);
+            result.add(new DataObjectFormat(null, null, files.get(i).getMimeType(), null, signatureElementIdReference));
         }
-        return dataObjectFormats;
+        return result;
     }
 
     private void markAsIdProperty(Document document, final String elementName, String property) {

@@ -132,11 +132,11 @@ public class CreateSignatureTest {
     private void verify_signed_data_object_properties(SignedDataObjectProperties signedDataObjectProperties) {
         assertThat(signedDataObjectProperties.getDataObjectFormats()).hasSize(2); // One per file
         DataObjectFormat hoveddokumentDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(0);
-        assertThat(hoveddokumentDataObjectFormat.getObjectReference()).isEqualTo("#hoveddokument.pdf");
+        assertThat(hoveddokumentDataObjectFormat.getObjectReference()).isEqualTo("#ID_0");
         assertThat(hoveddokumentDataObjectFormat.getMimeType()).isEqualTo("application/pdf");
 
         DataObjectFormat manifestDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(1);
-        assertThat(manifestDataObjectFormat.getObjectReference()).isEqualTo("#manifest.xml");
+        assertThat(manifestDataObjectFormat.getObjectReference()).isEqualTo("#ID_1");
         assertThat(manifestDataObjectFormat.getMimeType()).isEqualTo("application/xml");
     }
 

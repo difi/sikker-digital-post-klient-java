@@ -63,6 +63,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
@@ -161,12 +162,13 @@ public class CreateSignature {
     }
 
     private List<Reference> references(XMLSignatureFactory xmlSignatureFactory, List<AsicEAttachable> files) {
-        List<Reference> references = new ArrayList<Reference>();
-        for (AsicEAttachable file : files) {
-            Reference reference = xmlSignatureFactory.newReference(file.getFileName(), sha256DigestMethod, null, null, file.getFileName(), sha256(file.getBytes()));
-            references.add(reference);
+        List<Reference> result = new ArrayList<Reference>();
+        for (int i = 0; i < files.size(); i++) {
+            String signatureElementId = format("ID_%s", i);
+            Reference reference = xmlSignatureFactory.newReference(files.get(i).getFileName(), sha256DigestMethod, null, null, signatureElementId, sha256(files.get(i).getBytes()));
+            result.add(reference);
         }
-        return references;
+        return result;
     }
 
     private KeyInfo keyInfo(XMLSignatureFactory xmlSignatureFactory, Certificate[] sertifikater) {
