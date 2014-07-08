@@ -15,12 +15,19 @@
  */
 package no.difi.sdp.client.domain.exceptions;
 
-import no.digipost.api.exceptions.MessageSenderSoapFaultException;
+import no.digipost.api.exceptions.MessageSenderValidationException;
 
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.fraSoapFaultCode;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.SERVER;
 
-public class SoapFaultException extends SendException {
-    public SoapFaultException(MessageSenderSoapFaultException e) {
-        super(e.getSoapFault().getFaultStringOrReason(), fraSoapFaultCode(e.getSoapFault().getFaultCode()), e);
+
+/**
+ * Indikerer at server har returnert data som ikke validerer i henhold til forventning
+ * Eksempler: feil org nummer, manglende ebMS Messaging header
+ */
+public class ValideringException extends SendException {
+
+    public ValideringException(MessageSenderValidationException e) {
+        super(e.getMessage(), SERVER, e);
     }
+
 }

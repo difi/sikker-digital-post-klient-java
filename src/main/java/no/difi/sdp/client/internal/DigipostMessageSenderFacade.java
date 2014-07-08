@@ -172,7 +172,7 @@ public class DigipostMessageSenderFacade {
 
                 }
             };
-            payloadValidatingInterceptor.setSchemas(Schemas.schemaResources());
+            payloadValidatingInterceptor.setSchemas(Schemas.allSchemaResources());
             payloadValidatingInterceptor.setValidateRequest(true);
             // TODO: Responsevalidering skal skrus på når vi er sikre på at MF og postkassene leverer skikkelige responser
             payloadValidatingInterceptor.setValidateResponse(false);
