@@ -2,6 +2,7 @@ target
 .cache
 .classpath
 .project
+.settings
 *.iml
 src/test/resources/keystore.jce
 
