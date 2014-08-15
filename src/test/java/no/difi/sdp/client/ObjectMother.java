@@ -163,7 +163,7 @@ public class ObjectMother {
 	}
 
 
-	private static Sertifikat eboksmottakerSertifikatTest() {
+	public static Sertifikat eboksmottakerSertifikatTest() {
 		return Sertifikat.fraBase64X509String(
 		"MIIE+DCCA+CgAwIBAgIKGQiM/jonpcG0VTANBgkqhkiG9w0BAQsFADBRMQswCQYD\n" +
 		"VQQGEwJOTzEdMBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIzAhBgNVBAMM\n" +
