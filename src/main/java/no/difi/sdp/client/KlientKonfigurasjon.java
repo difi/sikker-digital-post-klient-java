@@ -76,7 +76,7 @@ public class KlientKonfigurasjon {
     }
 
     public boolean useProxy() {
-        return isEmpty(proxyHost) && proxyPort > 0;
+        return !isEmpty(proxyHost) && proxyPort > 0;
     }
 
     public static Builder builder() {
