@@ -15,6 +15,12 @@
  */
 package no.difi.sdp.client.internal;
 
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.SERVER;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
+
+import java.util.Arrays;
+
 import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.TekniskAvsender;
@@ -30,17 +36,12 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.xml.Schemas;
+
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.xml.sax.SAXParseException;
-
-import java.util.Arrays;
-
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.SERVER;
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
 public class DigipostMessageSenderFacade {
 
@@ -157,11 +158,11 @@ public class DigipostMessageSenderFacade {
         this.exceptionMapper = exceptionMapper;
     }
 
-    private PayloadValidatingInterceptor payloadValidatingInterceptor() {
+    protected ClientInterceptor payloadValidatingInterceptor() {
         try {
             PayloadValidatingInterceptor payloadValidatingInterceptor = new PayloadValidatingInterceptor() {
                 @Override
-                protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
+                protected boolean handleRequestValidationErrors(final MessageContext messageContext, final SAXParseException[] errors) {
                     if (messageContext.hasResponse()) {
                         // Feil i responsen, sannsynligvis serveren sin skyld
                         throw new XmlValideringException("XML validation errors in response from server", errors, SERVER);

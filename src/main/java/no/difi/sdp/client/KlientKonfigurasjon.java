@@ -15,15 +15,16 @@
  */
 package no.difi.sdp.client;
 
-import no.digipost.api.representations.Organisasjonsnummer;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponseInterceptor;
-import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import no.digipost.api.representations.Organisasjonsnummer;
+
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponseInterceptor;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 public class KlientKonfigurasjon {
 
