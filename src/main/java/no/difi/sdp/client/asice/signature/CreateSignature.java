@@ -21,6 +21,7 @@ import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
 import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
 import no.difi.sdp.client.domain.exceptions.XmlValideringException;
+import no.digipost.api.xml.Constants;
 import no.digipost.api.xml.Schemas;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.validation.SchemaLoaderUtils;
@@ -32,16 +33,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.DigestMethod;
-import javax.xml.crypto.dsig.Reference;
-import javax.xml.crypto.dsig.SignatureMethod;
-import javax.xml.crypto.dsig.SignedInfo;
-import javax.xml.crypto.dsig.Transform;
-import javax.xml.crypto.dsig.XMLObject;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.crypto.dsig.XMLSignatureException;
-import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
@@ -54,6 +46,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -90,9 +83,9 @@ public class CreateSignature {
         try {
             XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
             sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
-            canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod("http://www.w3.org/2006/12/xml-c14n11", (C14NMethodParameterSpec) null);
+            canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod(Constants.C14V1, (C14NMethodParameterSpec) null);
             signatureMethod = xmlSignatureFactory.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null);
-            canonicalXmlTransform = xmlSignatureFactory.newTransform("http://www.w3.org/TR/2001/REC-xml-c14n-20010315", (TransformParameterSpec) null);
+            canonicalXmlTransform = xmlSignatureFactory.newTransform(Constants.C14V1, (TransformParameterSpec) null);
         } catch (NoSuchAlgorithmException e) {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
         } catch (InvalidAlgorithmParameterException e) {

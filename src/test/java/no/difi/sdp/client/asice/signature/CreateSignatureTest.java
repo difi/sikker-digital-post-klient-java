@@ -19,11 +19,7 @@ import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.Noekkelpar;
 import org.apache.commons.io.IOUtils;
-import org.etsi.uri._01903.v1_3.DataObjectFormat;
-import org.etsi.uri._01903.v1_3.DigestAlgAndValueType;
-import org.etsi.uri._01903.v1_3.QualifyingProperties;
-import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
-import org.etsi.uri._01903.v1_3.SigningCertificate;
+import org.etsi.uri._01903.v1_3.*;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
@@ -44,6 +40,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.util.List;
@@ -153,7 +150,7 @@ public class CreateSignatureTest {
     }
 
     private void verify_signed_info(SignedInfo signedInfo) {
-        assertThat(signedInfo.getCanonicalizationMethod().getAlgorithm()).isEqualTo("http://www.w3.org/2006/12/xml-c14n11");
+        assertThat(signedInfo.getCanonicalizationMethod().getAlgorithm()).isEqualTo("http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
         assertThat(signedInfo.getSignatureMethod().getAlgorithm()).isEqualTo("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
 
         List<Reference> references = signedInfo.getReferences();
@@ -179,8 +176,11 @@ public class CreateSignatureTest {
 
     private AsicEAttachable file(final String fileName, final byte[] contents, final String mimeType) {
         return new AsicEAttachable() {
+            @Override
             public String getFileName() { return fileName; }
+            @Override
             public byte[] getBytes() { return contents; }
+            @Override
             public String getMimeType() { return mimeType; }
         };
     }
