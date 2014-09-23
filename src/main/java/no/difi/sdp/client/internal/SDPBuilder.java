@@ -15,6 +15,9 @@
  */
 package no.difi.sdp.client.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import no.difi.begrep.sdp.schema_v10.SDPAvsender;
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPostInfo;
@@ -33,7 +36,6 @@ import no.difi.begrep.sdp.schema_v10.SDPSmsVarsel;
 import no.difi.begrep.sdp.schema_v10.SDPSmsVarselTekst;
 import no.difi.begrep.sdp.schema_v10.SDPTittel;
 import no.difi.begrep.sdp.schema_v10.SDPVarsler;
-import no.difi.begrep.sdp.schema_v10.SDPVirksomhet;
 import no.difi.sdp.client.domain.Behandlingsansvarlig;
 import no.difi.sdp.client.domain.Dokument;
 import no.difi.sdp.client.domain.Forsendelse;
@@ -41,12 +43,10 @@ import no.difi.sdp.client.domain.Mottaker;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client.domain.digital_post.SmsVarsel;
+
 import org.joda.time.LocalDate;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 public class SDPBuilder {
@@ -98,10 +98,9 @@ public class SDPBuilder {
     }
 
     private SDPMottaker sdpMottaker(final Mottaker mottaker) {
-        SDPVirksomhet virksomhet = null; // Sending til virksomheter er ikke støttet
         SDPPerson sdpPerson = new SDPPerson(mottaker.getPersonidentifikator(), mottaker.getPostkasseadresse());
 
-        return new SDPMottaker(virksomhet, sdpPerson);
+        return new SDPMottaker(sdpPerson);
     }
 
     private SDPAvsender sdpAvsender(final Behandlingsansvarlig avsender) {

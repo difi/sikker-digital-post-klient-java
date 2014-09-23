@@ -15,11 +15,30 @@
  */
 package no.difi.sdp.client.asice.signature;
 
+import static java.util.Arrays.asList;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+
+import java.io.ByteArrayInputStream;
+import java.math.BigInteger;
+import java.util.List;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamSource;
+
 import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.Noekkelpar;
+
 import org.apache.commons.io.IOUtils;
-import org.etsi.uri._01903.v1_3.*;
+import org.etsi.uri._01903.v1_3.DataObjectFormat;
+import org.etsi.uri._01903.v1_3.DigestAlgAndValueType;
+import org.etsi.uri._01903.v1_3.QualifyingProperties;
+import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
+import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
@@ -34,19 +53,6 @@ import org.w3.xmldsig.X509IssuerSerialType;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.stream.StreamSource;
-
-import java.io.ByteArrayInputStream;
-import java.math.BigInteger;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 public class CreateSignatureTest {
 
@@ -111,6 +117,21 @@ public class CreateSignatureTest {
     }
 
     @Test
+    public void should_support_filenames_with_spaces_and_other_characters() {
+        List<AsicEAttachable> otherFiles = asList(
+                file("hoveddokument (2).pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
+                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
+        );
+
+        Signature signature = sut.createSignature(noekkelpar, otherFiles);
+        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        String uri = xAdESSignatures.getSignatures().get(0).getSignedInfo().getReferences().get(0).getURI();
+        assertEquals("hoveddokument+%282%29.pdf", uri);
+    }
+
+
+
+    @Test
     public void test_pregenerated_xml() throws Exception {
         // Note: this is a very brittle test. it is meant to be guiding. If it fails, manually check if the changes to the XML makes sense. If they do, just update the expected XML.
         String expected = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"));
@@ -126,7 +147,7 @@ public class CreateSignatureTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    private void verify_signed_data_object_properties(SignedDataObjectProperties signedDataObjectProperties) {
+    private void verify_signed_data_object_properties(final SignedDataObjectProperties signedDataObjectProperties) {
         assertThat(signedDataObjectProperties.getDataObjectFormats()).hasSize(2); // One per file
         DataObjectFormat hoveddokumentDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(0);
         assertThat(hoveddokumentDataObjectFormat.getObjectReference()).isEqualTo("#ID_0");
@@ -137,7 +158,7 @@ public class CreateSignatureTest {
         assertThat(manifestDataObjectFormat.getMimeType()).isEqualTo("application/xml");
     }
 
-    private void verify_signing_certificate(SigningCertificate signingCertificate) {
+    private void verify_signing_certificate(final SigningCertificate signingCertificate) {
         assertThat(signingCertificate.getCerts()).hasSize(1);
 
         DigestAlgAndValueType certDigest = signingCertificate.getCerts().get(0).getCertDigest();
@@ -149,7 +170,7 @@ public class CreateSignatureTest {
         assertThat(issuerSerial.getX509SerialNumber()).isEqualTo(new BigInteger("589725471"));
     }
 
-    private void verify_signed_info(SignedInfo signedInfo) {
+    private void verify_signed_info(final SignedInfo signedInfo) {
         assertThat(signedInfo.getCanonicalizationMethod().getAlgorithm()).isEqualTo("http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
         assertThat(signedInfo.getSignatureMethod().getAlgorithm()).isEqualTo("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
 
@@ -160,7 +181,7 @@ public class CreateSignatureTest {
         verify_signed_properties_reference(references.get(2));
     }
 
-    private void verify_signed_properties_reference(Reference signedPropertiesReference) {
+    private void verify_signed_properties_reference(final Reference signedPropertiesReference) {
         assertThat(signedPropertiesReference.getURI()).isEqualTo("#SignedProperties");
         assertThat(signedPropertiesReference.getType()).isEqualTo("http://uri.etsi.org/01903#SignedProperties");
         assertThat(signedPropertiesReference.getDigestMethod().getAlgorithm()).isEqualTo("http://www.w3.org/2001/04/xmlenc#sha256");
@@ -168,7 +189,7 @@ public class CreateSignatureTest {
         assertThat(signedPropertiesReference.getTransforms().getTransforms().get(0).getAlgorithm()).isEqualTo("http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
     }
 
-    private void assert_hovedokument_reference(Reference hovedDokumentReference) {
+    private void assert_hovedokument_reference(final Reference hovedDokumentReference) {
         assertThat(hovedDokumentReference.getURI()).isEqualTo("hoveddokument.pdf");
         assertThat(hovedDokumentReference.getDigestValue()).isEqualTo(expectedHovedDokumentHash);
         assertThat(hovedDokumentReference.getDigestMethod().getAlgorithm()).isEqualTo("http://www.w3.org/2001/04/xmlenc#sha256");
@@ -185,7 +206,7 @@ public class CreateSignatureTest {
         };
     }
 
-    private String prettyPrint(Signature signature) throws TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    private String prettyPrint(final Signature signature) throws TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         StreamSource xmlSource = new StreamSource(new ByteArrayInputStream(signature.getBytes()));
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         DOMResult outputTarget = new DOMResult();
