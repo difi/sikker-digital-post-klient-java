@@ -15,25 +15,35 @@
  */
 package no.difi.sdp.client.asice.signature;
 
-import no.difi.sdp.client.asice.AsicEAttachable;
-import no.difi.sdp.client.domain.Noekkelpar;
-import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
-import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
-import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
-import no.difi.sdp.client.domain.exceptions.XmlValideringException;
-import no.digipost.api.xml.Constants;
-import no.digipost.api.xml.Schemas;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.validation.SchemaLoaderUtils;
-import org.springframework.xml.validation.XmlValidatorFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
+import static org.apache.commons.codec.digest.DigestUtils.sha256;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
-import javax.xml.crypto.dsig.*;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.SignatureMethod;
+import javax.xml.crypto.dsig.SignedInfo;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.crypto.dsig.XMLObject;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureException;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
@@ -47,20 +57,22 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.List;
+import no.difi.sdp.client.asice.AsicEAttachable;
+import no.difi.sdp.client.domain.Noekkelpar;
+import no.difi.sdp.client.domain.exceptions.KonfigurasjonException;
+import no.difi.sdp.client.domain.exceptions.RuntimeIOException;
+import no.difi.sdp.client.domain.exceptions.XmlKonfigurasjonException;
+import no.difi.sdp.client.domain.exceptions.XmlValideringException;
+import no.digipost.api.xml.Constants;
+import no.digipost.api.xml.Schemas;
 
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
-import static org.apache.commons.codec.digest.DigestUtils.sha256;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.validation.SchemaLoaderUtils;
+import org.springframework.xml.validation.XmlValidatorFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CreateSignature {
@@ -101,7 +113,7 @@ public class CreateSignature {
         }
     }
 
-    public Signature createSignature(Noekkelpar noekkelpar, List<AsicEAttachable> attachedFiles) throws XmlValideringException {
+    public Signature createSignature(final Noekkelpar noekkelpar, final List<AsicEAttachable> attachedFiles) throws XmlValideringException {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
 
         // Lag signatur-referanse for alle filer
@@ -150,27 +162,32 @@ public class CreateSignature {
         } catch (IOException e) {
             throw new RuntimeIOException(e);
         }
-
         return new Signature(outputStream.toByteArray());
     }
 
-    private List<Reference> references(XMLSignatureFactory xmlSignatureFactory, List<AsicEAttachable> files) {
+    private List<Reference> references(final XMLSignatureFactory xmlSignatureFactory, final List<AsicEAttachable> files) {
         List<Reference> result = new ArrayList<Reference>();
         for (int i = 0; i < files.size(); i++) {
-            String signatureElementId = format("ID_%s", i);
-            Reference reference = xmlSignatureFactory.newReference(files.get(i).getFileName(), sha256DigestMethod, null, null, signatureElementId, sha256(files.get(i).getBytes()));
-            result.add(reference);
+            try {
+	            String signatureElementId = format("ID_%s", i);
+	            String uri = URLEncoder.encode(files.get(i).getFileName(), "UTF-8");
+	            Reference reference = xmlSignatureFactory.newReference(uri, sha256DigestMethod, null, null, signatureElementId, sha256(files.get(i).getBytes()));
+	            result.add(reference);
+            } catch(UnsupportedEncodingException e) {
+            	throw new RuntimeException(e);
+            }
+
         }
         return result;
     }
 
-    private KeyInfo keyInfo(XMLSignatureFactory xmlSignatureFactory, Certificate[] sertifikater) {
+    private KeyInfo keyInfo(final XMLSignatureFactory xmlSignatureFactory, final Certificate[] sertifikater) {
         KeyInfoFactory keyInfoFactory = xmlSignatureFactory.getKeyInfoFactory();
         X509Data x509Data = keyInfoFactory.newX509Data(asList(sertifikater));
         return keyInfoFactory.newKeyInfo(singletonList(x509Data));
     }
 
-    private void wrapSignatureInXADeSEnvelope(Document document) {
+    private void wrapSignatureInXADeSEnvelope(final Document document) {
         Node signatureElement = document.removeChild(document.getDocumentElement());
         Element xadesElement = document.createElementNS(asicNamespace, "XAdESSignatures");
         xadesElement.appendChild(signatureElement);
