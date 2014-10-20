@@ -18,11 +18,26 @@ package no.difi.sdp.client.asice.signature;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.crypto.Data;
+import javax.xml.crypto.OctetStreamData;
+import javax.xml.crypto.URIDereferencer;
+import javax.xml.crypto.URIReference;
+import javax.xml.crypto.URIReferenceException;
+import javax.xml.crypto.XMLCryptoContext;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.dom.DOMValidateContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -34,6 +49,7 @@ import no.difi.sdp.client.asice.AsicEAttachable;
 import no.difi.sdp.client.domain.Noekkelpar;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.jcp.xml.dsig.internal.dom.DOMSubTreeData;
 import org.etsi.uri._01903.v1_3.DataObjectFormat;
 import org.etsi.uri._01903.v1_3.DigestAlgAndValueType;
 import org.etsi.uri._01903.v1_3.QualifyingProperties;
@@ -50,6 +66,9 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.SignedInfo;
 import org.w3.xmldsig.X509IssuerSerialType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
@@ -99,6 +118,36 @@ public class CreateSignatureTest {
         verify_signed_info(dSignature.getSignedInfo());
         assertThat(dSignature.getSignatureValue()).isNotNull();
         assertThat(dSignature.getKeyInfo()).isNotNull();
+    }
+
+    @Test
+    public void multithreaded_signing() throws Exception {
+    	List<Thread> threads = new ArrayList<Thread>();
+    	final AtomicInteger fails = new AtomicInteger(0);
+    	for (int i = 0; i < 50; i++) {
+    		Thread t = new Thread() {
+    			@Override
+				public void run() {
+    				for (int j = 0; j < 20; j++) {
+	        			Signature signature = sut.createSignature(noekkelpar, files);
+	        	        if (!verify_signature(signature)) {
+	        	        	fails.incrementAndGet();
+	        	        }
+	        	        if (fails.get() > 0) {
+	        	        	break;
+	        	        }
+    				}
+    			}
+    		};
+    		threads.add(t);
+    		t.start();
+    	}
+    	for(Thread t : threads) {
+    		t.join();
+    	}
+    	if (fails.get() > 0) {
+    		fail("Signature validation failed");
+    	}
     }
 
     @Test
@@ -181,7 +230,56 @@ public class CreateSignatureTest {
         verify_signed_properties_reference(references.get(2));
     }
 
-    private void verify_signed_properties_reference(final Reference signedPropertiesReference) {
+    private boolean verify_signature(final Signature signature2) {
+    	try {
+    		signature2.getBytes();
+    		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+    		fac.setNamespaceAware(true);
+    		DocumentBuilder builder = fac.newDocumentBuilder();
+    		final Document doc = builder.parse(new ByteArrayInputStream(signature2.getBytes()));
+    		//System.err.println(new String(signature2.getBytes()));
+	    	NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+	    	DOMValidateContext valContext = new DOMValidateContext
+	    		    (noekkelpar.getSertifikat().getX509Certificate().getPublicKey(), nl.item(0));
+	    	valContext.setURIDereferencer(new URIDereferencer() {
+				@Override
+				public Data dereference(final URIReference uriReference, final XMLCryptoContext context) throws URIReferenceException {
+					//System.out.println("$$$$ " + uriReference.getURI());
+					for(AsicEAttachable file : files) {
+						if (file.getFileName().equals(uriReference.getURI().toString())) {
+							return new OctetStreamData(new ByteArrayInputStream(file.getBytes()));
+						}
+					}
+					uriReference.getURI().toString().replace("#", "");
+					Node element = doc.getElementsByTagName("SignedProperties").item(0);
+					return new DOMSubTreeData(element, false);
+
+				}
+			});
+	    	XMLSignatureFactory fact = XMLSignatureFactory.getInstance("DOM");
+			XMLSignature signature = fact.unmarshalXMLSignature(valContext);
+	    	boolean coreValidity = signature.validate(valContext);
+	    	if (coreValidity == false) {
+	    	    System.err.println("Signature failed core validation");
+	    	    boolean sv = signature.getSignatureValue().validate(valContext);
+	    	    System.out.println("signature validation status: " + sv);
+	    	    if (sv == false) {
+	    	        // Check the validation status of each Reference.
+	    	        Iterator i = signature.getSignedInfo().getReferences().iterator();
+	    	        for (int j=0; i.hasNext(); j++) {
+	    	            boolean refValid = ((javax.xml.crypto.dsig.Reference) i.next()).validate(valContext);
+	    	            System.out.println("ref["+j+"] validity status: " + refValid);
+	    	        }
+	    	    }
+	    	}
+	    	return coreValidity;
+    	} catch(Exception ex) {
+    		ex.printStackTrace(System.err);
+    		return false;
+    	}
+	}
+
+	private void verify_signed_properties_reference(final Reference signedPropertiesReference) {
         assertThat(signedPropertiesReference.getURI()).isEqualTo("#SignedProperties");
         assertThat(signedPropertiesReference.getType()).isEqualTo("http://uri.etsi.org/01903#SignedProperties");
         assertThat(signedPropertiesReference.getDigestMethod().getAlgorithm()).isEqualTo("http://www.w3.org/2001/04/xmlenc#sha256");
