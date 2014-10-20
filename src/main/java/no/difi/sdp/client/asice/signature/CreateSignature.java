@@ -82,7 +82,6 @@ public class CreateSignature {
 
     private final DigestMethod sha256DigestMethod;
     private final CanonicalizationMethod canonicalizationMethod;
-    private final SignatureMethod signatureMethod;
     private final Transform canonicalXmlTransform;
 
     private final CreateXAdESProperties createXAdESProperties;
@@ -96,7 +95,6 @@ public class CreateSignature {
             XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
             sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
             canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod(Constants.C14V1, (C14NMethodParameterSpec) null);
-            signatureMethod = xmlSignatureFactory.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null);
             canonicalXmlTransform = xmlSignatureFactory.newTransform(Constants.C14V1, (TransformParameterSpec) null);
         } catch (NoSuchAlgorithmException e) {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
@@ -104,17 +102,23 @@ public class CreateSignature {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
         }
 
-        try {
-            schema = SchemaLoaderUtils.loadSchema(new Resource[]{ Schemas.ASICE_SCHEMA }, XmlValidatorFactory.SCHEMA_W3C_XML);
+        schema = loadSchema();
+    }
+
+	private Schema loadSchema() {
+		try {
+            return SchemaLoaderUtils.loadSchema(new Resource[]{ Schemas.ASICE_SCHEMA }, XmlValidatorFactory.SCHEMA_W3C_XML);
         } catch (IOException e) {
             throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures", e);
         } catch (SAXException e) {
             throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures", e);
         }
-    }
+	}
 
     public Signature createSignature(final Noekkelpar noekkelpar, final List<AsicEAttachable> attachedFiles) throws XmlValideringException {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
+        SignatureMethod signatureMethod = getSignatureMethod(xmlSignatureFactory);
+
 
         // Lag signatur-referanse for alle filer
         List<Reference> references = references(xmlSignatureFactory, attachedFiles);
@@ -164,6 +168,16 @@ public class CreateSignature {
         }
         return new Signature(outputStream.toByteArray());
     }
+
+	private SignatureMethod getSignatureMethod(final XMLSignatureFactory xmlSignatureFactory) {
+        try {
+            return xmlSignatureFactory.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null);
+        } catch (NoSuchAlgorithmException e) {
+            throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
+        }
+	}
 
     private List<Reference> references(final XMLSignatureFactory xmlSignatureFactory, final List<AsicEAttachable> files) {
         List<Reference> result = new ArrayList<Reference>();
