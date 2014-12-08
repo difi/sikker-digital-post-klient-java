@@ -61,8 +61,8 @@ public class CreateASiCE {
         files.add(manifest);
 
         // Lag signatur over alle filene i pakka
-        log.info("Signing ASiC-E documents using private key with alias " + tekniskAvsender.getNoekkelpar().getAlias());
-        Signature signature = createSignature.createSignature(tekniskAvsender.getNoekkelpar(), files);
+        log.info("Signing ASiC-E documents using private key with alias " + tekniskAvsender.noekkelpar.getAlias());
+        Signature signature = createSignature.createSignature(tekniskAvsender.noekkelpar, files);
         files.add(signature);
 
         // Zip filene

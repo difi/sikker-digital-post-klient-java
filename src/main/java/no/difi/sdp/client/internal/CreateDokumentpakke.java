@@ -40,7 +40,7 @@ public class CreateDokumentpakke {
         log.info("Creating dokumentpakke");
         ArchivedASiCE archivedASiCE = createASiCE.createAsice(tekniskAvsender, forsendelse);
 
-        Sertifikat mottakerSertifikat = forsendelse.getDigitalPost().getMottaker().getSertifikat();
+        Sertifikat mottakerSertifikat = forsendelse.getTekniskMottaker().sertifikat;
 
         log.info("Creating CMS document");
         CMSDocument cms = createCMS.createCMS(archivedASiCE.getBytes(), mottakerSertifikat);

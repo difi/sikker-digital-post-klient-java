@@ -17,20 +17,12 @@ package no.difi.sdp.client.domain;
 
 public class TekniskAvsender {
 
-    private String organisasjonsnummer;
-    private Noekkelpar noekkelpar;
+    public final String organisasjonsnummer;
+    public final Noekkelpar noekkelpar;
 
     private TekniskAvsender(String organisasjonsnummer, Noekkelpar noekkelpar) {
         this.organisasjonsnummer = organisasjonsnummer;
         this.noekkelpar = noekkelpar;
-    }
-
-    public String getOrganisasjonsnummer() {
-        return organisasjonsnummer;
-    }
-
-    public Noekkelpar getNoekkelpar() {
-        return noekkelpar;
     }
 
     /**
