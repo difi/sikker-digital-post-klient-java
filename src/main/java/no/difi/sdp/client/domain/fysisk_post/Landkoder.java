@@ -30,7 +30,6 @@ public final class Landkoder {
 		FINLAND("FI"),
 		STORBRITANNIA("UK"),
 		IRLAND("IE"),
-		SKOTTLAND(""),
 		USA("US"),
 		TYSKLAND("DE"),
 		OESTERIKE("AT"),
