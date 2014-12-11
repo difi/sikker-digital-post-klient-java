@@ -16,31 +16,55 @@
 package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
+import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 
 import java.util.UUID;
 
+import static no.difi.sdp.client.domain.Forsendelse.Type.DIGITAL;
+import static no.difi.sdp.client.domain.Forsendelse.Type.FYSISK;
+
 public class Forsendelse {
 
-    private DigitalPost digitalPost;
-    private Dokumentpakke dokumentpakke;
-    private Behandlingsansvarlig behandlingsansvarlig;
+	public enum Type {
+		DIGITAL, FYSISK
+	}
+
+	public final Type type;
+    private final DigitalPost digitalPost;
+    private final FysiskPost fysiskPost;
+    private final Dokumentpakke dokumentpakke;
+    private final Behandlingsansvarlig behandlingsansvarlig;
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
     private String spraakkode = "NO";
     private String mpcId;
 
     private Forsendelse(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+    	this.type = DIGITAL;
         this.behandlingsansvarlig = behandlingsansvarlig;
         this.digitalPost = digitalPost;
+        this.fysiskPost = null;
         this.dokumentpakke = dokumentpakke;
     }
 
-    public String getKonversasjonsId() {
+    public Forsendelse(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+    	this.type = FYSISK;
+    	this.behandlingsansvarlig = behandlingsansvarlig;
+    	this.dokumentpakke = dokumentpakke;
+    	this.fysiskPost = fysiskPost;
+    	this.digitalPost = null;
+    }
+
+	public String getKonversasjonsId() {
         return konversasjonsId;
     }
 
     public DigitalPost getDigitalPost() {
         return digitalPost;
+    }
+
+	public FysiskPost getFysiskPost() {
+		return fysiskPost;
     }
 
     public Dokumentpakke getDokumentpakke() {
@@ -73,6 +97,10 @@ public class Forsendelse {
         return new Builder(behandlingsansvarlig, digitalPost, dokumentpakke);
     }
 
+	public static Builder fysisk(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+	    return new Builder(behandlingsansvarlig, fysiskPost, dokumentpakke);
+    }
+
     public static class Builder {
 
         private final Forsendelse target;
@@ -80,6 +108,10 @@ public class Forsendelse {
 
         private Builder(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
             this.target = new Forsendelse(behandlingsansvarlig, digitalPost, dokumentpakke);
+        }
+
+        private Builder(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+            this.target = new Forsendelse(behandlingsansvarlig, fysiskPost, dokumentpakke);
         }
 
         /**
@@ -130,4 +162,13 @@ public class Forsendelse {
             return target;
         }
     }
+
+	public TekniskMottaker getTekniskMottaker() {
+		switch (type) {
+    		case DIGITAL: return digitalPost.getMottaker().getMottakersPostkasse();
+    		case FYSISK: return fysiskPost.getUtskriftsleverandoer();
+    		default: throw new IllegalStateException("Forsendelse av type " + type + " har ikke teknisk mottaker");
+		}
+    }
+
 }

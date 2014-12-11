@@ -15,12 +15,6 @@
  */
 package no.difi.sdp.client.internal;
 
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.KLIENT;
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.SERVER;
-import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.UKJENT;
-
-import java.util.Arrays;
-
 import no.difi.sdp.client.ExceptionMapper;
 import no.difi.sdp.client.KlientKonfigurasjon;
 import no.difi.sdp.client.domain.TekniskAvsender;
@@ -36,12 +30,15 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.xml.Schemas;
-
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.xml.sax.SAXParseException;
+
+import java.util.Arrays;
+
+import static no.difi.sdp.client.domain.exceptions.SendException.AntattSkyldig.*;
 
 public class DigipostMessageSenderFacade {
 
@@ -49,14 +46,14 @@ public class DigipostMessageSenderFacade {
     private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
     public DigipostMessageSenderFacade(final TekniskAvsender avsender, final KlientKonfigurasjon konfigurasjon) {
-        KeyStoreInfo keyStoreInfo = avsender.getNoekkelpar().getKeyStoreInfo();
+        KeyStoreInfo keyStoreInfo = avsender.noekkelpar.getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
 
         MessageSender.Builder messageSenderBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
                 keyStoreInfo,
                 wsSecurityInterceptor,
-                EbmsAktoer.avsender(avsender.getOrganisasjonsnummer()),
+                EbmsAktoer.avsender(avsender.organisasjonsnummer),
                 EbmsAktoer.meldingsformidler(konfigurasjon.getMeldingsformidlerOrganisasjon()))
                 .withConnectTimeout((int) konfigurasjon.getConnectTimeoutInMillis())
                 .withSocketTimeout((int) konfigurasjon.getSocketTimeoutInMillis())

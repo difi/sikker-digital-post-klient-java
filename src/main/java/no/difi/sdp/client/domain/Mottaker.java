@@ -17,20 +17,18 @@ package no.difi.sdp.client.domain;
 
 public class Mottaker {
 
-    private String personidentifikator;
-    private String postkasseadresse;
-    private Sertifikat mottakerSertifikat;
-    private String organisasjonsnummerPostkasse;
+    private final String personidentifikator;
+    private final String postkasseadresse;
+    private final TekniskMottaker postkasse;
 
     private Mottaker(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String organisasjonsnummerPostkasse) {
         this.personidentifikator = personidentifikator;
         this.postkasseadresse = postkasseadresse;
-        this.mottakerSertifikat = mottakerSertifikat;
-        this.organisasjonsnummerPostkasse = organisasjonsnummerPostkasse;
+        this.postkasse = new TekniskMottaker(organisasjonsnummerPostkasse, mottakerSertifikat);
     }
 
-    public String getOrganisasjonsnummerPostkasse() {
-        return organisasjonsnummerPostkasse;
+    public TekniskMottaker getMottakersPostkasse() {
+    	return postkasse;
     }
 
     public String getPostkasseadresse() {
@@ -41,9 +39,6 @@ public class Mottaker {
         return personidentifikator;
     }
 
-    public Sertifikat getSertifikat() {
-        return mottakerSertifikat;
-    }
 
     /**
      * Informasjon om mottaker. Vil vanligvis være hentet fra <a href="http://begrep.difi.no/Oppslagstjenesten/">Oppslagstjenesten</a>.
