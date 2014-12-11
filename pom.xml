@@ -15,6 +15,7 @@
         <sdp-shared.version>1.1.9</sdp-shared.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-compress.version>1.8.1</commons-compress.version>
+        <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
     <artifactId>sikker-digital-post-java-klient</artifactId>
