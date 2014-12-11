@@ -207,18 +207,18 @@ public class ObjectMother {
     }
 
     public static EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
-        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, new SDPAapning(), null);
+        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPAapning(), null, null);
         return createEbmsKvittering(aapningsKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
-        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPLevering());
+        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering(), null);
         return createEbmsKvittering(leveringsKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(final SDPVarslingskanal varslingskanal) {
         SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
-        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), sdpVarslingfeilet, null, null);
+        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null, null);
         return createEbmsKvittering(varslingFeiletKvittering);
     }
 
