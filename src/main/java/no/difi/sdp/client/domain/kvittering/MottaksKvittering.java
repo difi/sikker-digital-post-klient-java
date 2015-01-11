@@ -17,10 +17,10 @@ package no.difi.sdp.client.domain.kvittering;
 
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 
-public class LeveringsKvittering extends ForretningsKvittering {
+public class MottaksKvittering extends ForretningsKvittering {
 
-    public LeveringsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        super(applikasjonsKvittering);
-    }
+	public MottaksKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+		super(applikasjonsKvittering);
+	}
 
 }
