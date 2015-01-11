@@ -17,22 +17,16 @@ package no.difi.sdp.client.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.domain.Prioritet;
-import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
-import no.difi.sdp.client.domain.kvittering.Feil;
-import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
-import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
-import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
+import no.difi.sdp.client.domain.kvittering.*;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsOutgoingMessage;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Test;
 
-import static no.difi.sdp.client.ObjectMother.createEbmsAapningsKvittering;
-import static no.difi.sdp.client.ObjectMother.createEbmsFeil;
-import static no.difi.sdp.client.ObjectMother.createEbmsLeveringsKvittering;
-import static no.difi.sdp.client.ObjectMother.createEbmsVarslingFeiletKvittering;
+import static no.difi.sdp.client.ObjectMother.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -78,6 +72,26 @@ public class KvitteringBuilderTest {
 
         assertNotNull(leveringsKvittering.getKonversasjonsId());
         assertNotNull(leveringsKvittering.getTidspunkt());
+    }
+
+    @Test
+    public void should_build_mottaks_kvittering() {
+        EbmsApplikasjonsKvittering ebmsKvittering = ObjectMother.createEbmsMottaksKvittering();
+
+        MottaksKvittering mottaksKvittering = (MottaksKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
+
+        assertNotNull(mottaksKvittering.getKonversasjonsId());
+        assertNotNull(mottaksKvittering.getTidspunkt());
+    }
+
+    @Test
+    public void should_build_returpost_kvittering() {
+        EbmsApplikasjonsKvittering ebmsKvittering = ObjectMother.createEbmsReturpostKvittering();
+
+        ReturpostKvittering returpostKvittering = (ReturpostKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
+
+        assertNotNull(returpostKvittering.getKonversasjonsId());
+        assertNotNull(returpostKvittering.getTidspunkt());
     }
 
     @Test
