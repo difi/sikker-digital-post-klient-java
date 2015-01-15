@@ -25,7 +25,7 @@ import no.difi.sdp.client.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client.domain.fysisk_post.KonvoluttAdresse;
 import no.difi.sdp.client.domain.fysisk_post.KonvoluttAdresse.Type;
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
 
@@ -103,9 +103,9 @@ public class SDPBuilder {
         	return null;
         }
 
-        LocalDate virkningsdato = null;
+        DateTime virkningstidspunkt = null;
         if (digitalPost.getVirkningsdato() != null) {
-            virkningsdato = new LocalDate(digitalPost.getVirkningsdato());
+            virkningstidspunkt = new DateTime(digitalPost.getVirkningsdato().getTime());
         }
 
         boolean aapningskvittering = digitalPost.isAapningskvittering();
@@ -113,7 +113,7 @@ public class SDPBuilder {
         SDPTittel tittel = new SDPTittel(digitalPost.getIkkeSensitivTittel(), forsendelse.getSpraakkode());
         SDPVarsler varsler = sdpVarsler(forsendelse);
 
-        return new SDPDigitalPostInfo(virkningsdato, aapningskvittering, sikkerhetsnivaa, tittel, varsler);
+        return new SDPDigitalPostInfo(virkningstidspunkt, null, aapningskvittering, sikkerhetsnivaa, tittel, varsler);
     }
 
     private SDPFysiskPostInfo sdpFysiskPostInfo(FysiskPost fysiskPost) {
