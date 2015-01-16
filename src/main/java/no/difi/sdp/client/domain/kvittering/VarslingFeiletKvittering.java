@@ -16,9 +16,6 @@
 package no.difi.sdp.client.domain.kvittering;
 
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-import org.joda.time.DateTime;
-
-import java.util.Date;
 
 public class VarslingFeiletKvittering extends ForretningsKvittering {
 
@@ -28,11 +25,6 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     private VarslingFeiletKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
         super(applikasjonsKvittering);
         this.varslingskanal = varslingskanal;
-    }
-
-    public Date getTidspunkt() {
-        DateTime tidspunkt = applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt();
-        return tidspunkt != null ? tidspunkt.toDate() : null;
     }
 
     public Varslingskanal getVarslingskanal() {

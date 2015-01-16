@@ -15,23 +15,8 @@
  */
 package no.difi.sdp.client;
 
-import no.difi.begrep.sdp.schema_v10.SDPAapning;
-import no.difi.begrep.sdp.schema_v10.SDPFeil;
-import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
-import no.difi.begrep.sdp.schema_v10.SDPKvittering;
-import no.difi.begrep.sdp.schema_v10.SDPLevering;
-import no.difi.begrep.sdp.schema_v10.SDPMelding;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
-import no.difi.sdp.client.domain.Behandlingsansvarlig;
-import no.difi.sdp.client.domain.Dokument;
-import no.difi.sdp.client.domain.Dokumentpakke;
-import no.difi.sdp.client.domain.Forsendelse;
-import no.difi.sdp.client.domain.Mottaker;
-import no.difi.sdp.client.domain.Noekkelpar;
-import no.difi.sdp.client.domain.Prioritet;
-import no.difi.sdp.client.domain.Sertifikat;
-import no.difi.sdp.client.domain.TekniskAvsender;
+import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.sdp.client.domain.*;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
@@ -42,13 +27,7 @@ import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.StandardBusinessDocumentFactory;
 import org.joda.time.DateTime;
 import org.springframework.core.io.ClassPathResource;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.BusinessScope;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.DocumentIdentification;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.Partner;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.PartnerIdentification;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.Scope;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocumentHeader;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.*;
 
 import java.io.ByteArrayInputStream;
 import java.security.KeyStore;
@@ -214,6 +193,16 @@ public class ObjectMother {
     public static EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
         SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering(), null);
         return createEbmsKvittering(leveringsKvittering);
+    }
+
+    public static EbmsApplikasjonsKvittering createEbmsMottaksKvittering() {
+        SDPKvittering mottaksKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, null, new SDPMottak());
+        return createEbmsKvittering(mottaksKvittering);
+    }
+
+    public static EbmsApplikasjonsKvittering createEbmsReturpostKvittering() {
+    	SDPKvittering returpostKvittering = new SDPKvittering(null, DateTime.now(), new SDPReturpost(), null, null, null, null);
+    	return createEbmsKvittering(returpostKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(final SDPVarslingskanal varslingskanal) {

@@ -15,18 +15,9 @@
  */
 package no.difi.sdp.client.internal;
 
-import no.difi.begrep.sdp.schema_v10.SDPFeil;
-import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
-import no.difi.begrep.sdp.schema_v10.SDPKvittering;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
-import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.begrep.sdp.schema_v10.*;
 import no.difi.sdp.client.domain.exceptions.SikkerDigitalPostException;
-import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
-import no.difi.sdp.client.domain.kvittering.Feil;
-import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
-import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
-import no.difi.sdp.client.domain.kvittering.LeveringsKvittering;
-import no.difi.sdp.client.domain.kvittering.VarslingFeiletKvittering;
+import no.difi.sdp.client.domain.kvittering.*;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.Organisasjonsnummer;
@@ -47,11 +38,15 @@ public class KvitteringBuilder {
             SDPKvittering sdpKvittering = sbd.getKvittering().kvittering;
 
             if (sdpKvittering.getAapning() != null) {
-                return AapningsKvittering.builder(applikasjonsKvittering).build();
+                return new AapningsKvittering(applikasjonsKvittering);
+            } else if (sdpKvittering.getMottak() != null) {
+            	return new MottaksKvittering(applikasjonsKvittering);
             } else if (sdpKvittering.getLevering() != null) {
-                return LeveringsKvittering.builder(applikasjonsKvittering).build();
+                return new LeveringsKvittering(applikasjonsKvittering);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
                 return varslingFeiletKvittering(sdpKvittering, applikasjonsKvittering);
+            } else if (sdpKvittering.getReturpost() != null) {
+            	return new ReturpostKvittering(applikasjonsKvittering);
             }
         } else if (sbd.erFeil()) {
             return feil(applikasjonsKvittering);

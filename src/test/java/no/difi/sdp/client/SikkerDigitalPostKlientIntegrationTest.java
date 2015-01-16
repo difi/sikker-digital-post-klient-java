@@ -100,7 +100,7 @@ public class SikkerDigitalPostKlientIntegrationTest {
     @Ignore
     public void test_hent_kvittering_og_bekreft_forrige() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
-        ForretningsKvittering forrigeKvittering = AapningsKvittering.builder(createEbmsAapningsKvittering()).build();
+        ForretningsKvittering forrigeKvittering = new AapningsKvittering(createEbmsAapningsKvittering());
 
         ForretningsKvittering forretningsKvittering = postklient.hentKvitteringOgBekreftForrige(kvitteringForespoersel, forrigeKvittering);
         if (forretningsKvittering != null) {
@@ -114,7 +114,7 @@ public class SikkerDigitalPostKlientIntegrationTest {
     @Test
     @Ignore
     public void test_bekreft_kvittering() {
-        ForretningsKvittering forrigeKvittering = AapningsKvittering.builder(createEbmsAapningsKvittering()).build();
+        ForretningsKvittering forrigeKvittering = new AapningsKvittering(createEbmsAapningsKvittering());
         postklient.bekreft(forrigeKvittering);
     }
 

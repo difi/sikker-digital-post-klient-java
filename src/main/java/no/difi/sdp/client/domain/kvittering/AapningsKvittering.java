@@ -16,44 +16,11 @@
 package no.difi.sdp.client.domain.kvittering;
 
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-import org.joda.time.DateTime;
-
-import java.util.Date;
 
 public class AapningsKvittering extends ForretningsKvittering {
 
-    private AapningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
+    public AapningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
         super(applikasjonsKvittering);
     }
 
-    public Date getTidspunkt() {
-        DateTime tidspunkt = applikasjonsKvittering.getStandardBusinessDocument().getKvittering().kvittering.getTidspunkt();
-        return tidspunkt != null ? tidspunkt.toDate() : null;
-    }
-
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
-                '}';
-    }
-
-    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        return new Builder(applikasjonsKvittering);
-    }
-
-    public static class Builder {
-        private AapningsKvittering target;
-        private boolean built = false;
-
-        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-            target = new AapningsKvittering(applikasjonsKvittering);
-        }
-
-        public AapningsKvittering build() {
-            if (built) throw new IllegalStateException("Can't build twice");
-            built = true;
-            return target;
-        }
-    }
 }

@@ -6,7 +6,7 @@
         <maven>2.2.1</maven>
     </prerequisites>
     <properties>
-        <junit-version>4.11</junit-version>
+        <junit-version>4.12</junit-version>
         <hamcrest-version>1.3</hamcrest-version>
         <spring.version>4.0.5.RELEASE</spring.version>
         <spring.ws.version>2.2.0.RELEASE</spring.ws.version>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.1</version>
+            <version>3.3.2</version>
         </dependency>
 
         <dependency>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.3</version>
+            <version>2.6</version>
         </dependency>
 
         <dependency>
@@ -158,12 +158,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.7</version>
+            <version>1.7.10</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -187,7 +187,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -216,11 +216,11 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.16</version>
+                <version>2.18.1</version>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
+                <version>2.18.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -237,7 +237,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>2.10.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
@@ -249,7 +249,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>2.4</version>
                 <configuration>
                     <includePom>true</includePom>
                 </configuration>
@@ -324,7 +324,7 @@
                 <version>1.3.1</version>
                 <executions>
                     <execution>
-                        <id>test</id>
+                        <id>verify-allowed-dependencies</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
@@ -344,8 +344,8 @@
                                         <include>javax.activation:activation:1.1</include>
                                         <include>javax.xml.stream:stax-api:1.0</include>
                                         <include>jaxen:jaxen:1.1.6</include>
-                                        <include>joda-time:joda-time:2.3</include>
-                                        <include>junit:junit:${junit-version}</include>
+                                        <include>joda-time:joda-time</include>
+                                        <include>junit:junit</include>
                                         <include>org.bouncycastle:bcpkix-jdk15on:1.50</include>
                                         <include>org.bouncycastle:bcprov-jdk15on:1.50</include>
                                         <include>org.codehaus.woodstox:stax2-api:3.1.4</include>
