@@ -43,6 +43,16 @@ public class PostadresseBuilderTest {
 	public void utenlandskAdresse() {
 		KonvoluttAdresse adresse = KonvoluttAdresse.build("Ola Hansen").iUtlandet("Somewhere St. 5", "10592 New York", null, null, USA).build();
 		assertThat(adresse.getType()).isEqualTo(UTENLANDSK);
+		assertThat(adresse.getLand()).isNull();
+		assertThat(adresse.getLandkode()).isEqualTo(USA.getKode());
+	}
+
+	@Test
+	public void utenlandskAdresseMedLandnavn() {
+		KonvoluttAdresse adresse = KonvoluttAdresse.build("Ola Hansen").iUtlandet("Somewhere St. 5", "10592 New York", null, null, "Sverige").build();
+		assertThat(adresse.getType()).isEqualTo(UTENLANDSK);
+		assertThat(adresse.getLand()).isEqualTo("Sverige");
+		assertThat(adresse.getLandkode()).isNull();
 	}
 
 }

@@ -105,7 +105,7 @@ public class KonvoluttAdresse {
 			postadresse.type = Type.UTENLANDSK;
 			postadresse.adresselinjer = onlyNonNull(adresselinje1, adresselinje2, adresselinje3, adresselinje4);
 			postadresse.land = land;
-			postadresse.landkode = landkode.getKode();
+			postadresse.landkode = landkode != null ? landkode.getKode() : null;
 			return this;
 		}
 
