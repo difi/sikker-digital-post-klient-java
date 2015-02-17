@@ -17,6 +17,7 @@ package no.difi.sdp.client.domain;
 
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.fysisk_post.FysiskPost;
+import no.digipost.api.PMode;
 
 import java.util.UUID;
 

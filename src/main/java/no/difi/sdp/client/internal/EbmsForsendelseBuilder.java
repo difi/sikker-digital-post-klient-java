@@ -19,6 +19,7 @@ import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.TekniskAvsender;
 import no.difi.sdp.client.domain.TekniskMottaker;
+import no.digipost.api.PMode;
 import no.digipost.api.representations.*;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 
@@ -54,6 +55,7 @@ public class EbmsForsendelseBuilder {
         return EbmsForsendelse.create(ebmsAvsender, ebmsMottaker, sbdhMottaker, standardBusinessDocument, dokumentpakke)
                 .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())
                 .withMpcId(forsendelse.getMpcId())
+                .withAction(forsendelse.type == Forsendelse.Type.DIGITAL ? PMode.Action.FORMIDLE_DIGITAL : PMode.Action.FORMIDLE_FYSISK)
                 .build();
     }
 
