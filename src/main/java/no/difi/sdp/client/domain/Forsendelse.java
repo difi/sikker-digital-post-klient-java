@@ -27,8 +27,15 @@ import static no.difi.sdp.client.domain.Forsendelse.Type.FYSISK;
 public class Forsendelse {
 
 	public enum Type {
-		DIGITAL, FYSISK
-	}
+		DIGITAL(PMode.Action.FORMIDLE_DIGITAL),
+        FYSISK(PMode.Action.FORMIDLE_FYSISK);
+
+        public final PMode.Action action;
+
+        Type(PMode.Action action) {
+            this.action = action;
+        }
+    }
 
 	public final Type type;
     private final DigitalPost digitalPost;

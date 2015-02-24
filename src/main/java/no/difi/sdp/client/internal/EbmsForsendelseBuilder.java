@@ -55,7 +55,7 @@ public class EbmsForsendelseBuilder {
         return EbmsForsendelse.create(ebmsAvsender, ebmsMottaker, sbdhMottaker, standardBusinessDocument, dokumentpakke)
                 .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())
                 .withMpcId(forsendelse.getMpcId())
-                .withAction(forsendelse.type == Forsendelse.Type.DIGITAL ? PMode.Action.FORMIDLE_DIGITAL : PMode.Action.FORMIDLE_FYSISK)
+                .withAction(forsendelse.type.action)
                 .build();
     }
 
