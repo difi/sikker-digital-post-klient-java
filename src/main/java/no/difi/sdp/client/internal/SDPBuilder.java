@@ -132,7 +132,7 @@ public class SDPBuilder {
     	SDPFysiskPostadresse sdpAdresse = new SDPFysiskPostadresse().withNavn(adresse.getNavn());
     	if (adresse.er(UTENLANDSK)) {
     		UpTo4ElementsOfList<String> adresselinjer = UpTo4ElementsOfList.extract(adresse.getAdresselinjer());
-    		sdpAdresse.setUtenlandskAdresse(new SDPUtenlandskPostadresse(adresselinjer._1, adresselinjer._2, adresselinjer._3, adresselinjer._4, adresse.getLand(), adresse.getLandkode()));
+    		sdpAdresse.setUtenlandskAdresse(new SDPUtenlandskPostadresse(adresselinjer._1, adresselinjer._2, adresselinjer._3, adresselinjer._4, adresse.getLandkode(), adresse.getLand()));
     	} else if (adresse.er(NORSK)) {
     		UpTo4ElementsOfList<String> adresselinjer = UpTo4ElementsOfList.extract(adresse.getAdresselinjer());
     		sdpAdresse.setNorskAdresse(new SDPNorskPostadresse(adresselinjer._1, adresselinjer._2, adresselinjer._3, adresse.getPostnummer(), adresse.getPoststed()));

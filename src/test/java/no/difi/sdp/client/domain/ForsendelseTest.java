@@ -15,9 +15,12 @@
  */
 package no.difi.sdp.client.domain;
 
+import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.sdp.client.ObjectMother;
 import no.difi.sdp.client.domain.digital_post.DigitalPost;
 import no.difi.sdp.client.domain.digital_post.Sikkerhetsnivaa;
+import no.difi.sdp.client.domain.fysisk_post.*;
+import no.difi.sdp.client.internal.SDPBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,5 +71,31 @@ public class ForsendelseTest {
     public void test_default_konversasjonsId_er_satt() {
         assertThat(forsendelse.getKonversasjonsId()).isNotEmpty();
     }
+
+    @Test
+	public void fysisk_post_faar_land_eller_landkode() {
+    	FysiskPost adresse = FysiskPost.builder()
+    			.adresse(KonvoluttAdresse.build("Rall").iUtlandet("Sweden Main Street", null, null, null, Landkoder.Predefinert.SVERIGE).build())
+    			.retur(Returhaandtering.MAKULERING_MED_MELDING, KonvoluttAdresse.build("Rall").iUtlandet("Hungary street 2", null, null, null, "Ungarn").build())
+    			.sendesMed(Posttype.A_PRIORITERT)
+    			.utskrift(Utskriftsfarge.FARGE, new TekniskMottaker("orgnr", null)).build();
+		Forsendelse fysiskForsendelse = Forsendelse.fysisk(ObjectMother.behandlingsansvarlig(), adresse,
+    			Dokumentpakke.builder(Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes())).build()).build()).build();
+
+		assertThat(fysiskForsendelse.type).isEqualTo(Forsendelse.Type.FYSISK);
+		assertThat(fysiskForsendelse.getFysiskPost().getAdresse().getLandkode()).isEqualTo("SE");
+		assertThat(fysiskForsendelse.getFysiskPost().getAdresse().getLand()).isNull();
+
+		assertThat(fysiskForsendelse.getFysiskPost().getReturadresse().getLand()).isEqualTo("Ungarn");
+		assertThat(fysiskForsendelse.getFysiskPost().getReturadresse().getLandkode()).isNull();;
+
+		SDPDigitalPost sdpDigitalPost = new SDPBuilder().buildDigitalPost(fysiskForsendelse);
+		assertThat(sdpDigitalPost.getFysiskPostInfo().getMottaker().getUtenlandskAdresse().getLand()).isNull();
+		assertThat(sdpDigitalPost.getFysiskPostInfo().getMottaker().getUtenlandskAdresse().getLandkode()).isEqualTo("SE");
+
+		assertThat(sdpDigitalPost.getFysiskPostInfo().getRetur().getMottaker().getUtenlandskAdresse().getLandkode()).isNull();
+		assertThat(sdpDigitalPost.getFysiskPostInfo().getRetur().getMottaker().getUtenlandskAdresse().getLand()).isEqualTo("Ungarn");
+
+	}
 
 }
