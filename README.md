@@ -195,3 +195,7 @@ try {
     throw new RuntimeException("Kunne ikke lagre dokumentpakke", e);
 }
 ```
+
+### Validering av PDF dokumenter som sendes til SDP utskriftstjenesten
+
+Denne klienten støtter også å sende PDF dokumenter til SDP utskriftstjenesten. Dokumenter som skal sendes som fysisk post vil valideres av SDP utskriftstjenesten. [Det finnes et eget Java bibliotek](https://github.com/digipost/printability-validator) som kan benyttes for å validere printbarheten til PDF dokumentet før det faktisk sendes til SDP utskriftstjenesten. Det er fornuftig å alltid gjøre slik validering før request sendes til SDP meldingsformidlertjeneste.
