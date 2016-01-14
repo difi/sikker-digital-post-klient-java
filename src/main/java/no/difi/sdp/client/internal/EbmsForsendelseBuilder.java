@@ -43,11 +43,10 @@ public class EbmsForsendelseBuilder {
         EbmsAktoer ebmsMottaker = EbmsAktoer.meldingsformidler(meldingsformidler);
 
         //SBD
-        String meldingsId = UUID.randomUUID().toString();
         Organisasjonsnummer sbdhMottaker = new Organisasjonsnummer(mottaker.organisasjonsnummer);
         Organisasjonsnummer sbdhAvsender = new Organisasjonsnummer(tekniskAvsender.organisasjonsnummer);
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
-        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, forsendelse.getKonversasjonsId(), sikkerDigitalPost);
+        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, forsendelse.getInstanceIdentifier(), forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 
         //Dokumentpakke
         Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(tekniskAvsender, forsendelse);

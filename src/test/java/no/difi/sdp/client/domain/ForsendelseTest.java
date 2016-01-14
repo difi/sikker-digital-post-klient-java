@@ -71,6 +71,11 @@ public class ForsendelseTest {
     public void test_default_konversasjonsId_er_satt() {
         assertThat(forsendelse.getKonversasjonsId()).isNotEmpty();
     }
+    
+    @Test
+    public void test_default_instanceIdentifier_er_satt() {
+        assertThat(forsendelse.getInstanceIdentifier()).isNotEmpty();
+    }
 
     @Test
 	public void fysisk_post_faar_land_eller_landkode() {
