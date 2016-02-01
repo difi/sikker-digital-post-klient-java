@@ -62,8 +62,12 @@ public class ObjectMother {
 
         Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig();
 
+        String konversjonsId = UUID.randomUUID().toString();
+        String instanceIdentifier = konversjonsId;
+
         return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
-                .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
+                .konversasjonsId(konversjonsId)
+                .instanceIdentifier(instanceIdentifier)
                 .prioritet(Prioritet.PRIORITERT)
                 .spraakkode("NO")
                 .build();
@@ -90,7 +94,7 @@ public class ObjectMother {
     }
 
     public static Behandlingsansvarlig behandlingsansvarlig() {
-        return Behandlingsansvarlig.builder("991825827")
+        return Behandlingsansvarlig.builder("984661185")
                 .avsenderIdentifikator("avsenderId")
                 .fakturaReferanse("ØK1")
                 .build();
