@@ -43,6 +43,7 @@ public class Forsendelse {
     private final Dokumentpakke dokumentpakke;
     private final Behandlingsansvarlig behandlingsansvarlig;
     private String konversasjonsId = UUID.randomUUID().toString();
+    private String instanceIdentifier= UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
     private String spraakkode = "NO";
     private String mpcId;
@@ -94,6 +95,10 @@ public class Forsendelse {
     public Behandlingsansvarlig getBehandlingsansvarlig() {
         return behandlingsansvarlig;
     }
+    
+    public String getInstanceIdentifier(){
+    	return instanceIdentifier;
+    }
 
     /**
      * @param behandlingsansvarlig Ansvarlig avsender av forsendelsen. Dette vil i de aller fleste tilfeller være
@@ -130,6 +135,17 @@ public class Forsendelse {
          */
         public Builder konversasjonsId(String konversasjonsId) {
             target.konversasjonsId = konversasjonsId;
+            return this;
+        }
+        
+        /**
+         * Unik ID opprettet og definert i en initiell melding og siden bruk i alle tilhørende kvitteringer knyttet til den opprinnelige meldingen.
+         * Skal være unik for en avsender.
+         *
+         * Standard er {@link java.util.UUID#randomUUID()}}.
+         */
+        public Builder instanceIdentifier(String instanceIdentifier) {
+            target.instanceIdentifier = instanceIdentifier;
             return this;
         }
 

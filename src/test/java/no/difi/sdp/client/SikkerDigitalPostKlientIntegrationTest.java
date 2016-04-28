@@ -19,6 +19,7 @@ import no.difi.sdp.client.domain.Forsendelse;
 import no.difi.sdp.client.domain.Noekkelpar;
 import no.difi.sdp.client.domain.Prioritet;
 import no.difi.sdp.client.domain.TekniskAvsender;
+import no.difi.sdp.client.domain.exceptions.SendIOException;
 import no.difi.sdp.client.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client.domain.kvittering.KvitteringForespoersel;
@@ -37,6 +38,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class SikkerDigitalPostKlientIntegrationTest {
 
     private SikkerDigitalPostKlient postklient;
+    private SikkerDigitalPostKlient postklientSomTimerUt;
 
     private Noekkelpar avsenderNoekkelpar() {
         try {
@@ -45,7 +47,9 @@ public class SikkerDigitalPostKlientIntegrationTest {
             String keyStoreFile = "/keystore.jce";
 
             KeyStore keyStore = KeyStore.getInstance("JCEKS");
-            keyStore.load(new ClassPathResource(keyStoreFile).getInputStream(), passphrase.toCharArray());
+            ClassPathResource classPathResource = new ClassPathResource(keyStoreFile);
+            boolean exsist = classPathResource.exists();
+            keyStore.load(classPathResource.getInputStream(), passphrase.toCharArray());
             return Noekkelpar.fraKeyStore(keyStore, alias, passphrase);
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste nøkkelpar for kjøring av tester. " +
@@ -56,14 +60,22 @@ public class SikkerDigitalPostKlientIntegrationTest {
 
     @Before
     public void setUp() {
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
-                .connectionTimeout(20, TimeUnit.SECONDS)
+        KlientKonfigurasjon klientKonfigurasjonSomTimerUt = KlientKonfigurasjon.builder()
+                .meldingsformidlerRoot("https://qa2.meldingsformidler.digipost.no/api/ebms")
+                .connectionTimeout(1, TimeUnit.MILLISECONDS)
+                .proxy("sig-web.posten.no", 3128, "http")
                 .build();
 
-        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(avsenderNoekkelpar());
+        TekniskAvsender tekniskAvsender = TekniskAvsender.builder("984661185", avsenderNoekkelpar()).build();
+        postklientSomTimerUt = new SikkerDigitalPostKlient(tekniskAvsender, klientKonfigurasjonSomTimerUt);
 
-        postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
+                .meldingsformidlerRoot("https://qa2.meldingsformidler.digipost.no/api/ebms")
+                .connectionTimeout(10, TimeUnit.SECONDS)
+                .proxy("sig-web.posten.no", 3128, "http")
+                .build();
+
+        postklient = new SikkerDigitalPostKlient(tekniskAvsender, klientKonfigurasjon);
     }
 
     @Test
@@ -72,6 +84,19 @@ public class SikkerDigitalPostKlientIntegrationTest {
         Forsendelse forsendelse = forsendelse();
 
         postklient.send(forsendelse);
+    }
+
+    @Test
+    @Ignore
+    public void resending_ved_timeout() {
+        Forsendelse forsendelse = forsendelse();
+
+        try {
+            postklientSomTimerUt.send(forsendelse);
+        }
+        catch(SendIOException sioE){
+            postklient.send(forsendelse);
+        }
     }
 
     @Test
