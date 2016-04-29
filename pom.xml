@@ -18,11 +18,11 @@
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
-    <artifactId>sikker-digital-post-java-klient</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>Sikker digital post klient</name>
     <groupId>no.difi.sdp</groupId>
+    <artifactId>sikker-digital-post-klient-java</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <name>Sikker digital post-klient</name>
+
     <description>
         Klient for sending av sikker digital post fra offentlige virksomheter.
     </description>
@@ -30,7 +30,7 @@
     <parent>
         <groupId>no.digipost</groupId>
         <artifactId>digipost-open-super-pom</artifactId>
-        <version>0.3</version>
+        <version>1</version>
     </parent>
 
     <dependencies>

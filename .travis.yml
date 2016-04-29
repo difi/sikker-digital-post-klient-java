@@ -1,0 +1,20 @@
+sudo: false
+cache:
+  directories:
+  - $HOME/.m2/repository
+
+language: java
+jdk:
+- oraclejdk8
+
+env:
+  global:
+  - secure: BV1rIUw71UNTyQ5IrdETVS1MGAgf8qPkGMBAF9gF3gS68oW1Svjrx00X9mOSUUymqwWktt4a+NKuHsLxRIBMd8hJm159baagxHx0HWTr5I32e+l04HggS83awNj46FR/a2lpWysrGBwR6bjbJ5LKMpZSLlcPVBnUIoNWUsYKI+8=
+  - secure: fk8Mb+XPyxbouNAnAchAhhgZ52gszqWf3ah87Tc7lGF8mqDEGbHWPNC/Y/Z0t2bp2jVYvZW/u8WgE5CCCW3ZdCKP8eufwa3DRi7GiZwZ3N8Inc1nB9M32Sa+4zIfW/C+fF8j4Tne95sUStRCtfYH0NmJA2D89RoQYjg4TmrMH+k=
+
+before_install:
+  - echo "<settings><servers><server><id>sonatype-oss-nexus-snapshots</id><username>\${env.SONATYPE_USER}</username><password>\${env.SONATYPE_PASS}</password></server></servers></settings>" > ~/.m2/deploy-settings.xml
+
+
+install:
+  - mvn clean deploy -U --settings ~/.m2/deploy-settings.xml
