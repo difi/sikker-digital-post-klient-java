@@ -83,49 +83,26 @@ public class DigipostMessageSenderFacade {
     }
 
     public void send(final EbmsForsendelse ebmsForsendelse) {
-        performRequest(new VoidRequest() {
-            @Override
-            public void exec() {
-                messageSender.send(ebmsForsendelse);
-            }
-        });
+        performRequest((VoidRequest) () -> messageSender.send(ebmsForsendelse));
     }
 
     public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest) {
-        return performRequest(new Request<EbmsApplikasjonsKvittering>() {
-            @Override
-            public EbmsApplikasjonsKvittering exec() {
-                return messageSender.hentKvittering(ebmsPullRequest);
-            }
-        });
+        return performRequest(() -> messageSender.hentKvittering(ebmsPullRequest));
     }
 
     public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest, final EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        return performRequest(new Request<EbmsApplikasjonsKvittering>() {
-            @Override
-            public EbmsApplikasjonsKvittering exec() {
-                return messageSender.hentKvittering(ebmsPullRequest, applikasjonsKvittering);
-            }
-        });
+        return performRequest(() -> messageSender.hentKvittering(ebmsPullRequest, applikasjonsKvittering));
     }
 
     public void bekreft(final EbmsApplikasjonsKvittering kvittering) {
-        performRequest(new VoidRequest() {
-            @Override
-            public void exec() {
-                messageSender.bekreft(kvittering);
-            }
-        });
+        performRequest(() -> messageSender.bekreft(kvittering));
 
     }
 
     private void performRequest(final VoidRequest request) {
-        this.performRequest(new Request<Object>() {
-            @Override
-            public Object exec() {
-                request.exec();
-                return null;
-            }
+        this.performRequest(() -> {
+            request.exec();
+            return null;
         });
     }
 
