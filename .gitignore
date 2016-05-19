@@ -5,6 +5,7 @@ target
 .settings
 *.iml
 src/test/resources/keystore.jce
+src/integration-test/resources/keystore.jce
 
 #Ignore all intellij files
 .idea/*
