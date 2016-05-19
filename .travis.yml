@@ -15,6 +15,5 @@ env:
 before_install:
   - echo "<settings><servers><server><id>sonatype-oss-nexus-snapshots</id><username>\${env.SONATYPE_USER}</username><password>\${env.SONATYPE_PASS}</password></server></servers></settings>" > ~/.m2/deploy-settings.xml
 
-
 install:
   - mvn clean deploy -U --settings ~/.m2/deploy-settings.xml
