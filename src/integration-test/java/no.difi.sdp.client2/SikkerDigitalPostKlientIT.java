@@ -23,8 +23,10 @@ import no.difi.sdp.client2.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 
 import java.security.KeyStore;
@@ -34,7 +36,8 @@ import static no.difi.sdp.client2.ObjectMother.createEbmsAapningsKvittering;
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class SikkerDigitalPostKlientIntegrationTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class SikkerDigitalPostKlientIT {
 
     private SikkerDigitalPostKlient postklient;
 
@@ -56,6 +59,8 @@ public class SikkerDigitalPostKlientIntegrationTest {
 
     @Before
     public void setUp() {
+        System.out.println("Integrasjonstester!!!");
+
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
@@ -67,16 +72,14 @@ public class SikkerDigitalPostKlientIntegrationTest {
     }
 
     @Test
-    @Ignore
-    public void send_digital_forsendelse() {
+    public void A_send_digital_forsendelse() {
         Forsendelse forsendelse = forsendelse();
 
         postklient.send(forsendelse);
     }
 
     @Test
-    @Ignore
-    public void test_hent_kvittering() {
+    public void B_test_hent_kvittering() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
 
         for (int i = 0; i < 10; i++) {
@@ -98,7 +101,7 @@ public class SikkerDigitalPostKlientIntegrationTest {
 
     @Test
     @Ignore
-    public void test_hent_kvittering_og_bekreft_forrige() {
+    public void B_test_hent_kvittering_og_bekreft_forrige() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
         ForretningsKvittering forrigeKvittering = new AapningsKvittering(createEbmsAapningsKvittering());
 
@@ -113,7 +116,7 @@ public class SikkerDigitalPostKlientIntegrationTest {
 
     @Test
     @Ignore
-    public void test_bekreft_kvittering() {
+    public void C_test_bekreft_kvittering() {
         ForretningsKvittering forrigeKvittering = new AapningsKvittering(createEbmsAapningsKvittering());
         postklient.bekreft(forrigeKvittering);
     }
