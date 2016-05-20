@@ -25,14 +25,6 @@
             </activation>
             <properties>
                 <!--
-                  Specifies the build.profile.id property that must be equal than the name of
-                  the directory that contains the profile specific configuration file.
-                  Because the name of the directory that contains the configuration file of the
-                  development profile is dev, we must set the value of the build.profile.id
-                  property to dev.
-                -->
-                <build.profile.id>dev</build.profile.id>
-                <!--
                     Only unit tests are run when the development profile is active
                 -->
                 <skip.integration.tests>true</skip.integration.tests>
@@ -42,14 +34,6 @@
         <profile>
             <id>integration-test</id>
             <properties>
-                <!--
-                    Specifies the build.profile.id property that must be equal than the name of
-                    the directory that contains the profile specific configuration file.
-                    Because the name of the directory that contains the configuration file of the
-                    integration-test profile is integration-test, we must set the value of the
-                    build.profile.id property to integration-test.
-                -->
-                <build.profile.id>integration-test</build.profile.id>
                 <!--
                     Only integration tests are run when the integration-test profile is active
                 -->
@@ -259,11 +243,6 @@
                         <configuration>
                             <!-- Configures the resource directory of our integration tests -->
                             <resources>
-                                <!--
-                                    Placeholders that are found from the files located in the configured resource
-                                    directories are replaced with the property values found from the profile
-                                    specific configuration file.
-                                -->
                                 <resource>
                                     <directory>src/integration-test/resources</directory>
                                 </resource>
