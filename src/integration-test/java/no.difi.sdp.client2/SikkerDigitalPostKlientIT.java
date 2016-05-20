@@ -20,28 +20,37 @@ import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.TekniskAvsender;
 import no.difi.sdp.client2.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client2.domain.kvittering.Feil;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
+import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.IOException;
 import java.security.KeyStore;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.sleep;
 import static no.difi.sdp.client2.ObjectMother.createEbmsAapningsKvittering;
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SikkerDigitalPostKlientIT {
 
-    private SikkerDigitalPostKlient postklient;
+    private static SikkerDigitalPostKlient postklient;
+    private static String MpcId;
 
-    private Noekkelpar avsenderNoekkelpar() {
+    private static Noekkelpar avsenderNoekkelpar() {
         try {
             String alias = "meldingsformidler";
             String passphrase = "abcd1234";
@@ -53,14 +62,13 @@ public class SikkerDigitalPostKlientIT {
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste nøkkelpar for kjøring av tester. " +
                     "For å kjøre integrasjonstester må det ligge inne et gyldig virksomhetssertifikat for test (med tilhørende certificate chain). " +
-                    "Keystore med tilhørende alias og passphrase settes i " + this.getClass().getSimpleName() + ".", e);
+                    "Keystore med tilhørende alias og passphrase settes i  SikkerDigitalPostKlientIT.java .", e);
         }
     }
 
-    @Before
-    public void setUp() {
-        System.out.println("Integrasjonstester!!!");
-
+    @BeforeClass
+    public static void setUp() {
+        MpcId = UUID.randomUUID().toString();
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
@@ -73,17 +81,22 @@ public class SikkerDigitalPostKlientIT {
 
     @Test
     public void A_send_digital_forsendelse() {
-        Forsendelse forsendelse = forsendelse();
+        Forsendelse forsendelse = null;
+        try {
+            forsendelse = forsendelse(MpcId,new ClassPathResource("/test.pdf").getInputStream());
+        } catch (IOException e) {
+            fail("klarte ikke åpne hoveddokument.");
+        }
 
         postklient.send(forsendelse);
     }
 
     @Test
-    public void B_test_hent_kvittering() {
-        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
-
+    public void B_test_hent_kvittering() throws InterruptedException {
+        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(MpcId).build();
+        ForretningsKvittering forretningsKvittering = null;
         for (int i = 0; i < 10; i++) {
-            ForretningsKvittering forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
+            forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
@@ -91,34 +104,16 @@ public class SikkerDigitalPostKlientIT {
                 assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
                 assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
                 assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
+                assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
+
+                postklient.bekreft(forretningsKvittering);
+                break;
             }
             else {
                 System.out.println("Ingen kvittering");
-                break;
+                sleep(1000);
             }
         }
+        assertThat(forretningsKvittering != null).isTrue();
     }
-
-    @Test
-    @Ignore
-    public void B_test_hent_kvittering_og_bekreft_forrige() {
-        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).build();
-        ForretningsKvittering forrigeKvittering = new AapningsKvittering(createEbmsAapningsKvittering());
-
-        ForretningsKvittering forretningsKvittering = postklient.hentKvitteringOgBekreftForrige(kvitteringForespoersel, forrigeKvittering);
-        if (forretningsKvittering != null) {
-            assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
-            assertThat(forretningsKvittering.getMessageId()).isNotEmpty();
-            assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
-            assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
-        }
-    }
-
-    @Test
-    @Ignore
-    public void C_test_bekreft_kvittering() {
-        ForretningsKvittering forrigeKvittering = new AapningsKvittering(createEbmsAapningsKvittering());
-        postklient.bekreft(forrigeKvittering);
-    }
-
 }

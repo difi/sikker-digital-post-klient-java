@@ -205,24 +205,6 @@
         </dependency>
     </dependencies>
     <build>
-        <filters>
-            <!--
-                Ensures that the config.properties file is always loaded from the
-                configuration directory of the active Maven profile. 
-            -->
-            <filter>${project.basedir}/profiles/${build.profile.id}/config.properties</filter>
-        </filters>
-        <resources>
-            <!--
-                Placeholders that are found from the files located in the configured resource
-                directories are replaced with the property values found from the profile
-                specific configuration file.
-            -->
-            <resource>
-                <filtering>true</filtering>
-                <directory>${project.basedir}/src/main/resources</directory>
-            </resource>
-        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -283,7 +265,6 @@
                                     specific configuration file.
                                 -->
                                 <resource>
-                                    <filtering>true</filtering>
                                     <directory>src/integration-test/resources</directory>
                                 </resource>
                             </resources>
