@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client2;
+package no.difi.sdp.client2.integrationtests;
 
+import no.difi.sdp.client2.KlientKonfigurasjon;
+import no.difi.sdp.client2.SikkerDigitalPostKlient;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.TekniskAvsender;
-import no.difi.sdp.client2.domain.kvittering.AapningsKvittering;
-import no.difi.sdp.client2.domain.kvittering.Feil;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
@@ -39,8 +36,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
-import static no.difi.sdp.client2.ObjectMother.createEbmsAapningsKvittering;
-import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
@@ -52,12 +47,13 @@ public class SikkerDigitalPostKlientIT {
 
     private static Noekkelpar avsenderNoekkelpar() {
         try {
-            String alias = "meldingsformidler";
-            String passphrase = "abcd1234";
-            String keyStoreFile = "/keystore.jce";
+            String alias = "digipost testintegrasjon for digital post";
+            String passphrase = System.getenv("smoketest_passphrase") ;
+            String keystorePass= "sophisticatedpassword";
+            String keyStoreFile = "/SmokeTests.jceks";
 
             KeyStore keyStore = KeyStore.getInstance("JCEKS");
-            keyStore.load(new ClassPathResource(keyStoreFile).getInputStream(), passphrase.toCharArray());
+            keyStore.load(new ClassPathResource(keyStoreFile).getInputStream(), keystorePass.toCharArray());
             return Noekkelpar.fraKeyStore(keyStore, alias, passphrase);
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste nøkkelpar for kjøring av tester. " +
@@ -83,13 +79,14 @@ public class SikkerDigitalPostKlientIT {
     public void A_send_digital_forsendelse() {
         Forsendelse forsendelse = null;
         try {
-            forsendelse = forsendelse(MpcId,new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = ObjectMother.forsendelse(MpcId,new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }
 
         postklient.send(forsendelse);
     }
+
 
     @Test
     public void B_test_hent_kvittering() throws InterruptedException {
