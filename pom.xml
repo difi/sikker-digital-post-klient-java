@@ -25,17 +25,17 @@
             </activation>
             <properties>
                 <!--
-                    Only run unit tests when the development profile is active
+                    Run both unit- and smoke tests when the development profile is active
                 -->
                 <skip.smoke.tests>false</skip.smoke.tests>
                 <skip.unit.tests>false</skip.unit.tests>
             </properties>
         </profile>
         <profile>
-            <id>smoke-test</id>
+            <id>smoketest</id>
             <properties>
                 <!--
-                    Only run integration tests when the integration-test profile is active
+                    Only run smoke tests when the smoketest profile is active
                 -->
                 <skip.smoke.tests>false</skip.smoke.tests>
                 <skip.unit.tests>true</skip.unit.tests>
@@ -227,7 +227,7 @@
                             <goal>add-test-source</goal>
                         </goals>
                         <configuration>
-                            <!-- Configures the source directory of our integration tests -->
+                            <!-- Configures the source directory of our smoke tests -->
                             <sources>
                                 <source>src/smoke-test/java</source>
                             </sources>
@@ -241,7 +241,7 @@
                             <goal>add-test-resource</goal>
                         </goals>
                         <configuration>
-                            <!-- Configures the resource directory of our integration tests -->
+                            <!-- Configures the resource directory of our smoke tests -->
                             <resources>
                                 <resource>
                                     <directory>src/smoke-test/resources</directory>
@@ -257,9 +257,9 @@
                 <configuration>
                     <!-- Skips unit tests if the value of skip.unit.tests property is true -->
                     <skipTests>${skip.unit.tests}</skipTests>
-                    <!-- Excludes integration tests when unit tests are run -->
                     <excludes>
-                        <exclude>**/*ST*.java</exclude>
+                        <exclude>**/*ST*.java</exclude> <!-- Exludes smoke tests when unit tests are run -->
+                        <exclude>**/*IT*.java</exclude> <!-- Exludes integration tests when unit tests are run -->
                     </excludes>
                 </configuration>
             </plugin>
@@ -279,10 +279,10 @@
                         </goals>
                         <configuration>
                             <includes>
-                                <include>**/*ST.java</include>
+                                <include>**/*ST.java</include> <!-- Includes smoke tests -->
                             </includes>
                             <!--
-                                Skips integration tests if the value of skip.integration.tests
+                                Skips integration- and smoke tests if the value of skip.smoke.tests
                                 property is true
                             -->
                             <skipTests>${skip.smoke.tests}</skipTests>
