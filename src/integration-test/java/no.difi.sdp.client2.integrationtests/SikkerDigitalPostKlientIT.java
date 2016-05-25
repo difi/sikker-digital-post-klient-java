@@ -33,6 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -69,22 +70,27 @@ public class SikkerDigitalPostKlientIT {
     }
 
     private static void populateOrgNumberFromCertificate(){
+        String klarteIkkeFinneVirksomhetsSertifikatet = "Klarte ikke hente ut virksomhetssertifikatet fra keystoren.";
+        String oppsett = "For å kjøre integrasjonstester må det importeres et gyldig virksomhetssertifikat for test i src/integration-test/resources/SmokeTests.jceks med alias == \"virksomhetssertifikat\". "+"Eksempel på import kommando: keytool -v -importkeystore -srckeystore virksomhet.p12 -srcstoretype PKCS12 -srcalias \"digipost testintegrasjon for digital post\" -destalias \"virksomhetssertifikat\" -destkeystore SmokeTests.jceks -deststoretype jceks";
         if(keyStore == null)
             initKeyStore();
         try {
             X509Certificate cert = (X509Certificate) keyStore.getCertificate("virksomhetssertifikat");
+            if(cert == null){
+                throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet+" "+ oppsett);
+            }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
             OrgNumber = IETFUtils.valueToString(serialnumber.getFirst().getValue());
         } catch (CertificateEncodingException e) {
             throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.");
         } catch (KeyStoreException e) {
-            throw new RuntimeException("Klarte ikke hente ut virksomhetssertifikatet fra keystoren. Husk at -destalias må være virksomhetssertifikat");
+            throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet+" "+ oppsett);
         }
     }
 
     private static void initKeyStore(){
-        String feilmelding = "keytool -v -importkeystore -srckeystore virksomhet.p12 -srcstoretype PKCS12 -srcalias \"digipost testintegrasjon for digital post\" -destalias \"virksomhetssertifikat\" -destkeystore SmokeTests.jceks -deststoretype jceks";
+
         try {
             String keystorePass = "sophisticatedpassword";
             String keyStoreFile = "/SmokeTests.jceks";
@@ -93,9 +99,7 @@ public class SikkerDigitalPostKlientIT {
             keyStore.load(new ClassPathResource(keyStoreFile).getInputStream(), keystorePass.toCharArray());
         }
         catch (Exception e) {
-            throw new RuntimeException("Kunne ikke laste nøkkelpar for kjøring av tester. " +
-                "For å kjøre integrasjonstester må det ligge inne et gyldig virksomhetssertifikat for test (med tilhørende certificate chain). " +
-                feilmelding, e);
+            throw new RuntimeException("Kunne ikke initiere keystoren. Prøv å sjekk ut keystoren igjen og start på nytt. ", e);
         }
     }
 
