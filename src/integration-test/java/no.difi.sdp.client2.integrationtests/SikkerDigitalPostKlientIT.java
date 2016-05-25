@@ -63,21 +63,30 @@ public class SikkerDigitalPostKlientIT {
         String alias = "virksomhetssertifikat";
         String passphrase = System.getenv("smoketest_passphrase");
         if(passphrase == null){
-            throw new RuntimeException("Klarte ikke hente ut system env variabelen 'smoketest_passphrase'. Sett denne og prøv på nytt.");
+            throw new RuntimeException(
+                                        "Klarte ikke hente ut system env variabelen 'smoketest_passphrase'.\n "+
+                                        "Sett sertifikatpassordet i en env variabel: \n" +
+                                        "   export smoketest_passphrase=PASSPHRASE");
         }
 
         return Noekkelpar.fraKeyStore(keyStore, alias, passphrase);
     }
 
     private static void populateOrgNumberFromCertificate(){
-        String klarteIkkeFinneVirksomhetsSertifikatet = "Klarte ikke hente ut virksomhetssertifikatet fra keystoren.";
-        String oppsett = "For å kjøre integrasjonstester må det importeres et gyldig virksomhetssertifikat for test i src/integration-test/resources/SmokeTests.jceks med alias == \"virksomhetssertifikat\". "+"Eksempel på import kommando: keytool -v -importkeystore -srckeystore virksomhet.p12 -srcstoretype PKCS12 -srcalias \"digipost testintegrasjon for digital post\" -destalias \"virksomhetssertifikat\" -destkeystore SmokeTests.jceks -deststoretype jceks";
+        String klarteIkkeFinneVirksomhetsSertifikatet = "Klarte ikke hente ut virksomhetssertifikatet fra keystoren. \n";
+        String oppsett = "For å kjøre integrasjonstester må det importeres et gyldig virksomhetssertifikat. \n"+
+                        "1) Hent alias(siste avsnitt, første del før komma): \n" +
+                        "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
+                        "2) Importer sertifikatet i keystore: \n" +
+                        "       keytool -v -importkeystore -srckeystore \"VIRKSOMHETSSERTIFIKAT.p12\" -srcstoretype PKCS12 -srcalias \"ALIAS\" -destalias \"virksomhetssertifikat\" -destkeystore \"src/integration-test/resources/SmokeTests.jceks\" -deststoretype jceks -storepass sophisticatedpassword \n"+
+                        "3) Sett sertifikatpassordet i en env variabel: \n"+
+                        "       export smoketest_passphrase=PASSPHRASE";
         if(keyStore == null)
             initKeyStore();
         try {
             X509Certificate cert = (X509Certificate) keyStore.getCertificate("virksomhetssertifikat");
             if(cert == null){
-                throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet+" "+ oppsett);
+                throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet + oppsett);
             }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
@@ -85,7 +94,7 @@ public class SikkerDigitalPostKlientIT {
         } catch (CertificateEncodingException e) {
             throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.");
         } catch (KeyStoreException e) {
-            throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet+" "+ oppsett);
+            throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet + oppsett);
         }
     }
 
