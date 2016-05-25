@@ -41,7 +41,7 @@ import static java.util.Arrays.asList;
  */
 public class ObjectMother {
 
-    public static Forsendelse forsendelse(String mpcId, InputStream dokumentStream) {
+    public static Forsendelse forsendelse(String orgNumber, String mpcId, InputStream dokumentStream) {
         DigitalPost digitalPost = digitalPost();
 
         Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", dokumentStream)
@@ -52,7 +52,7 @@ public class ObjectMother {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig();
+        Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig(orgNumber);
 
         return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
                 .konversasjonsId(UUID.randomUUID().toString())
@@ -62,8 +62,8 @@ public class ObjectMother {
                 .build();
     }
 
-    public static TekniskAvsender tekniskAvsenderMedSertifikat(final Noekkelpar noekkelpar) {
-        return TekniskAvsender.builder("988015814", noekkelpar)
+    public static TekniskAvsender tekniskAvsenderMedSertifikat(final String orgNumber,final Noekkelpar noekkelpar) {
+        return TekniskAvsender.builder(orgNumber, noekkelpar)
                 .build();
     }
 
@@ -88,8 +88,8 @@ public class ObjectMother {
     }
 
 
-    public static Behandlingsansvarlig behandlingsansvarlig() {
-        return Behandlingsansvarlig.builder("988015814")
+    public static Behandlingsansvarlig behandlingsansvarlig(final String orgNumber) {
+        return Behandlingsansvarlig.builder(orgNumber)
                 .build();
     }
 
@@ -97,7 +97,7 @@ public class ObjectMother {
         return dpmottakerSertifikatTest();
     }
 
-    public static Sertifikat dpmottakerSertifikatTest() {
+    private static Sertifikat dpmottakerSertifikatTest() {
         return Sertifikat.fraBase64X509String("MIIE7jCCA9agAwIBAgIKGBZrmEgzTHzeJjANBgkqhkiG9w0BAQsFADBRMQswCQYD" +
                 "VQQGEwJOTzEdMBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIzAhBgNVBAMM" +
                 "GkJ1eXBhc3MgQ2xhc3MgMyBUZXN0NCBDQSAzMB4XDTE0MDQyNDEyMzA1MVoXDTE3" +
