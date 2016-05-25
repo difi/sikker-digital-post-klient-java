@@ -25,9 +25,9 @@
             </activation>
             <properties>
                 <!--
-                    Run both unit- and smoke tests when the development profile is active
+                    Only run unit tests when the development profile is active
                 -->
-                <skip.smoke.tests>false</skip.smoke.tests>
+                <skip.smoke.tests>true</skip.smoke.tests>
                 <skip.unit.tests>false</skip.unit.tests>
             </properties>
         </profile>
