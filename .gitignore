@@ -4,8 +4,7 @@ target
 .project
 .settings
 *.iml
-src/test/resources/keystore.jce
-src/integration-test/resources/SmokeTests.jceks
+*.jceks
 
 #Ignore all intellij files
 .idea/*
