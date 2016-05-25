@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client2.integrationtests;
+package no.difi.sdp.client2.smoketest;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
@@ -48,7 +48,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SikkerDigitalPostKlientIT {
+public class SikkerDigitalPostKlientST {
 
     private static SikkerDigitalPostKlient postklient;
     private static String MpcId;
@@ -93,7 +93,7 @@ public class SikkerDigitalPostKlientIT {
                         "1) Hent alias(siste avsnitt, første del før komma): \n" +
                         "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
                         "2) Importer sertifikatet i keystore: \n" +
-                        "       keytool -v -importkeystore -srckeystore \"VIRKSOMHETSSERTIFIKAT.p12\" -srcstoretype PKCS12 -srcalias \"ALIAS\" -destalias \"virksomhetssertifikat\" -destkeystore \"src/integration-test/resources/SmokeTests.jceks\" -deststoretype jceks -storepass sophisticatedpassword \n"+
+                        "       keytool -v -importkeystore -srckeystore \"VIRKSOMHETSSERTIFIKAT.p12\" -srcstoretype PKCS12 -srcalias \"ALIAS\" -destalias \"virksomhetssertifikat\" -destkeystore \"src/smoke-test/resources/SmokeTests.jceks\" -deststoretype jceks -storepass sophisticatedpassword \n"+
                         "3) Sett sertifikatpassordet i en env variabel: \n"+
                         "       export smoketest_passphrase=PASSPHRASE";
         if(keyStore == null)

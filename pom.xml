@@ -27,17 +27,17 @@
                 <!--
                     Only run unit tests when the development profile is active
                 -->
-                <skip.integration.tests>true</skip.integration.tests>
+                <skip.smoke.tests>false</skip.smoke.tests>
                 <skip.unit.tests>false</skip.unit.tests>
             </properties>
         </profile>
         <profile>
-            <id>integration-test</id>
+            <id>smoke-test</id>
             <properties>
                 <!--
                     Only run integration tests when the integration-test profile is active
                 -->
-                <skip.integration.tests>false</skip.integration.tests>
+                <skip.smoke.tests>false</skip.smoke.tests>
                 <skip.unit.tests>true</skip.unit.tests>
             </properties>
         </profile>
@@ -229,7 +229,7 @@
                         <configuration>
                             <!-- Configures the source directory of our integration tests -->
                             <sources>
-                                <source>src/integration-test/java</source>
+                                <source>src/smoke-test/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -244,7 +244,7 @@
                             <!-- Configures the resource directory of our integration tests -->
                             <resources>
                                 <resource>
-                                    <directory>src/integration-test/resources</directory>
+                                    <directory>src/smoke-test/resources</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -259,7 +259,7 @@
                     <skipTests>${skip.unit.tests}</skipTests>
                     <!-- Excludes integration tests when unit tests are run -->
                     <excludes>
-                        <exclude>**/*IT*.java</exclude>
+                        <exclude>**/*ST*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -278,11 +278,14 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
+                            <includes>
+                                <include>**/*ST.java</include>
+                            </includes>
                             <!--
                                 Skips integration tests if the value of skip.integration.tests
                                 property is true
                             -->
-                            <skipTests>${skip.integration.tests}</skipTests>
+                            <skipTests>${skip.smoke.tests}</skipTests>
                         </configuration>
                     </execution>
                 </executions>
