@@ -30,7 +30,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,12 +50,9 @@ public class ObjectMother {
     }
 
     public static Forsendelse forsendelse() {
-        return forsendelse(UUID.randomUUID().toString(),new ByteArrayInputStream("hei".getBytes()));
-    }
-    public static Forsendelse forsendelse(String mpcId, InputStream dokumentStream) {
         DigitalPost digitalPost = digitalPost();
 
-        Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", dokumentStream)
+        Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
                 .mimeType("application/pdf")
                 .build();
 
@@ -69,7 +65,6 @@ public class ObjectMother {
         return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
                 .konversasjonsId(UUID.randomUUID().toString())
                 .prioritet(Prioritet.PRIORITERT)
-                .mpcId(mpcId)
                 .spraakkode("NO")
                 .build();
     }
@@ -96,7 +91,7 @@ public class ObjectMother {
 
     public static Behandlingsansvarlig behandlingsansvarlig() {
         return Behandlingsansvarlig.builder("984661185")
-                .avsenderIdentifikator("digipost")
+                .avsenderIdentifikator("avsenderId")
                 .fakturaReferanse("ØK1")
                 .build();
     }

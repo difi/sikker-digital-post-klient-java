@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client2.integrationtests;
+package no.difi.sdp.client2.smoketest;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
@@ -33,7 +33,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -49,12 +48,26 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SikkerDigitalPostKlientIT {
+public class SikkerDigitalPostKlientST {
 
     private static SikkerDigitalPostKlient postklient;
     private static String MpcId;
     private static String OrgNumber;
     private static KeyStore keyStore;
+
+    @BeforeClass
+    public static void setUp() {
+        MpcId = UUID.randomUUID().toString();
+        populateOrgNumberFromCertificate();
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
+                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .connectionTimeout(20, TimeUnit.SECONDS)
+                .build();
+
+        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrgNumber,avsenderNoekkelpar());
+
+        postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
+    }
 
     private static Noekkelpar avsenderNoekkelpar() {
         if(keyStore == null)
@@ -66,7 +79,9 @@ public class SikkerDigitalPostKlientIT {
             throw new RuntimeException(
                                         "Klarte ikke hente ut system env variabelen 'smoketest_passphrase'.\n "+
                                         "Sett sertifikatpassordet i en env variabel: \n" +
-                                        "   export smoketest_passphrase=PASSPHRASE");
+                                        "   export smoketest_passphrase=PASSPHRASE \n" +
+                                        "Hvis du debugger må env_variabel settes i test run configuration."
+            );
         }
 
         return Noekkelpar.fraKeyStore(keyStore, alias, passphrase);
@@ -78,7 +93,7 @@ public class SikkerDigitalPostKlientIT {
                         "1) Hent alias(siste avsnitt, første del før komma): \n" +
                         "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
                         "2) Importer sertifikatet i keystore: \n" +
-                        "       keytool -v -importkeystore -srckeystore \"VIRKSOMHETSSERTIFIKAT.p12\" -srcstoretype PKCS12 -srcalias \"ALIAS\" -destalias \"virksomhetssertifikat\" -destkeystore \"src/integration-test/resources/SmokeTests.jceks\" -deststoretype jceks -storepass sophisticatedpassword \n"+
+                        "       keytool -v -importkeystore -srckeystore \"VIRKSOMHETSSERTIFIKAT.p12\" -srcstoretype PKCS12 -srcalias \"ALIAS\" -destalias \"virksomhetssertifikat\" -destkeystore \"src/smoke-test/resources/SmokeTests.jceks\" -deststoretype jceks -storepass sophisticatedpassword \n"+
                         "3) Sett sertifikatpassordet i en env variabel: \n"+
                         "       export smoketest_passphrase=PASSPHRASE";
         if(keyStore == null)
@@ -110,20 +125,6 @@ public class SikkerDigitalPostKlientIT {
         catch (Exception e) {
             throw new RuntimeException("Kunne ikke initiere keystoren. Prøv å sjekk ut keystoren igjen og start på nytt. ", e);
         }
-    }
-
-    @BeforeClass
-    public static void setUp() {
-        MpcId = UUID.randomUUID().toString();
-        populateOrgNumberFromCertificate();
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
-                .connectionTimeout(20, TimeUnit.SECONDS)
-                .build();
-
-        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrgNumber,avsenderNoekkelpar());
-
-        postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }
 
     @Test

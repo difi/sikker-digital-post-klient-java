@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.difi.sdp.client2.integrationtests;
+package no.difi.sdp.client2.smoketest;
 
 import no.difi.sdp.client2.domain.Behandlingsansvarlig;
 import no.difi.sdp.client2.domain.Dokument;
