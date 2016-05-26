@@ -5,9 +5,11 @@ target
 .settings
 *.iml
 *.jceks
+*.p12
 
 #Ignore all intellij files
 .idea/*
 
 # ... except these
 !.idea/codeStyleSettings.xml
+src/integration-test/
