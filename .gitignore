@@ -4,12 +4,12 @@ target
 .project
 .settings
 *.iml
-*.jceks
 *.p12
+*.jceks
 
 #Ignore all intellij files
 .idea/*
 
 # ... except these
 !.idea/codeStyleSettings.xml
-src/integration-test/
+!src/main/resources/TrustStore.jceks
