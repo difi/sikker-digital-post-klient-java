@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -52,30 +53,56 @@ public class SikkerDigitalPostKlientST {
 
     private static SikkerDigitalPostKlient postklient;
     private static String MpcId;
-    private static String OrgNumber;
+    private static String OrganizationNumber;
     private static KeyStore keyStore;
+
+    public static final String VIRKSOMHETSSERTIFIKAT_PASSORD = "virksomhetssertifikat_passord";
+    private static String virksomhetssertifikatPassordValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PASSORD);
+
+    public static final String VIRKSOMHETSSERTIFIKAT_ALIAS = "virksomhetssertifikat_alias";
+    private static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS);
+
+    public static final String VIRKSOMHETSSERTIFIKAT_STI = "virksomhetssertifikat_sti";
+    private static String virksomhetssertifikatStiValue = System.getenv(VIRKSOMHETSSERTIFIKAT_STI);
 
     @BeforeClass
     public static void setUp() {
+        verifiserEnvironmentVariablerSatt();
+
+        keyStore = getVirksomhetssertifikat();
         MpcId = UUID.randomUUID().toString();
-        populateOrgNumberFromCertificate();
+        OrganizationNumber = getOrgNumberFromCertificate();
+
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
-        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrgNumber,avsenderNoekkelpar());
+        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumber, avsenderNoekkelpar());
 
         postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }
 
-    private static Noekkelpar avsenderNoekkelpar() {
-        if(keyStore == null)
-            initKeyStore();
+    private static void verifiserEnvironmentVariablerSatt() {
+        throwEnvironmentVariabelIkkeSatt("sti", virksomhetssertifikatStiValue);
+        throwEnvironmentVariabelIkkeSatt("alias", virksomhetssertifikatAliasValue);
+        throwEnvironmentVariabelIkkeSatt("passord", virksomhetssertifikatPassordValue);
+    }
 
-        String alias = "virksomhetssertifikat";
-        String passphrase = System.getenv("smoketest_passphrase");
-        if(passphrase == null){
+    private static void throwEnvironmentVariabelIkkeSatt(String variabel, String value) {
+        String oppsett = "For å kjøre smoketestene må det brukes et gyldig virksomhetssertifikat. \n"+
+                "1) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_STI + "' til full sti til virksomhetsssertifikatet. \n" +
+                "2) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_ALIAS + "' til aliaset (siste avsnitt, første del før komma): \n" +
+                "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
+                "3) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PASSORD + "' til passordet til virksomhetssertifikatet. \n";
+
+        if(value == null){
+            throw new RuntimeException(String.format("Finner ikke %s til virksomhetssertifikat. \n %s", variabel, oppsett));
+        }
+    }
+
+    private static Noekkelpar avsenderNoekkelpar() {
+        if(virksomhetssertifikatPassordValue == null){
             throw new RuntimeException(
                                         "Klarte ikke hente ut system env variabelen 'smoketest_passphrase'.\n "+
                                         "Sett sertifikatpassordet i en env variabel: \n" +
@@ -84,46 +111,36 @@ public class SikkerDigitalPostKlientST {
             );
         }
 
-        return Noekkelpar.fraKeyStore(keyStore, alias, passphrase);
+        return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPassordValue);
     }
 
-    private static void populateOrgNumberFromCertificate(){
-        String klarteIkkeFinneVirksomhetsSertifikatet = "Klarte ikke hente ut virksomhetssertifikatet fra keystoren. \n";
-        String oppsett = "For å kjøre integrasjonstester må det importeres et gyldig virksomhetssertifikat. \n"+
-                        "1) Hent alias(siste avsnitt, første del før komma): \n" +
-                        "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
-                        "2) Importer sertifikatet i keystore: \n" +
-                        "       keytool -v -importkeystore -srckeystore \"VIRKSOMHETSSERTIFIKAT.p12\" -srcstoretype PKCS12 -srcalias \"ALIAS\" -destalias \"virksomhetssertifikat\" -destkeystore \"src/smoke-test/resources/SmokeTests.jceks\" -deststoretype jceks -storepass sophisticatedpassword \n"+
-                        "3) Sett sertifikatpassordet i en env variabel: \n"+
-                        "       export smoketest_passphrase=PASSPHRASE";
-        if(keyStore == null)
-            initKeyStore();
+    private static String getOrgNumberFromCertificate(){
+
+
         try {
-            X509Certificate cert = (X509Certificate) keyStore.getCertificate("virksomhetssertifikat");
+            X509Certificate cert = (X509Certificate) keyStore.getCertificate(virksomhetssertifikatAliasValue);
             if(cert == null){
-                throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet + oppsett);
+                throw new RuntimeException(String.format("Klarte ikke hente ut virksomhetssertifikatet fra keystoren med alias '%s'", virksomhetssertifikatAliasValue));
             }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
-            OrgNumber = IETFUtils.valueToString(serialnumber.getFirst().getValue());
+            return IETFUtils.valueToString(serialnumber.getFirst().getValue());
         } catch (CertificateEncodingException e) {
-            throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.");
+            throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.",e);
         } catch (KeyStoreException e) {
-            throw new RuntimeException(klarteIkkeFinneVirksomhetsSertifikatet + oppsett);
+            throw new RuntimeException("Klarte ikke hente ut virksomhetssertifikatet fra keystoren.",e);
         }
     }
 
-    private static void initKeyStore(){
+    private static KeyStore getVirksomhetssertifikat(){
 
         try {
-            String keystorePass = "sophisticatedpassword";
-            String keyStoreFile = "/SmokeTests.jceks";
-
-            keyStore = KeyStore.getInstance("JCEKS");
-            keyStore.load(new ClassPathResource(keyStoreFile).getInputStream(), keystorePass.toCharArray());
+            keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(new FileInputStream(virksomhetssertifikatStiValue), virksomhetssertifikatPassordValue.toCharArray());
+            return keyStore;
         }
         catch (Exception e) {
-            throw new RuntimeException("Kunne ikke initiere keystoren. Prøv å sjekk ut keystoren igjen og start på nytt. ", e);
+            throw new RuntimeException("Kunne ikke initiere keystoren. Legg virksomhetssertifikatet.p12 i src/smoke-test/resources/. ", e);
         }
     }
 
@@ -131,7 +148,7 @@ public class SikkerDigitalPostKlientST {
     public void A_send_digital_forsendelse() {
         Forsendelse forsendelse = null;
         try {
-            forsendelse = ObjectMother.forsendelse(OrgNumber, MpcId,new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = ObjectMother.forsendelse(OrganizationNumber, MpcId,new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }

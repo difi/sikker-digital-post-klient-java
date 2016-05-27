@@ -240,7 +240,7 @@ public class CreateSignatureTest {
     		//System.err.println(new String(signature2.getBytes()));
 	    	NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
 	    	DOMValidateContext valContext = new DOMValidateContext
-	    		    (noekkelpar.getSertifikat().getX509Certificate().getPublicKey(), nl.item(0));
+	    		    (noekkelpar.getVirksomhetssertifikat().getX509Certificate().getPublicKey(), nl.item(0));
 	    	valContext.setURIDereferencer(new URIDereferencer() {
 				@Override
 				public Data dereference(final URIReference uriReference, final XMLCryptoContext context) throws URIReferenceException {

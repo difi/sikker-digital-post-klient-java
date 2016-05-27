@@ -39,11 +39,19 @@ import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
-     public static Noekkelpar noekkelpar() {
+    public static final String VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
+    public static final String VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
+
+    public static Noekkelpar noekkelpar() {
+            return Noekkelpar.fraKeyStore(selvsignertKeyStore(), VIRKSOMHETSSERTIFIKAT_ALIAS, VIRKSOMHETSSERTIFIKAT_PASSORD);
+    }
+
+    public static KeyStore selvsignertKeyStore(){
         try {
             KeyStore keyStore = KeyStore.getInstance("jks");
             keyStore.load(new ClassPathResource("/selfsigned-keystore.jks").getInputStream(), "password1234".toCharArray());
-            return Noekkelpar.fraKeyStore(keyStore, "avsender", "password1234");
+            return keyStore;
+
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste keystore", e);
         }

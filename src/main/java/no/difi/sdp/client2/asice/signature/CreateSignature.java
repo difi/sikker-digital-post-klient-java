@@ -133,9 +133,9 @@ public class CreateSignature {
         ));
 
         // Generer XAdES-dokument som skal signeres, informasjon om nøkkel brukt til signering og informasjon om hva som er signert
-        Document document = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getSertifikat());
+        Document document = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getVirksomhetssertifikat());
 
-        KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getCertificateChain());
+        KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getVirksomhetssertifikatKjede());
         SignedInfo signedInfo = xmlSignatureFactory.newSignedInfo(canonicalizationMethod, signatureMethod, references);
 
         // Definer signatur over XAdES-dokument
@@ -143,7 +143,7 @@ public class CreateSignature {
         XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, singletonList(xmlObject), "Signature", null);
 
         try {
-            xmlSignature.sign(new DOMSignContext(noekkelpar.getPrivateKey(), document));
+            xmlSignature.sign(new DOMSignContext(noekkelpar.getVirksomhetssertifikatPrivatnøkkel(), document));
         } catch (MarshalException e) {
             throw new XmlKonfigurasjonException("Klarte ikke å lese ASiC-E XML for signering", e);
         } catch (XMLSignatureException e) {

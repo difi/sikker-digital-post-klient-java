@@ -37,8 +37,8 @@ public class CreateCMSDocumentTest {
     @Before
     public void setUp() {
         Noekkelpar noekkelpar = ObjectMother.noekkelpar();
-        privateKey = noekkelpar.getPrivateKey();
-        sertifikat = noekkelpar.getSertifikat();
+        privateKey = noekkelpar.getVirksomhetssertifikatPrivatnøkkel();
+        sertifikat = noekkelpar.getVirksomhetssertifikat();
 
         sut = new CreateCMSDocument();
     }

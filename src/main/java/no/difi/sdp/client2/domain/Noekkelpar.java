@@ -17,6 +17,7 @@ package no.difi.sdp.client2.domain;
 
 import no.difi.sdp.client2.domain.exceptions.NoekkelException;
 import no.digipost.api.interceptors.KeyStoreInfo;
+import org.springframework.core.io.ClassPathResource;
 
 import java.security.Key;
 import java.security.KeyStore;
@@ -29,44 +30,60 @@ import java.security.cert.Certificate;
 public class Noekkelpar {
 
     private KeyStore keyStore;
-    private String alias;
-    private String password;
+    private KeyStore trustStore;
+    private String virksomhetssertifikatAlias;
+    private String virksomhetssertifikatPassord;
 
-    private Noekkelpar(KeyStore keyStore, String alias, String password) {
+    private static final String TRUST_STORE_PASSORD = "sophisticatedpassword";
+    private static final String TRUST_STORE_STI = "/TrustStore.jceks";
+
+    private Noekkelpar(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
+        this(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+        this.trustStore = trustStore;
+    }
+
+    private Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
         this.keyStore = keyStore;
-        this.alias = alias;
-        this.password = password;
+        this.virksomhetssertifikatAlias = virksomhetssertifikatAlias;
+        this.virksomhetssertifikatPassord = virksomhetssertifikatPassord;
     }
 
     public String getAlias() {
-        return alias;
+        return virksomhetssertifikatAlias;
     }
 
     public KeyStore getKeyStore() {
         return keyStore;
     }
 
+    public KeyStore getTrustStore() { return trustStore; }
+
     public KeyStoreInfo getKeyStoreInfo() {
-        return new KeyStoreInfo(keyStore, alias, password);
+        if(trustStore != null)
+        {
+            return new KeyStoreInfo(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+        }
+
+        return new KeyStoreInfo(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
     }
 
-    public Sertifikat getSertifikat() {
-        return Sertifikat.fraKeyStore(keyStore, alias);
+    public Sertifikat getVirksomhetssertifikat() {
+        return Sertifikat.fraKeyStore(keyStore, virksomhetssertifikatAlias);
     }
 
-    public Certificate[] getCertificateChain() {
+    public Certificate[] getVirksomhetssertifikatKjede() {
         try {
-            return keyStore.getCertificateChain(alias);
+            return keyStore.getCertificateChain(virksomhetssertifikatAlias);
         } catch (KeyStoreException e) {
-            throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Er KeyStore initialisiert?", e);
+            throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Er KeyStore initialisiert?", e);
         }
     }
 
-    public PrivateKey getPrivateKey() {
+    public PrivateKey getVirksomhetssertifikatPrivatnøkkel() {
         try {
-            Key key = keyStore.getKey(alias, password.toCharArray());
+            Key key = keyStore.getKey(virksomhetssertifikatAlias, virksomhetssertifikatPassord.toCharArray());
             if (!(key instanceof PrivateKey)) {
-                throw new NoekkelException("Kunne ikke hente privat nøkkel fra key store. Forventet å få en PrivateKey, fikk " + key.getClass().getCanonicalName());
+                throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Forventet å få en PrivateKey, fikk " + key.getClass().getCanonicalName());
             }
             return (PrivateKey) key;
         } catch (KeyStoreException e) {
@@ -78,7 +95,26 @@ public class Noekkelpar {
         }
     }
 
-    public static Noekkelpar fraKeyStore(KeyStore keyStore, String alias, String password) {
-        return new Noekkelpar(keyStore, alias, password);
+    public static Noekkelpar fraKeyStore(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
+        return new Noekkelpar(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+    }
+
+    public static Noekkelpar fraKeyStoreUtenTrustStore(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
+        return new Noekkelpar(keyStore, getStandardTrustStore(), virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+    }
+
+    private static KeyStore getStandardTrustStore() {
+        try {
+            KeyStore trustStore = KeyStore.getInstance("JCEKS");
+            trustStore.load(new ClassPathResource(TRUST_STORE_STI).getInputStream(), TRUST_STORE_PASSORD.toCharArray());
+            return trustStore;
+        }
+        catch (Exception e) {
+            throw new NoekkelException(String.format("Kunne ikke initiere trust store. Fant ikke '%s'", TRUST_STORE_STI), e);
+        }
+    }
+
+    public static Noekkelpar fraKeyStoreOgTrustStore(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword) {
+        return new Noekkelpar(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword);
     }
 }
