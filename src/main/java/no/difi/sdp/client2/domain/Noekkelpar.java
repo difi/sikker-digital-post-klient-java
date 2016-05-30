@@ -32,20 +32,20 @@ public class Noekkelpar {
     private KeyStore keyStore;
     private KeyStore trustStore;
     private String virksomhetssertifikatAlias;
-    private String virksomhetssertifikatPassord;
+    private String virksomhetssertifikatPassword;
 
-    private static final String TRUST_STORE_PASSORD = "sophisticatedpassword";
-    private static final String TRUST_STORE_STI = "/TrustStore.jceks";
+    private static final String DEFAULT_TRUST_STORE_PASSWORD = "sophisticatedpassword";
+    private static final String DEFAULT_TRUST_STORE_PATH = "/TrustStore.jceks";
 
     private Noekkelpar(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
         this(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
         this.trustStore = trustStore;
     }
 
-    private Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
+    private Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword) {
         this.keyStore = keyStore;
         this.virksomhetssertifikatAlias = virksomhetssertifikatAlias;
-        this.virksomhetssertifikatPassord = virksomhetssertifikatPassord;
+        this.virksomhetssertifikatPassword = virksomhetssertifikatPassword;
     }
 
     public String getAlias() {
@@ -61,10 +61,10 @@ public class Noekkelpar {
     public KeyStoreInfo getKeyStoreInfo() {
         if(trustStore != null)
         {
-            return new KeyStoreInfo(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+            return new KeyStoreInfo(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword);
         }
 
-        return new KeyStoreInfo(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+        return new KeyStoreInfo(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword);
     }
 
     public Sertifikat getVirksomhetssertifikat() {
@@ -81,17 +81,17 @@ public class Noekkelpar {
 
     public PrivateKey getVirksomhetssertifikatPrivatnøkkel() {
         try {
-            Key key = keyStore.getKey(virksomhetssertifikatAlias, virksomhetssertifikatPassord.toCharArray());
+            Key key = keyStore.getKey(virksomhetssertifikatAlias, virksomhetssertifikatPassword.toCharArray());
             if (!(key instanceof PrivateKey)) {
-                throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Forventet å få en PrivateKey, fikk " + key.getClass().getCanonicalName());
+                throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Forventet å få en PrivateKey, fikk " + key.getClass().getCanonicalName());
             }
             return (PrivateKey) key;
         } catch (KeyStoreException e) {
-            throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Er KeyStore initialisiert?", e);
+            throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Er KeyStore initialisiert?", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Verifiser at nøkkelen er støttet på plattformen", e);
+            throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Verifiser at nøkkelen er støttet på plattformen", e);
         } catch (UnrecoverableKeyException e) {
-            throw new NoekkelException("Kunne ikke hente privat nøkkel fra KeyStore. Sjekk at passordet er riktig.", e);
+            throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Sjekk at passordet er riktig.", e);
         }
     }
 
@@ -106,11 +106,11 @@ public class Noekkelpar {
     private static KeyStore getStandardTrustStore() {
         try {
             KeyStore trustStore = KeyStore.getInstance("JCEKS");
-            trustStore.load(new ClassPathResource(TRUST_STORE_STI).getInputStream(), TRUST_STORE_PASSORD.toCharArray());
+            trustStore.load(new ClassPathResource(DEFAULT_TRUST_STORE_PATH).getInputStream(), DEFAULT_TRUST_STORE_PASSWORD.toCharArray());
             return trustStore;
         }
         catch (Exception e) {
-            throw new NoekkelException(String.format("Kunne ikke initiere trust store. Fant ikke '%s'", TRUST_STORE_STI), e);
+            throw new NoekkelException(String.format("Kunne ikke initiere trust store. Fant ikke '%s'", DEFAULT_TRUST_STORE_PATH), e);
         }
     }
 
