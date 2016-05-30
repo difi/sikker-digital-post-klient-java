@@ -36,9 +36,6 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 
-/**
- * Created by kristianenge on 24.05.2016.
- */
 public class ObjectMother {
 
     public static Forsendelse forsendelse(String orgNumber, String mpcId, InputStream dokumentStream) {
@@ -94,11 +91,12 @@ public class ObjectMother {
     }
 
     public static Sertifikat mottakerSertifikat() {
-        return dpmottakerSertifikatTest();
+        return DigipostMottakerSertifikatTest();
     }
 
-    private static Sertifikat dpmottakerSertifikatTest() {
-        return Sertifikat.fraBase64X509String("MIIE7jCCA9agAwIBAgIKGBZrmEgzTHzeJjANBgkqhkiG9w0BAQsFADBRMQswCQYD" +
+    private static Sertifikat DigipostMottakerSertifikatTest() {
+        return Sertifikat.fraBase64X509String(
+                "MIIE7jCCA9agAwIBAgIKGBZrmEgzTHzeJjANBgkqhkiG9w0BAQsFADBRMQswCQYD" +
                 "VQQGEwJOTzEdMBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIzAhBgNVBAMM" +
                 "GkJ1eXBhc3MgQ2xhc3MgMyBUZXN0NCBDQSAzMB4XDTE0MDQyNDEyMzA1MVoXDTE3" +
                 "MDQyNDIxNTkwMFowVTELMAkGA1UEBhMCTk8xGDAWBgNVBAoMD1BPU1RFTiBOT1JH" +
