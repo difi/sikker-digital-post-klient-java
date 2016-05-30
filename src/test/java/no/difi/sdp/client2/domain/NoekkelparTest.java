@@ -55,7 +55,7 @@ public class NoekkelparTest {
         assertThat(noekkelpar.getTrustStore()).isEqualTo(trustStore);
     }
 
-    private static KeyStore testKeyStore(){
+    private static KeyStore testKeyStore() {
         return ObjectMother.selvsignertKeyStore();
     }
 

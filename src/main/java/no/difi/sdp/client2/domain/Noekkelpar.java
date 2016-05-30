@@ -56,11 +56,12 @@ public class Noekkelpar {
         return keyStore;
     }
 
-    public KeyStore getTrustStore() { return trustStore; }
+    public KeyStore getTrustStore() {
+        return trustStore;
+    }
 
     public KeyStoreInfo getKeyStoreInfo() {
-        if(trustStore != null)
-        {
+        if (trustStore != null) {
             return new KeyStoreInfo(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword);
         }
 
@@ -108,8 +109,7 @@ public class Noekkelpar {
             KeyStore trustStore = KeyStore.getInstance("JCEKS");
             trustStore.load(new ClassPathResource(DEFAULT_TRUST_STORE_PATH).getInputStream(), DEFAULT_TRUST_STORE_PASSWORD.toCharArray());
             return trustStore;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new NoekkelException(String.format("Kunne ikke initiere trust store. Fant ikke '%s'", DEFAULT_TRUST_STORE_PATH), e);
         }
     }

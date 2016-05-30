@@ -89,13 +89,13 @@ public class SikkerDigitalPostKlientST {
     }
 
     private static void throwEnvironmentVariabelIkkeSatt(String variabel, String value) {
-        String oppsett = "For å kjøre smoketestene må det brukes et gyldig virksomhetssertifikat. \n"+
+        String oppsett = "For å kjøre smoketestene må det brukes et gyldig virksomhetssertifikat. \n" +
                 "1) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE + "' til full sti til virksomhetsssertifikatet. \n" +
                 "2) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE + "' til aliaset (siste avsnitt, første del før komma): \n" +
-                "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
+                "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n" +
                 "3) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE + "' til passordet til virksomhetssertifikatet. \n";
 
-        if(value == null){
+        if (value == null) {
             throw new RuntimeException(String.format("Finner ikke %s til virksomhetssertifikat. \n %s", variabel, oppsett));
         }
     }
@@ -104,30 +104,29 @@ public class SikkerDigitalPostKlientST {
         return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
     }
 
-    private static String getOrganizationNumberFromCertificate(){
+    private static String getOrganizationNumberFromCertificate() {
         try {
             X509Certificate cert = (X509Certificate) keyStore.getCertificate(virksomhetssertifikatAliasValue);
-            if(cert == null){
+            if (cert == null) {
                 throw new RuntimeException(String.format("Klarte ikke hente ut virksomhetssertifikatet fra keystoren med alias '%s'", virksomhetssertifikatAliasValue));
             }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
             return IETFUtils.valueToString(serialnumber.getFirst().getValue());
         } catch (CertificateEncodingException e) {
-            throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.",e);
+            throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.", e);
         } catch (KeyStoreException e) {
-            throw new RuntimeException("Klarte ikke hente ut virksomhetssertifikatet fra keystoren.",e);
+            throw new RuntimeException("Klarte ikke hente ut virksomhetssertifikatet fra keystoren.", e);
         }
     }
 
-    private static KeyStore getVirksomhetssertifikat(){
+    private static KeyStore getVirksomhetssertifikat() {
 
         try {
             keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(new FileInputStream(virksomhetssertifikatPathValue), virksomhetssertifikatPasswordValue.toCharArray());
             return keyStore;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Kunne ikke initiere keystoren. Legg virksomhetssertifikatet.p12 i src/smoke-test/resources/. ", e);
         }
     }
@@ -136,7 +135,7 @@ public class SikkerDigitalPostKlientST {
     public void send_digital_forsendelse_og_hent_kvittering() throws InterruptedException {
         Forsendelse forsendelse = null;
         try {
-            forsendelse = ObjectMother.forsendelse(OrganizationNumber, MpcId,new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = ObjectMother.forsendelse(OrganizationNumber, MpcId, new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }
@@ -159,8 +158,7 @@ public class SikkerDigitalPostKlientST {
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);
                 break;
-            }
-            else {
+            } else {
                 System.out.println("Ingen kvittering");
                 sleep(1000);
             }
