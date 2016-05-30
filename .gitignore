@@ -4,10 +4,12 @@ target
 .project
 .settings
 *.iml
-src/test/resources/keystore.jce
+*.p12
+*.jceks
 
 #Ignore all intellij files
 .idea/*
 
 # ... except these
 !.idea/codeStyleSettings.xml
+!src/main/resources/TrustStore.jceks

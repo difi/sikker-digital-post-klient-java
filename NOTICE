@@ -27,7 +27,6 @@ This software includes third party software subject to the following licenses:
   FEST Util under Apache License, Version 2.0
   Hamcrest Core under New BSD License
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
-  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail 1.4 under The Apache Software License, Version 2.0
   JavaMail API (no providers) under CDDL/GPLv2+CE
   javax.xml.soap API under CDDL 1.1 or GPL2 w/ CPE

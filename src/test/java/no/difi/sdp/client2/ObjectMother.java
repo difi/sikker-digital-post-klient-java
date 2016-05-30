@@ -1,18 +1,3 @@
-/**
- * Copyright (C) Posten Norge AS
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package no.difi.sdp.client2;
 
 import no.difi.begrep.sdp.schema_v10.*;
@@ -39,11 +24,19 @@ import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
-     public static Noekkelpar noekkelpar() {
+    public static final String VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
+    public static final String VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
+
+    public static Noekkelpar noekkelpar() {
+            return Noekkelpar.fraKeyStore(selvsignertKeyStore(), VIRKSOMHETSSERTIFIKAT_ALIAS, VIRKSOMHETSSERTIFIKAT_PASSORD);
+    }
+
+    public static KeyStore selvsignertKeyStore(){
         try {
             KeyStore keyStore = KeyStore.getInstance("jks");
             keyStore.load(new ClassPathResource("/selfsigned-keystore.jks").getInputStream(), "password1234".toCharArray());
-            return Noekkelpar.fraKeyStore(keyStore, "avsender", "password1234");
+            return keyStore;
+
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke laste keystore", e);
         }
@@ -63,7 +56,7 @@ public class ObjectMother {
         Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig();
 
         return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
-                .konversasjonsId("konversasjonsId-" + System.currentTimeMillis())
+                .konversasjonsId(UUID.randomUUID().toString())
                 .prioritet(Prioritet.PRIORITERT)
                 .spraakkode("NO")
                 .build();
@@ -90,7 +83,7 @@ public class ObjectMother {
     }
 
     public static Behandlingsansvarlig behandlingsansvarlig() {
-        return Behandlingsansvarlig.builder("991825827")
+        return Behandlingsansvarlig.builder("984661185")
                 .avsenderIdentifikator("avsenderId")
                 .fakturaReferanse("ØK1")
                 .build();

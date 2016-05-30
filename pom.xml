@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <prerequisites>
@@ -12,15 +13,30 @@
         <spring.ws.version>2.2.0.RELEASE</spring.ws.version>
         <spring.security.version>3.1.6.RELEASE</spring.security.version>
         <commons-codec.version>1.9</commons-codec.version>
-        <sdp-shared.version>1.1.13</sdp-shared.version>
+        <sdp-shared.version>1.1.18</sdp-shared.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-compress.version>1.8.1</commons-compress.version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!--
+                    Only run unit tests when the development profile is active
+                -->
+                <skipSmokeTests>false</skipSmokeTests>
+                <skipUnitTests>false</skipUnitTests>
+            </properties>
+        </profile>
+    </profiles>
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
     <name>Sikker digital post-klient</name>
 
     <description>
@@ -145,16 +161,12 @@
             <version>2.0M10</version>
             <scope>test</scope>
         </dependency>
-        
-
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
             <version>2.0.1</version>
             <scope>test</scope>
         </dependency>
-        
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -167,7 +179,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -193,13 +204,78 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <!-- Adds source and resource directories to our build -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <!-- Add a new source directory to our build -->
+                    <execution>
+                        <id>add-smoke-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the source directory of our smoke tests -->
+                            <sources>
+                                <source>src/smoke-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add a new resource directory to our build -->
+                    <execution>
+                        <id>add-smoke-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the resource directory of our smoke tests -->
+                            <resources>
+                                <resource>
+                                    <directory>src/smoke-test/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
+                <configuration>
+                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+                    <skipTests>${skipUnitTests}</skipTests>
+                    <excludes>
+                        <exclude>**/*ST*.java</exclude> <!-- Exludes smoke tests when unit tests are run -->
+                        <exclude>**/*IT*.java</exclude> <!-- Exludes integration tests when unit tests are run -->
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
+                <executions>
+                    <!--
+                        Invokes both the integration-test and the verify goals of the
+                        Failsafe Maven plugin
+                    -->
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/*ST.java</include> <!-- Includes smoke tests -->
+                            </includes>
+                            <skipTests>${skipSmokeTests}</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -272,17 +348,9 @@
                         <exclude>**/*.template</exclude>
                         <exclude>**/*.jks</exclude>
                         <exclude>**/*.jce</exclude>
+                        <exclude>**/*.properties</exclude>
                     </excludes>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>check-license-header</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <phase>test</phase>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -362,6 +430,7 @@
             </plugin>
         </plugins>
     </build>
+
 
     <scm>
         <connection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</connection>
