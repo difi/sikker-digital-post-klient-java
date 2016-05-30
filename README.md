@@ -1,6 +1,6 @@
 
-##Kjøre dokumentasjon første gang
-* [Sjekk guide på help.github](https://help.github.com/articles/using-jekyll-with-pages/)
+##Kjøre dokumentasjon første gang lokalt
+* [Sjekk guide på help.github](https://help.github.com/articles/setting-up-your-github-pages-site-locally-with-jekyll/)
 * Her står det hvordan du kjører oppdatering av pakker osv. når det er lenge siden sist.
 
 
