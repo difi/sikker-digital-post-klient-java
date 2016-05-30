@@ -48,30 +48,29 @@ import static java.lang.Thread.sleep;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SikkerDigitalPostKlientST {
 
-    private static SikkerDigitalPostKlient postklient;
+    private static SikkerDigitalPostKlient sikkerDigitalPostKlient;
     private static String MpcId;
     private static String OrganizationNumber;
     private static KeyStore keyStore;
 
-    public static final String VIRKSOMHETSSERTIFIKAT_PASSORD = "virksomhetssertifikat_passord";
-    private static String virksomhetssertifikatPassordValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PASSORD);
+    private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
+    private static String virksomhetssertifikatPasswordValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
 
-    public static final String VIRKSOMHETSSERTIFIKAT_ALIAS = "virksomhetssertifikat_alias";
-    private static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS);
+    private static final String VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
+    private static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
 
-    public static final String VIRKSOMHETSSERTIFIKAT_STI = "virksomhetssertifikat_sti";
-    private static String virksomhetssertifikatStiValue = System.getenv(VIRKSOMHETSSERTIFIKAT_STI);
+    private static final String VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
+    private static String virksomhetssertifikatPathValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
 
     @BeforeClass
     public static void setUp() {
-        verifiserEnvironmentVariablerSatt();
+        verifyEnvironmentVariables();
 
         keyStore = getVirksomhetssertifikat();
         MpcId = UUID.randomUUID().toString();
-        OrganizationNumber = getOrgNumberFromCertificate();
+        OrganizationNumber = getOrganizationNumberFromCertificate();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
@@ -80,21 +79,21 @@ public class SikkerDigitalPostKlientST {
 
         TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumber, avsenderNoekkelpar());
 
-        postklient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
+        sikkerDigitalPostKlient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }
 
-    private static void verifiserEnvironmentVariablerSatt() {
-        throwEnvironmentVariabelIkkeSatt("sti", virksomhetssertifikatStiValue);
+    private static void verifyEnvironmentVariables() {
+        throwEnvironmentVariabelIkkeSatt("sti", virksomhetssertifikatPathValue);
         throwEnvironmentVariabelIkkeSatt("alias", virksomhetssertifikatAliasValue);
-        throwEnvironmentVariabelIkkeSatt("passord", virksomhetssertifikatPassordValue);
+        throwEnvironmentVariabelIkkeSatt("passord", virksomhetssertifikatPasswordValue);
     }
 
     private static void throwEnvironmentVariabelIkkeSatt(String variabel, String value) {
         String oppsett = "For å kjøre smoketestene må det brukes et gyldig virksomhetssertifikat. \n"+
-                "1) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_STI + "' til full sti til virksomhetsssertifikatet. \n" +
-                "2) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_ALIAS + "' til aliaset (siste avsnitt, første del før komma): \n" +
+                "1) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE + "' til full sti til virksomhetsssertifikatet. \n" +
+                "2) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE + "' til aliaset (siste avsnitt, første del før komma): \n" +
                 "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n"+
-                "3) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PASSORD + "' til passordet til virksomhetssertifikatet. \n";
+                "3) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE + "' til passordet til virksomhetssertifikatet. \n";
 
         if(value == null){
             throw new RuntimeException(String.format("Finner ikke %s til virksomhetssertifikat. \n %s", variabel, oppsett));
@@ -102,21 +101,10 @@ public class SikkerDigitalPostKlientST {
     }
 
     private static Noekkelpar avsenderNoekkelpar() {
-        if(virksomhetssertifikatPassordValue == null){
-            throw new RuntimeException(
-                                        "Klarte ikke hente ut system env variabelen 'smoketest_passphrase'.\n "+
-                                        "Sett sertifikatpassordet i en env variabel: \n" +
-                                        "   export smoketest_passphrase=PASSPHRASE \n" +
-                                        "Hvis du debugger må env_variabel settes i test run configuration."
-            );
-        }
-
-        return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPassordValue);
+        return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
     }
 
-    private static String getOrgNumberFromCertificate(){
-
-
+    private static String getOrganizationNumberFromCertificate(){
         try {
             X509Certificate cert = (X509Certificate) keyStore.getCertificate(virksomhetssertifikatAliasValue);
             if(cert == null){
@@ -136,7 +124,7 @@ public class SikkerDigitalPostKlientST {
 
         try {
             keyStore = KeyStore.getInstance("PKCS12");
-            keyStore.load(new FileInputStream(virksomhetssertifikatStiValue), virksomhetssertifikatPassordValue.toCharArray());
+            keyStore.load(new FileInputStream(virksomhetssertifikatPathValue), virksomhetssertifikatPasswordValue.toCharArray());
             return keyStore;
         }
         catch (Exception e) {
@@ -145,7 +133,7 @@ public class SikkerDigitalPostKlientST {
     }
 
     @Test
-    public void A_send_digital_forsendelse() {
+    public void send_digital_forsendelse_og_hent_kvittering() throws InterruptedException {
         Forsendelse forsendelse = null;
         try {
             forsendelse = ObjectMother.forsendelse(OrganizationNumber, MpcId,new ClassPathResource("/test.pdf").getInputStream());
@@ -153,17 +141,13 @@ public class SikkerDigitalPostKlientST {
             fail("klarte ikke åpne hoveddokument.");
         }
 
-        postklient.send(forsendelse);
-    }
+        sikkerDigitalPostKlient.send(forsendelse);
 
-
-   @Test
-    public void B_test_hent_kvittering() throws InterruptedException {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(MpcId).build();
         ForretningsKvittering forretningsKvittering = null;
         sleep(1000);//wait 1 sec until first try.
         for (int i = 0; i < 10; i++) {
-            forretningsKvittering = postklient.hentKvittering(kvitteringForespoersel);
+            forretningsKvittering = sikkerDigitalPostKlient.hentKvittering(kvitteringForespoersel);
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
@@ -173,7 +157,7 @@ public class SikkerDigitalPostKlientST {
                 assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
                 assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
 
-                postklient.bekreft(forretningsKvittering);
+                sikkerDigitalPostKlient.bekreft(forretningsKvittering);
                 break;
             }
             else {
