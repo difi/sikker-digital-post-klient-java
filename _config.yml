@@ -3,7 +3,7 @@ name: Sikker Digital Post Java
 siteUrlText: difi.github.io/difi-sikker-digital-post-klient-java
 
 # url of the download button
-downloadUrl: http://search.maven.org/#search|ga|1|sikker-digital-post
+downloadUrl: http://mvnrepository.com/artifact/no.difi.sdp
 
 baseurl: "/sikker-digital-post-klient-java"
 
