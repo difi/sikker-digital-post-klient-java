@@ -23,9 +23,9 @@ collections:
 # list of additional links on the right of the top menu
 headerLinks:
   - title: GitHub
-    url: https://github.com/difi/sikker-digital-post-klient-dotnet
+    url: https://github.com/difi/sikker-digital-post-klient-java
   - title: Issues
-    url: https://github.com/difi/sikker-digital-post-klient-dotnet/issues
+    url: https://github.com/difi/sikker-digital-post-klient-java/issues
 
 # github buttons
 githubButton:
