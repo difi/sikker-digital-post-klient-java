@@ -11,16 +11,17 @@ public abstract class ForretningsKvittering {
     public final EbmsApplikasjonsKvittering applikasjonsKvittering;
     private final DateTime tidspunkt;
 
-    protected ForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        this.applikasjonsKvittering = applikasjonsKvittering;
-        SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
-		if (sbd.erFeil()) {
-        	this.tidspunkt = sbd.getFeil().getTidspunkt();
+    protected ForretningsKvittering(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering) {
+        this.applikasjonsKvittering = ebmsApplikasjonsKvittering;
+
+        SimpleStandardBusinessDocument sbd = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
+        if (sbd.erFeil()) {
+            this.tidspunkt = sbd.getFeil().getTidspunkt();
         } else if (sbd.erKvittering()) {
-        	this.tidspunkt = sbd.getKvittering().kvittering.getTidspunkt();
+            this.tidspunkt = sbd.getKvittering().kvittering.getTidspunkt();
         } else {
-        	throw new IllegalStateException("Unable to handle StandardBusinessDocument of type " +
-        			sbd.getUnderlyingDoc().getClass() + ", conversationId=" + sbd.getConversationId());
+            throw new IllegalStateException("Unable to handle StandardBusinessDocument of type " +
+                    sbd.getUnderlyingDoc().getClass() + ", conversationId=" + sbd.getConversationId());
         }
     }
 
@@ -28,8 +29,16 @@ public abstract class ForretningsKvittering {
         return applikasjonsKvittering.getStandardBusinessDocument().getConversationId();
     }
 
+    public boolean erKvittering() {
+        return applikasjonsKvittering.getStandardBusinessDocument().erKvittering();
+    }
+
+    public boolean erFeil() {
+        return applikasjonsKvittering.getStandardBusinessDocument().erFeil();
+    }
+
     public final Date getTidspunkt() {
-    	return tidspunkt.toDate();
+        return tidspunkt.toDate();
     }
 
     public String getMessageId() {
@@ -46,7 +55,7 @@ public abstract class ForretningsKvittering {
      */
     @Override
     public String toString() {
-    	return this.getClass().getSimpleName() + "{" +
+        return this.getClass().getSimpleName() + "{" +
                 "konversasjonsId=" + getKonversasjonsId() +
                 "}";
     }
