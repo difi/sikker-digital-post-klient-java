@@ -7,8 +7,8 @@ public class Feil extends ForretningsKvittering {
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
-        super(applikasjonsKvittering);
+    private Feil(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+        super(ebmsBekreftbar, kvitteringsinfo);
         this.feiltype = feiltype;
     }
 
@@ -23,22 +23,22 @@ public class Feil extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
+                "konversasjonsId=" + super.kvitteringsinfo.konversasjonsId +
                 ", feiltype=" + feiltype +
                 ", detaljer='" + detaljer + '\'' +
                 '}';
     }
 
-    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
-        return new Builder(applikasjonsKvittering, feiltype);
+    public static Builder builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+        return new Builder(ebmsBekreftbar, kvitteringsinfo, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
-            target = new Feil(applikasjonsKvittering, feiltype);
+        public Builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+            target = new Feil(ebmsBekreftbar, kvitteringsinfo, feiltype);
         }
 
         public Builder detaljer(String detaljer) {

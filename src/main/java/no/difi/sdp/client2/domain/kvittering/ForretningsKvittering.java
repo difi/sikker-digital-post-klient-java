@@ -1,52 +1,14 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-import no.digipost.api.representations.SimpleStandardBusinessDocument;
-import org.joda.time.DateTime;
-
-import java.util.Date;
-
 public abstract class ForretningsKvittering {
 
-    public final EbmsApplikasjonsKvittering applikasjonsKvittering;
-    private final DateTime tidspunkt;
+    public final Kvitteringsinfo kvitteringsinfo;
+    public final EbmsBekreftbar ebmsBekreftbar;
 
-    protected ForretningsKvittering(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering) {
-        this.applikasjonsKvittering = ebmsApplikasjonsKvittering;
 
-        SimpleStandardBusinessDocument sbd = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
-        if (sbd.erFeil()) {
-            this.tidspunkt = sbd.getFeil().getTidspunkt();
-        } else if (sbd.erKvittering()) {
-            this.tidspunkt = sbd.getKvittering().kvittering.getTidspunkt();
-        } else {
-            throw new IllegalStateException("Unable to handle StandardBusinessDocument of type " +
-                    sbd.getUnderlyingDoc().getClass() + ", conversationId=" + sbd.getConversationId());
-        }
-    }
-
-    public String getKonversasjonsId() {
-        return applikasjonsKvittering.getStandardBusinessDocument().getConversationId();
-    }
-
-    public boolean erKvittering() {
-        return applikasjonsKvittering.getStandardBusinessDocument().erKvittering();
-    }
-
-    public boolean erFeil() {
-        return applikasjonsKvittering.getStandardBusinessDocument().erFeil();
-    }
-
-    public final Date getTidspunkt() {
-        return tidspunkt.toDate();
-    }
-
-    public String getMessageId() {
-        return applikasjonsKvittering.messageId;
-    }
-
-    public String getRefToMessageId() {
-        return applikasjonsKvittering.refToMessageId;
+    public ForretningsKvittering(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo){
+        this.ebmsBekreftbar = ebmsBekreftbar;
+        this.kvitteringsinfo = kvitteringsinfo;
     }
 
     /**
@@ -56,8 +18,43 @@ public abstract class ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
+                "konversasjonsId=" + kvitteringsinfo.konversasjonsId +
                 "}";
     }
+
+    //    protected ForretningsKvittering(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering) {
+//        this.applikasjonsKvittering = ebmsApplikasjonsKvittering;
+////        SimpleStandardBusinessDocument sbd = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
+////        if (sbd.erFeil()) {
+////            this.tidspunkt = sbd.getFeil().getTidspunkt();
+////        } else if (sbd.erKvittering()) {
+////            this.tidspunkt = sbd.getKvittering().kvittering.getTidspunkt();
+////        } else {
+////            throw new IllegalStateException("Unable to handle StandardBusinessDocument of type " +
+////                    sbd.getUnderlyingDoc().getClass() + ", conversationId=" + sbd.getConversationId());
+////        }
+//
+//    }
+
+//    public String getKonversasjonsId() {
+////        return applikasjonsKvittering.getStandardBusinessDocument().getConversationId();
+//        return konversasjonsId;
+//    }
+
+//    public String getReferanser(){
+//        return ebmsBekreftbar.getReferanser();
+//        List<Reference> reference = applikasjonsKvittering.references;
+//        StringResult stringResult = new StringResult();
+//        Jaxb2Marshaller marshallerSingleton = Marshalling.getMarshallerSingleton();
+//
+//
+//        Marshalling.marshal(marshallerSingleton, reference, stringResult );
+//
+//        Object unmarshal = marshallerSingleton.unmarshal(new StreamSource(new StringReader(stringResult.toString())));
+
+
+//        String marshalled = marshallerSingleton.marshal();
+//        return "";
+//    }
 
 }

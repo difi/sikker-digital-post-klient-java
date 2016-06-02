@@ -4,8 +4,8 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 
 public class MottaksKvittering extends ForretningsKvittering {
 
-	public MottaksKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-		super(applikasjonsKvittering);
+	public MottaksKvittering(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo) {
+		super(ebmsBekreftbar, kvitteringsinfo);
 	}
 
 }

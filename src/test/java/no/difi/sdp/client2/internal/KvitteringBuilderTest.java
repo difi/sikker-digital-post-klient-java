@@ -45,8 +45,8 @@ public class KvitteringBuilderTest {
 
         AapningsKvittering aapningKvittering = (AapningsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(aapningKvittering.getKonversasjonsId());
-        assertNotNull(aapningKvittering.getTidspunkt());
+        assertNotNull(aapningKvittering.kvitteringsinfo.konversasjonsId);
+        assertNotNull(aapningKvittering.kvitteringsinfo.tidspunkt);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class KvitteringBuilderTest {
 
         LeveringsKvittering leveringsKvittering = (LeveringsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(leveringsKvittering.getKonversasjonsId());
-        assertNotNull(leveringsKvittering.getTidspunkt());
+        assertNotNull(leveringsKvittering.kvitteringsinfo.konversasjonsId);
+        assertNotNull(leveringsKvittering.kvitteringsinfo.tidspunkt);
     }
 
     @Test
@@ -65,8 +65,8 @@ public class KvitteringBuilderTest {
 
         MottaksKvittering mottaksKvittering = (MottaksKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(mottaksKvittering.getKonversasjonsId());
-        assertNotNull(mottaksKvittering.getTidspunkt());
+        assertNotNull(mottaksKvittering.kvitteringsinfo.konversasjonsId);
+        assertNotNull(mottaksKvittering.kvitteringsinfo.tidspunkt);
     }
 
     @Test
@@ -75,8 +75,8 @@ public class KvitteringBuilderTest {
 
         ReturpostKvittering returpostKvittering = (ReturpostKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(returpostKvittering.getKonversasjonsId());
-        assertNotNull(returpostKvittering.getTidspunkt());
+        assertNotNull(returpostKvittering.kvitteringsinfo.konversasjonsId);
+        assertNotNull(returpostKvittering.kvitteringsinfo.tidspunkt);
     }
 
     @Test
@@ -85,8 +85,8 @@ public class KvitteringBuilderTest {
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
-        assertNotNull(varslingFeiletKvittering.getTidspunkt());
+        assertNotNull(varslingFeiletKvittering.kvitteringsinfo.konversasjonsId);
+        assertNotNull(varslingFeiletKvittering.kvitteringsinfo.tidspunkt);
 
         assertThat(varslingFeiletKvittering.getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
         assertThat(varslingFeiletKvittering.getVarslingskanal()).isEqualTo(VarslingFeiletKvittering.Varslingskanal.EPOST);
@@ -98,8 +98,8 @@ public class KvitteringBuilderTest {
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
-        assertNotNull(varslingFeiletKvittering.getTidspunkt());
+        assertNotNull(varslingFeiletKvittering.kvitteringsinfo.konversasjonsId);
+        assertNotNull(varslingFeiletKvittering.kvitteringsinfo.tidspunkt);
         assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
         assertThat((varslingFeiletKvittering).getVarslingskanal()).isEqualTo(VarslingFeiletKvittering.Varslingskanal.SMS);
     }
@@ -110,8 +110,8 @@ public class KvitteringBuilderTest {
 
         Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(feil.getKonversasjonsId());
-        assertNotNull(feil.getTidspunkt());
+        assertNotNull(feil.kvitteringsinfo.konversasjonsId);
+        assertNotNull(feil.kvitteringsinfo.tidspunkt);
         assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.KLIENT);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
     }
@@ -122,8 +122,8 @@ public class KvitteringBuilderTest {
 
         Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(feil.getKonversasjonsId());
-        assertNotNull(feil.getTidspunkt());
+        assertNotNull(feil.kvitteringsinfo.konversasjonsId);
+        assertNotNull(feil.kvitteringsinfo.tidspunkt);
         assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.SERVER);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
     }

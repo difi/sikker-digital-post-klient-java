@@ -7,8 +7,8 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
-        super(applikasjonsKvittering);
+    private VarslingFeiletKvittering(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+        super(ebmsBekreftbar, kvitteringsinfo);
         this.varslingskanal = varslingskanal;
     }
 
@@ -23,22 +23,22 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
+                "konversasjonsId=" + super.kvitteringsinfo.konversasjonsId +
                 ", varslingskanal=" + varslingskanal +
                 ", beskrivelse='" + beskrivelse + '\'' +
                 '}';
     }
 
-    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
-        return new Builder(applikasjonsKvittering, varslingskanal);
+    public static Builder builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+        return new Builder(ebmsBekreftbar, kvitteringsinfo, varslingskanal );
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(applikasjonsKvittering, varslingskanal);
+        public Builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(ebmsBekreftbar, kvitteringsinfo, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {
