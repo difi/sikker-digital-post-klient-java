@@ -6,7 +6,6 @@ public class Kvitteringsinfo {
 
     public Instant tidspunkt;
     public String konversasjonsId;
-    public String meldingsId;
     public String referanseTilMeldingId;
 
 }
