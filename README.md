@@ -1,6 +1,8 @@
 Sikker Digital Post Java klient
 ==============================
 
+[![Build Status](https://travis-ci.org/difi/sikker-digital-post-klient-java.svg?branch=master)](https://travis-ci.org/difi/sikker-digital-post-klient-java)
+
 [DOKUMENTASJON FINNER DU HER](https://difi.github.io/sikker-digital-post-klient-java/)
 
 ## Om klienten
