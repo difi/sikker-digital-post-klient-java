@@ -1,14 +1,12 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-
 public class Feil extends ForretningsKvittering {
 
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
-        super(ebmsBekreftbar, kvitteringsinfo);
+    private Feil(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+        super(kvitteringBekreftbar, kvitteringsinfo);
         this.feiltype = feiltype;
     }
 
@@ -29,16 +27,16 @@ public class Feil extends ForretningsKvittering {
                 '}';
     }
 
-    public static Builder builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
-        return new Builder(ebmsBekreftbar, kvitteringsinfo, feiltype);
+    public static Builder builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+        return new Builder(kvitteringBekreftbar, kvitteringsinfo, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
-            target = new Feil(ebmsBekreftbar, kvitteringsinfo, feiltype);
+        public Builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+            target = new Feil(kvitteringBekreftbar, kvitteringsinfo, feiltype);
         }
 
         public Builder detaljer(String detaljer) {

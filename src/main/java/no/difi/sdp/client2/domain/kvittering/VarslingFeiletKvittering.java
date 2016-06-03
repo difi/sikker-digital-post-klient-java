@@ -1,14 +1,12 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-
 public class VarslingFeiletKvittering extends ForretningsKvittering {
 
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-        super(ebmsBekreftbar, kvitteringsinfo);
+    private VarslingFeiletKvittering(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+        super(kvitteringBekreftbar, kvitteringsinfo);
         this.varslingskanal = varslingskanal;
     }
 
@@ -29,16 +27,16 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
                 '}';
     }
 
-    public static Builder builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-        return new Builder(ebmsBekreftbar, kvitteringsinfo, varslingskanal );
+    public static Builder builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+        return new Builder(kvitteringBekreftbar, kvitteringsinfo, varslingskanal );
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(ebmsBekreftbar, kvitteringsinfo, varslingskanal);
+        public Builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(kvitteringBekreftbar, kvitteringsinfo, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {

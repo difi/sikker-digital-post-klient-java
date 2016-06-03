@@ -10,14 +10,13 @@ import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusine
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import javax.xml.transform.stream.StreamSource;
-import java.io.InputStream;
 import java.io.StringReader;
 
 public class ForretningsKvitteringTest {
 
     @Test
     public void testKonstruktør_initializesProperly() {
-        EbmsBekreftbar ebmsBekreftbar = new EbmsBekreftbar() {
+        KvitteringBekreftbar kvitteringBekreftbar = new KvitteringBekreftbar() {
             @Override
             public String getMeldingsId() {
                 return "MeldingsId";
@@ -29,9 +28,9 @@ public class ForretningsKvitteringTest {
             }
         };
         Kvitteringsinfo kvitteringsinfo = new Kvitteringsinfo();
-        LeveringsKvittering leveringsKvittering = new LeveringsKvittering(ebmsBekreftbar, kvitteringsinfo);
+        LeveringsKvittering leveringsKvittering = new LeveringsKvittering(kvitteringBekreftbar, kvitteringsinfo);
 
-        assertThat(leveringsKvittering.ebmsBekreftbar).isEqualTo(ebmsBekreftbar);
+        assertThat(leveringsKvittering.kvitteringBekreftbar).isEqualTo(kvitteringBekreftbar);
         assertThat(leveringsKvittering.kvitteringsinfo).isEqualTo(kvitteringsinfo);
     }
 

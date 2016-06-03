@@ -3,11 +3,11 @@ package no.difi.sdp.client2.domain.kvittering;
 public abstract class ForretningsKvittering {
 
     public final Kvitteringsinfo kvitteringsinfo;
-    public final EbmsBekreftbar ebmsBekreftbar;
+    public final KvitteringBekreftbar kvitteringBekreftbar;
 
 
-    public ForretningsKvittering(EbmsBekreftbar ebmsBekreftbar, Kvitteringsinfo kvitteringsinfo){
-        this.ebmsBekreftbar = ebmsBekreftbar;
+    public ForretningsKvittering(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo){
+        this.kvitteringBekreftbar = kvitteringBekreftbar;
         this.kvitteringsinfo = kvitteringsinfo;
     }
 

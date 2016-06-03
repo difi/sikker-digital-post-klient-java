@@ -1,6 +1,6 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-public interface EbmsBekreftbar {
+public interface KvitteringBekreftbar {
 
     String getMeldingsId();
 

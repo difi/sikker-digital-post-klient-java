@@ -4,7 +4,7 @@ import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client2.domain.exceptions.SikkerDigitalPostException;
-import no.difi.sdp.client2.domain.kvittering.EbmsBekreftbar;
+import no.difi.sdp.client2.domain.kvittering.KvitteringBekreftbar;
 import no.difi.sdp.client2.domain.kvittering.Feil;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
@@ -22,7 +22,6 @@ import org.w3.xmldsig.Reference;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.Instant;
-import java.util.List;
 
 import static no.digipost.api.representations.EbmsAktoer.meldingsformidler;
 
@@ -43,7 +42,7 @@ public class KvitteringBuilder {
             kvitteringsinfo.tidspunkt = Instant.ofEpochMilli(sbd.getKvittering().kvittering.getTidspunkt().getMillis());
             kvitteringsinfo.referanseTilMeldingId = applikasjonsKvittering.refToMessageId;
 
-            EbmsBekreftbar ebmsBekreftbar = new EbmsBekreftbar() {
+            KvitteringBekreftbar kvitteringBekreftbar = new KvitteringBekreftbar() {
                 @Override
                 public String getMeldingsId() {
                     return applikasjonsKvittering.messageId;
@@ -67,8 +66,8 @@ public class KvitteringBuilder {
 //            	return new MottaksKvittering(applikasjonsKvittering);
             } else if (sdpKvittering.getLevering() != null) {
 //                throw new NotImplementedException();
-                ebmsBekreftbar.getReferanser();
-                return new LeveringsKvittering(ebmsBekreftbar, kvitteringsinfo);
+                kvitteringBekreftbar.getReferanser();
+                return new LeveringsKvittering(kvitteringBekreftbar, kvitteringsinfo);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
 //                return varslingFeiletKvittering(sdpKvittering, applikasjonsKvittering);
             } else if (sdpKvittering.getReturpost() != null) {
