@@ -2,22 +2,33 @@ package no.difi.sdp.client2.smoketest;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
+import no.difi.sdp.client2.domain.Behandlingsansvarlig;
+import no.difi.sdp.client2.domain.Dokument;
+import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
+import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.FileInputStream;
@@ -37,7 +48,7 @@ public class SikkerDigitalPostKlientST {
 
     private static SikkerDigitalPostKlient sikkerDigitalPostKlient;
     private static String MpcId;
-    private static String OrganizationNumber;
+    private static String OrganizationNumberFromCertificate;
     private static KeyStore keyStore;
 
     private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
@@ -55,25 +66,40 @@ public class SikkerDigitalPostKlientST {
 
         keyStore = getVirksomhetssertifikat();
         MpcId = UUID.randomUUID().toString();
-        OrganizationNumber = getOrganizationNumberFromCertificate();
+        OrganizationNumberFromCertificate = getOrganizationNumberFromCertificate();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
+                .httpRequestInterceptors(new HttpRequestInterceptor() {
+                    @Override
+                    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                        System.out.println("Utgående request!");
+//                        String s = EntityUtils.toString(((HttpPost)request).getEntity(), "UTF-8");
+
+                    }
+                })
+                .httpResponseInterceptors(new HttpResponseInterceptor() {
+                    @Override
+                    public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+                        System.out.println("Innkommende request!");
+//                        String s = EntityUtils.toString(response.getEntity(), "UTF-8");
+                    }
+                })
                 .build();
 
-        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumber, avsenderNoekkelpar());
+        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumberFromCertificate, avsenderNoekkelpar());
 
         sikkerDigitalPostKlient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }
 
     private static void verifyEnvironmentVariables() {
-        throwEnvironmentVariabelIkkeSatt("sti", virksomhetssertifikatPathValue);
-        throwEnvironmentVariabelIkkeSatt("alias", virksomhetssertifikatAliasValue);
-        throwEnvironmentVariabelIkkeSatt("passord", virksomhetssertifikatPasswordValue);
+        throwIfEnvironmentVariableNotSet("sti", virksomhetssertifikatPathValue);
+        throwIfEnvironmentVariableNotSet("alias", virksomhetssertifikatAliasValue);
+        throwIfEnvironmentVariableNotSet("passord", virksomhetssertifikatPasswordValue);
     }
 
-    private static void throwEnvironmentVariabelIkkeSatt(String variabel, String value) {
+    private static void throwIfEnvironmentVariableNotSet(String variabel, String value) {
         String oppsett = "For å kjøre smoketestene må det brukes et gyldig virksomhetssertifikat. \n" +
                 "1) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE + "' til full sti til virksomhetsssertifikatet. \n" +
                 "2) Sett environmentvariabel '" + VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE + "' til aliaset (siste avsnitt, første del før komma): \n" +
@@ -120,13 +146,48 @@ public class SikkerDigitalPostKlientST {
     public void send_digital_forsendelse_og_hent_kvittering() throws InterruptedException {
         Forsendelse forsendelse = null;
         try {
-            forsendelse = ObjectMother.forsendelse(OrganizationNumber, MpcId, new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = ObjectMother.forsendelse(OrganizationNumberFromCertificate, MpcId, new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }
 
         sikkerDigitalPostKlient.send(forsendelse);
+        ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient);
+        sikkerDigitalPostKlient.bekreft(forretningsKvittering);
+        assertThat(forretningsKvittering != null).isTrue();
+    }
 
+    @Test
+    public void send_digital_forsendelse_med_databehandler_og_hent_kvittering() throws InterruptedException {
+        Dokument hovedDokument = null;
+        try {
+            hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ClassPathResource("/test.pdf").getInputStream())
+                    .mimeType("application/pdf")
+                    .build();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument).build();
+
+        Behandlingsansvarlig behandlingsansvarlig = new Behandlingsansvarlig(OrganizationNumberFromCertificate);
+        Mottaker mottaker = Mottaker.builder("01013300001", "ove.jonsen#6K5A", no.difi.sdp.client2.ObjectMother.mottakerSertifikat(), "984661185").build();
+        DigitalPost digitalPost = DigitalPost.builder(mottaker, "IkkeSensitivTittel").build();
+        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke).mpcId(MpcId).prioritet(Prioritet.PRIORITERT).build();
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
+                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .connectionTimeout(40, TimeUnit.SECONDS).build();
+
+        SikkerDigitalPostKlient sikkerDigitalPostKlient = new SikkerDigitalPostKlient(ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumberFromCertificate, avsenderNoekkelpar()), klientKonfigurasjon);
+
+        sikkerDigitalPostKlient.send(forsendelse);
+        ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient);
+        sikkerDigitalPostKlient.bekreft(forretningsKvittering);
+
+    }
+
+    private ForretningsKvittering getForretningsKvittering(SikkerDigitalPostKlient sikkerDigitalPostKlient) throws InterruptedException {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(MpcId).build();
         ForretningsKvittering forretningsKvittering = null;
         sleep(1000);//wait 1 sec until first try.
@@ -135,10 +196,10 @@ public class SikkerDigitalPostKlientST {
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
-                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getRefToMessageId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
-                assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
-                assertThat(forretningsKvittering.getRefToMessageId()).isNotEmpty();
-                assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
+                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsinfo.konversasjonsId, forretningsKvittering.kvitteringsinfo.referanseTilMeldingId, forretningsKvittering.kvitteringsinfo.tidspunkt, forretningsKvittering));
+                assertThat(forretningsKvittering.kvitteringsinfo.konversasjonsId).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsinfo.referanseTilMeldingId).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsinfo.tidspunkt).isNotNull();
                 assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);
@@ -148,6 +209,6 @@ public class SikkerDigitalPostKlientST {
                 sleep(1000);
             }
         }
-        assertThat(forretningsKvittering != null).isTrue();
+        return forretningsKvittering;
     }
 }

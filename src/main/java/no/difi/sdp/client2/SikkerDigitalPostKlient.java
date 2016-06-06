@@ -12,6 +12,8 @@ import no.difi.sdp.client2.util.CryptoChecker;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 
 public class SikkerDigitalPostKlient {
 
@@ -113,8 +115,11 @@ public class SikkerDigitalPostKlient {
      * </ol>
      */
     public void bekreft(ForretningsKvittering forrigeKvittering) throws SendException {
-//        EbmsApplikasjonsKvittering kvittering = forrigeKvittering.applikasjonsKvittering;
-//        digipostMessageSenderFacade.bekreft(kvittering);
+        bekreft(forrigeKvittering.kanBekreftesSomBehandletKvittering);
+    }
+
+    public void bekreft(KanBekreftesSomBehandletKvittering forrigeKvittering) throws SendException {
+        digipostMessageSenderFacade.bekreft(forrigeKvittering);
     }
 
     /**

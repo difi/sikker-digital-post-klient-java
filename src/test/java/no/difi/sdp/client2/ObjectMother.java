@@ -243,7 +243,6 @@ public class ObjectMother {
                                         .withInstanceIdentifier(UUID.randomUUID().toString())
                                 )
                         )
-
         )
                 .withAny(sdpMelding);
 
@@ -271,7 +270,7 @@ public class ObjectMother {
         digestMethod.setAlgorithm("http://www.w3.org/2001/04/xmlenc#sha256");
         reference.setDigestMethod(digestMethod);
         reference.setDigestValue("xQbKUtuEGSrsgZsSAT5rF+/yflr+hl2cUC4cKyiMxRM=".getBytes());
-        
+
         Transforms transformsContainer = new Transforms(transforms);
         reference.setTransforms(transformsContainer);
         return incomingReferences;

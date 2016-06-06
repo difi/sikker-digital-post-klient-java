@@ -1,12 +1,14 @@
 package no.difi.sdp.client2.domain.kvittering;
 
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+
 public class Feil extends ForretningsKvittering {
 
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
-        super(kvitteringBekreftbar, kvitteringsinfo);
+    private Feil(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
         this.feiltype = feiltype;
     }
 
@@ -27,16 +29,16 @@ public class Feil extends ForretningsKvittering {
                 '}';
     }
 
-    public static Builder builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
-        return new Builder(kvitteringBekreftbar, kvitteringsinfo, feiltype);
+    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsinfo, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
-            target = new Feil(kvitteringBekreftbar, kvitteringsinfo, feiltype);
+        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Feiltype feiltype) {
+            target = new Feil(kanBekreftesSomBehandletKvittering, kvitteringsinfo, feiltype);
         }
 
         public Builder detaljer(String detaljer) {

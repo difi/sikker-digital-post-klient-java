@@ -1,12 +1,14 @@
 package no.difi.sdp.client2.domain.kvittering;
 
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+
 public class VarslingFeiletKvittering extends ForretningsKvittering {
 
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-        super(kvitteringBekreftbar, kvitteringsinfo);
+    private VarslingFeiletKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
         this.varslingskanal = varslingskanal;
     }
 
@@ -27,16 +29,16 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
                 '}';
     }
 
-    public static Builder builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-        return new Builder(kvitteringBekreftbar, kvitteringsinfo, varslingskanal );
+    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsinfo, varslingskanal );
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(kvitteringBekreftbar, kvitteringsinfo, varslingskanal);
+        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(kanBekreftesSomBehandletKvittering, kvitteringsinfo, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {

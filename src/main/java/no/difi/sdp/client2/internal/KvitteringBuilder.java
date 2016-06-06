@@ -4,7 +4,6 @@ import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client2.domain.exceptions.SikkerDigitalPostException;
-import no.difi.sdp.client2.domain.kvittering.KvitteringBekreftbar;
 import no.difi.sdp.client2.domain.kvittering.Feil;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
@@ -13,6 +12,7 @@ import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
 import no.difi.sdp.client2.domain.kvittering.VarslingFeiletKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsPullRequest;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.SimpleStandardBusinessDocument;
 import no.digipost.api.xml.Marshalling;
@@ -31,8 +31,8 @@ public class KvitteringBuilder {
         return new EbmsPullRequest(meldingsformidler(meldingsformidler), kvitteringForespoersel.getPrioritet().getEbmsPrioritet(), kvitteringForespoersel.getMpcId());
     }
 
-    public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
+    public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering) {
+        SimpleStandardBusinessDocument sbd = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
 
         if (sbd.erKvittering()) {
             SDPKvittering sdpKvittering = sbd.getKvittering().kvittering;
@@ -40,23 +40,7 @@ public class KvitteringBuilder {
             Kvitteringsinfo kvitteringsinfo = new Kvitteringsinfo();
             kvitteringsinfo.konversasjonsId = sbd.getConversationId();
             kvitteringsinfo.tidspunkt = Instant.ofEpochMilli(sbd.getKvittering().kvittering.getTidspunkt().getMillis());
-            kvitteringsinfo.referanseTilMeldingId = applikasjonsKvittering.refToMessageId;
-
-            KvitteringBekreftbar kvitteringBekreftbar = new KvitteringBekreftbar() {
-                @Override
-                public String getMeldingsId() {
-                    return applikasjonsKvittering.messageId;
-                }
-
-                @Override
-                public String getReferanser() {
-                    Reference reference = applikasjonsKvittering.references.get(0);
-                    StringResult marshaledReferences = new StringResult();
-                    Jaxb2Marshaller marshallerSingleton = Marshalling.getMarshallerSingleton();
-                    Marshalling.marshal(marshallerSingleton, reference, marshaledReferences);
-                    return marshaledReferences.toString();
-                }
-            };
+            kvitteringsinfo.referanseTilMeldingId = ebmsApplikasjonsKvittering.refToMessageId;
 
             if (sdpKvittering.getAapning() != null) {
                 throw new NotImplementedException();
@@ -65,16 +49,14 @@ public class KvitteringBuilder {
                 throw new NotImplementedException();
 //            	return new MottaksKvittering(applikasjonsKvittering);
             } else if (sdpKvittering.getLevering() != null) {
-//                throw new NotImplementedException();
-                kvitteringBekreftbar.getReferanser();
-                return new LeveringsKvittering(kvitteringBekreftbar, kvitteringsinfo);
+                return new LeveringsKvittering(ebmsApplikasjonsKvittering, kvitteringsinfo);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
 //                return varslingFeiletKvittering(sdpKvittering, applikasjonsKvittering);
             } else if (sdpKvittering.getReturpost() != null) {
 //            	return new ReturpostKvittering(applikasjonsKvittering);
             }
         } else if (sbd.erFeil()) {
-            return feil(applikasjonsKvittering);
+            return feil(ebmsApplikasjonsKvittering);
         }
 
         throw new SikkerDigitalPostException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");

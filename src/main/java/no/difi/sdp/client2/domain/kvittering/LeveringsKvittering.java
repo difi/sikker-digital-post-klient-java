@@ -1,9 +1,11 @@
 package no.difi.sdp.client2.domain.kvittering;
 
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+
 public class LeveringsKvittering extends ForretningsKvittering {
 
-        public LeveringsKvittering(KvitteringBekreftbar kvitteringBekreftbar, Kvitteringsinfo kvitteringsinfo) {
-        super(kvitteringBekreftbar, kvitteringsinfo);
+        public LeveringsKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
     }
 
 }

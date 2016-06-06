@@ -59,8 +59,8 @@ public class KvitteringBuilderTest {
         assertNotNull(leveringsKvittering.kvitteringsinfo.tidspunkt);
         assertNotNull(leveringsKvittering.kvitteringsinfo.referanseTilMeldingId);
 
-        assertNotNull(leveringsKvittering.kvitteringBekreftbar.getMeldingsId());
-        assertNotNull(leveringsKvittering.kvitteringBekreftbar.getReferanser());
+        assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
+        assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getReferanse());
     }
 
     @Test
