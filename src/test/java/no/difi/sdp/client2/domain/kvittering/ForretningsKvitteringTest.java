@@ -1,7 +1,7 @@
 package no.difi.sdp.client2.domain.kvittering;
 
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
-import no.digipost.api.representations.Referanse;
+import no.digipost.api.representations.KvitteringsReferanse;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -19,7 +19,7 @@ public class ForretningsKvitteringTest {
             }
 
             @Override
-            public Referanse getReferanse() {
+            public KvitteringsReferanse getReferanseTilMeldingSomKvitteres() {
                 return null;
             }
         };

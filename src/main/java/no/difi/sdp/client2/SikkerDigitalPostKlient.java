@@ -13,7 +13,6 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 
 public class SikkerDigitalPostKlient {
 

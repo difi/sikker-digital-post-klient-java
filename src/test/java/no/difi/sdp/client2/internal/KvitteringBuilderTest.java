@@ -60,7 +60,7 @@ public class KvitteringBuilderTest {
         assertNotNull(leveringsKvittering.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class KvitteringBuilderTest {
         assertNotNull(mottaksKvittering.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(mottaksKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(mottaksKvittering.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(mottaksKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class KvitteringBuilderTest {
         assertNotNull(returpostKvittering.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(returpostKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(returpostKvittering.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(returpostKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
         assertThat(varslingFeiletKvittering.getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
@@ -121,7 +121,7 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
         assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
@@ -139,7 +139,7 @@ public class KvitteringBuilderTest {
         assertNotNull(feil.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(feil.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
 
         assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.KLIENT);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
@@ -156,7 +156,7 @@ public class KvitteringBuilderTest {
         assertNotNull(feil.kvitteringsinfo.getReferanseTilMeldingId());
 
         assertNotNull(feil.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getReferanse());
+        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
         assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.SERVER);
