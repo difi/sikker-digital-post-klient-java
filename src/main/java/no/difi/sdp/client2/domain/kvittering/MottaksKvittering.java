@@ -4,8 +4,8 @@ import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class MottaksKvittering extends ForretningsKvittering {
 
-	public MottaksKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo) {
-		super(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
-	}
+    public MottaksKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
+    }
 
 }

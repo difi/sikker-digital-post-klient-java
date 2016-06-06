@@ -1,18 +1,12 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsAktoer;
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.Referanse;
-import no.digipost.api.xml.Marshalling;
 import org.junit.Test;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
+
+import java.time.Instant;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
 
 public class ForretningsKvitteringTest {
 
@@ -29,7 +23,7 @@ public class ForretningsKvitteringTest {
                 return null;
             }
         };
-        Kvitteringsinfo kvitteringsinfo = new Kvitteringsinfo();
+        Kvitteringsinfo kvitteringsinfo = new Kvitteringsinfo("konversasjonsId", "referanseTilMeldingId", Instant.now());
         LeveringsKvittering leveringsKvittering = new LeveringsKvittering(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
 
         assertThat(leveringsKvittering.kanBekreftesSomBehandletKvittering).isEqualTo(kanBekreftesSomBehandletKvittering);

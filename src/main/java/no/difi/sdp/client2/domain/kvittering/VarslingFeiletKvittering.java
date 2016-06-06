@@ -23,7 +23,7 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + super.kvitteringsinfo.konversasjonsId +
+                "konversasjonsId=" + super.kvitteringsinfo.getKonversasjonsId() +
                 ", varslingskanal=" + varslingskanal +
                 ", beskrivelse='" + beskrivelse + '\'' +
                 '}';

@@ -1,25 +1,24 @@
 package no.difi.sdp.client2.internal;
 
+import no.difi.begrep.sdp.schema_v10.SDPFeil;
 import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPKvittering;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client2.domain.exceptions.SikkerDigitalPostException;
+import no.difi.sdp.client2.domain.kvittering.AapningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.Feil;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.domain.kvittering.Kvitteringsinfo;
 import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
+import no.difi.sdp.client2.domain.kvittering.MottaksKvittering;
+import no.difi.sdp.client2.domain.kvittering.ReturpostKvittering;
 import no.difi.sdp.client2.domain.kvittering.VarslingFeiletKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsPullRequest;
-import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.SimpleStandardBusinessDocument;
-import no.digipost.api.xml.Marshalling;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.xml.transform.StringResult;
-import org.w3.xmldsig.Reference;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.Instant;
 
@@ -32,55 +31,56 @@ public class KvitteringBuilder {
     }
 
     public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering) {
-        SimpleStandardBusinessDocument sbd = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
+        SimpleStandardBusinessDocument simpleStandardBusinessDocument = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
 
-        if (sbd.erKvittering()) {
-            SDPKvittering sdpKvittering = sbd.getKvittering().kvittering;
+        Kvitteringsinfo.Builder kvitteringsinfoBuilder = Kvitteringsinfo.builder()
+                .konversasjonsId(simpleStandardBusinessDocument.getConversationId())
+                .referanseTilMeldingId(ebmsApplikasjonsKvittering.refToMessageId);
 
-            Kvitteringsinfo kvitteringsinfo = new Kvitteringsinfo();
-            kvitteringsinfo.konversasjonsId = sbd.getConversationId();
-            kvitteringsinfo.tidspunkt = Instant.ofEpochMilli(sbd.getKvittering().kvittering.getTidspunkt().getMillis());
-            kvitteringsinfo.referanseTilMeldingId = ebmsApplikasjonsKvittering.refToMessageId;
+        if (simpleStandardBusinessDocument.erKvittering()) {
+            SDPKvittering sdpKvittering = simpleStandardBusinessDocument.getKvittering().kvittering;
+            kvitteringsinfoBuilder.tidspunkt(Instant.ofEpochMilli(sdpKvittering.getTidspunkt().getMillis()));
+
+            final Kvitteringsinfo kvitteringsinfo = kvitteringsinfoBuilder.build();
 
             if (sdpKvittering.getAapning() != null) {
-                throw new NotImplementedException();
-//                return new AapningsKvittering(applikasjonsKvittering);
+                return new AapningsKvittering(ebmsApplikasjonsKvittering, kvitteringsinfo);
             } else if (sdpKvittering.getMottak() != null) {
-                throw new NotImplementedException();
-//            	return new MottaksKvittering(applikasjonsKvittering);
+                return new MottaksKvittering(ebmsApplikasjonsKvittering, kvitteringsinfo);
             } else if (sdpKvittering.getLevering() != null) {
                 return new LeveringsKvittering(ebmsApplikasjonsKvittering, kvitteringsinfo);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
-//                return varslingFeiletKvittering(sdpKvittering, applikasjonsKvittering);
+                return varslingFeiletKvittering(sdpKvittering, kvitteringsinfo, ebmsApplikasjonsKvittering);
             } else if (sdpKvittering.getReturpost() != null) {
-//            	return new ReturpostKvittering(applikasjonsKvittering);
+                return new ReturpostKvittering(ebmsApplikasjonsKvittering, kvitteringsinfo);
             }
-        } else if (sbd.erFeil()) {
-            return feil(ebmsApplikasjonsKvittering);
+        } else if (simpleStandardBusinessDocument.erFeil()) {
+            SDPFeil sdpFeil = simpleStandardBusinessDocument.getFeil();
+            kvitteringsinfoBuilder.tidspunkt(Instant.ofEpochMilli(sdpFeil.getTidspunkt().getMillis()));
+
+            final Kvitteringsinfo kvitteringsinfo = kvitteringsinfoBuilder.build();
+
+            return feil(ebmsApplikasjonsKvittering, kvitteringsinfo);
         }
 
-        throw new SikkerDigitalPostException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
+        throw new SikkerDigitalPostException("Kvittering tilbake fra meldingsformidler var verken kvittering eller feil.");
     }
 
-    private ForretningsKvittering feil(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        throw new NotImplementedException();
+    private ForretningsKvittering feil(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering, Kvitteringsinfo kvitteringsinfo) {
+        SDPFeil feil = ebmsApplikasjonsKvittering.getStandardBusinessDocument().getFeil();
 
-//        SDPFeil feil = applikasjonsKvittering.getStandardBusinessDocument().getFeil();
-//
-//        return Feil.builder(applikasjonsKvittering, mapFeilType(feil.getFeiltype()))
-//                .detaljer(feil.getDetaljer())
-//                .build();
+        return Feil.builder(ebmsApplikasjonsKvittering, kvitteringsinfo, mapFeilType(feil.getFeiltype()))
+                .detaljer(feil.getDetaljer())
+                .build();
     }
 
-    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, EbmsApplikasjonsKvittering applikasjonsKvittering) {
-//        SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
-//        VarslingFeiletKvittering.Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
-//
-//        return VarslingFeiletKvittering.builder(applikasjonsKvittering, varslingskanal)
-//                .beskrivelse(varslingfeilet.getBeskrivelse())
-//                .build();
-        throw new NotImplementedException();
+    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, Kvitteringsinfo kvitteringsinfo, EbmsApplikasjonsKvittering ebmsAapplikasjonsKvittering) {
+        SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
+        VarslingFeiletKvittering.Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
 
+        return VarslingFeiletKvittering.builder(ebmsAapplikasjonsKvittering, kvitteringsinfo, varslingskanal)
+                .beskrivelse(varslingfeilet.getBeskrivelse())
+                .build();
     }
 
     private Feil.Feiltype mapFeilType(SDPFeiltype feiltype) {

@@ -23,7 +23,7 @@ public class Feil extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + super.kvitteringsinfo.konversasjonsId +
+                "konversasjonsId=" + super.kvitteringsinfo.getKonversasjonsId() +
                 ", feiltype=" + feiltype +
                 ", detaljer='" + detaljer + '\'' +
                 '}';

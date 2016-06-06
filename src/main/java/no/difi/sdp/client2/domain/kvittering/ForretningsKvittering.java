@@ -19,7 +19,7 @@ public abstract class ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + kvitteringsinfo.konversasjonsId +
+                "konversasjonsId=" + kvitteringsinfo.getKonversasjonsId() +
                 "}";
     }
     //        Marshalling.marshal(marshallerSingleton, reference, stringResult );

@@ -19,9 +19,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -196,10 +194,10 @@ public class SikkerDigitalPostKlientST {
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
-                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsinfo.konversasjonsId, forretningsKvittering.kvitteringsinfo.referanseTilMeldingId, forretningsKvittering.kvitteringsinfo.tidspunkt, forretningsKvittering));
-                assertThat(forretningsKvittering.kvitteringsinfo.konversasjonsId).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsinfo.referanseTilMeldingId).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsinfo.tidspunkt).isNotNull();
+                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsinfo.getKonversasjonsId(), forretningsKvittering.kvitteringsinfo.getReferanseTilMeldingId(), forretningsKvittering.kvitteringsinfo.getTidspunkt(), forretningsKvittering));
+                assertThat(forretningsKvittering.kvitteringsinfo.getKonversasjonsId()).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsinfo.getReferanseTilMeldingId()).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsinfo.getTidspunkt()).isNotNull();
                 assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);
