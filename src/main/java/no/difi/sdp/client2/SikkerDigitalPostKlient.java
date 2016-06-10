@@ -92,7 +92,7 @@ public class SikkerDigitalPostKlient {
         if (forrigeKvittering == null) {
             ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest);
         } else {
-            digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering);
+            ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering.kanBekreftesSomBehandletKvittering);
         }
 
         if (ebmsApplikasjonsKvittering == null) {
