@@ -22,7 +22,6 @@ public class Kvitteringsinfo {
     }
 
     protected Kvitteringsinfo(String konversasjonsId, String referanseTilMeldingId, Instant tidspunkt) {
-
         this.konversasjonsId = konversasjonsId;
         this.referanseTilMeldingId = referanseTilMeldingId;
         this.tidspunkt = tidspunkt;
