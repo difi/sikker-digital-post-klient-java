@@ -69,21 +69,6 @@ public class SikkerDigitalPostKlientST {
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
-                .httpRequestInterceptors(new HttpRequestInterceptor() {
-                    @Override
-                    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                        System.out.println("Utgående request!");
-//                        String s = EntityUtils.toString(((HttpPost)request).getEntity(), "UTF-8");
-
-                    }
-                })
-                .httpResponseInterceptors(new HttpResponseInterceptor() {
-                    @Override
-                    public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-                        System.out.println("Innkommende request!");
-//                        String s = EntityUtils.toString(response.getEntity(), "UTF-8");
-                    }
-                })
                 .build();
 
         TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumberFromCertificate, avsenderNoekkelpar());
@@ -153,36 +138,6 @@ public class SikkerDigitalPostKlientST {
         ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient);
         sikkerDigitalPostKlient.bekreft(forretningsKvittering);
         assertThat(forretningsKvittering != null).isTrue();
-    }
-
-    @Test
-    public void send_digital_forsendelse_med_databehandler_og_hent_kvittering() throws InterruptedException {
-        Dokument hovedDokument = null;
-        try {
-            hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ClassPathResource("/test.pdf").getInputStream())
-                    .mimeType("application/pdf")
-                    .build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument).build();
-
-        Behandlingsansvarlig behandlingsansvarlig = new Behandlingsansvarlig(OrganizationNumberFromCertificate);
-        Mottaker mottaker = Mottaker.builder("01013300001", "ove.jonsen#6K5A", no.difi.sdp.client2.ObjectMother.mottakerSertifikat(), "984661185").build();
-        DigitalPost digitalPost = DigitalPost.builder(mottaker, "IkkeSensitivTittel").build();
-        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke).mpcId(MpcId).prioritet(Prioritet.PRIORITERT).build();
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
-                .connectionTimeout(40, TimeUnit.SECONDS).build();
-
-        SikkerDigitalPostKlient sikkerDigitalPostKlient = new SikkerDigitalPostKlient(ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumberFromCertificate, avsenderNoekkelpar()), klientKonfigurasjon);
-
-        sikkerDigitalPostKlient.send(forsendelse);
-        ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient);
-        sikkerDigitalPostKlient.bekreft(forretningsKvittering);
-
     }
 
     private ForretningsKvittering getForretningsKvittering(SikkerDigitalPostKlient sikkerDigitalPostKlient) throws InterruptedException {
