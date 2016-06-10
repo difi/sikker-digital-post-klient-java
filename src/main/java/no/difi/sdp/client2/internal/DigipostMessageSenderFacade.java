@@ -76,7 +76,7 @@ public class DigipostMessageSenderFacade {
         return performRequest(() -> messageSender.hentKvittering(ebmsPullRequest));
     }
 
-    public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest, final EbmsApplikasjonsKvittering applikasjonsKvittering) {
+    public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest, final KanBekreftesSomBehandletKvittering applikasjonsKvittering) {
         return performRequest(() -> messageSender.hentKvittering(ebmsPullRequest, applikasjonsKvittering));
     }
 
