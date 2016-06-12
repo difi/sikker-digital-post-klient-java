@@ -85,14 +85,14 @@ public class SikkerDigitalPostKlient {
      * </dl>
      *
      */
-    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) throws SendException {
+    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, KanBekreftesSomBehandletKvittering forrigeKvittering) throws SendException {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), kvitteringForespoersel);
 
         EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering;
         if (forrigeKvittering == null) {
             ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest);
         } else {
-            ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering.kanBekreftesSomBehandletKvittering);
+            ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering);
         }
 
         if (ebmsApplikasjonsKvittering == null) {
@@ -113,10 +113,6 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreft(ForretningsKvittering forrigeKvittering) throws SendException {
-        bekreft(forrigeKvittering.kanBekreftesSomBehandletKvittering);
-    }
-
     public void bekreft(KanBekreftesSomBehandletKvittering forrigeKvittering) throws SendException {
         digipostMessageSenderFacade.bekreft(forrigeKvittering);
     }

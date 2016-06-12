@@ -1,8 +1,9 @@
 package no.difi.sdp.client2.domain.kvittering;
 
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+import no.digipost.api.representations.KvitteringsReferanse;
 
-public abstract class ForretningsKvittering {
+public abstract class ForretningsKvittering implements KanBekreftesSomBehandletKvittering{
 
     public final Kvitteringsinfo kvitteringsinfo;
     public final KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering;
@@ -22,13 +23,12 @@ public abstract class ForretningsKvittering {
                 "konversasjonsId=" + kvitteringsinfo.getKonversasjonsId() +
                 "}";
     }
-    //        Marshalling.marshal(marshallerSingleton, reference, stringResult );
-//
-//        Object unmarshal = marshallerSingleton.unmarshal(new StreamSource(new StringReader(stringResult.toString())));
 
+    public String getMeldingsId(){
+       return kanBekreftesSomBehandletKvittering.getMeldingsId();
+    }
 
-//        String marshalled = marshallerSingleton.marshal();
-//        return "";
-//    }
-
+    public KvitteringsReferanse getReferanseTilMeldingSomKvitteres(){
+        return kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres();
+    }
 }
