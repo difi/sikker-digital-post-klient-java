@@ -2,24 +2,13 @@ package no.difi.sdp.client2.smoketest;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
-import no.difi.sdp.client2.domain.Dokument;
-import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
-import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.TekniskAvsender;
-import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.protocol.HttpContext;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -45,8 +34,7 @@ import static org.fest.assertions.api.Assertions.fail;
 public class SikkerDigitalPostKlientST {
 
     private static SikkerDigitalPostKlient sikkerDigitalPostKlient;
-    private static String MpcId;
-    private static String OrganizationNumberFromCertificate;
+    private static String organizationNumberFromCertificate;
     private static KeyStore keyStore;
 
     private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
@@ -63,15 +51,14 @@ public class SikkerDigitalPostKlientST {
         verifyEnvironmentVariables();
 
         keyStore = getVirksomhetssertifikat();
-        MpcId = UUID.randomUUID().toString();
-        OrganizationNumberFromCertificate = getOrganizationNumberFromCertificate();
+        organizationNumberFromCertificate = getOrganizationNumberFromCertificate();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
                 .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
-        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(OrganizationNumberFromCertificate, avsenderNoekkelpar());
+        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(organizationNumberFromCertificate, avsenderNoekkelpar());
 
         sikkerDigitalPostKlient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
     }
@@ -127,21 +114,29 @@ public class SikkerDigitalPostKlientST {
 
     @Test
     public void send_digital_forsendelse_og_hent_kvittering() throws InterruptedException {
-        Forsendelse forsendelse = null;
-        try {
-            forsendelse = ObjectMother.forsendelse(OrganizationNumberFromCertificate, MpcId, new ClassPathResource("/test.pdf").getInputStream());
-        } catch (IOException e) {
-            fail("klarte ikke åpne hoveddokument.");
-        }
+        String mpcId = UUID.randomUUID().toString();
+
+        Forsendelse forsendelse = buildForsendelse(mpcId);
 
         sikkerDigitalPostKlient.send(forsendelse);
-        ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient);
+        ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient, mpcId);
         sikkerDigitalPostKlient.bekreft(forretningsKvittering);
+
         assertThat(forretningsKvittering != null).isTrue();
     }
 
-    private ForretningsKvittering getForretningsKvittering(SikkerDigitalPostKlient sikkerDigitalPostKlient) throws InterruptedException {
-        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(MpcId).build();
+    private Forsendelse buildForsendelse(String mpcId) {
+        Forsendelse forsendelse = null;
+        try {
+            forsendelse = ObjectMother.forsendelse(organizationNumberFromCertificate, mpcId, new ClassPathResource("/test.pdf").getInputStream());
+        } catch (IOException e) {
+            fail("klarte ikke åpne hoveddokument.");
+        }
+        return forsendelse;
+    }
+
+    private ForretningsKvittering getForretningsKvittering(SikkerDigitalPostKlient sikkerDigitalPostKlient, String mpcId) throws InterruptedException {
+        KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(mpcId).build();
         ForretningsKvittering forretningsKvittering = null;
         sleep(1000);//wait 1 sec until first try.
         for (int i = 0; i < 10; i++) {
