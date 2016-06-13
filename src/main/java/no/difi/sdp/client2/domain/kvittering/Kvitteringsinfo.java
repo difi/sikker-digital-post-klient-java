@@ -2,7 +2,7 @@ package no.difi.sdp.client2.domain.kvittering;
 
 import java.time.Instant;
 
-public class Kvitteringsinfo {
+public class KvitteringsInfo {
 
     private String konversasjonsId;
     private String referanseTilMeldingId;
@@ -21,7 +21,7 @@ public class Kvitteringsinfo {
         return tidspunkt;
     }
 
-    protected Kvitteringsinfo(String konversasjonsId, String referanseTilMeldingId, Instant tidspunkt) {
+    protected KvitteringsInfo(String konversasjonsId, String referanseTilMeldingId, Instant tidspunkt) {
         this.konversasjonsId = konversasjonsId;
         this.referanseTilMeldingId = referanseTilMeldingId;
         this.tidspunkt = tidspunkt;
@@ -56,7 +56,7 @@ public class Kvitteringsinfo {
             return this;
         }
 
-        public Kvitteringsinfo build() {
+        public KvitteringsInfo build() {
             if (built) {
                 throw new IllegalStateException("Kan ikke bygges flere ganger.");
             }
@@ -67,7 +67,7 @@ public class Kvitteringsinfo {
 
             built = true;
 
-            return new Kvitteringsinfo(konversasjonsId, referanseTilMeldingId, tidspunkt);
+            return new KvitteringsInfo(konversasjonsId, referanseTilMeldingId, tidspunkt);
         }
     }
 }

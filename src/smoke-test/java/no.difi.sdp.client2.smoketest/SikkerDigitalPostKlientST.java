@@ -144,10 +144,10 @@ public class SikkerDigitalPostKlientST {
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
-                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsinfo.getKonversasjonsId(), forretningsKvittering.kvitteringsinfo.getReferanseTilMeldingId(), forretningsKvittering.kvitteringsinfo.getTidspunkt(), forretningsKvittering));
-                assertThat(forretningsKvittering.kvitteringsinfo.getKonversasjonsId()).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsinfo.getReferanseTilMeldingId()).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsinfo.getTidspunkt()).isNotNull();
+                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsInfo.getKonversasjonsId(), forretningsKvittering.kvitteringsInfo.getReferanseTilMeldingId(), forretningsKvittering.kvitteringsInfo.getTidspunkt(), forretningsKvittering));
+                assertThat(forretningsKvittering.kvitteringsInfo.getKonversasjonsId()).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsInfo.getReferanseTilMeldingId()).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsInfo.getTidspunkt()).isNotNull();
                 assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);

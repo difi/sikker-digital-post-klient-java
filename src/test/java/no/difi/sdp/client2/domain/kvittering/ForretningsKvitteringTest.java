@@ -23,10 +23,10 @@ public class ForretningsKvitteringTest {
                 return null;
             }
         };
-        Kvitteringsinfo kvitteringsinfo = new Kvitteringsinfo("konversasjonsId", "referanseTilMeldingId", Instant.now());
-        LeveringsKvittering leveringsKvittering = new LeveringsKvittering(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
+        KvitteringsInfo kvitteringsInfo = new KvitteringsInfo("konversasjonsId", "referanseTilMeldingId", Instant.now());
+        LeveringsKvittering leveringsKvittering = new LeveringsKvittering(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
 
         assertThat(leveringsKvittering.kanBekreftesSomBehandletKvittering).isEqualTo(kanBekreftesSomBehandletKvittering);
-        assertThat(leveringsKvittering.kvitteringsinfo).isEqualTo(kvitteringsinfo);
+        assertThat(leveringsKvittering.kvitteringsInfo).isEqualTo(kvitteringsInfo);
     }
 }

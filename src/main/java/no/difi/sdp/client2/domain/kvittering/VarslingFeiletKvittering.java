@@ -7,8 +7,8 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-        super(kanBekreftesSomBehandletKvittering, kvitteringsinfo);
+    private VarslingFeiletKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
         this.varslingskanal = varslingskanal;
     }
 
@@ -23,22 +23,22 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + super.kvitteringsinfo.getKonversasjonsId() +
+                "konversasjonsId=" + super.kvitteringsInfo.getKonversasjonsId() +
                 ", varslingskanal=" + varslingskanal +
                 ", beskrivelse='" + beskrivelse + '\'' +
                 '}';
     }
 
-    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsinfo, varslingskanal );
+    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
+        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsInfo, varslingskanal );
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, Kvitteringsinfo kvitteringsinfo, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(kanBekreftesSomBehandletKvittering, kvitteringsinfo, varslingskanal);
+        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(kanBekreftesSomBehandletKvittering, kvitteringsInfo, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {
