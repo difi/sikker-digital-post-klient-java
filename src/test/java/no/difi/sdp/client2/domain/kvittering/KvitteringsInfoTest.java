@@ -9,7 +9,7 @@ import java.time.Instant;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 
-public class KvitteringsInfo2Test {
+public class KvitteringsInfoTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
@@ -20,14 +20,14 @@ public class KvitteringsInfo2Test {
         String referanse = "referanse";
         Instant tidspunkt = Instant.now();
 
-        KvitteringsInfo2 kvitteringsInfo2 = KvitteringsInfo2.builder()
+        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
                 .konversasjonsId(konversasjonsid)
                 .referanseTilMeldingId(referanse)
                 .tidspunkt(tidspunkt).build();
 
-        assertThat(kvitteringsInfo2.getKonversasjonsId()).isEqualTo(konversasjonsid);
-        assertThat(kvitteringsInfo2.getReferanseTilMeldingId()).isEqualTo(referanse);
-        assertThat(kvitteringsInfo2.getTidspunkt()).isEqualTo(tidspunkt);
+        assertThat(kvitteringsInfo.getKonversasjonsId()).isEqualTo(konversasjonsid);
+        assertThat(kvitteringsInfo.getReferanseTilMeldingId()).isEqualTo(referanse);
+        assertThat(kvitteringsInfo.getTidspunkt()).isEqualTo(tidspunkt);
     }
 
 
@@ -37,7 +37,7 @@ public class KvitteringsInfo2Test {
         Instant tidspunkt = Instant.now();
 
         thrown.expect(RuntimeException.class);
-        KvitteringsInfo2 kvitteringsInfo2 = KvitteringsInfo2.builder()
+        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
                 .referanseTilMeldingId(referanse)
                 .tidspunkt(tidspunkt).build();
     }
@@ -48,7 +48,7 @@ public class KvitteringsInfo2Test {
         Instant tidspunkt = Instant.now();
         thrown.expect(RuntimeException.class);
 
-        KvitteringsInfo2 kvitteringsInfo2 = KvitteringsInfo2.builder()
+        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
                 .konversasjonsId(konversasjonsid)
                 .tidspunkt(tidspunkt).build();
     }
@@ -59,7 +59,7 @@ public class KvitteringsInfo2Test {
         String referanse = "referanse";
         thrown.expect(RuntimeException.class);
 
-        KvitteringsInfo2 kvitteringsInfo2 = KvitteringsInfo2.builder()
+        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
                 .konversasjonsId(konversasjonsid)
                 .referanseTilMeldingId(referanse)
                 .build();

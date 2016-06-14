@@ -145,10 +145,10 @@ public class SmokeTest {
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
-                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsInfo2.getKonversasjonsId(), forretningsKvittering.kvitteringsInfo2.getReferanseTilMeldingId(), forretningsKvittering.kvitteringsInfo2.getTidspunkt(), forretningsKvittering));
-                assertThat(forretningsKvittering.kvitteringsInfo2.getKonversasjonsId()).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsInfo2.getReferanseTilMeldingId()).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsInfo2.getTidspunkt()).isNotNull();
+                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsInfo.getKonversasjonsId(), forretningsKvittering.kvitteringsInfo.getReferanseTilMeldingId(), forretningsKvittering.kvitteringsInfo.getTidspunkt(), forretningsKvittering));
+                assertThat(forretningsKvittering.kvitteringsInfo.getKonversasjonsId()).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsInfo.getReferanseTilMeldingId()).isNotEmpty();
+                assertThat(forretningsKvittering.kvitteringsInfo.getTidspunkt()).isNotNull();
                 assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);
