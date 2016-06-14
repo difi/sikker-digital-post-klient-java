@@ -1,4 +1,4 @@
-package no.difi.sdp.client2.smoketest;
+package no.difi.sdp.client2.smoke;
 
 import no.difi.sdp.client2.domain.Behandlingsansvarlig;
 import no.difi.sdp.client2.domain.Dokument;

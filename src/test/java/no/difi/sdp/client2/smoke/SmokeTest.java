@@ -1,4 +1,4 @@
-package no.difi.sdp.client2.smoketest;
+package no.difi.sdp.client2.smoke;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
@@ -16,6 +16,7 @@ import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.FileInputStream;
@@ -31,7 +32,8 @@ import static java.lang.Thread.sleep;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
 
-public class SikkerDigitalPostKlientST {
+@Category(SmokeTest.class)
+public class SmokeTest {
 
     private static SikkerDigitalPostKlient sikkerDigitalPostKlient;
     private static String organizationNumberFromCertificate;
@@ -102,13 +104,12 @@ public class SikkerDigitalPostKlientST {
     }
 
     private static KeyStore getVirksomhetssertifikat() {
-
         try {
             keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(new FileInputStream(virksomhetssertifikatPathValue), virksomhetssertifikatPasswordValue.toCharArray());
             return keyStore;
         } catch (Exception e) {
-            throw new RuntimeException("Kunne ikke initiere keystoren. Legg virksomhetssertifikatet.p12 i src/smoke-test/resources/. ", e);
+            throw new RuntimeException(String.format("Fant ikke virksomhetssertifikat på sti '%s'. Eksporter environmentvariabel '%s' til virksomhetssertifikatet.", virksomhetssertifikatPathValue, VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE), e);
         }
     }
 
@@ -138,7 +139,7 @@ public class SikkerDigitalPostKlientST {
     private ForretningsKvittering getForretningsKvittering(SikkerDigitalPostKlient sikkerDigitalPostKlient, String mpcId) throws InterruptedException {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(mpcId).build();
         ForretningsKvittering forretningsKvittering = null;
-        sleep(1000);//wait 1 sec until first try.
+        sleep(2000);
         for (int i = 0; i < 10; i++) {
             forretningsKvittering = sikkerDigitalPostKlient.hentKvittering(kvitteringForespoersel);
 
