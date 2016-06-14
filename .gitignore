@@ -2,7 +2,7 @@ target
 .cache
 .classpath
 .project
-.settings
+.settings/*
 *.iml
 *.p12
 *.jceks
@@ -13,3 +13,4 @@ target
 # ... except these
 !.idea/codeStyleSettings.xml
 !src/main/resources/TrustStore.jceks
+!.settings/org.eclipse.jdt.ui.prefs
