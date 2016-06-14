@@ -7,8 +7,8 @@ public class Feil extends ForretningsKvittering {
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Feiltype feiltype) {
-        super(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
+    private Feil(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo2 kvitteringsInfo2, Feiltype feiltype) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsInfo2);
         this.feiltype = feiltype;
     }
 
@@ -23,22 +23,22 @@ public class Feil extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + super.kvitteringsInfo.getKonversasjonsId() +
+                "konversasjonsId=" + super.kvitteringsInfo2.getKonversasjonsId() +
                 ", feiltype=" + feiltype +
                 ", detaljer='" + detaljer + '\'' +
                 '}';
     }
 
-    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Feiltype feiltype) {
-        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsInfo, feiltype);
+    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo2 kvitteringsInfo2, Feiltype feiltype) {
+        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsInfo2, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Feiltype feiltype) {
-            target = new Feil(kanBekreftesSomBehandletKvittering, kvitteringsInfo, feiltype);
+        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo2 kvitteringsInfo2, Feiltype feiltype) {
+            target = new Feil(kanBekreftesSomBehandletKvittering, kvitteringsInfo2, feiltype);
         }
 
         public Builder detaljer(String detaljer) {

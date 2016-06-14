@@ -5,12 +5,12 @@ import no.digipost.api.representations.KvitteringsReferanse;
 
 public abstract class ForretningsKvittering implements KanBekreftesSomBehandletKvittering{
 
-    public final KvitteringsInfo kvitteringsInfo;
+    public final KvitteringsInfo2 kvitteringsInfo2;
     public final KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering;
 
-    public ForretningsKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering,  KvitteringsInfo kvitteringsInfo){
+    public ForretningsKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering,  KvitteringsInfo2 kvitteringsInfo2){
         this.kanBekreftesSomBehandletKvittering = kanBekreftesSomBehandletKvittering;
-        this.kvitteringsInfo = kvitteringsInfo;
+        this.kvitteringsInfo2 = kvitteringsInfo2;
     }
 
     /**
@@ -20,7 +20,7 @@ public abstract class ForretningsKvittering implements KanBekreftesSomBehandletK
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + kvitteringsInfo.getKonversasjonsId() +
+                "konversasjonsId=" + kvitteringsInfo2.getKonversasjonsId() +
                 "}";
     }
 
