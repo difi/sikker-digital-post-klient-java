@@ -1,14 +1,14 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class VarslingFeiletKvittering extends ForretningsKvittering {
 
     private Varslingskanal varslingskanal;
     private String beskrivelse;
 
-    private VarslingFeiletKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
-        super(applikasjonsKvittering);
+    private VarslingFeiletKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
         this.varslingskanal = varslingskanal;
     }
 
@@ -23,22 +23,22 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
+                "konversasjonsId=" + super.kvitteringsInfo.getKonversasjonsId() +
                 ", varslingskanal=" + varslingskanal +
                 ", beskrivelse='" + beskrivelse + '\'' +
                 '}';
     }
 
-    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
-        return new Builder(applikasjonsKvittering, varslingskanal);
+    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
+        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsInfo, varslingskanal );
     }
 
     public static class Builder {
         private VarslingFeiletKvittering target;
         private boolean built = false;
 
-        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Varslingskanal varslingskanal) {
-            target = new VarslingFeiletKvittering(applikasjonsKvittering, varslingskanal);
+        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
+            target = new VarslingFeiletKvittering(kanBekreftesSomBehandletKvittering, kvitteringsInfo, varslingskanal);
         }
 
         public Builder beskrivelse(String beskrivelse) {

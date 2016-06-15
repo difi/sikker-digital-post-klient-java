@@ -13,23 +13,22 @@
         <spring.ws.version>2.2.0.RELEASE</spring.ws.version>
         <spring.security.version>3.1.6.RELEASE</spring.security.version>
         <commons-codec.version>1.9</commons-codec.version>
-        <sdp-shared.version>1.1.18</sdp-shared.version>
+        <sdp-shared.version>1.1.19-SNAPSHOT</sdp-shared.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-compress.version>1.8.1</commons-compress.version>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
     <profiles>
         <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            <id>smokeTests</id>
             <properties>
-                <!--
-                    Only run unit tests when the development profile is active
-                -->
-                <skipSmokeTests>false</skipSmokeTests>
-                <skipUnitTests>false</skipUnitTests>
+                <test.includedGroups>no.difi.sdp.client2.smoke.SmokeTest</test.includedGroups>
+            </properties>
+        </profile>
+        <profile>
+            <id>unitTests</id>
+            <properties>
+                <test.excludedGroups>no.difi.sdp.client2.smoke.SmokeTest</test.excludedGroups>
             </properties>
         </profile>
     </profiles>
@@ -204,78 +203,13 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <!-- Adds source and resource directories to our build -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <!-- Add a new source directory to our build -->
-                    <execution>
-                        <id>add-smoke-test-sources</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Configures the source directory of our smoke tests -->
-                            <sources>
-                                <source>src/smoke-test/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <!-- Add a new resource directory to our build -->
-                    <execution>
-                        <id>add-smoke-test-resources</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>add-test-resource</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Configures the resource directory of our smoke tests -->
-                            <resources>
-                                <resource>
-                                    <directory>src/smoke-test/resources</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
+           <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
                 <configuration>
-                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->
-                    <skipTests>${skipUnitTests}</skipTests>
-                    <excludes>
-                        <exclude>**/*ST*.java</exclude> <!-- Exludes smoke tests when unit tests are run -->
-                        <exclude>**/*IT*.java</exclude> <!-- Exludes integration tests when unit tests are run -->
-                    </excludes>
+                    <groups>${test.includedGroups}</groups>
+                    <excludedGroups>${test.excludedGroups}</excludedGroups>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
-                <executions>
-                    <!--
-                        Invokes both the integration-test and the verify goals of the
-                        Failsafe Maven plugin
-                    -->
-                    <execution>
-                        <id>integration-tests</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*ST.java</include> <!-- Includes smoke tests -->
-                            </includes>
-                            <skipTests>${skipSmokeTests}</skipTests>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

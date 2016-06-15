@@ -40,7 +40,7 @@ public class Forsendelse {
         this.dokumentpakke = dokumentpakke;
     }
 
-    public Forsendelse(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+    private Forsendelse(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
     	this.type = FYSISK;
     	this.behandlingsansvarlig = behandlingsansvarlig;
     	this.dokumentpakke = dokumentpakke;

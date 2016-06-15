@@ -12,6 +12,7 @@ import no.difi.sdp.client2.util.CryptoChecker;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class SikkerDigitalPostKlient {
 
@@ -84,21 +85,21 @@ public class SikkerDigitalPostKlient {
      * </dl>
      *
      */
-    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, ForretningsKvittering forrigeKvittering) throws SendException {
+    public ForretningsKvittering hentKvitteringOgBekreftForrige(KvitteringForespoersel kvitteringForespoersel, KanBekreftesSomBehandletKvittering forrigeKvittering) throws SendException {
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(konfigurasjon.getMeldingsformidlerOrganisasjon(), kvitteringForespoersel);
 
-        EbmsApplikasjonsKvittering applikasjonsKvittering;
+        EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering;
         if (forrigeKvittering == null) {
-            applikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest);
+            ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest);
         } else {
-            applikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering.applikasjonsKvittering);
+            ebmsApplikasjonsKvittering = digipostMessageSenderFacade.hentKvittering(ebmsPullRequest, forrigeKvittering);
         }
 
-        if (applikasjonsKvittering == null) {
+        if (ebmsApplikasjonsKvittering == null) {
             return null;
         }
 
-        return kvitteringBuilder.buildForretningsKvittering(applikasjonsKvittering);
+        return kvitteringBuilder.buildForretningsKvittering(ebmsApplikasjonsKvittering);
     }
 
     /**
@@ -112,9 +113,8 @@ public class SikkerDigitalPostKlient {
      *     <li>Bekreft mottak av kvittering</li>
      * </ol>
      */
-    public void bekreft(ForretningsKvittering forrigeKvittering) throws SendException {
-        EbmsApplikasjonsKvittering kvittering = forrigeKvittering.applikasjonsKvittering;
-        digipostMessageSenderFacade.bekreft(kvittering);
+    public void bekreft(KanBekreftesSomBehandletKvittering forrigeKvittering) throws SendException {
+        digipostMessageSenderFacade.bekreft(forrigeKvittering);
     }
 
     /**

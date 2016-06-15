@@ -1,12 +1,26 @@
 package no.difi.sdp.client2.internal;
 
-import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.begrep.sdp.schema_v10.SDPFeil;
+import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
+import no.difi.begrep.sdp.schema_v10.SDPKvittering;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client2.domain.exceptions.SikkerDigitalPostException;
-import no.difi.sdp.client2.domain.kvittering.*;
+import no.difi.sdp.client2.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client2.domain.kvittering.Feil;
+import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
+import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
+import no.difi.sdp.client2.domain.kvittering.KvitteringsInfo;
+import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
+import no.difi.sdp.client2.domain.kvittering.MottaksKvittering;
+import no.difi.sdp.client2.domain.kvittering.ReturpostKvittering;
+import no.difi.sdp.client2.domain.kvittering.VarslingFeiletKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.SimpleStandardBusinessDocument;
+
+import java.time.Instant;
 
 import static no.digipost.api.representations.EbmsAktoer.meldingsformidler;
 
@@ -16,43 +30,55 @@ public class KvitteringBuilder {
         return new EbmsPullRequest(meldingsformidler(meldingsformidler), kvitteringForespoersel.getPrioritet().getEbmsPrioritet(), kvitteringForespoersel.getMpcId());
     }
 
-    public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
+    public ForretningsKvittering buildForretningsKvittering(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering) {
+        SimpleStandardBusinessDocument simpleStandardBusinessDocument = ebmsApplikasjonsKvittering.getStandardBusinessDocument();
 
-        if (sbd.erKvittering()) {
-            SDPKvittering sdpKvittering = sbd.getKvittering().kvittering;
+        KvitteringsInfo.Builder kvitteringsinfoBuilder = KvitteringsInfo.builder()
+                .konversasjonsId(simpleStandardBusinessDocument.getConversationId())
+                .referanseTilMeldingId(ebmsApplikasjonsKvittering.refToMessageId);
+
+        if (simpleStandardBusinessDocument.erKvittering()) {
+            SDPKvittering sdpKvittering = simpleStandardBusinessDocument.getKvittering().kvittering;
+            kvitteringsinfoBuilder.tidspunkt(Instant.ofEpochMilli(sdpKvittering.getTidspunkt().getMillis()));
+
+            final KvitteringsInfo kvitteringsInfo = kvitteringsinfoBuilder.build();
 
             if (sdpKvittering.getAapning() != null) {
-                return new AapningsKvittering(applikasjonsKvittering);
+                return new AapningsKvittering(ebmsApplikasjonsKvittering, kvitteringsInfo);
             } else if (sdpKvittering.getMottak() != null) {
-            	return new MottaksKvittering(applikasjonsKvittering);
+                return new MottaksKvittering(ebmsApplikasjonsKvittering, kvitteringsInfo);
             } else if (sdpKvittering.getLevering() != null) {
-                return new LeveringsKvittering(applikasjonsKvittering);
+                return new LeveringsKvittering(ebmsApplikasjonsKvittering, kvitteringsInfo);
             } else if (sdpKvittering.getVarslingfeilet() != null) {
-                return varslingFeiletKvittering(sdpKvittering, applikasjonsKvittering);
+                return varslingFeiletKvittering(sdpKvittering, kvitteringsInfo, ebmsApplikasjonsKvittering);
             } else if (sdpKvittering.getReturpost() != null) {
-            	return new ReturpostKvittering(applikasjonsKvittering);
+                return new ReturpostKvittering(ebmsApplikasjonsKvittering, kvitteringsInfo);
             }
-        } else if (sbd.erFeil()) {
-            return feil(applikasjonsKvittering);
+        } else if (simpleStandardBusinessDocument.erFeil()) {
+            SDPFeil sdpFeil = simpleStandardBusinessDocument.getFeil();
+            kvitteringsinfoBuilder.tidspunkt(Instant.ofEpochMilli(sdpFeil.getTidspunkt().getMillis()));
+
+            final KvitteringsInfo kvitteringsInfo = kvitteringsinfoBuilder.build();
+
+            return feil(ebmsApplikasjonsKvittering, kvitteringsInfo);
         }
 
-        throw new SikkerDigitalPostException("Kvittering tilbake fra meldingsformidler var hverken kvittering eller feil.");
+        throw new SikkerDigitalPostException("Kvittering tilbake fra meldingsformidler var verken kvittering eller feil.");
     }
 
-    private ForretningsKvittering feil(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        SDPFeil feil = applikasjonsKvittering.getStandardBusinessDocument().getFeil();
+    private ForretningsKvittering feil(EbmsApplikasjonsKvittering ebmsApplikasjonsKvittering, KvitteringsInfo kvitteringsInfo) {
+        SDPFeil feil = ebmsApplikasjonsKvittering.getStandardBusinessDocument().getFeil();
 
-        return Feil.builder(applikasjonsKvittering, mapFeilType(feil.getFeiltype()))
+        return Feil.builder(ebmsApplikasjonsKvittering, kvitteringsInfo, mapFeilType(feil.getFeiltype()))
                 .detaljer(feil.getDetaljer())
                 .build();
     }
 
-    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, EbmsApplikasjonsKvittering applikasjonsKvittering) {
+    private ForretningsKvittering varslingFeiletKvittering(SDPKvittering sdpKvittering, KvitteringsInfo kvitteringsInfo, EbmsApplikasjonsKvittering ebmsAapplikasjonsKvittering) {
         SDPVarslingfeilet varslingfeilet = sdpKvittering.getVarslingfeilet();
         VarslingFeiletKvittering.Varslingskanal varslingskanal = mapVarslingsKanal(varslingfeilet.getVarslingskanal());
 
-        return VarslingFeiletKvittering.builder(applikasjonsKvittering, varslingskanal)
+        return VarslingFeiletKvittering.builder(ebmsAapplikasjonsKvittering, kvitteringsInfo, varslingskanal)
                 .beskrivelse(varslingfeilet.getBeskrivelse())
                 .build();
     }

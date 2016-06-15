@@ -1,0 +1,49 @@
+<ns3:StandardBusinessDocument xmlns:ns3="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" xmlns:ns9="http://begrep.difi.no/sdp/schema_v10">
+  <ns3:StandardBusinessDocumentHeader>
+    <ns3:HeaderVersion>1.0</ns3:HeaderVersion>
+    <ns3:Sender>
+      <ns3:Identifier Authority="urn:oasis:names:tc:ebcore:partyid-type:iso6523:9908">9908:984661185</ns3:Identifier>
+    </ns3:Sender>
+    <ns3:Receiver>
+      <ns3:Identifier Authority="urn:oasis:names:tc:ebcore:partyid-type:iso6523:9908">9908:984661185</ns3:Identifier>
+    </ns3:Receiver>
+    <ns3:DocumentIdentification>
+      <ns3:Standard>urn:no:difi:sdp:1.0</ns3:Standard>
+      <ns3:TypeVersion>1.0</ns3:TypeVersion>
+      <ns3:InstanceIdentifier>ed8dd96b-5df1-4198-b0b5-1417b1b64e8d</ns3:InstanceIdentifier>
+      <ns3:Type>feil</ns3:Type>
+      <ns3:CreationDateAndTime>2016-06-01T14:54:16.222+02:00</ns3:CreationDateAndTime>
+    </ns3:DocumentIdentification>
+    <ns3:BusinessScope>
+      <ns3:Scope>
+        <ns3:Type>ConversationId</ns3:Type>
+        <ns3:InstanceIdentifier>bd156c75-780e-42a4-bf73-b2eeb822972d</ns3:InstanceIdentifier>
+        <ns3:Identifier>urn:no:difi:sdp:1.0</ns3:Identifier>
+      </ns3:Scope>
+    </ns3:BusinessScope>
+  </ns3:StandardBusinessDocumentHeader>
+  <ns9:feil>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+      <SignedInfo>
+        <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+        <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+        <Reference URI="">
+          <Transforms>
+            <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          </Transforms>
+          <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+          <DigestValue>U2zYEh6Gs35Fqqa/JG6FpMS5/ui/b8iHwJo8jFiH4cc=</DigestValue>
+        </Reference>
+      </SignedInfo>
+      <SignatureValue>R02rUmXxFWyYgTlHIhN7JireDXo3qlJCDuwwwwS00aTnGwiRRsncFgeo+VpoouCiI8HL+Vj8xoY1p/HicIsCFxPSJVAuw3K1EfqwqD6OrwUuFtoG9ufoc3EC9hF+DMHIc5GeVWJQfrc24ws/wp5qHjFkM3Phkw9qgyhYx60YBfpstkN3LbM23WGdpY4k6HFmI4BRHpCN7F9zTps/qJx3w3vldtAE2Q9dbTz4wW4FQ+4gfbuId7Pq+sU6iTJKNOroyJHVQwNGIx1ymYV2ndbsNLQOoCItITsQp6T5ERWOPYjKUoYmBtk02zCVXdkmjiKYJebIMbz3z7iHrUKBtohLZg==</SignatureValue>
+      <KeyInfo>
+        <X509Data>
+          <X509Certificate>MIIE7jCCA9agAwIBAgIKGBZrmEgzTHzeJjANBgkqhkiG9w0BAQsFADBRMQswCQYDVQQGEwJOTzEdMBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIzAhBgNVBAMMGkJ1eXBhc3MgQ2xhc3MgMyBUZXN0NCBDQSAzMB4XDTE0MDQyNDEyMzA1MVoXDTE3MDQyNDIxNTkwMFowVTELMAkGA1UEBhMCTk8xGDAWBgNVBAoMD1BPU1RFTiBOT1JHRSBBUzEYMBYGA1UEAwwPUE9TVEVOIE5PUkdFIEFTMRIwEAYDVQQFEwk5ODQ2NjExODUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCLCxU4oBhtGmJxXZWbdWdzO2uA3eRNW/kPdddL1HYl1iXLV/g+H2Q0ELadWLggkS+1kOd8/jKxEN++biMmmDqqCWbzNdmEd1j4lctSlH6M7tt0ywmXIYdZMz5kxcLAMNXsaqnPdikI9uPJZQEL3Kc8hXhXISvpzP7gYOvKHg41uCxu1xCZQOM6pTlNbxemBYqvES4fRh2xvB9aMjwkB4Nz8jrIsyoPI89i05OmGMkI5BPZt8NTa40Yf3yU+SQECW0GWalB5cxaTMeB01tqslUzBJPV3cQx+AhtQG4hkOhQnAMDJramSPVtwbEnqOjQ+lyNmg5GQ4FJO02ApKJTZDTHAgMBAAGjggHCMIIBvjAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFD+u9XgLkqNwIDVfWvr3JKBSAfBBMB0GA1UdDgQWBBQ1gsJfVC7KYGiWVLP7ZwzppyVYTTAOBgNVHQ8BAf8EBAMCBLAwFgYDVR0gBA8wDTALBglghEIBGgEAAwIwgbsGA1UdHwSBszCBsDA3oDWgM4YxaHR0cDovL2NybC50ZXN0NC5idXlwYXNzLm5vL2NybC9CUENsYXNzM1Q0Q0EzLmNybDB1oHOgcYZvbGRhcDovL2xkYXAudGVzdDQuYnV5cGFzcy5uby9kYz1CdXlwYXNzLGRjPU5PLENOPUJ1eXBhc3MlMjBDbGFzcyUyMDMlMjBUZXN0NCUyMENBJTIwMz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0MIGKBggrBgEFBQcBAQR+MHwwOwYIKwYBBQUHMAGGL2h0dHA6Ly9vY3NwLnRlc3Q0LmJ1eXBhc3Mubm8vb2NzcC9CUENsYXNzM1Q0Q0EzMD0GCCsGAQUFBzAChjFodHRwOi8vY3J0LnRlc3Q0LmJ1eXBhc3Mubm8vY3J0L0JQQ2xhc3MzVDRDQTMuY2VyMA0GCSqGSIb3DQEBCwUAA4IBAQCe67UOZ/VSwcH2ov1cOSaWslL7JNfqhyNZWGpfgX1c0Gh+KkO3eVkMSozpgX6M4eeWBWJGELMiVN1LhNaGxBU9TBMdeQ3SqK219W6DXRJ2ycBtaVwQ26V5tWKRN4UlRovYYiY+nMLx9VrLOD4uoP6fm9GE5Fj0vSMMPvOEXi0NsN+8MUm3HWoBeUCLyFpe7/EPsS/Wud5bb0as/E2zIztRodxfNsoiXNvWaP2ZiPWFunIjK1H/8EcktEW1paiPd8AZek/QQoG0MKPfPIJuqH+WJU3a8J8epMDyVfaek+4+l9XOeKwVXNSOP/JSwgpOJNzTdaDOM+uVuk75n2191Fd7</X509Certificate>
+        </X509Data>
+      </KeyInfo>
+    </Signature>
+    <ns9:tidspunkt>2016-06-01T14:54:16.222+02:00</ns9:tidspunkt>
+    <ns9:feiltype>KLIENT</ns9:feiltype>
+    <ns9:detaljer>Recipient is not a Digipost-user</ns9:detaljer>
+  </ns9:feil>
+</ns3:StandardBusinessDocument>

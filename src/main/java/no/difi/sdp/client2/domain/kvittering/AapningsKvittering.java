@@ -1,11 +1,11 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class AapningsKvittering extends ForretningsKvittering {
 
-    public AapningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        super(applikasjonsKvittering);
+    public AapningsKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
     }
 
 }

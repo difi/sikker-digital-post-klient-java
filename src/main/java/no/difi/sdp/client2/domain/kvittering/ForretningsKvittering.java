@@ -1,43 +1,16 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
-import no.digipost.api.representations.SimpleStandardBusinessDocument;
-import org.joda.time.DateTime;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+import no.digipost.api.representations.KvitteringsReferanse;
 
-import java.util.Date;
+public abstract class ForretningsKvittering implements KanBekreftesSomBehandletKvittering{
 
-public abstract class ForretningsKvittering {
+    public final KvitteringsInfo kvitteringsInfo;
+    public final KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering;
 
-    public final EbmsApplikasjonsKvittering applikasjonsKvittering;
-    private final DateTime tidspunkt;
-
-    protected ForretningsKvittering(EbmsApplikasjonsKvittering applikasjonsKvittering) {
-        this.applikasjonsKvittering = applikasjonsKvittering;
-        SimpleStandardBusinessDocument sbd = applikasjonsKvittering.getStandardBusinessDocument();
-		if (sbd.erFeil()) {
-        	this.tidspunkt = sbd.getFeil().getTidspunkt();
-        } else if (sbd.erKvittering()) {
-        	this.tidspunkt = sbd.getKvittering().kvittering.getTidspunkt();
-        } else {
-        	throw new IllegalStateException("Unable to handle StandardBusinessDocument of type " +
-        			sbd.getUnderlyingDoc().getClass() + ", conversationId=" + sbd.getConversationId());
-        }
-    }
-
-    public String getKonversasjonsId() {
-        return applikasjonsKvittering.getStandardBusinessDocument().getConversationId();
-    }
-
-    public final Date getTidspunkt() {
-    	return tidspunkt.toDate();
-    }
-
-    public String getMessageId() {
-        return applikasjonsKvittering.messageId;
-    }
-
-    public String getRefToMessageId() {
-        return applikasjonsKvittering.refToMessageId;
+    public ForretningsKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering,  KvitteringsInfo kvitteringsInfo){
+        this.kanBekreftesSomBehandletKvittering = kanBekreftesSomBehandletKvittering;
+        this.kvitteringsInfo = kvitteringsInfo;
     }
 
     /**
@@ -46,9 +19,16 @@ public abstract class ForretningsKvittering {
      */
     @Override
     public String toString() {
-    	return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
+        return this.getClass().getSimpleName() + "{" +
+                "konversasjonsId=" + kvitteringsInfo.getKonversasjonsId() +
                 "}";
     }
 
+    public String getMeldingsId(){
+       return kanBekreftesSomBehandletKvittering.getMeldingsId();
+    }
+
+    public KvitteringsReferanse getReferanseTilMeldingSomKvitteres(){
+        return kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres();
+    }
 }

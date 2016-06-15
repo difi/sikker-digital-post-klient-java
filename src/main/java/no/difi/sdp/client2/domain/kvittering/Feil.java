@@ -1,14 +1,14 @@
 package no.difi.sdp.client2.domain.kvittering;
 
-import no.digipost.api.representations.EbmsApplikasjonsKvittering;
+import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class Feil extends ForretningsKvittering {
 
     private Feiltype feiltype;
     private String detaljer;
 
-    private Feil(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
-        super(applikasjonsKvittering);
+    private Feil(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Feiltype feiltype) {
+        super(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
         this.feiltype = feiltype;
     }
 
@@ -23,22 +23,22 @@ public class Feil extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + getKonversasjonsId() +
+                "konversasjonsId=" + super.kvitteringsInfo.getKonversasjonsId() +
                 ", feiltype=" + feiltype +
                 ", detaljer='" + detaljer + '\'' +
                 '}';
     }
 
-    public static Builder builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
-        return new Builder(applikasjonsKvittering, feiltype);
+    public static Builder builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Feiltype feiltype) {
+        return new Builder(kanBekreftesSomBehandletKvittering, kvitteringsInfo, feiltype);
     }
 
     public static class Builder {
         private Feil target;
         private boolean built = false;
 
-        public Builder(EbmsApplikasjonsKvittering applikasjonsKvittering, Feiltype feiltype) {
-            target = new Feil(applikasjonsKvittering, feiltype);
+        public Builder(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Feiltype feiltype) {
+            target = new Feil(kanBekreftesSomBehandletKvittering, kvitteringsInfo, feiltype);
         }
 
         public Builder detaljer(String detaljer) {
