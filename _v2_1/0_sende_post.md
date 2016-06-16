@@ -9,17 +9,18 @@ For å sende post så må du først lage en `DigitalPost` eller en `FysiskPost`,
 ### Opprette digital post
 
 ```java
-Sertifikat mottakerSertifikat = null; //Mottakers sertifikat fra Oppslagstjenesten
-String orgnrPostkasse = "123456789";
+Sertifikat mottakerSertifikat = null;   //Fås fra Oppslagstjenesten
+String orgnrPostkasse = null;           //Fås fra Oppslagstjenesten
 
 Mottaker mottaker = Mottaker.builder("99999999999",
         "ola.nordmann#2222", mottakerSertifikat, orgnrPostkasse).build();
+
 
 SmsVarsel smsVarsel = SmsVarsel.builder("4799999999",
         "Du har mottatt brev i din digitale postkasse")
         .build();
 
-EpostVarsel epostVarsel = EpostVarsel.builder("example@fiktivepost.no.",
+EpostVarsel epostVarsel = EpostVarsel.builder("epost@example.com",
         "Du har mottatt brev i din digitale postkasse")
         .varselEtterDager(asList(1, 4, 10))
         .build();
@@ -83,7 +84,7 @@ Forsendelse forsendelse = Forsendelse
         .build();
 ```
 
-> Sett en unik `Forsendelse.mpcId` for å unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer. Dette kan være nyttig i større organisasjoner som har flere avsenderenheter. I tillegg kan det være ekstremt nyttig i utvikling for å unngå at utviklere og testmiljøer går i beina på hverandre.
+> Sett en unik `Forsendelse.mpcId` for å unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer. Dette er nyttig i større organisasjoner som har flere avsenderenheter. I tillegg kan det være veldig nyttig i utvikling for å unngå at utviklere og testmiljøer går i beina på hverandre.
 
 ### Opprette klient og sende post
 
