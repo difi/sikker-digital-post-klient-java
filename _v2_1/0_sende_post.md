@@ -83,6 +83,8 @@ Forsendelse forsendelse = Forsendelse
         .build();
 ```
 
+> Sett en unik `Forsendelse.mpcId` for å unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer. Dette kan være nyttig i større organisasjoner som har flere avsenderenheter. I tillegg kan det være ekstremt nyttig i utvikling for å unngå at utviklere og testmiljøer går i beina på hverandre.
+
 ### Opprette klient og sende post
 
 ```java

@@ -8,16 +8,18 @@ downloadUrl: http://mvnrepository.com/artifact/no.difi.sdp
 baseurl: "/sikker-digital-post-klient-java"
 
 ## Version handling
-currentCollecion: "v1_2"
-currentVersion: "1.2"
-versions: ["1.2"]
+currentCollecion: "v2_1"
+currentVersion: "2.1"
+versions: ["2.1", "1.2"]
 
 # Collection of versions
 collections:
   v1_2:  
     output: true
     permalink: /v1.2/
-
+  v2_1:  
+    output: true
+    permalink: /v2.1/
 ## End of Version handling
 
 # list of additional links on the right of the top menu
