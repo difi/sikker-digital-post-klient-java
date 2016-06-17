@@ -1,4 +1,4 @@
-Sikker Digital Post Java klient
+Sikker Digital Post Klient Java
 ==============================
 
 [![Build Status](https://travis-ci.org/difi/sikker-digital-post-klient-java.svg?branch=master)](https://travis-ci.org/difi/sikker-digital-post-klient-java)
