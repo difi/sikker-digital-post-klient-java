@@ -22,9 +22,10 @@ public class KvitteringBuilderTest {
     @Test
     public void should_build_pull_request_with_standard_priority_and_mpc() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).mpcId("mpcId").build();
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), kvitteringForespoersel);
+        Organisasjonsnummer organisasjonsnummer = Organisasjonsnummer.of("988015814");
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(organisasjonsnummer, kvitteringForespoersel);
 
-        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
+        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr).isEqualTo(organisasjonsnummer);
         assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.NORMAL);
         assertThat(ebmsPullRequest.mpcId).isEqualTo("mpcId");
     }
@@ -32,9 +33,10 @@ public class KvitteringBuilderTest {
     @Test
     public void should_build_pull_request_with_standard_high_priority_and_null_mpc() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).build();
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), kvitteringForespoersel);
+        Organisasjonsnummer organisasjonsnummer = Organisasjonsnummer.of("988015814");
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(organisasjonsnummer, kvitteringForespoersel);
 
-        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
+        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr).isEqualTo(organisasjonsnummer);
         assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
         assertThat(ebmsPullRequest.mpcId).isNull();
     }

@@ -29,8 +29,8 @@ public class EbmsForsendelseBuilder {
 
         //SBD
         String meldingsId = UUID.randomUUID().toString();
-        Organisasjonsnummer sbdhMottaker = new Organisasjonsnummer(mottaker.organisasjonsnummer);
-        Organisasjonsnummer sbdhAvsender = new Organisasjonsnummer(tekniskAvsender.organisasjonsnummer);
+        Organisasjonsnummer sbdhMottaker = mottaker.organisasjonsnummer;
+        Organisasjonsnummer sbdhAvsender = tekniskAvsender.organisasjonsnummer;
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
         StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, DateTime.now(),forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 

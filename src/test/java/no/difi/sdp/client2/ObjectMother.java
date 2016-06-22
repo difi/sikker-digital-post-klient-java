@@ -68,14 +68,16 @@ public class ObjectMother {
     }
 
     public static DigitalPost digitalPost() {
-        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", "Du har mottatt brev i din digitale postkasse")
+        String varslingsTekst = "Du har mottatt brev i din digitale postkasse";
+        
+        EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", varslingsTekst)
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
 
-        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), "984661185")
+        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), Organisasjonsnummer.of("984661185"))
                 .build();
 
-        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")
+        SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", varslingsTekst)
                 .build();
 
         return DigitalPost.builder(mottaker, "Ikke-sensitiv tittel for forsendelsen")
@@ -95,12 +97,12 @@ public class ObjectMother {
     }
 
     public static TekniskAvsender tekniskAvsender() {
-        return TekniskAvsender.builder("984661185", noekkelpar())
+        return TekniskAvsender.builder(Organisasjonsnummer.of("984661185"), noekkelpar())
                 .build();
     }
 
     public static TekniskAvsender tekniskAvsenderMedSertifikat(final Noekkelpar noekkelpar) {
-        return TekniskAvsender.builder("984661185", noekkelpar)
+        return TekniskAvsender.builder(Organisasjonsnummer.of("984661185"), noekkelpar)
                 .build();
     }
 
@@ -174,7 +176,7 @@ public class ObjectMother {
 
 
     public static Mottaker mottaker() {
-        return Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185")
+        return Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185"))
                 .build();
     }
 
@@ -216,14 +218,14 @@ public class ObjectMother {
     }
 
     public static EbmsApplikasjonsKvittering createEbmsKvittering(final Object sdpMelding) {
-        Organisasjonsnummer avsender = new Organisasjonsnummer("123");
-        Organisasjonsnummer mottaker = new Organisasjonsnummer("456");
+        Organisasjonsnummer avsenderOrganisasjonsnummer = Organisasjonsnummer.of("984661185");
+        Organisasjonsnummer mottakerOrganisasjonsnummer = Organisasjonsnummer.of("988015814");
 
         StandardBusinessDocument sbd = new StandardBusinessDocument().withStandardBusinessDocumentHeader(
                 new StandardBusinessDocumentHeader()
                         .withHeaderVersion("1.0")
-                        .withSenders(new Partner().withIdentifier(new PartnerIdentification(avsender.asIso6523(), Organisasjonsnummer.ISO6523_ACTORID)))
-                        .withReceivers(new Partner().withIdentifier(new PartnerIdentification(mottaker.asIso6523(), Organisasjonsnummer.ISO6523_ACTORID)))
+                        .withSenders(new Partner().withIdentifier(new PartnerIdentification(avsenderOrganisasjonsnummer.medLandkode(), Organisasjonsnummer.ISO6523_ACTORID)))
+                        .withReceivers(new Partner().withIdentifier(new PartnerIdentification(mottakerOrganisasjonsnummer.medLandkode(), Organisasjonsnummer.ISO6523_ACTORID)))
                         .withDocumentIdentification(new DocumentIdentification()
                                 .withStandard("urn:no:difi:sdp:1.0")
                                 .withTypeVersion("1.0")
@@ -241,7 +243,7 @@ public class ObjectMother {
         )
                 .withAny(sdpMelding);
 
-        EbmsApplikasjonsKvittering build = EbmsApplikasjonsKvittering.create(EbmsAktoer.avsender(avsender), EbmsAktoer.postkasse(mottaker), sbd)
+        EbmsApplikasjonsKvittering build = EbmsApplikasjonsKvittering.create(EbmsAktoer.avsender(avsenderOrganisasjonsnummer), EbmsAktoer.postkasse(mottakerOrganisasjonsnummer), sbd)
                 .withReferences(getReferences())
                 .withRefToMessageId("RefToMessageId")
                 .build();

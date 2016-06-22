@@ -15,6 +15,7 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+import no.digipost.api.representations.MeldingsformidlerUri;
 import no.digipost.api.xml.Schemas;
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -24,43 +25,46 @@ import org.xml.sax.SAXParseException;
 
 import java.util.Arrays;
 
-import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.*;
+import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.KLIENT;
+import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.SERVER;
+import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
 public class DigipostMessageSenderFacade {
 
     private final MessageSender messageSender;
     private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
-    public DigipostMessageSenderFacade(final TekniskAvsender avsender, final KlientKonfigurasjon konfigurasjon) {
-        KeyStoreInfo keyStoreInfo = avsender.noekkelpar.getKeyStoreInfo();
+
+    public DigipostMessageSenderFacade(final TekniskAvsender tekniskAvsender, final KlientKonfigurasjon klientKonfigurasjon) {
+        KeyStoreInfo keyStoreInfo = tekniskAvsender.noekkelpar.getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
 
-        MessageSender.Builder messageSenderBuilder = MessageSender.create(konfigurasjon.getMeldingsformidlerRoot().toString(),
+        MessageSender.Builder messageSenderBuilder = MessageSender.create(new MeldingsformidlerUri(klientKonfigurasjon.getMeldingsformidlerRoot(), tekniskAvsender.organisasjonsnummer),
                 keyStoreInfo,
                 wsSecurityInterceptor,
-                EbmsAktoer.avsender(avsender.organisasjonsnummer),
-                EbmsAktoer.meldingsformidler(konfigurasjon.getMeldingsformidlerOrganisasjon()))
-                .withConnectTimeout((int) konfigurasjon.getConnectTimeoutInMillis())
-                .withSocketTimeout((int) konfigurasjon.getSocketTimeoutInMillis())
-                .withConnectionRequestTimeout((int) konfigurasjon.getConnectionRequestTimeoutInMillis())
-                .withDefaultMaxPerRoute(konfigurasjon.getMaxConnectionPoolSize()) // Vi vil i praksis bare kjøre én route med denne klienten.
-                .withMaxTotal(konfigurasjon.getMaxConnectionPoolSize());
+                EbmsAktoer.avsender(tekniskAvsender.organisasjonsnummer),
+                EbmsAktoer.meldingsformidler(klientKonfigurasjon.getMeldingsformidlerOrganisasjon()))
+                .withConnectTimeout((int) klientKonfigurasjon.getConnectTimeoutInMillis())
+                .withSocketTimeout((int) klientKonfigurasjon.getSocketTimeoutInMillis())
+                .withConnectionRequestTimeout((int) klientKonfigurasjon.getConnectionRequestTimeoutInMillis())
+                .withDefaultMaxPerRoute(klientKonfigurasjon.getMaxConnectionPoolSize())
+                .withMaxTotal(klientKonfigurasjon.getMaxConnectionPoolSize());
 
-        if (konfigurasjon.useProxy()) {
-            messageSenderBuilder.withHttpProxy(konfigurasjon.getProxyHost(), konfigurasjon.getProxyPort(), konfigurasjon.getProxyScheme());
+        if (klientKonfigurasjon.useProxy()) {
+            messageSenderBuilder.withHttpProxy(klientKonfigurasjon.getProxyHost(), klientKonfigurasjon.getProxyPort(), klientKonfigurasjon.getProxyScheme());
         }
 
         // Legg til http request interceptors fra konfigurasjon pluss vår egen.
-        HttpRequestInterceptor[] httpRequestInterceptors = Arrays.copyOf(konfigurasjon.getHttpRequestInterceptors(), konfigurasjon.getHttpRequestInterceptors().length + 1);
+        HttpRequestInterceptor[] httpRequestInterceptors = Arrays.copyOf(klientKonfigurasjon.getHttpRequestInterceptors(), klientKonfigurasjon.getHttpRequestInterceptors().length + 1);
         httpRequestInterceptors[httpRequestInterceptors.length - 1] = new AddClientVersionInterceptor();
         messageSenderBuilder.withHttpRequestInterceptors(httpRequestInterceptors);
 
-        messageSenderBuilder.withHttpResponseInterceptors(konfigurasjon.getHttpResponseInterceptors());
+        messageSenderBuilder.withHttpResponseInterceptors(klientKonfigurasjon.getHttpResponseInterceptors());
 
         messageSenderBuilder.withMeldingInterceptorBefore(TransactionLogClientInterceptor.class, payloadValidatingInterceptor());
 
-        for (ClientInterceptor clientInterceptor : konfigurasjon.getSoapInterceptors()) {
+        for (ClientInterceptor clientInterceptor : klientKonfigurasjon.getSoapInterceptors()) {
             // TransactionLogClientInterceptoren bør alltid ligge ytterst for å sikre riktig transaksjonslogging (i tilfelle en custom interceptor modifiserer requestet)
             messageSenderBuilder.withMeldingInterceptorBefore(TransactionLogClientInterceptor.class, clientInterceptor);
         }
@@ -95,8 +99,7 @@ public class DigipostMessageSenderFacade {
     private <T> T performRequest(final Request<T> request) throws SendException {
         try {
             return request.exec();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             RuntimeException mappedException = exceptionMapper.mapException(e);
             if (mappedException != null) {
                 throw mappedException;
@@ -126,8 +129,7 @@ public class DigipostMessageSenderFacade {
                     if (messageContext.hasResponse()) {
                         // Feil i responsen, sannsynligvis serveren sin skyld
                         throw new XmlValideringException("XML validation errors in response from server", errors, SERVER);
-                    }
-                    else {
+                    } else {
                         throw new XmlValideringException("XML validation errors in request. Maybe some fields are not being set or are set with null values?", errors, KLIENT);
                     }
 
