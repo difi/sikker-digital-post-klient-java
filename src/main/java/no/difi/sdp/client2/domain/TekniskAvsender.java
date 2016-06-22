@@ -1,11 +1,14 @@
 package no.difi.sdp.client2.domain;
 
+import no.digipost.api.representations.Organisasjonsnummer;
+
 public class TekniskAvsender {
 
-    public final String organisasjonsnummer;
+    public final Organisasjonsnummer organisasjonsnummer;
     public final Noekkelpar noekkelpar;
 
-    private TekniskAvsender(String organisasjonsnummer, Noekkelpar noekkelpar) {
+    private TekniskAvsender(Organisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
+
         this.organisasjonsnummer = organisasjonsnummer;
         this.noekkelpar = noekkelpar;
     }
@@ -14,7 +17,7 @@ public class TekniskAvsender {
      * @param organisasjonsnummer Organisasjonsnummeret til avsender av brevet.
      * @param noekkelpar Avsenders nøkkelpar: signert virksomhetssertifikat og tilhørende privatnøkkel.
      */
-    public static Builder builder(String organisasjonsnummer, Noekkelpar noekkelpar) {
+    public static Builder builder(Organisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
         return new Builder(organisasjonsnummer, noekkelpar);
     }
 
@@ -23,8 +26,8 @@ public class TekniskAvsender {
         private final TekniskAvsender target;
         private boolean built = false;
 
-        private Builder(String orgNummer, Noekkelpar noekkelpar) {
-            target = new TekniskAvsender(orgNummer, noekkelpar);
+        private Builder(Organisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
+            target = new TekniskAvsender(organisasjonsnummer, noekkelpar);
         }
 
         public TekniskAvsender build() {

@@ -25,40 +25,37 @@ public class EbmsForsendelseBuilderTest {
     private EbmsForsendelseBuilder sut;
 
     @Before
-    public void setUp() {
+    public void set_up() {
         sut = new EbmsForsendelseBuilder();
     }
 
     @Test
     public void bygg_minimalt_request() {
-        TekniskAvsender avsender = TekniskAvsender.builder("991825827", ObjectMother.noekkelpar()).build();
-        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185").build();
+        TekniskAvsender avsender = TekniskAvsender.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
+        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
         Dokumentpakke dokumentpakke = Dokumentpakke.builder(dokument).build();
         Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("936796702").build();
         Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalpost, dokumentpakke).build();
 
-        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, new Organisasjonsnummer("984661185"), forsendelse);
+        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, Organisasjonsnummer.of("984661185"), forsendelse);
 
-        // Hovedpoenget her er at det henger sammen å bygge et request uten optional-felter satt (at vi ikke får NullPointerException).
-        assertThat(ebmsForsendelse.getAvsender().orgnr.asIso6523()).isEqualTo("9908:991825827");
+        assertThat(ebmsForsendelse.getAvsender().orgnr.medLandkode()).isEqualTo("9908:991825827");
         assertThat(ebmsForsendelse.getDokumentpakke().getContentType()).isEqualTo("application/cms");
     }
 
     @Test
     public void korrekt_mpc() {
-        // Mpc består av prioritet og mpc-id som brukes til å skille mellom forskjellige MPC-køer hos samme avsender
-        TekniskAvsender avsender = TekniskAvsender.builder("991825827", ObjectMother.noekkelpar()).build();
-        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), "984661185").build();
+        TekniskAvsender avsender = TekniskAvsender.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
+        Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("991825827").build();
         Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig, digitalpost, ObjectMother.dokumentpakke()).mpcId("mpcId").prioritet(Prioritet.PRIORITERT).build();
 
-        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, new Organisasjonsnummer("984661185"), forsendelse);
+        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, Organisasjonsnummer.of("984661185"), forsendelse);
 
         assertThat(ebmsForsendelse.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
         assertThat(ebmsForsendelse.mpcId).isEqualTo("mpcId");
     }
-
 }

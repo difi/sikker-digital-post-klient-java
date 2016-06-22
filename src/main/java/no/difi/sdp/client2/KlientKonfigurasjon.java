@@ -1,24 +1,23 @@
 package no.difi.sdp.client2;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
-
 import no.digipost.api.representations.Organisasjonsnummer;
-
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class KlientKonfigurasjon {
 
-    private URI meldingsformidlerRoot = URI.create("https://meldingsformidler.digipost.no/api/ebms");
-    private final Organisasjonsnummer meldingsformidlerOrganisasjon = new Organisasjonsnummer("984661185");
+    private URI meldingsformidlerRoot;
+    private final Organisasjonsnummer meldingsformidlerOrganisasjon = Organisasjonsnummer.of("984661185");
 
     private String proxyHost;
     private int proxyPort;
-	private String proxyScheme = "https";
+    private String proxyScheme = "https";
     private int maxConnectionPoolSize = 10;
     private long socketTimeoutInMillis = TimeUnit.SECONDS.toMillis(30);
     private long connectTimeoutInMillis = TimeUnit.SECONDS.toMillis(10);
@@ -27,7 +26,9 @@ public class KlientKonfigurasjon {
     private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
 
-    private KlientKonfigurasjon() {}
+    private KlientKonfigurasjon(String meldingsformidlerRoot) {
+        this.meldingsformidlerRoot = URI.create(meldingsformidlerRoot);
+    }
 
     public URI getMeldingsformidlerRoot() {
         return meldingsformidlerRoot;
@@ -41,9 +42,9 @@ public class KlientKonfigurasjon {
         return proxyPort;
     }
 
-	public String getProxyScheme() {
-		return proxyScheme;
-	}
+    public String getProxyScheme() {
+        return proxyScheme;
+    }
 
     public long getSocketTimeoutInMillis() {
         return socketTimeoutInMillis;
@@ -65,10 +66,6 @@ public class KlientKonfigurasjon {
         return !isEmpty(proxyHost) && proxyPort > 0;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public Organisasjonsnummer getMeldingsformidlerOrganisasjon() {
         return meldingsformidlerOrganisasjon;
     }
@@ -85,17 +82,16 @@ public class KlientKonfigurasjon {
         return httpResponseInterceptors;
     }
 
+    public static Builder builder(String meldingsformidlerRoot) {
+        return new Builder(meldingsformidlerRoot);
+    }
+
     public static class Builder {
 
         private final KlientKonfigurasjon target;
 
-        private Builder() {
-            target = new KlientKonfigurasjon();
-        }
-
-        public Builder meldingsformidlerRoot(final String meldingsformidlerRoot) {
-            target.meldingsformidlerRoot = URI.create(meldingsformidlerRoot);
-            return this;
+        private Builder(String meldingsformidlerRoot) {
+            target = new KlientKonfigurasjon(meldingsformidlerRoot);
         }
 
         public Builder proxy(final String proxyHost, final int proxyPort) {
@@ -103,6 +99,7 @@ public class KlientKonfigurasjon {
             target.proxyPort = proxyPort;
             return this;
         }
+
         public Builder proxy(final String proxyHost, final int proxyPort, final String proxyScheme) {
             target.proxyHost = proxyHost;
             target.proxyPort = proxyPort;

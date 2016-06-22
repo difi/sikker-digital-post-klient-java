@@ -7,6 +7,7 @@ import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
+import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class SDPBuilderManifestTest {
     private SDPBuilder sut;
 
     @Before
-    public void setUp() throws Exception {
+    public void set_up() throws Exception {
         sut = new SDPBuilder();
     }
 
@@ -44,7 +45,7 @@ public class SDPBuilderManifestTest {
 
         Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("123456789").fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
 
-        Mottaker mottaker = Mottaker.builder("11077941012", "123456", mottakerSertifikat(), "984661185").build();
+        Mottaker mottaker = Mottaker.builder("11077941012", "123456", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
 
         Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig,
                 DigitalPost.builder(mottaker, "Ikke sensitiv tittel").build(),

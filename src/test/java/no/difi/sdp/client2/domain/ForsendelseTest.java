@@ -6,6 +6,7 @@ import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
 import no.difi.sdp.client2.domain.fysisk_post.*;
 import no.difi.sdp.client2.internal.SDPBuilder;
+import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,17 +44,17 @@ public class ForsendelseTest {
     }
 
     @Test
-    public void test_default_sikkerhetsnivaa_er_satt_til_4() {
+    public void default_sikkerhetsnivaa_er_satt_til_4() {
         assertThat(forsendelse.getDigitalPost().getSikkerhetsnivaa()).isEqualTo(Sikkerhetsnivaa.NIVAA_4);
     }
 
     @Test
-    public void test_default_prioritet_er_satt_til_NORMAL() {
+    public void default_prioritet_er_satt_til_NORMAL() {
         assertThat(forsendelse.getPrioritet()).isEqualTo(Prioritet.NORMAL);
     }
 
     @Test
-    public void test_default_konversasjonsId_er_satt() {
+    public void default_konversasjonsId_er_satt() {
         assertThat(forsendelse.getKonversasjonsId()).isNotEmpty();
     }
 
@@ -63,7 +64,7 @@ public class ForsendelseTest {
     			.adresse(KonvoluttAdresse.build("Rall").iUtlandet("Sweden Main Street", null, null, null, Landkoder.Predefinert.SVERIGE).build())
     			.retur(Returhaandtering.MAKULERING_MED_MELDING, KonvoluttAdresse.build("Rall").iUtlandet("Hungary street 2", null, null, null, "Ungarn").build())
     			.sendesMed(Posttype.A_PRIORITERT)
-    			.utskrift(Utskriftsfarge.FARGE, new TekniskMottaker("orgnr", null)).build();
+    			.utskrift(Utskriftsfarge.FARGE, new TekniskMottaker(Organisasjonsnummer.of("988015814"), null)).build();
 		Forsendelse fysiskForsendelse = Forsendelse.fysisk(ObjectMother.behandlingsansvarlig(), adresse,
     			Dokumentpakke.builder(Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes())).build()).build()).build();
 

@@ -15,7 +15,7 @@ public class KvitteringsInfoTest {
     public final ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testBuilder_initializes() throws Exception {
+    public void builder_initializes() throws Exception {
         String konversasjonsid = "konversasjonsid";
         String referanse = "referanse";
         Instant tidspunkt = Instant.now();
@@ -32,7 +32,7 @@ public class KvitteringsInfoTest {
 
 
     @Test
-    public void testBuilder_failsOnKonversasjonsidNotInitialized() throws Exception {
+    public void builder_fails_on_konversasjonsid_not_initialized() throws Exception {
         String referanse = "referanse";
         Instant tidspunkt = Instant.now();
 
@@ -43,7 +43,7 @@ public class KvitteringsInfoTest {
     }
 
     @Test
-    public void testBuilder_failsOnReferanseNotInitialized() throws Exception {
+    public void builder_fails_on_referanse_not_initialized() throws Exception {
         String konversasjonsid = "konversasjonsid";
         Instant tidspunkt = Instant.now();
         thrown.expect(RuntimeException.class);
@@ -54,7 +54,7 @@ public class KvitteringsInfoTest {
     }
 
     @Test
-    public void testBuilder_failsOnTidspunktNotInitialized() throws Exception {
+    public void builder_fails_on_tidspunkt_not_initialized() throws Exception {
         String konversasjonsid = "konversasjonsid";
         String referanse = "referanse";
         thrown.expect(RuntimeException.class);

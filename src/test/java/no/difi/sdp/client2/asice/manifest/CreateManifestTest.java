@@ -6,6 +6,7 @@ import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
+import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class CreateManifestTest {
 
     @Test(expected = XmlValideringException.class)
     public void should_validate_manifest() {
-        Mottaker mottaker = Mottaker.builder("04036125433", null, mottakerSertifikat(), "984661185").build();
+        Mottaker mottaker = Mottaker.builder("04036125433", null, mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         Behandlingsansvarlig behandlingsasnvarlig = Behandlingsansvarlig.builder("991825827").build();
         Forsendelse ugyldigForsendelse = Forsendelse.digital(behandlingsasnvarlig, DigitalPost.builder(mottaker, "tittel").build(), ObjectMother.dokumentpakke()).build();
 

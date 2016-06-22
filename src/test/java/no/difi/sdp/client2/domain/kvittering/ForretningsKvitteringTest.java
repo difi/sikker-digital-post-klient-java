@@ -11,7 +11,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class ForretningsKvitteringTest {
 
     @Test
-    public void testConstructor_initializesProperly() {
+    public void constructor_initializes_properly() {
         KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering = new KanBekreftesSomBehandletKvittering() {
             @Override
             public String getMeldingsId() {

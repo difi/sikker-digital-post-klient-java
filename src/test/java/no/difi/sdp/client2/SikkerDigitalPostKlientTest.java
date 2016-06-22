@@ -1,5 +1,6 @@
 package no.difi.sdp.client2;
 
+import no.difi.sdp.client2.domain.Behandlingsansvarlig;
 import no.difi.sdp.client2.domain.exceptions.SendIOException;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -20,9 +21,8 @@ public class SikkerDigitalPostKlientTest {
 
     @Test
     public void haandter_connection_timeouts() {
-        String lokalTimeoutUrl = "http://10.255.255.1/";
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot(lokalTimeoutUrl)
+        String lokalTimeoutUrl = "http://10.255.255.1";
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .build();
 
@@ -41,9 +41,8 @@ public class SikkerDigitalPostKlientTest {
     public void kall_http_interceptors() {
         final StringBuffer interceptorString = new StringBuffer();
 
-        String lokalTimeoutUrl = "http://10.255.255.1/";
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot(lokalTimeoutUrl)
+        String lokalTimeoutUrl = "http://10.255.255.1";
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .httpRequestInterceptors(new HttpRequestInterceptor() {
                     @Override

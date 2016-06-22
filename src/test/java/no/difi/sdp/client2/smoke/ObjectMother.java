@@ -13,6 +13,7 @@ import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
 import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
+import no.digipost.api.representations.Organisasjonsnummer;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class ObjectMother {
                 .build();
     }
 
-    public static TekniskAvsender tekniskAvsenderMedSertifikat(final String orgNumber,final Noekkelpar noekkelpar) {
-        return TekniskAvsender.builder(orgNumber, noekkelpar)
+    public static TekniskAvsender tekniskAvsenderMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
+        return TekniskAvsender.builder(organisasjonsnummer, noekkelpar)
                 .build();
     }
 
@@ -54,7 +55,7 @@ public class ObjectMother {
                 .varselEtterDager(asList(1, 4, 10))
                 .build();
 
-        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), "984661185")
+        Mottaker mottaker = Mottaker.builder("04036125433", "ove.jonsen#6K5A", mottakerSertifikat(), Organisasjonsnummer.of("984661185"))
                 .build();
 
         SmsVarsel smsVarsel = SmsVarsel.builder("4799999999", "Du har mottatt brev i din digitale postkasse")

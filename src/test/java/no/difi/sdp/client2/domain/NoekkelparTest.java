@@ -11,7 +11,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class NoekkelparTest {
 
     @Test
-    public void testFraKeyStore() throws Exception {
+    public void initializes_from_key_store() throws Exception {
         KeyStore keyStoreMedVirksomhetssertifikatOgTrustStore = testKeyStore();
         Noekkelpar noekkelpar = Noekkelpar.fraKeyStore(keyStoreMedVirksomhetssertifikatOgTrustStore, ObjectMother.VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.VIRKSOMHETSSERTIFIKAT_PASSORD);
 
@@ -20,7 +20,7 @@ public class NoekkelparTest {
     }
 
     @Test
-    public void testFraKeyStoreUtenTrustStore() throws Exception {
+    public void initializes_from_key_store_without_trust_store() throws Exception {
         KeyStore keyStoreUtenTrustStore = testKeyStore();
         Noekkelpar noekkelpar = Noekkelpar.fraKeyStoreUtenTrustStore(keyStoreUtenTrustStore, ObjectMother.VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.VIRKSOMHETSSERTIFIKAT_PASSORD);
 
@@ -30,7 +30,7 @@ public class NoekkelparTest {
     }
 
     @Test
-    public void testFraKeyStoreOgTrustStore() throws Exception {
+    public void initializes_from_key_store_and_trust_store() throws Exception {
         KeyStore keyStoreMedVirksomhetssertifikat = testKeyStore();
         KeyStore trustStore = testKeyStore();
 

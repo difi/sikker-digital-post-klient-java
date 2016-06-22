@@ -9,6 +9,7 @@ import no.difi.sdp.client2.domain.TekniskAvsender;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
+import no.digipost.api.representations.Organisasjonsnummer;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -18,9 +19,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.ws.client.WebServiceClientException;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.context.MessageContext;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.CertificateEncodingException;
@@ -55,14 +65,14 @@ public class SmokeTest {
         keyStore = getVirksomhetssertifikat();
         organizationNumberFromCertificate = getOrganizationNumberFromCertificate();
 
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder()
-                .meldingsformidlerRoot("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
+                .builder("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
-        TekniskAvsender avsender = ObjectMother.tekniskAvsenderMedSertifikat(organizationNumberFromCertificate, avsenderNoekkelpar());
+        TekniskAvsender tekniskAvsender = ObjectMother.tekniskAvsenderMedSertifikat(Organisasjonsnummer.of("984661185"), avsenderNoekkelpar());
 
-        sikkerDigitalPostKlient = new SikkerDigitalPostKlient(avsender, klientKonfigurasjon);
+        sikkerDigitalPostKlient = new SikkerDigitalPostKlient(tekniskAvsender, klientKonfigurasjon);
     }
 
     private static void verifyEnvironmentVariables() {
@@ -129,7 +139,7 @@ public class SmokeTest {
     private Forsendelse buildForsendelse(String mpcId) {
         Forsendelse forsendelse = null;
         try {
-            forsendelse = ObjectMother.forsendelse(organizationNumberFromCertificate, mpcId, new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = ObjectMother.forsendelse("988015814", mpcId, new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }

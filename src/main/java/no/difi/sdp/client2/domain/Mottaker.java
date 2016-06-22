@@ -1,12 +1,14 @@
 package no.difi.sdp.client2.domain;
 
+import no.digipost.api.representations.Organisasjonsnummer;
+
 public class Mottaker {
 
     private final String personidentifikator;
     private final String postkasseadresse;
     private final TekniskMottaker postkasse;
 
-    private Mottaker(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String organisasjonsnummerPostkasse) {
+    private Mottaker(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, Organisasjonsnummer organisasjonsnummerPostkasse) {
         this.personidentifikator = personidentifikator;
         this.postkasseadresse = postkasseadresse;
         this.postkasse = new TekniskMottaker(organisasjonsnummerPostkasse, mottakerSertifikat);
@@ -33,7 +35,7 @@ public class Mottaker {
      * @param mottakerSertifikat Mottakers sertifikat.
      * @param organisasjonsnummerPostkasse Identifikator (organisasjonsnummer) til virksomheten som er sluttmottaker i meldingsprosessen.
      */
-    public static Builder builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String organisasjonsnummerPostkasse) {
+    public static Builder builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, Organisasjonsnummer organisasjonsnummerPostkasse) {
         return new Builder(personidentifikator, postkasseadresse, mottakerSertifikat, organisasjonsnummerPostkasse);
     }
 
@@ -41,7 +43,7 @@ public class Mottaker {
         private final Mottaker target;
         private boolean built = false;
 
-        private Builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, String organisasjonsnummerPostkasse) {
+        private Builder(String personidentifikator, String postkasseadresse, Sertifikat mottakerSertifikat, Organisasjonsnummer organisasjonsnummerPostkasse) {
             target = new Mottaker(personidentifikator, postkasseadresse, mottakerSertifikat, organisasjonsnummerPostkasse);
         }
 

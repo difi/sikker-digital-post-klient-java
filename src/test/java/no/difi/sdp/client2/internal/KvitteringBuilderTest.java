@@ -22,9 +22,10 @@ public class KvitteringBuilderTest {
     @Test
     public void should_build_pull_request_with_standard_priority_and_mpc() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.NORMAL).mpcId("mpcId").build();
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), kvitteringForespoersel);
+        Organisasjonsnummer organisasjonsnummer = Organisasjonsnummer.of("988015814");
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(organisasjonsnummer, kvitteringForespoersel);
 
-        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
+        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr).isEqualTo(organisasjonsnummer);
         assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.NORMAL);
         assertThat(ebmsPullRequest.mpcId).isEqualTo("mpcId");
     }
@@ -32,9 +33,10 @@ public class KvitteringBuilderTest {
     @Test
     public void should_build_pull_request_with_standard_high_priority_and_null_mpc() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).build();
-        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(new Organisasjonsnummer("123"), kvitteringForespoersel);
+        Organisasjonsnummer organisasjonsnummer = Organisasjonsnummer.of("988015814");
+        EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(organisasjonsnummer, kvitteringForespoersel);
 
-        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr.toString()).isEqualTo("123");
+        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr).isEqualTo(organisasjonsnummer);
         assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
         assertThat(ebmsPullRequest.mpcId).isNull();
     }
@@ -50,7 +52,7 @@ public class KvitteringBuilderTest {
     }
 
     @Test
-    public void should_build_leverings_kvittering() {
+    public void builds_leverings_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsLeveringsKvittering();
 
         LeveringsKvittering leveringsKvittering = (LeveringsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
@@ -64,7 +66,7 @@ public class KvitteringBuilderTest {
     }
 
     @Test
-    public void should_build_mottaks_kvittering() {
+    public void builds_mottaks_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = ObjectMother.createEbmsMottaksKvittering();
 
         MottaksKvittering mottaksKvittering = (MottaksKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
@@ -78,7 +80,7 @@ public class KvitteringBuilderTest {
     }
 
     @Test
-    public void should_build_returpost_kvittering() {
+    public void builds_returpost_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = ObjectMother.createEbmsReturpostKvittering();
 
         ReturpostKvittering returpostKvittering = (ReturpostKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
@@ -92,7 +94,7 @@ public class KvitteringBuilderTest {
     }
 
     @Test
-    public void should_build_varsling_feilet_epost_kvittering() {
+    public void builds_varsling_feilet_epost_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsVarslingFeiletKvittering(SDPVarslingskanal.EPOST);
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
@@ -111,7 +113,7 @@ public class KvitteringBuilderTest {
 
 
     @Test
-    public void should_build_varsling_feilet_sms_kvittering() {
+    public void builds_varsling_feilet_sms_kvittering() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsVarslingFeiletKvittering(SDPVarslingskanal.SMS);
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
@@ -129,7 +131,7 @@ public class KvitteringBuilderTest {
     }
 
     @Test
-    public void should_build_klient_feil() {
+    public void builds_klient_feil() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsFeil(SDPFeiltype.KLIENT);
 
         Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
@@ -146,7 +148,7 @@ public class KvitteringBuilderTest {
     }
 
     @Test
-    public void should_build_server_feil() {
+    public void builds_server_feil() {
         EbmsApplikasjonsKvittering ebmsKvittering = createEbmsFeil(SDPFeiltype.SERVER);
 
         Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
