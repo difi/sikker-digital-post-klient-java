@@ -35,7 +35,7 @@ public class SDPBuilderManifestTest {
     private SDPBuilder sut;
 
     @Before
-    public void setUp() throws Exception {
+    public void set_up() throws Exception {
         sut = new SDPBuilder();
     }
 

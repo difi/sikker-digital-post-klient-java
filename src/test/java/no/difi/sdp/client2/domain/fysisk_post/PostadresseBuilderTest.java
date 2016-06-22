@@ -10,7 +10,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class PostadresseBuilderTest {
 
 	@Test
-	public void inkludererKunIkkeNullAdresselinjer() {
+	public void inkluderer_kun_ikke_null_adresselinjer() {
 		KonvoluttAdresse adresse = KonvoluttAdresse.build("Ola Hansen").iNorge("Osloveien 5", null, null, "0560", "Oslo").build();
 		assertThat(adresse.getAdresselinjer()).containsExactly("Osloveien 5");
 
@@ -19,13 +19,13 @@ public class PostadresseBuilderTest {
 	}
 
 	@Test
-	public void norskAdresse() {
+	public void norsk_adresse_er_norsk() {
 		KonvoluttAdresse adresse = KonvoluttAdresse.build("Ola Hansen").iNorge("Osloveien 5", null, null, "0560", "Oslo").build();
 		assertThat(adresse.getType()).isEqualTo(NORSK);
 	}
 
 	@Test
-	public void utenlandskAdresse() {
+	public void utenlandsk_adresse_er_utenlandsk() {
 		KonvoluttAdresse adresse = KonvoluttAdresse.build("Ola Hansen").iUtlandet("Somewhere St. 5", "10592 New York", null, null, USA).build();
 		assertThat(adresse.getType()).isEqualTo(UTENLANDSK);
 		assertThat(adresse.getLand()).isNull();
@@ -33,7 +33,7 @@ public class PostadresseBuilderTest {
 	}
 
 	@Test
-	public void utenlandskAdresseMedLandnavn() {
+	public void utenlandsk_adresse_med_landnavn_kan_hente_navn() {
 		KonvoluttAdresse adresse = KonvoluttAdresse.build("Ola Hansen").iUtlandet("Somewhere St. 5", "10592 New York", null, null, "Sverige").build();
 		assertThat(adresse.getType()).isEqualTo(UTENLANDSK);
 		assertThat(adresse.getLand()).isEqualTo("Sverige");

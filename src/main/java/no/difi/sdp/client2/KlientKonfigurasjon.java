@@ -1,6 +1,5 @@
 package no.difi.sdp.client2;
 
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;

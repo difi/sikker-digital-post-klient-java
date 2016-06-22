@@ -25,7 +25,7 @@ public class EbmsForsendelseBuilderTest {
     private EbmsForsendelseBuilder sut;
 
     @Before
-    public void setUp() {
+    public void set_up() {
         sut = new EbmsForsendelseBuilder();
     }
 

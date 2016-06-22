@@ -20,7 +20,7 @@ public class CreateCMSDocumentTest {
     private Sertifikat sertifikat;
 
     @Before
-    public void setUp() {
+    public void set_up() {
         Noekkelpar noekkelpar = ObjectMother.noekkelpar();
         privateKey = noekkelpar.getVirksomhetssertifikatPrivatnøkkel();
         sertifikat = noekkelpar.getVirksomhetssertifikat();
@@ -29,7 +29,7 @@ public class CreateCMSDocumentTest {
     }
 
     @Test
-    public void test_can_be_decrypted_by_recipient() throws Exception {
+    public void can_be_decrypted_by_recipient() throws Exception {
         CMSDocument cms = sut.createCMS("message".getBytes(), sertifikat);
 
         CMSEnvelopedDataParser cmsEnvelopeParser = new CMSEnvelopedDataParser(cms.getBytes());

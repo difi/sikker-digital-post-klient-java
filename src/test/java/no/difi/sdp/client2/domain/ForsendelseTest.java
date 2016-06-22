@@ -44,17 +44,17 @@ public class ForsendelseTest {
     }
 
     @Test
-    public void test_default_sikkerhetsnivaa_er_satt_til_4() {
+    public void default_sikkerhetsnivaa_er_satt_til_4() {
         assertThat(forsendelse.getDigitalPost().getSikkerhetsnivaa()).isEqualTo(Sikkerhetsnivaa.NIVAA_4);
     }
 
     @Test
-    public void test_default_prioritet_er_satt_til_NORMAL() {
+    public void default_prioritet_er_satt_til_NORMAL() {
         assertThat(forsendelse.getPrioritet()).isEqualTo(Prioritet.NORMAL);
     }
 
     @Test
-    public void test_default_konversasjonsId_er_satt() {
+    public void default_konversasjonsId_er_satt() {
         assertThat(forsendelse.getKonversasjonsId()).isNotEmpty();
     }
 

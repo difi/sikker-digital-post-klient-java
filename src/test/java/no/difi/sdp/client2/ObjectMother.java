@@ -69,7 +69,7 @@ public class ObjectMother {
 
     public static DigitalPost digitalPost() {
         String varslingsTekst = "Du har mottatt brev i din digitale postkasse";
-        
+
         EpostVarsel epostVarsel = EpostVarsel.builder("example@email.org", varslingsTekst)
                 .varselEtterDager(asList(1, 4, 10))
                 .build();

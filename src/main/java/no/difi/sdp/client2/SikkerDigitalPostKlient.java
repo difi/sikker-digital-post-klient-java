@@ -23,8 +23,8 @@ public class SikkerDigitalPostKlient {
     private final KlientKonfigurasjon klientKonfigurasjon;
 
     /**
-     * @param tekniskAvsender teknisk avsender er den parten som har ansvarlig for den tekniske utførelsen av sendingen.
-     *                        Se <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikt over aktører</a> for mer informasjon.
+     * @param tekniskAvsender     teknisk avsender er den parten som har ansvarlig for den tekniske utførelsen av sendingen.
+     *                            Se <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikt over aktører</a> for mer informasjon.
      * @param klientKonfigurasjon Oppsett for blant annet oppkoblingen mot meldingsformidler og interceptorer for å få ut data som sendes.
      */
     public SikkerDigitalPostKlient(TekniskAvsender tekniskAvsender, KlientKonfigurasjon klientKonfigurasjon) {
@@ -58,7 +58,6 @@ public class SikkerDigitalPostKlient {
      * <dl>
      * <dt>normal</dt>
      * <dd>Minimum 10 minutter</dd>
-     * <p>
      * <dt>prioritert</dt>
      * <dd>Minimum 1 minutt</dd>
      * </dl>
@@ -76,7 +75,6 @@ public class SikkerDigitalPostKlient {
      * <dl>
      * <dt>normal</dt>
      * <dd>Minimum 10 minutter</dd>
-     * <p>
      * <dt>prioritert</dt>
      * <dd>Minimum 1 minutt</dd>
      * </dl>

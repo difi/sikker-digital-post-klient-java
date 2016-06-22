@@ -8,7 +8,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class KlientKonfigurasjonTest {
 
     @Test
-    public void DefaultBuilder_InitializesMeldingsformidlerRoot() {
+    public void default_builder_initializes_meldingsformidler_root() {
         String meldingsformidlerRoot =  "http://meldingsformidlerroot.no";
         Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("orgnummer").build();
 
