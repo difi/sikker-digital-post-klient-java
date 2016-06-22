@@ -2,7 +2,7 @@ package no.difi.sdp.client2.internal;
 
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.domain.Behandlingsansvarlig;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -31,7 +31,7 @@ public class EbmsForsendelseBuilderTest {
 
     @Test
     public void bygg_minimalt_request() {
-        TekniskAvsender avsender = TekniskAvsender.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
+        Databehandler avsender = Databehandler.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
@@ -47,7 +47,7 @@ public class EbmsForsendelseBuilderTest {
 
     @Test
     public void korrekt_mpc() {
-        TekniskAvsender avsender = TekniskAvsender.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
+        Databehandler avsender = Databehandler.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("991825827").build();

@@ -7,7 +7,7 @@ import no.difi.sdp.client2.asice.manifest.Manifest;
 import no.difi.sdp.client2.asice.signature.CreateSignature;
 import no.difi.sdp.client2.asice.signature.Signature;
 import no.difi.sdp.client2.domain.Forsendelse;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class CreateASiCE {
         createZip = new CreateZip();
     }
 
-    public ArchivedASiCE createAsice(TekniskAvsender tekniskAvsender, Forsendelse forsendelse) {
+    public ArchivedASiCE createAsice(Databehandler databehandler, Forsendelse forsendelse) {
         // Lag ASiC-E manifest
         log.info("Creating ASiC-E manifest");
         Manifest manifest = createManifest.createManifest(forsendelse);
@@ -46,8 +46,8 @@ public class CreateASiCE {
         files.add(manifest);
 
         // Lag signatur over alle filene i pakka
-        log.info("Signing ASiC-E documents using private key with alias " + tekniskAvsender.noekkelpar.getAlias());
-        Signature signature = createSignature.createSignature(tekniskAvsender.noekkelpar, files);
+        log.info("Signing ASiC-E documents using private key with alias " + databehandler.noekkelpar.getAlias());
+        Signature signature = createSignature.createSignature(databehandler.noekkelpar, files);
         files.add(signature);
 
         // Zip filene

@@ -96,13 +96,13 @@ public class ObjectMother {
                 .build();
     }
 
-    public static TekniskAvsender tekniskAvsender() {
-        return TekniskAvsender.builder(Organisasjonsnummer.of("984661185"), noekkelpar())
+    public static Databehandler databehandler() {
+        return Databehandler.builder(Organisasjonsnummer.of("984661185"), noekkelpar())
                 .build();
     }
 
-    public static TekniskAvsender tekniskAvsenderMedSertifikat(final Noekkelpar noekkelpar) {
-        return TekniskAvsender.builder(Organisasjonsnummer.of("984661185"), noekkelpar)
+    public static Databehandler databehandlerMedSertifikat(final Noekkelpar noekkelpar) {
+        return Databehandler.builder(Organisasjonsnummer.of("984661185"), noekkelpar)
                 .build();
     }
 

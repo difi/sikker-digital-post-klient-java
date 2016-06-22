@@ -2,7 +2,7 @@ package no.difi.sdp.client2.internal;
 
 import no.difi.sdp.client2.ExceptionMapper;
 import no.difi.sdp.client2.KlientKonfigurasjon;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
@@ -35,15 +35,15 @@ public class DigipostMessageSenderFacade {
     private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
 
-    public DigipostMessageSenderFacade(final TekniskAvsender tekniskAvsender, final KlientKonfigurasjon klientKonfigurasjon) {
-        KeyStoreInfo keyStoreInfo = tekniskAvsender.noekkelpar.getKeyStoreInfo();
+    public DigipostMessageSenderFacade(final Databehandler databehandler, final KlientKonfigurasjon klientKonfigurasjon) {
+        KeyStoreInfo keyStoreInfo = databehandler.noekkelpar.getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
 
-        MessageSender.Builder messageSenderBuilder = MessageSender.create(new MeldingsformidlerUri(klientKonfigurasjon.getMeldingsformidlerRoot(), tekniskAvsender.organisasjonsnummer),
+        MessageSender.Builder messageSenderBuilder = MessageSender.create(new MeldingsformidlerUri(klientKonfigurasjon.getMeldingsformidlerRoot(), databehandler.organisasjonsnummer),
                 keyStoreInfo,
                 wsSecurityInterceptor,
-                EbmsAktoer.avsender(tekniskAvsender.organisasjonsnummer),
+                EbmsAktoer.avsender(databehandler.organisasjonsnummer),
                 EbmsAktoer.meldingsformidler(klientKonfigurasjon.getMeldingsformidlerOrganisasjon()))
                 .withConnectTimeout((int) klientKonfigurasjon.getConnectTimeoutInMillis())
                 .withSocketTimeout((int) klientKonfigurasjon.getSocketTimeoutInMillis())
