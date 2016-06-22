@@ -48,7 +48,7 @@ public class DigitalPost {
     }
 
     /**
-     * @param mottaker Mottaker av digital post.
+     * @param mottaker           Mottaker av digital post.
      * @param ikkeSensitivTittel Ikke-sensitiv tittel på brevet.
      *                           Denne tittelen vil være synlig under transport av meldingen og kan vises i mottakerens postkasse selv om det ikke er autentisert med tilstrekkelig autentiseringsnivå.
      */
@@ -67,7 +67,7 @@ public class DigitalPost {
 
         /**
          * Når brevet tilgjengeliggjøres for mottaker.
-         *
+         * <p>
          * Standard er nå.
          */
         public Builder virkningsdato(Date virkningsdato) {
@@ -77,7 +77,7 @@ public class DigitalPost {
 
         /**
          * Ønskes kvittering når brevet blir åpnet av mottaker?
-         *
+         * <p>
          * Standard er false.
          */
         public Builder aapningskvittering(boolean aapningskvittering) {
@@ -87,7 +87,7 @@ public class DigitalPost {
 
         /**
          * Nødvendig autentiseringsnivå som kreves av mottaker i postkassen for å åpne brevet.
-         *
+         * <p>
          * Standard er {@link Sikkerhetsnivaa#NIVAA_4}.
          */
         public Builder sikkerhetsnivaa(Sikkerhetsnivaa sikkerhetsnivaa) {
@@ -97,7 +97,7 @@ public class DigitalPost {
 
         /**
          * Minimum e-postvarsel som skal sendes til mottaker av brevet. Postkassen kan velge å sende andre varsler i tillegg.
-         *
+         * <p>
          * Standard er standardoppførselen til postkasseleverandøren.
          */
         public Builder epostVarsel(EpostVarsel epostVarsel) {
@@ -107,7 +107,7 @@ public class DigitalPost {
 
         /**
          * Minimum sms-varsel som skal sendes til mottaker av brevet. Postkassen kan velge å sende andre varsler i tillegg.
-         *
+         * <p>
          * Standard er standardoppførselen til postkasseleverandøren.
          */
         public Builder smsVarsel(SmsVarsel smsVarsel) {
