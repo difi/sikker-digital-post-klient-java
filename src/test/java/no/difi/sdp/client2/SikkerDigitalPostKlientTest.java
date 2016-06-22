@@ -1,6 +1,5 @@
 package no.difi.sdp.client2;
 
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
 import no.difi.sdp.client2.domain.exceptions.SendIOException;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;

@@ -1,6 +1,6 @@
 package no.difi.sdp.client2.smoke;
 
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
+import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -35,9 +35,9 @@ public class ObjectMother {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig(orgNumber);
+        Avsender avsender = avsender(orgNumber);
 
-        return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
+        return Forsendelse.digital(avsender, digitalPost, dokumentpakke)
                 .konversasjonsId(UUID.randomUUID().toString())
                 .prioritet(Prioritet.PRIORITERT)
                 .mpcId(mpcId)
@@ -71,8 +71,8 @@ public class ObjectMother {
     }
 
 
-    public static Behandlingsansvarlig behandlingsansvarlig(final String orgNumber) {
-        return Behandlingsansvarlig.builder(orgNumber)
+    public static Avsender avsender(final String orgNumber) {
+        return Avsender.builder(Organisasjonsnummer.of(orgNumber))
                 .build();
     }
 

@@ -1,15 +1,17 @@
 package no.difi.sdp.client2.domain;
 
-/**
- * Behandlingsansvarlig som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
- */
-public class Behandlingsansvarlig {
+import no.digipost.api.representations.Organisasjonsnummer;
 
-    private final String organisasjonsnummer;
+/**
+ * Avsender som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
+ */
+public class Avsender {
+
+    private final Organisasjonsnummer organisasjonsnummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
 
-    public Behandlingsansvarlig(String organisasjonsnummer) {
+    public Avsender(Organisasjonsnummer organisasjonsnummer) {
         this.organisasjonsnummer = organisasjonsnummer;
     }
 
@@ -21,21 +23,21 @@ public class Behandlingsansvarlig {
         return fakturaReferanse;
     }
 
-    public String getOrganisasjonsnummer() {
+    public Organisasjonsnummer getOrganisasjonsnummer() {
         return organisasjonsnummer;
     }
 
-    public static Builder builder(String organisasjonsnummer) {
+    public static Builder builder(Organisasjonsnummer organisasjonsnummer) {
         return new Builder(organisasjonsnummer);
     }
 
     public static class Builder {
 
-        private final Behandlingsansvarlig target;
+        private final Avsender target;
         private boolean built = false;
 
-        private Builder(String organisasjonsnummer) {
-            target = new Behandlingsansvarlig(organisasjonsnummer);
+        private Builder(Organisasjonsnummer organisasjonsnummer) {
+            target = new Avsender(organisasjonsnummer);
         }
 
         public Builder fakturaReferanse(String fakturaReferanse) {
@@ -53,7 +55,7 @@ public class Behandlingsansvarlig {
             return this;
         }
 
-        public Behandlingsansvarlig build() {
+        public Avsender build() {
             if (built) throw new IllegalStateException("Can't build twice");
             built = true;
             return this.target;

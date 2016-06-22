@@ -58,9 +58,9 @@ public class ObjectMother {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig();
+        Avsender avsender = avsender();
 
-        return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
+        return Forsendelse.digital(avsender, digitalPost, dokumentpakke)
                 .konversasjonsId(UUID.randomUUID().toString())
                 .prioritet(Prioritet.PRIORITERT)
                 .spraakkode("NO")
@@ -89,8 +89,8 @@ public class ObjectMother {
                 .build();
     }
 
-    public static Behandlingsansvarlig behandlingsansvarlig() {
-        return Behandlingsansvarlig.builder("984661185")
+    public static Avsender avsender() {
+        return Avsender.builder(Organisasjonsnummer.of("984661185"))
                 .avsenderIdentifikator("avsenderId")
                 .fakturaReferanse("ØK1")
                 .build();
