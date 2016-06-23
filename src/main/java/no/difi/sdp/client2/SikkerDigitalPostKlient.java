@@ -1,7 +1,7 @@
 package no.difi.sdp.client2;
 
 import no.difi.sdp.client2.domain.Forsendelse;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
@@ -16,26 +16,26 @@ import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class SikkerDigitalPostKlient {
 
-    private final TekniskAvsender tekniskAvsender;
+    private final Databehandler databehandler;
     private final EbmsForsendelseBuilder ebmsForsendelseBuilder;
     private final KvitteringBuilder kvitteringBuilder;
     private final DigipostMessageSenderFacade digipostMessageSenderFacade;
     private final KlientKonfigurasjon klientKonfigurasjon;
 
     /**
-     * @param tekniskAvsender     teknisk avsender er den parten som har ansvarlig for den tekniske utførelsen av sendingen.
+     * @param databehandler     teknisk avsender er den parten som har ansvarlig for den tekniske utførelsen av sendingen.
      *                            Se <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikt over aktører</a> for mer informasjon.
      * @param klientKonfigurasjon Oppsett for blant annet oppkoblingen mot meldingsformidler og interceptorer for å få ut data som sendes.
      */
-    public SikkerDigitalPostKlient(TekniskAvsender tekniskAvsender, KlientKonfigurasjon klientKonfigurasjon) {
+    public SikkerDigitalPostKlient(Databehandler databehandler, KlientKonfigurasjon klientKonfigurasjon) {
         CryptoChecker.checkCryptoPolicy();
 
         this.ebmsForsendelseBuilder = new EbmsForsendelseBuilder();
         this.kvitteringBuilder = new KvitteringBuilder();
-        this.digipostMessageSenderFacade = new DigipostMessageSenderFacade(tekniskAvsender, klientKonfigurasjon);
+        this.digipostMessageSenderFacade = new DigipostMessageSenderFacade(databehandler, klientKonfigurasjon);
 
         this.klientKonfigurasjon = klientKonfigurasjon;
-        this.tekniskAvsender = tekniskAvsender;
+        this.databehandler = databehandler;
     }
 
     /**
@@ -46,7 +46,7 @@ public class SikkerDigitalPostKlient {
      * @throws SendException
      */
     public void send(Forsendelse forsendelse) throws SendException {
-        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(tekniskAvsender, klientKonfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
+        EbmsForsendelse ebmsForsendelse = ebmsForsendelseBuilder.buildEbmsForsendelse(databehandler, klientKonfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
         digipostMessageSenderFacade.send(ebmsForsendelse);
     }
 

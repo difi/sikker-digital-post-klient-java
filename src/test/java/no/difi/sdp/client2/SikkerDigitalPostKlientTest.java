@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
-import static no.difi.sdp.client2.ObjectMother.tekniskAvsender;
+import static no.difi.sdp.client2.ObjectMother.databehandler;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Fail.fail;
@@ -25,7 +25,7 @@ public class SikkerDigitalPostKlientTest {
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .build();
 
-        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(tekniskAvsender(), klientKonfigurasjon);
+        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(databehandler(), klientKonfigurasjon);
 
         try {
             postklient.send(forsendelse());
@@ -56,7 +56,7 @@ public class SikkerDigitalPostKlientTest {
                 })
                 .build();
 
-        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(tekniskAvsender(), klientKonfigurasjon);
+        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(databehandler(), klientKonfigurasjon);
 
         try {
             postklient.send(forsendelse());

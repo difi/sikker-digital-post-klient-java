@@ -8,7 +8,7 @@ import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.Sertifikat;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
@@ -45,8 +45,8 @@ public class ObjectMother {
                 .build();
     }
 
-    public static TekniskAvsender tekniskAvsenderMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
-        return TekniskAvsender.builder(organisasjonsnummer, noekkelpar)
+    public static Databehandler databehandlerMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
+        return Databehandler.builder(organisasjonsnummer, noekkelpar)
                 .build();
     }
 
