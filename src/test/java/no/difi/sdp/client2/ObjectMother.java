@@ -224,8 +224,8 @@ public class ObjectMother {
         StandardBusinessDocument sbd = new StandardBusinessDocument().withStandardBusinessDocumentHeader(
                 new StandardBusinessDocumentHeader()
                         .withHeaderVersion("1.0")
-                        .withSenders(new Partner().withIdentifier(new PartnerIdentification(avsenderOrganisasjonsnummer.medLandkode(), Organisasjonsnummer.ISO6523_ACTORID)))
-                        .withReceivers(new Partner().withIdentifier(new PartnerIdentification(mottakerOrganisasjonsnummer.medLandkode(), Organisasjonsnummer.ISO6523_ACTORID)))
+                        .withSenders(new Partner().withIdentifier(new PartnerIdentification(avsenderOrganisasjonsnummer.getOrganisasjonsnummerMedLandkode(), Organisasjonsnummer.ISO6523_ACTORID)))
+                        .withReceivers(new Partner().withIdentifier(new PartnerIdentification(mottakerOrganisasjonsnummer.getOrganisasjonsnummerMedLandkode(), Organisasjonsnummer.ISO6523_ACTORID)))
                         .withDocumentIdentification(new DocumentIdentification()
                                 .withStandard("urn:no:difi:sdp:1.0")
                                 .withTypeVersion("1.0")

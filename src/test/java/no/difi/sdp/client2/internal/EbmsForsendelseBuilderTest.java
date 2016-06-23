@@ -41,7 +41,7 @@ public class EbmsForsendelseBuilderTest {
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(avsender, Organisasjonsnummer.of("984661185"), forsendelse);
 
-        assertThat(ebmsForsendelse.getAvsender().orgnr.medLandkode()).isEqualTo("9908:991825827");
+        assertThat(ebmsForsendelse.getAvsender().orgnr.getOrganisasjonsnummerMedLandkode()).isEqualTo("9908:991825827");
         assertThat(ebmsForsendelse.getDokumentpakke().getContentType()).isEqualTo("application/cms");
     }
 
