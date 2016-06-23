@@ -1,7 +1,7 @@
 package no.difi.sdp.client2.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPManifest;
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
+import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -43,11 +43,11 @@ public class SDPBuilderManifestTest {
     public void build_expected_manifest() throws Exception {
         String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-manifest.xml"));
 
-        Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("123456789").fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
+        Avsender avsender = Avsender.builder("123456789").fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
 
         Mottaker mottaker = Mottaker.builder("11077941012", "123456", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
 
-        Forsendelse forsendelse = Forsendelse.digital(behandlingsansvarlig,
+        Forsendelse forsendelse = Forsendelse.digital(avsender,
                 DigitalPost.builder(mottaker, "Ikke sensitiv tittel").build(),
                 Dokumentpakke.builder(Dokument.builder("Vedtak", "vedtak_2398324.pdf", new ByteArrayInputStream("vedtak".getBytes())).mimeType("application/pdf").build()).
                         vedlegg(

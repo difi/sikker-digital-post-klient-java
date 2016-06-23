@@ -1,15 +1,15 @@
 package no.difi.sdp.client2.domain;
 
 /**
- * Behandlingsansvarlig som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
+ * Avsender som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
  */
-public class Behandlingsansvarlig {
+public class Avsender {
 
     private final String organisasjonsnummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
 
-    public Behandlingsansvarlig(String organisasjonsnummer) {
+    public Avsender(String organisasjonsnummer) {
         this.organisasjonsnummer = organisasjonsnummer;
     }
 
@@ -31,11 +31,11 @@ public class Behandlingsansvarlig {
 
     public static class Builder {
 
-        private final Behandlingsansvarlig target;
+        private final Avsender target;
         private boolean built = false;
 
         private Builder(String organisasjonsnummer) {
-            target = new Behandlingsansvarlig(organisasjonsnummer);
+            target = new Avsender(organisasjonsnummer);
         }
 
         public Builder fakturaReferanse(String fakturaReferanse) {
@@ -53,7 +53,7 @@ public class Behandlingsansvarlig {
             return this;
         }
 
-        public Behandlingsansvarlig build() {
+        public Avsender build() {
             if (built) throw new IllegalStateException("Can't build twice");
             built = true;
             return this.target;
