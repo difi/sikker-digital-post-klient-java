@@ -1,15 +1,17 @@
 package no.difi.sdp.client2.domain;
 
+import no.digipost.api.representations.AvsenderOrganisasjonsnummer;
+
 /**
  * Avsender som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
  */
 public class Avsender {
 
-    private final String organisasjonsnummer;
+    private final AvsenderOrganisasjonsnummer organisasjonsnummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
 
-    public Avsender(String organisasjonsnummer) {
+    public Avsender(AvsenderOrganisasjonsnummer organisasjonsnummer) {
         this.organisasjonsnummer = organisasjonsnummer;
     }
 
@@ -21,11 +23,11 @@ public class Avsender {
         return fakturaReferanse;
     }
 
-    public String getOrganisasjonsnummer() {
+    public AvsenderOrganisasjonsnummer getOrganisasjonsnummer() {
         return organisasjonsnummer;
     }
 
-    public static Builder builder(String organisasjonsnummer) {
+    public static Builder builder(AvsenderOrganisasjonsnummer organisasjonsnummer) {
         return new Builder(organisasjonsnummer);
     }
 
@@ -34,7 +36,7 @@ public class Avsender {
         private final Avsender target;
         private boolean built = false;
 
-        private Builder(String organisasjonsnummer) {
+        private Builder(AvsenderOrganisasjonsnummer organisasjonsnummer) {
             target = new Avsender(organisasjonsnummer);
         }
 
@@ -54,7 +56,7 @@ public class Avsender {
         }
 
         public Avsender build() {
-            if (built) throw new IllegalStateException("Can't build twice");
+            if (built) throw new IllegalStateException("Kan ikke bygges flere ganger.");
             built = true;
             return this.target;
         }

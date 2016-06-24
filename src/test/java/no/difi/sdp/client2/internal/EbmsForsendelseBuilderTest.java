@@ -36,7 +36,7 @@ public class EbmsForsendelseBuilderTest {
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
         Dokumentpakke dokumentpakke = Dokumentpakke.builder(dokument).build();
-        Avsender avsender = Avsender.builder("936796702").build();
+        Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
         Forsendelse forsendelse = Forsendelse.digital(avsender, digitalpost, dokumentpakke).build();
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse);
@@ -50,7 +50,7 @@ public class EbmsForsendelseBuilderTest {
         Databehandler databehandler = Databehandler.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
-        Avsender avsender = Avsender.builder("991825827").build();
+        Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
         Forsendelse forsendelse = Forsendelse.digital(avsender, digitalpost, ObjectMother.dokumentpakke()).mpcId("mpcId").prioritet(Prioritet.PRIORITERT).build();
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse);
