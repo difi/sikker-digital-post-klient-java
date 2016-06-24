@@ -93,23 +93,21 @@ public class ObjectMother {
     }
 
     public static Avsender avsender() {
-        Organisasjonsnummer orgnummer = Organisasjonsnummer.of("984661185");
+        Organisasjonsnummer orgnummer = avsenderOrganisasjonsnummer();
 
         return Avsender.builder(orgnummer.forfremTilAvsender())
-                .avsenderIdentifikator("avsenderId")
-                .fakturaReferanse("ØK1")
                 .build();
 
 
     }
 
     public static Databehandler databehandler() {
-        return Databehandler.builder(Organisasjonsnummer.of("984661185"), noekkelpar())
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar())
                 .build();
     }
 
     public static Databehandler databehandlerMedSertifikat(final Noekkelpar noekkelpar) {
-        return Databehandler.builder(Organisasjonsnummer.of("984661185"), noekkelpar)
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar)
                 .build();
     }
 
