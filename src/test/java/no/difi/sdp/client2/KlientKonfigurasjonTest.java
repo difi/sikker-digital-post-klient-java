@@ -11,12 +11,15 @@ public class KlientKonfigurasjonTest {
     @Test
     public void default_builder_initializes_meldingsformidler_root() {
         String meldingsformidlerRoot =  "http://meldingsformidlerroot.no";
-        Avsender avsender = Avsender.builder(Organisasjonsnummer.of("984661185")).build();
+
+        Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
                 .builder(meldingsformidlerRoot)
                 .build();
 
         assertThat(klientKonfigurasjon.getMeldingsformidlerRoot().toString()).isEqualTo(meldingsformidlerRoot);
+
+
     }
 }

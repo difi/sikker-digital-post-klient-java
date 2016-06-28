@@ -43,7 +43,7 @@ public class SDPBuilderManifestTest {
     public void build_expected_manifest() throws Exception {
         String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-manifest.xml"));
 
-        Avsender avsender = Avsender.builder(Organisasjonsnummer.of("123456789")).fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
+        Avsender avsender = Avsender.builder(Organisasjonsnummer.of("123456789").forfremTilAvsender()).fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
 
         Mottaker mottaker = Mottaker.builder("11077941012", "123456", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
 

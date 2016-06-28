@@ -17,7 +17,7 @@ public class CreateManifestTest {
     private CreateManifest sut;
 
     @Before
-    public void setUp() throws Exception {
+    public void set_up() throws Exception {
         sut = new CreateManifest();
     }
 
@@ -31,10 +31,9 @@ public class CreateManifestTest {
     @Test(expected = XmlValideringException.class)
     public void should_validate_manifest() {
         Mottaker mottaker = Mottaker.builder("04036125433", null, mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
-        Avsender behandlingsasnvarlig = Avsender.builder(Organisasjonsnummer.of("991825827")).build();
-        Forsendelse ugyldigForsendelse = Forsendelse.digital(behandlingsasnvarlig, DigitalPost.builder(mottaker, "tittel").build(), ObjectMother.dokumentpakke()).build();
+        Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
 
+        Forsendelse ugyldigForsendelse = Forsendelse.digital(avsender, DigitalPost.builder(mottaker, "tittel").build(), ObjectMother.dokumentpakke()).build();
         sut.createManifest(ugyldigForsendelse);
     }
-
 }

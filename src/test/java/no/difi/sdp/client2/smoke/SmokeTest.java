@@ -1,6 +1,7 @@
 package no.difi.sdp.client2.smoke;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
+import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Noekkelpar;
@@ -130,7 +131,7 @@ public class SmokeTest {
     private Forsendelse buildForsendelse(String mpcId) {
         Forsendelse forsendelse = null;
         try {
-            forsendelse = ObjectMother.forsendelse("988015814", mpcId, new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = ObjectMother.forsendelse(mpcId, new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }
