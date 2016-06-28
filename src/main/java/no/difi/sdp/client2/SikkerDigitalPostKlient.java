@@ -1,7 +1,7 @@
 package no.difi.sdp.client2;
 
-import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Databehandler;
+import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
@@ -23,7 +23,11 @@ public class SikkerDigitalPostKlient {
     private final KlientKonfigurasjon klientKonfigurasjon;
 
     /**
+<<<<<<< HEAD
      * @param databehandler     teknisk avsender er den parten som har ansvarlig for den tekniske utførelsen av sendingen.
+=======
+     * @param databehandler       parten som har ansvarlig for den tekniske utførelsen av sendingen.
+>>>>>>> master
      *                            Se <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikt over aktører</a> for mer informasjon.
      * @param klientKonfigurasjon Oppsett for blant annet oppkoblingen mot meldingsformidler og interceptorer for å få ut data som sendes.
      */

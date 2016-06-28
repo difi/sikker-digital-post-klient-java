@@ -32,9 +32,8 @@ public class CreateManifestTest {
     public void should_validate_manifest() {
         Mottaker mottaker = Mottaker.builder("04036125433", null, mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
-        Forsendelse ugyldigForsendelse = Forsendelse.digital(avsender, DigitalPost.builder(mottaker, "tittel").build(), ObjectMother.dokumentpakke()).build();
 
+        Forsendelse ugyldigForsendelse = Forsendelse.digital(avsender, DigitalPost.builder(mottaker, "tittel").build(), ObjectMother.dokumentpakke()).build();
         sut.createManifest(ugyldigForsendelse);
     }
-
 }

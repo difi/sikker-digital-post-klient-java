@@ -11,6 +11,7 @@ public class KlientKonfigurasjonTest {
     @Test
     public void default_builder_initializes_meldingsformidler_root() {
         String meldingsformidlerRoot =  "http://meldingsformidlerroot.no";
+
         Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon

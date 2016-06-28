@@ -32,11 +32,11 @@ public class SDPBuilderManifestTest {
         marshaller.setMarshallerProperties(Collections.singletonMap(Marshaller.JAXB_FORMATTED_OUTPUT, true));
     }
 
-    private SDPBuilder sut;
+    private SDPBuilder sdpBuilder;
 
     @Before
     public void set_up() throws Exception {
-        sut = new SDPBuilder();
+        sdpBuilder = new SDPBuilder();
     }
 
     @Test
@@ -56,7 +56,7 @@ public class SDPBuilderManifestTest {
                         .build())
                 .build();
 
-        SDPManifest manifest = sut.createManifest(forsendelse);
+        SDPManifest manifest = sdpBuilder.createManifest(forsendelse);
 
         ByteArrayOutputStream xmlBytes = new ByteArrayOutputStream();
         marshaller.marshal(manifest, new StreamResult(xmlBytes));

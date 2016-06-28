@@ -96,9 +96,8 @@ public class ObjectMother {
         Organisasjonsnummer orgnummer = avsenderOrganisasjonsnummer();
 
         return Avsender.builder(orgnummer.forfremTilAvsender())
+
                 .build();
-
-
     }
 
     public static Databehandler databehandler() {
