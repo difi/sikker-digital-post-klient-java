@@ -1,6 +1,6 @@
 package no.difi.sdp.client2.smoke;
 
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
+import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -8,7 +8,7 @@ import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.Sertifikat;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
@@ -35,9 +35,9 @@ public class ObjectMother {
                 .vedlegg(new ArrayList<Dokument>())
                 .build();
 
-        Behandlingsansvarlig behandlingsansvarlig = behandlingsansvarlig(orgNumber);
+        Avsender avsender = avsender(orgNumber);
 
-        return Forsendelse.digital(behandlingsansvarlig, digitalPost, dokumentpakke)
+        return Forsendelse.digital(avsender, digitalPost, dokumentpakke)
                 .konversasjonsId(UUID.randomUUID().toString())
                 .prioritet(Prioritet.PRIORITERT)
                 .mpcId(mpcId)
@@ -45,8 +45,8 @@ public class ObjectMother {
                 .build();
     }
 
-    public static TekniskAvsender tekniskAvsenderMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
-        return TekniskAvsender.builder(organisasjonsnummer, noekkelpar)
+    public static Databehandler databehandlerMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
+        return Databehandler.builder(organisasjonsnummer, noekkelpar)
                 .build();
     }
 
@@ -71,8 +71,8 @@ public class ObjectMother {
     }
 
 
-    public static Behandlingsansvarlig behandlingsansvarlig(final String orgNumber) {
-        return Behandlingsansvarlig.builder(orgNumber)
+    public static Avsender avsender(final String orgNumber) {
+        return Avsender.builder(Organisasjonsnummer.of(orgNumber))
                 .build();
     }
 

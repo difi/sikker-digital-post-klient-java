@@ -26,23 +26,23 @@ public class Forsendelse {
     private final DigitalPost digitalPost;
     private final FysiskPost fysiskPost;
     private final Dokumentpakke dokumentpakke;
-    private final Behandlingsansvarlig behandlingsansvarlig;
+    private final Avsender avsender;
     private String konversasjonsId = UUID.randomUUID().toString();
     private Prioritet prioritet = Prioritet.NORMAL;
     private String spraakkode = "NO";
     private String mpcId;
 
-    private Forsendelse(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+    private Forsendelse(Avsender avsender, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
     	this.type = DIGITAL;
-        this.behandlingsansvarlig = behandlingsansvarlig;
+        this.avsender = avsender;
         this.digitalPost = digitalPost;
         this.fysiskPost = null;
         this.dokumentpakke = dokumentpakke;
     }
 
-    private Forsendelse(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+    private Forsendelse(Avsender avsender, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
     	this.type = FYSISK;
-    	this.behandlingsansvarlig = behandlingsansvarlig;
+    	this.avsender = avsender;
     	this.dokumentpakke = dokumentpakke;
     	this.fysiskPost = fysiskPost;
     	this.digitalPost = null;
@@ -76,22 +76,22 @@ public class Forsendelse {
         return mpcId;
     }
 
-    public Behandlingsansvarlig getBehandlingsansvarlig() {
-        return behandlingsansvarlig;
+    public Avsender getAvsender() {
+        return avsender;
     }
 
     /**
-     * @param behandlingsansvarlig Ansvarlig avsender av forsendelsen. Dette vil i de aller fleste tilfeller være
+     * @param avsender Ansvarlig avsender av forsendelsen. Dette vil i de aller fleste tilfeller være
      *                             den offentlige virksomheten som er ansvarlig for brevet som skal sendes.
      * @param digitalPost Informasjon som brukes av postkasseleverandør for å behandle den digitale posten.
      * @param dokumentpakke Pakke med hoveddokument og evt vedlegg som skal sendes.
      */
-    public static Builder digital(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
-        return new Builder(behandlingsansvarlig, digitalPost, dokumentpakke);
+    public static Builder digital(Avsender avsender, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+        return new Builder(avsender, digitalPost, dokumentpakke);
     }
 
-	public static Builder fysisk(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
-	    return new Builder(behandlingsansvarlig, fysiskPost, dokumentpakke);
+	public static Builder fysisk(Avsender avsender, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+	    return new Builder(avsender, fysiskPost, dokumentpakke);
     }
 
     public static class Builder {
@@ -99,12 +99,12 @@ public class Forsendelse {
         private final Forsendelse target;
         private boolean built = false;
 
-        private Builder(Behandlingsansvarlig behandlingsansvarlig, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
-            this.target = new Forsendelse(behandlingsansvarlig, digitalPost, dokumentpakke);
+        private Builder(Avsender avsender, DigitalPost digitalPost, Dokumentpakke dokumentpakke) {
+            this.target = new Forsendelse(avsender, digitalPost, dokumentpakke);
         }
 
-        private Builder(Behandlingsansvarlig behandlingsansvarlig, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
-            this.target = new Forsendelse(behandlingsansvarlig, fysiskPost, dokumentpakke);
+        private Builder(Avsender avsender, FysiskPost fysiskPost, Dokumentpakke dokumentpakke) {
+            this.target = new Forsendelse(avsender, fysiskPost, dokumentpakke);
         }
 
         /**

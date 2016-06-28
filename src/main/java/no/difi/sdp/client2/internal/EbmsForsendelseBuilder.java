@@ -2,7 +2,7 @@ package no.difi.sdp.client2.internal;
 
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.sdp.client2.domain.Forsendelse;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.TekniskMottaker;
 import no.digipost.api.representations.*;
 import org.joda.time.DateTime;
@@ -20,22 +20,22 @@ public class EbmsForsendelseBuilder {
         createDokumentpakke = new CreateDokumentpakke();
     }
 
-    public EbmsForsendelse buildEbmsForsendelse(TekniskAvsender tekniskAvsender, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
+    public EbmsForsendelse buildEbmsForsendelse(Databehandler databehandler, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
         TekniskMottaker mottaker = forsendelse.getTekniskMottaker();
 
         //EBMS
-        EbmsAktoer ebmsAvsender = EbmsAktoer.avsender(tekniskAvsender.organisasjonsnummer);
+        EbmsAktoer ebmsAvsender = EbmsAktoer.avsender(databehandler.organisasjonsnummer);
         EbmsAktoer ebmsMottaker = EbmsAktoer.meldingsformidler(meldingsformidler);
 
         //SBD
         String meldingsId = UUID.randomUUID().toString();
         Organisasjonsnummer sbdhMottaker = mottaker.organisasjonsnummer;
-        Organisasjonsnummer sbdhAvsender = tekniskAvsender.organisasjonsnummer;
+        Organisasjonsnummer sbdhAvsender = databehandler.organisasjonsnummer;
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
         StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, DateTime.now(),forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 
         //Dokumentpakke
-        Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(tekniskAvsender, forsendelse);
+        Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(databehandler, forsendelse);
 
         return EbmsForsendelse.create(ebmsAvsender, ebmsMottaker, sbdhMottaker, standardBusinessDocument, dokumentpakke)
                 .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())

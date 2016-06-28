@@ -1,6 +1,7 @@
 package no.difi.sdp.client2;
 
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
+import no.difi.sdp.client2.domain.Avsender;
+import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -10,7 +11,7 @@ public class KlientKonfigurasjonTest {
     @Test
     public void default_builder_initializes_meldingsformidler_root() {
         String meldingsformidlerRoot =  "http://meldingsformidlerroot.no";
-        Behandlingsansvarlig behandlingsansvarlig = Behandlingsansvarlig.builder("orgnummer").build();
+        Avsender avsender = Avsender.builder(Organisasjonsnummer.of("984661185")).build();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
                 .builder(meldingsformidlerRoot)

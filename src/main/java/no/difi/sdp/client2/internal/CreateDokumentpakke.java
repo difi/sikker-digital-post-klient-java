@@ -4,7 +4,7 @@ import no.difi.sdp.client2.asice.ArchivedASiCE;
 import no.difi.sdp.client2.asice.CreateASiCE;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Sertifikat;
-import no.difi.sdp.client2.domain.TekniskAvsender;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.digipost.api.representations.Dokumentpakke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,9 @@ public class CreateDokumentpakke {
         createCMS = new CreateCMSDocument();
     }
 
-    public Dokumentpakke createDokumentpakke(TekniskAvsender tekniskAvsender, Forsendelse forsendelse) {
+    public Dokumentpakke createDokumentpakke(Databehandler databehandler, Forsendelse forsendelse) {
         log.info("Creating dokumentpakke");
-        ArchivedASiCE archivedASiCE = createASiCE.createAsice(tekniskAvsender, forsendelse);
+        ArchivedASiCE archivedASiCE = createASiCE.createAsice(databehandler, forsendelse);
 
         Sertifikat mottakerSertifikat = forsendelse.getTekniskMottaker().sertifikat;
 

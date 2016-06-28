@@ -1,7 +1,7 @@
 package no.difi.sdp.client2.internal;
 
 import no.difi.begrep.sdp.schema_v10.*;
-import no.difi.sdp.client2.domain.Behandlingsansvarlig;
+import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
@@ -31,7 +31,7 @@ public class SDPBuilder {
 
     public SDPManifest createManifest(final Forsendelse forsendelse) {
         SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost());
-        SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getBehandlingsansvarlig());
+        SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getAvsender());
         String spraakkode = forsendelse.getSpraakkode();
         SDPDokument sdpHovedDokument = sdpDokument(forsendelse.getDokumentpakke().getHoveddokument(), spraakkode);
 
@@ -44,7 +44,7 @@ public class SDPBuilder {
     }
 
     public SDPDigitalPost buildDigitalPost(final Forsendelse forsendelse) {
-        SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getBehandlingsansvarlig());
+        SDPAvsender sdpAvsender = sdpAvsender(forsendelse.getAvsender());
         SDPMottaker sdpMottaker = sdpMottaker(forsendelse.getDigitalPost());
 
         SDPDigitalPostInfo sdpDigitalPostInfo = sdpDigitalPostinfo(forsendelse);
@@ -70,7 +70,7 @@ public class SDPBuilder {
         return new SDPMottaker(sdpPerson);
     }
 
-    private SDPAvsender sdpAvsender(final Behandlingsansvarlig avsender) {
+    private SDPAvsender sdpAvsender(final Avsender avsender) {
         String fakturaReferanse = avsender.getFakturaReferanse();
         String identifikator = avsender.getAvsenderIdentifikator();
         SDPOrganisasjon organisasjon = sdpOrganisasjon(avsender);
@@ -78,7 +78,7 @@ public class SDPBuilder {
         return new SDPAvsender(organisasjon, identifikator, fakturaReferanse);
     }
 
-    private SDPOrganisasjon sdpOrganisasjon(final Behandlingsansvarlig avsender) {
+    private SDPOrganisasjon sdpOrganisasjon(final Avsender avsender) {
         return new SDPOrganisasjon(ORGNR_IDENTIFIER + avsender.getOrganisasjonsnummer(), SDPIso6523Authority.ISO_6523_ACTORID_UPIS);
     }
 

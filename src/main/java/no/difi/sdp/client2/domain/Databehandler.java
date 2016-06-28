@@ -2,12 +2,12 @@ package no.difi.sdp.client2.domain;
 
 import no.digipost.api.representations.Organisasjonsnummer;
 
-public class TekniskAvsender {
+public class Databehandler {
 
     public final Organisasjonsnummer organisasjonsnummer;
     public final Noekkelpar noekkelpar;
 
-    private TekniskAvsender(Organisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
+    private Databehandler(Organisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
 
         this.organisasjonsnummer = organisasjonsnummer;
         this.noekkelpar = noekkelpar;
@@ -23,14 +23,14 @@ public class TekniskAvsender {
 
     public static class Builder {
 
-        private final TekniskAvsender target;
+        private final Databehandler target;
         private boolean built = false;
 
         private Builder(Organisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
-            target = new TekniskAvsender(organisasjonsnummer, noekkelpar);
+            target = new Databehandler(organisasjonsnummer, noekkelpar);
         }
 
-        public TekniskAvsender build() {
+        public Databehandler build() {
             if (built) throw new IllegalStateException("Can't build twice");
             built = true;
             return this.target;
