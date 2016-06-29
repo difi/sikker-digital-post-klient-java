@@ -19,14 +19,10 @@ public class Dokument implements AsicEAttachable {
     private Dokument(String tittel, String filnavn, InputStream dokumentStream) {
         this.tittel = tittel;
         this.filnavn = filnavn;
-        try {
-            this.dokument = IOUtils.toByteArray(dokumentStream);
-        }
-        catch (IOException e) {
+        try (InputStream dokumentStreamToConsume = dokumentStream) {
+            this.dokument = IOUtils.toByteArray(dokumentStreamToConsume);
+        } catch (IOException e) {
             throw new LastDokumentException("Kunne ikke lese dokument", e);
-        }
-        finally {
-            IOUtils.closeQuietly(dokumentStream);
         }
     }
 
@@ -44,6 +40,7 @@ public class Dokument implements AsicEAttachable {
         return filnavn;
     }
 
+    @Override
     public String getMimeType() {
         return mimeType;
     }

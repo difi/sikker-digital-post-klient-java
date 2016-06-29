@@ -7,8 +7,9 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -47,9 +48,9 @@ public class CreateZipTest {
 
         Archive archive = createZip.zipIt(asicEAttachables);
 
-        File tempFile = File.createTempFile("test", ".zip");
-        IOUtils.copy(new ByteArrayInputStream(archive.getBytes()), new FileOutputStream(tempFile));
-        System.out.println("Skrev zip-fil til " + tempFile.getAbsolutePath());
+        Path tempFile = File.createTempFile("test", ".zip").toPath().toAbsolutePath();
+        Files.write(tempFile, archive.getBytes());
+        System.out.println("Skrev zip-fil til " + tempFile);
     }
 
     private void verifyZipFile(ZipInputStream zipInputStream, String fileName, String contents) throws IOException {
@@ -60,8 +61,11 @@ public class CreateZipTest {
 
     private AsicEAttachable file(final String fileName, final String contents) {
         return new AsicEAttachable() {
+            @Override
             public String getFileName() { return fileName; }
+            @Override
             public byte[] getBytes() { return contents.getBytes(); }
+            @Override
             public String getMimeType() { return "application/txt"; }
         };
     }
