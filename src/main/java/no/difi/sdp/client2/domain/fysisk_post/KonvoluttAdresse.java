@@ -93,7 +93,7 @@ public class KonvoluttAdresse {
 		 * @param adresselinje3 (valgfri)
 		 * @param postnummer
 		 * @param poststed
-		 * @return
+		 * @return builder. Kall {@link #build()} for å få en {@link KonvoluttAdresse}.
 		 */
 		public Builder iNorge(String adresselinje1, String adresselinje2, String adresselinje3, String postnummer, String poststed) {
 			postadresse.type = Type.NORSK;
