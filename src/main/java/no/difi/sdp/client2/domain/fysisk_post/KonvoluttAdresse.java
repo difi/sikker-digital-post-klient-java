@@ -1,9 +1,10 @@
 package no.difi.sdp.client2.domain.fysisk_post;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Collections.unmodifiableList;
-import static no.difi.sdp.client2.util.Convenience.onlyNonNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Adresse som skrives på konvolutt for sending av fysisk post. Bruk
@@ -97,7 +98,7 @@ public class KonvoluttAdresse {
 		 */
 		public Builder iNorge(String adresselinje1, String adresselinje2, String adresselinje3, String postnummer, String poststed) {
 			postadresse.type = Type.NORSK;
-			postadresse.adresselinjer = onlyNonNull(adresselinje1, adresselinje2, adresselinje3);
+			postadresse.adresselinjer = Stream.of(adresselinje1, adresselinje2, adresselinje3).filter(l -> l != null).collect(toList());
 			postadresse.postnummer = postnummer;
 			postadresse.poststed = poststed;
 			return this;
@@ -153,7 +154,7 @@ public class KonvoluttAdresse {
 
 		private Builder iUtlandet(String adresselinje1, String adresselinje2, String adresselinje3, String adresselinje4, String land, Landkode landkode) {
 			postadresse.type = Type.UTENLANDSK;
-			postadresse.adresselinjer = onlyNonNull(adresselinje1, adresselinje2, adresselinje3, adresselinje4);
+			postadresse.adresselinjer = Stream.of(adresselinje1, adresselinje2, adresselinje3, adresselinje4).filter(l -> l != null).collect(toList());
 			postadresse.land = land;
 			postadresse.landkode = landkode != null ? landkode.getKode() : null;
 			return this;
