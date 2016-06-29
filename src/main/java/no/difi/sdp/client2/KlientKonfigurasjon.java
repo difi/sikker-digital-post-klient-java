@@ -26,8 +26,8 @@ public class KlientKonfigurasjon {
     private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
 
-    private KlientKonfigurasjon(String meldingsformidlerRoot) {
-        this.meldingsformidlerRoot = URI.create(meldingsformidlerRoot);
+    private KlientKonfigurasjon(URI meldingsformidlerRoot) {
+        this.meldingsformidlerRoot = meldingsformidlerRoot;
     }
 
     public URI getMeldingsformidlerRoot() {
@@ -82,15 +82,20 @@ public class KlientKonfigurasjon {
         return httpResponseInterceptors;
     }
 
-    public static Builder builder(String meldingsformidlerRoot) {
+    public static Builder builder(String meldingsformidlerRootUri) {
+        return builder(URI.create(meldingsformidlerRootUri));
+    }
+
+    public static Builder builder(URI meldingsformidlerRoot) {
         return new Builder(meldingsformidlerRoot);
     }
+
 
     public static class Builder {
 
         private final KlientKonfigurasjon target;
 
-        private Builder(String meldingsformidlerRoot) {
+        private Builder(URI meldingsformidlerRoot) {
             target = new KlientKonfigurasjon(meldingsformidlerRoot);
         }
 

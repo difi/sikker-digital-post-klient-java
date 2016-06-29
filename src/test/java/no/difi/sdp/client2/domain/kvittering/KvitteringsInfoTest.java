@@ -1,5 +1,6 @@
 package no.difi.sdp.client2.domain.kvittering;
 
+import no.difi.sdp.client2.domain.kvittering.KvitteringsInfo.Builder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -36,32 +37,37 @@ public class KvitteringsInfoTest {
         String referanse = "referanse";
         Instant tidspunkt = Instant.now();
 
-        thrown.expect(RuntimeException.class);
-        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
+        Builder kvitteringsInfoBuilder = KvitteringsInfo.builder()
                 .referanseTilMeldingId(referanse)
-                .tidspunkt(tidspunkt).build();
+                .tidspunkt(tidspunkt);
+
+        thrown.expect(RuntimeException.class);
+        kvitteringsInfoBuilder.build();
     }
 
     @Test
     public void builder_fails_on_referanse_not_initialized() throws Exception {
         String konversasjonsid = "konversasjonsid";
         Instant tidspunkt = Instant.now();
-        thrown.expect(RuntimeException.class);
 
-        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
+        Builder kvitteringsInfoBuilder = KvitteringsInfo.builder()
                 .konversasjonsId(konversasjonsid)
-                .tidspunkt(tidspunkt).build();
+                .tidspunkt(tidspunkt);
+
+        thrown.expect(RuntimeException.class);
+        kvitteringsInfoBuilder.build();
     }
 
     @Test
     public void builder_fails_on_tidspunkt_not_initialized() throws Exception {
         String konversasjonsid = "konversasjonsid";
         String referanse = "referanse";
-        thrown.expect(RuntimeException.class);
 
-        KvitteringsInfo kvitteringsInfo = KvitteringsInfo.builder()
+        Builder kvitteringsInfoBuilder = KvitteringsInfo.builder()
                 .konversasjonsId(konversasjonsid)
-                .referanseTilMeldingId(referanse)
-                .build();
+                .referanseTilMeldingId(referanse);
+
+        thrown.expect(RuntimeException.class);
+        kvitteringsInfoBuilder.build();
     }
 }

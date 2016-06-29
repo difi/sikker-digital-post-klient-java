@@ -1,38 +1,8 @@
 package no.difi.sdp.client2.asice.signature;
 
-import static java.util.Arrays.asList;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.crypto.Data;
-import javax.xml.crypto.OctetStreamData;
-import javax.xml.crypto.URIDereferencer;
-import javax.xml.crypto.URIReference;
-import javax.xml.crypto.URIReferenceException;
-import javax.xml.crypto.XMLCryptoContext;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.crypto.dsig.XMLSignatureFactory;
-import javax.xml.crypto.dsig.dom.DOMValidateContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.stream.StreamSource;
-
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.asice.AsicEAttachable;
 import no.difi.sdp.client2.domain.Noekkelpar;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.jcp.xml.dsig.internal.dom.DOMSubTreeData;
 import org.etsi.uri._01903.v1_3.DataObjectFormat;
@@ -57,6 +27,35 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+
+import javax.xml.crypto.Data;
+import javax.xml.crypto.OctetStreamData;
+import javax.xml.crypto.URIDereferencer;
+import javax.xml.crypto.URIReference;
+import javax.xml.crypto.URIReferenceException;
+import javax.xml.crypto.XMLCryptoContext;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.dom.DOMValidateContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamSource;
+
+import java.io.ByteArrayInputStream;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.Arrays.asList;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CreateSignatureTest {
 
@@ -250,9 +249,10 @@ public class CreateSignatureTest {
 	    	    System.out.println("signature validation status: " + sv);
 	    	    if (sv == false) {
 	    	        // Check the validation status of each Reference.
-	    	        Iterator i = signature.getSignedInfo().getReferences().iterator();
+	                @SuppressWarnings("unchecked")
+                    Iterator<javax.xml.crypto.dsig.Reference> i = signature.getSignedInfo().getReferences().iterator();
 	    	        for (int j=0; i.hasNext(); j++) {
-	    	            boolean refValid = ((javax.xml.crypto.dsig.Reference) i.next()).validate(valContext);
+	    	            boolean refValid = i.next().validate(valContext);
 	    	            System.out.println("ref["+j+"] validity status: " + refValid);
 	    	        }
 	    	    }
