@@ -52,6 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -167,7 +168,7 @@ public class CreateSignatureTest {
     @Test
     public void test_pregenerated_xml() throws Exception {
         // Note: this is a very brittle test. it is meant to be guiding. If it fails, manually check if the changes to the XML makes sense. If they do, just update the expected XML.
-        String expected = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"));
+        String expected = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"), UTF_8);
 
         // The signature partly depends on the exact time the original message was signed
         DateTime dateTime = new DateTime(2014, 5, 21, 17, 7, 15, 756, DateTimeZone.forOffsetHours(2));
