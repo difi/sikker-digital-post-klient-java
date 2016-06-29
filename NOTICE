@@ -9,9 +9,10 @@ Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 This software includes third party software subject to the following licenses:
 
   AOP alliance under Public Domain
-  Apache Commons Codec under The Apache Software License, Version 2.0
-  Apache Commons Compress under The Apache Software License, Version 2.0
-  Apache Commons Lang under The Apache Software License, Version 2.0
+  Apache Commons Codec under Apache License, Version 2.0
+  Apache Commons Compress under Apache License, Version 2.0
+  Apache Commons IO under Apache License, Version 2.0
+  Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
   Apache WSS4J DOM WS-Security under The Apache Software License, Version 2.0
@@ -19,7 +20,6 @@ This software includes third party software subject to the following licenses:
   Apache XML Security for Java under The Apache Software License, Version 2.0
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
-  Commons IO under The Apache Software License, Version 2.0
   Commons Logging under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0
   Extended StAX API under Dual license consisting of the CDDL v1.1 and GPL v2
