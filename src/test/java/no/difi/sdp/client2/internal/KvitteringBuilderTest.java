@@ -4,14 +4,23 @@ import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.domain.Prioritet;
-import no.difi.sdp.client2.domain.kvittering.*;
+import no.difi.sdp.client2.domain.kvittering.AapningsKvittering;
+import no.difi.sdp.client2.domain.kvittering.Feil;
+import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
+import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
+import no.difi.sdp.client2.domain.kvittering.MottaksKvittering;
+import no.difi.sdp.client2.domain.kvittering.ReturpostKvittering;
+import no.difi.sdp.client2.domain.kvittering.VarslingFeiletKvittering;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsOutgoingMessage;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Test;
 
-import static no.difi.sdp.client2.ObjectMother.*;
+import static no.difi.sdp.client2.ObjectMother.createEbmsAapningsKvittering;
+import static no.difi.sdp.client2.ObjectMother.createEbmsFeil;
+import static no.difi.sdp.client2.ObjectMother.createEbmsLeveringsKvittering;
+import static no.difi.sdp.client2.ObjectMother.createEbmsVarslingFeiletKvittering;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
@@ -47,8 +56,8 @@ public class KvitteringBuilderTest {
 
         AapningsKvittering aapningKvittering = (AapningsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(aapningKvittering.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(aapningKvittering.kvitteringsInfo.getTidspunkt());
+        assertNotNull(aapningKvittering.getKonversasjonsId());
+        assertNotNull(aapningKvittering.getTidspunkt());
     }
 
     @Test
@@ -57,12 +66,12 @@ public class KvitteringBuilderTest {
 
         LeveringsKvittering leveringsKvittering = (LeveringsKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(leveringsKvittering.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(leveringsKvittering.kvitteringsInfo.getTidspunkt());
-        assertNotNull(leveringsKvittering.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(leveringsKvittering.getKonversasjonsId());
+        assertNotNull(leveringsKvittering.getTidspunkt());
+        assertNotNull(leveringsKvittering.getReferanseTilMeldingId());
 
-        assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(leveringsKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(leveringsKvittering.getMeldingsId());
+        assertNotNull(leveringsKvittering.getReferanseTilMeldingSomKvitteres());
     }
 
     @Test
@@ -71,12 +80,12 @@ public class KvitteringBuilderTest {
 
         MottaksKvittering mottaksKvittering = (MottaksKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(mottaksKvittering.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(mottaksKvittering.kvitteringsInfo.getTidspunkt());
-        assertNotNull(mottaksKvittering.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(mottaksKvittering.getKonversasjonsId());
+        assertNotNull(mottaksKvittering.getTidspunkt());
+        assertNotNull(mottaksKvittering.getReferanseTilMeldingId());
 
-        assertNotNull(mottaksKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(mottaksKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(mottaksKvittering.getMeldingsId());
+        assertNotNull(mottaksKvittering.getReferanseTilMeldingSomKvitteres());
     }
 
     @Test
@@ -85,12 +94,12 @@ public class KvitteringBuilderTest {
 
         ReturpostKvittering returpostKvittering = (ReturpostKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(returpostKvittering.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(returpostKvittering.kvitteringsInfo.getTidspunkt());
-        assertNotNull(returpostKvittering.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(returpostKvittering.getKonversasjonsId());
+        assertNotNull(returpostKvittering.getTidspunkt());
+        assertNotNull(returpostKvittering.getReferanseTilMeldingId());
 
-        assertNotNull(returpostKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(returpostKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(returpostKvittering.getMeldingsId());
+        assertNotNull(returpostKvittering.getReferanseTilMeldingSomKvitteres());
     }
 
     @Test
@@ -99,12 +108,12 @@ public class KvitteringBuilderTest {
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(varslingFeiletKvittering.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(varslingFeiletKvittering.kvitteringsInfo.getTidspunkt());
-        assertNotNull(varslingFeiletKvittering.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
+        assertNotNull(varslingFeiletKvittering.getTidspunkt());
+        assertNotNull(varslingFeiletKvittering.getReferanseTilMeldingId());
 
-        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(varslingFeiletKvittering.getMeldingsId());
+        assertNotNull(varslingFeiletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
         assertThat(varslingFeiletKvittering.getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
@@ -118,12 +127,12 @@ public class KvitteringBuilderTest {
 
         VarslingFeiletKvittering varslingFeiletKvittering = (VarslingFeiletKvittering) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(varslingFeiletKvittering.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(varslingFeiletKvittering.kvitteringsInfo.getTidspunkt());
-        assertNotNull(varslingFeiletKvittering.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(varslingFeiletKvittering.getKonversasjonsId());
+        assertNotNull(varslingFeiletKvittering.getTidspunkt());
+        assertNotNull(varslingFeiletKvittering.getReferanseTilMeldingId());
 
-        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(varslingFeiletKvittering.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(varslingFeiletKvittering.getMeldingsId());
+        assertNotNull(varslingFeiletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
         assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
@@ -136,12 +145,12 @@ public class KvitteringBuilderTest {
 
         Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(feil.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(feil.kvitteringsInfo.getTidspunkt());
-        assertNotNull(feil.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(feil.getKonversasjonsId());
+        assertNotNull(feil.getTidspunkt());
+        assertNotNull(feil.getReferanseTilMeldingId());
 
-        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(feil.getMeldingsId());
+        assertNotNull(feil.getReferanseTilMeldingSomKvitteres());
 
         assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.KLIENT);
         assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
@@ -153,12 +162,12 @@ public class KvitteringBuilderTest {
 
         Feil feil = (Feil) kvitteringBuilder.buildForretningsKvittering(ebmsKvittering);
 
-        assertNotNull(feil.kvitteringsInfo.getKonversasjonsId());
-        assertNotNull(feil.kvitteringsInfo.getTidspunkt());
-        assertNotNull(feil.kvitteringsInfo.getReferanseTilMeldingId());
+        assertNotNull(feil.getKonversasjonsId());
+        assertNotNull(feil.getTidspunkt());
+        assertNotNull(feil.getReferanseTilMeldingId());
 
-        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertNotNull(feil.kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertNotNull(feil.getMeldingsId());
+        assertNotNull(feil.getReferanseTilMeldingSomKvitteres());
 
 
         assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.SERVER);

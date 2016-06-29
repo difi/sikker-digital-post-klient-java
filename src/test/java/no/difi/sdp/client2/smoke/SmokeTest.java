@@ -3,10 +3,10 @@ package no.difi.sdp.client2.smoke;
 import no.difi.sdp.client2.KlientKonfigurasjon;
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
+import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
-import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.domain.kvittering.LeveringsKvittering;
@@ -38,7 +38,7 @@ import static org.fest.assertions.api.Assertions.fail;
 public class SmokeTest {
 
     private static SikkerDigitalPostKlient sikkerDigitalPostKlient;
-    private static String organizationNumberFromCertificate;
+    private static Organisasjonsnummer organisasjonsnummerFraSertifikat;
     private static KeyStore keyStore;
 
     private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
@@ -55,14 +55,14 @@ public class SmokeTest {
         verifyEnvironmentVariables();
 
         keyStore = getVirksomhetssertifikat();
-        organizationNumberFromCertificate = getOrganizationNumberFromCertificate();
+        organisasjonsnummerFraSertifikat = getOrganisasjonsnummerFraSertifikat();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
                 .builder("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
-        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(Organisasjonsnummer.of("984661185"), avsenderNoekkelpar());
+        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(organisasjonsnummerFraSertifikat, avsenderNoekkelpar());
 
         sikkerDigitalPostKlient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
     }
@@ -89,7 +89,7 @@ public class SmokeTest {
         return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
     }
 
-    private static String getOrganizationNumberFromCertificate() {
+    private static Organisasjonsnummer getOrganisasjonsnummerFraSertifikat() {
         try {
             X509Certificate cert = (X509Certificate) keyStore.getCertificate(virksomhetssertifikatAliasValue);
             if (cert == null) {
@@ -97,7 +97,7 @@ public class SmokeTest {
             }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
-            return IETFUtils.valueToString(serialnumber.getFirst().getValue());
+            return Organisasjonsnummer.of(IETFUtils.valueToString(serialnumber.getFirst().getValue()));
         } catch (CertificateEncodingException e) {
             throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.", e);
         } catch (KeyStoreException e) {
@@ -147,10 +147,10 @@ public class SmokeTest {
 
             if (forretningsKvittering != null) {
                 System.out.println("Kvittering!");
-                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.kvitteringsInfo.getKonversasjonsId(), forretningsKvittering.kvitteringsInfo.getReferanseTilMeldingId(), forretningsKvittering.kvitteringsInfo.getTidspunkt(), forretningsKvittering));
-                assertThat(forretningsKvittering.kvitteringsInfo.getKonversasjonsId()).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsInfo.getReferanseTilMeldingId()).isNotEmpty();
-                assertThat(forretningsKvittering.kvitteringsInfo.getTidspunkt()).isNotNull();
+                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getReferanseTilMeldingId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
+                assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
+                assertThat(forretningsKvittering.getReferanseTilMeldingId()).isNotEmpty();
+                assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
                 assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);

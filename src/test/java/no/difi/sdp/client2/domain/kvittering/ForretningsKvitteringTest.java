@@ -26,7 +26,10 @@ public class ForretningsKvitteringTest {
         KvitteringsInfo kvitteringsInfo = new KvitteringsInfo("konversasjonsId", "referanseTilMeldingId", Instant.now());
         LeveringsKvittering leveringsKvittering = new LeveringsKvittering(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
 
-        assertThat(leveringsKvittering.kanBekreftesSomBehandletKvittering).isEqualTo(kanBekreftesSomBehandletKvittering);
-        assertThat(leveringsKvittering.kvitteringsInfo).isEqualTo(kvitteringsInfo);
+        assertThat(leveringsKvittering.getReferanseTilMeldingSomKvitteres()).isEqualTo(kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
+        assertThat(leveringsKvittering.getMeldingsId()).isEqualTo(kanBekreftesSomBehandletKvittering.getMeldingsId());
+        assertThat(leveringsKvittering.getKonversasjonsId()).isEqualTo(kvitteringsInfo.getKonversasjonsId());
+        assertThat(leveringsKvittering.getReferanseTilMeldingId()).isEqualTo(kvitteringsInfo.getReferanseTilMeldingId());
+        assertThat(leveringsKvittering.getTidspunkt()).isEqualTo(kvitteringsInfo.getTidspunkt());
     }
 }

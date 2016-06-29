@@ -4,7 +4,7 @@ import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 
 public class VarslingFeiletKvittering extends ForretningsKvittering {
 
-    private Varslingskanal varslingskanal;
+    private final Varslingskanal varslingskanal;
     private String beskrivelse;
 
     private VarslingFeiletKvittering(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering, KvitteringsInfo kvitteringsInfo, Varslingskanal varslingskanal) {
@@ -23,7 +23,7 @@ public class VarslingFeiletKvittering extends ForretningsKvittering {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "konversasjonsId=" + super.kvitteringsInfo.getKonversasjonsId() +
+                "konversasjonsId=" + getKonversasjonsId() +
                 ", varslingskanal=" + varslingskanal +
                 ", beskrivelse='" + beskrivelse + '\'' +
                 '}';
