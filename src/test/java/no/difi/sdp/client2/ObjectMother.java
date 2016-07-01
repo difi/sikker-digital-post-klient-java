@@ -1,20 +1,41 @@
 package no.difi.sdp.client2;
 
-import no.difi.begrep.sdp.schema_v10.*;
-import no.difi.sdp.client2.domain.*;
+import no.difi.begrep.sdp.schema_v10.SDPAapning;
+import no.difi.begrep.sdp.schema_v10.SDPFeil;
+import no.difi.begrep.sdp.schema_v10.SDPFeiltype;
+import no.difi.begrep.sdp.schema_v10.SDPKvittering;
+import no.difi.begrep.sdp.schema_v10.SDPLevering;
+import no.difi.begrep.sdp.schema_v10.SDPMelding;
+import no.difi.begrep.sdp.schema_v10.SDPMottak;
+import no.difi.begrep.sdp.schema_v10.SDPReturpost;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
+import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.sdp.client2.domain.Avsender;
+import no.difi.sdp.client2.domain.Databehandler;
+import no.difi.sdp.client2.domain.Dokument;
+import no.difi.sdp.client2.domain.Dokumentpakke;
+import no.difi.sdp.client2.domain.Forsendelse;
+import no.difi.sdp.client2.domain.Mottaker;
+import no.difi.sdp.client2.domain.Noekkelpar;
+import no.difi.sdp.client2.domain.Prioritet;
+import no.difi.sdp.client2.domain.Sertifikat;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
 import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
-import no.digipost.api.representations.AvsenderOrganisasjonsnummer;
-import no.digipost.api.representations.DatabehandlerOrganisasjonsnummer;
 import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.StandardBusinessDocumentFactory;
 import org.joda.time.DateTime;
 import org.springframework.core.io.ClassPathResource;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.*;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.BusinessScope;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.DocumentIdentification;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.Partner;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.PartnerIdentification;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.Scope;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
+import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocumentHeader;
 import org.w3.xmldsig.DigestMethod;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Transform;
@@ -93,26 +114,19 @@ public class ObjectMother {
     }
 
     public static Avsender avsender() {
-        Organisasjonsnummer orgnummer = avsenderOrganisasjonsnummer();
-
-        return Avsender.builder(orgnummer.forfremTilAvsender())
-
-                .build();
+        return Avsender.builder(avsenderOrganisasjonsnummer()).build();
     }
 
     public static Databehandler databehandler() {
-        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar())
-                .build();
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar()).build();
     }
 
     public static Databehandler databehandlerMedSertifikat(final Noekkelpar noekkelpar) {
-        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar)
-                .build();
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar).build();
     }
 
     public static Mottaker mottaker() {
-        return Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185"))
-                .build();
+        return Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
     }
 
     public static EbmsApplikasjonsKvittering createEbmsFeil(final SDPFeiltype feiltype) {
@@ -208,12 +222,12 @@ public class ObjectMother {
         return incomingReferences;
     }
 
-    public static AvsenderOrganisasjonsnummer avsenderOrganisasjonsnummer(){
-        return Organisasjonsnummer.of("988015814").forfremTilAvsender();
+    public static Organisasjonsnummer avsenderOrganisasjonsnummer(){
+        return Organisasjonsnummer.of("988015814");
     }
 
-    public static DatabehandlerOrganisasjonsnummer databehandlerOrganisasjonsnummer(){
-        return Organisasjonsnummer.of("984661185").forfremTilDatabehandler();
+    public static Organisasjonsnummer databehandlerOrganisasjonsnummer(){
+        return Organisasjonsnummer.of("984661185");
     }
 
     public static Forsendelse forsendelse(String mpcId, InputStream dokumentStream) {

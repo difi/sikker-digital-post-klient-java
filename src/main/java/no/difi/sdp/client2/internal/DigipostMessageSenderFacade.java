@@ -15,7 +15,6 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
-import no.digipost.api.representations.MeldingsformidlerUri;
 import no.digipost.api.xml.Schemas;
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -40,7 +39,7 @@ public class DigipostMessageSenderFacade {
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
 
-        MessageSender.Builder messageSenderBuilder = MessageSender.create(new MeldingsformidlerUri(klientKonfigurasjon.getMeldingsformidlerRoot(), databehandler.organisasjonsnummer),
+        MessageSender.Builder messageSenderBuilder = MessageSender.create(klientKonfigurasjon.getMeldingsformidlerRoot(),
                 keyStoreInfo,
                 wsSecurityInterceptor,
                 EbmsAktoer.avsender(databehandler.organisasjonsnummer),
