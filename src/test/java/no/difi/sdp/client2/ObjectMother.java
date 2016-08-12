@@ -10,8 +10,11 @@ import no.difi.begrep.sdp.schema_v10.SDPMottak;
 import no.difi.begrep.sdp.schema_v10.SDPReturpost;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingfeilet;
 import no.difi.begrep.sdp.schema_v10.SDPVarslingskanal;
+import no.difi.sdp.client2.domain.AktørOrganisasjonsnummer;
 import no.difi.sdp.client2.domain.Avsender;
+import no.difi.sdp.client2.domain.AvsenderOrganisasjonsnummer;
 import no.difi.sdp.client2.domain.Databehandler;
+import no.difi.sdp.client2.domain.DatabehandlerOrganisasjonsnummer;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -222,12 +225,13 @@ public class ObjectMother {
         return incomingReferences;
     }
 
-    public static Organisasjonsnummer avsenderOrganisasjonsnummer(){
-        return Organisasjonsnummer.of("988015814");
+    public static AvsenderOrganisasjonsnummer avsenderOrganisasjonsnummer() {
+
+        return AktørOrganisasjonsnummer.of("988015814").forfremTilAvsender();
     }
 
-    public static Organisasjonsnummer databehandlerOrganisasjonsnummer(){
-        return Organisasjonsnummer.of("984661185");
+    public static DatabehandlerOrganisasjonsnummer databehandlerOrganisasjonsnummer() {
+        return AktørOrganisasjonsnummer.of("984661185").forfremTilDatabehandler();
     }
 
     public static Forsendelse forsendelse(String mpcId, InputStream dokumentStream) {
@@ -251,8 +255,9 @@ public class ObjectMother {
                 .build();
     }
 
-    public static Databehandler databehandlerMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
-        return Databehandler.builder(organisasjonsnummer, noekkelpar)
+    public static Databehandler databehandlerMedSertifikat(final String organisasjonsnummer, final Noekkelpar noekkelpar) {
+        return Databehandler
+                .builder(AktørOrganisasjonsnummer.of(organisasjonsnummer).forfremTilDatabehandler(), noekkelpar)
                 .build();
     }
 

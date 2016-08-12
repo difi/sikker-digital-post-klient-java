@@ -15,6 +15,7 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
+import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.xml.Schemas;
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -42,7 +43,7 @@ public class DigipostMessageSenderFacade {
         MessageSender.Builder messageSenderBuilder = MessageSender.create(klientKonfigurasjon.getMeldingsformidlerRoot(),
                 keyStoreInfo,
                 wsSecurityInterceptor,
-                EbmsAktoer.avsender(databehandler.organisasjonsnummer),
+                EbmsAktoer.avsender(Organisasjonsnummer.of(databehandler.organisasjonsnummer.getOrganisasjonsnummer())),
                 EbmsAktoer.meldingsformidler(klientKonfigurasjon.getMeldingsformidlerOrganisasjon()))
                 .withConnectTimeout((int) klientKonfigurasjon.getConnectTimeoutInMillis())
                 .withSocketTimeout((int) klientKonfigurasjon.getSocketTimeoutInMillis())
@@ -108,14 +109,6 @@ public class DigipostMessageSenderFacade {
         }
     }
 
-    private interface VoidRequest {
-        void exec();
-    }
-
-    private interface Request<T> {
-        T exec();
-    }
-
     public void setExceptionMapper(final ExceptionMapper exceptionMapper) {
         this.exceptionMapper = exceptionMapper;
     }
@@ -143,6 +136,14 @@ public class DigipostMessageSenderFacade {
         } catch (Exception e) {
             throw new KonfigurasjonException("Unable to initialize payload validating interecptor", e);
         }
+    }
+
+    private interface VoidRequest {
+        void exec();
+    }
+
+    private interface Request<T> {
+        T exec();
     }
 
 }
