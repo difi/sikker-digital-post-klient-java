@@ -226,7 +226,6 @@ public class ObjectMother {
     }
 
     public static AvsenderOrganisasjonsnummer avsenderOrganisasjonsnummer() {
-
         return AktørOrganisasjonsnummer.of("988015814").forfremTilAvsender();
     }
 
