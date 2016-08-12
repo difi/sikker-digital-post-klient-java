@@ -38,7 +38,6 @@ public class Noekkelpar {
      * @param keyStore                     Må inneholde sertifikatkjeden helt opp til rot-CAen for sertifikatutstederen og rotsertifikater som avsenderen stoler på til å identifisere meldingsformidler og postkasser. Oversikt over disse sertifikatene finnes i <a href="http://begrep.difi.no/SikkerDigitalPost/sikkerhet/sertifikathandtering">begrepskatalogen</a>.
      * @param virksomhetssertifikatAlias   Aliaset kan hentes ut fra virksomhetssertifikatet ved å kjøre `keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12`. Selve aliaset er siste avsnitt, første del før komma.
      * @param virksomhetssertifikatPassord Dette er passordet som er satt på selve virksomhetssertifikatet.
-     * @return
      */
     public static Noekkelpar fraKeyStore(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
         return new Noekkelpar(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
@@ -50,7 +49,6 @@ public class Noekkelpar {
      * @param keyStore                     Må inneholde sertifikatkjeden helt opp til rot-CAen for sertifikatutstederen.
      * @param virksomhetssertifikatAlias   Aliaset kan hentes ut fra virksomhetssertifikatet ved å kjøre `keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12`. Selve aliaset er siste avsnitt, første del før komma.
      * @param virksomhetssertifikatPassord Dette er passordet som er satt på selve virksomhetssertifikatet.
-     * @return
      */
     public static Noekkelpar fraKeyStoreUtenTrustStore(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
         return new Noekkelpar(keyStore, getStandardTrustStore(), virksomhetssertifikatAlias, virksomhetssertifikatPassord);
@@ -73,7 +71,6 @@ public class Noekkelpar {
      * @param trustStore                    Rotsertifikater som avsenderen stoler på til å identifisere meldingsformidler og postkasser. Oversikt over disse sertifikatene finnes i <a href="http://begrep.difi.no/SikkerDigitalPost/sikkerhet/sertifikathandtering">begrepskatalogen</a>.
      * @param virksomhetssertifikatAlias    Aliaset kan hentes ut fra virksomhetssertifikatet ved å kjøre `keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12`. Selve aliaset er siste avsnitt, første del før komma.
      * @param virksomhetssertifikatPassword Dette er passordet som er satt på selve virksomhetssertifikatet.
-     * @return
      */
     public static Noekkelpar fraKeyStoreOgTrustStore(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword) {
         return new Noekkelpar(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword);

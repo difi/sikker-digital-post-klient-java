@@ -16,8 +16,6 @@ public class KlientKonfigurasjonTest {
                 .builder(meldingsformidlerRoot)
                 .build();
 
-        assertThat(klientKonfigurasjon.getMeldingsformidlerRoot()).isEqualTo(meldingsformidlerRoot);
-
-
+        assertThat(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri()).isEqualTo(meldingsformidlerRoot);
     }
 }

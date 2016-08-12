@@ -6,13 +6,12 @@ import no.difi.sdp.client2.asice.manifest.CreateManifest;
 import no.difi.sdp.client2.asice.manifest.Manifest;
 import no.difi.sdp.client2.asice.signature.CreateSignature;
 import no.difi.sdp.client2.asice.signature.Signature;
-import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Databehandler;
+import no.difi.sdp.client2.domain.Forsendelse;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -72,15 +71,11 @@ public class CreateASiCE {
             file = debug_writeToDisk;
         }
 
-        FileOutputStream output = null;
-        try {
-            output = new FileOutputStream(file);
-            IOUtils.copy(new ByteArrayInputStream(archive.getBytes()), output);
+        try (FileOutputStream output = new FileOutputStream(file)) {
+            IOUtils.write(archive.getBytes(), output);
             log.info("Wrote Asic-E debug file to " + file.getAbsolutePath());
         } catch (IOException e) {
             log.error("Could not write Asic-E file", e);
-        } finally {
-            IOUtils.closeQuietly(output);
         }
     }
 

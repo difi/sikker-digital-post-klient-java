@@ -1,5 +1,6 @@
 package no.difi.sdp.client2;
 
+import no.digipost.api.EbmsEndpointUriBuilder;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
@@ -30,8 +31,8 @@ public class KlientKonfigurasjon {
         this.meldingsformidlerRoot = meldingsformidlerRoot;
     }
 
-    public URI getMeldingsformidlerRoot() {
-        return meldingsformidlerRoot;
+    public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
+        return EbmsEndpointUriBuilder.meldingsformidlerUri(meldingsformidlerRoot);
     }
 
     public String getProxyHost() {

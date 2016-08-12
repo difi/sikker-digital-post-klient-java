@@ -15,10 +15,12 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -41,9 +43,9 @@ public class SDPBuilderManifestTest {
 
     @Test
     public void build_expected_manifest() throws Exception {
-        String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-manifest.xml"));
+        String expectedXml = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-manifest.xml"), UTF_8);
 
-        Avsender avsender = Avsender.builder(Organisasjonsnummer.of("123456789").forfremTilAvsender()).fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
+        Avsender avsender = Avsender.builder(Organisasjonsnummer.of("123456789")).fakturaReferanse("ØK1").avsenderIdentifikator("0123456789").build();
 
         Mottaker mottaker = Mottaker.builder("11077941012", "123456", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
 
