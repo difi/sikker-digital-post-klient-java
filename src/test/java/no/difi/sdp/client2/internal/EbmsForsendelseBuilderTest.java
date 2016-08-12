@@ -1,6 +1,7 @@
 package no.difi.sdp.client2.internal;
 
 import no.difi.sdp.client2.ObjectMother;
+import no.difi.sdp.client2.domain.AktørOrganisasjonsnummer;
 import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.Dokument;
@@ -31,7 +32,7 @@ public class EbmsForsendelseBuilderTest {
 
     @Test
     public void bygg_minimalt_request() {
-        Databehandler databehandler = Databehandler.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
+        Databehandler databehandler = Databehandler.builder(AktørOrganisasjonsnummer.of("991825827").forfremTilDatabehandler(), ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
         Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
@@ -49,7 +50,7 @@ public class EbmsForsendelseBuilderTest {
 
     @Test
     public void korrekt_mpc() {
-        Databehandler databehandler = Databehandler.builder(Organisasjonsnummer.of("991825827"), ObjectMother.noekkelpar()).build();
+        Databehandler databehandler = Databehandler.builder(AktørOrganisasjonsnummer.of("991825827").forfremTilDatabehandler(), ObjectMother.noekkelpar()).build();
         Mottaker mottaker = Mottaker.builder("01129955131", "postkasseadresse", mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         DigitalPost digitalpost = DigitalPost.builder(mottaker, "Ikke-sensitiv tittel").build();
 

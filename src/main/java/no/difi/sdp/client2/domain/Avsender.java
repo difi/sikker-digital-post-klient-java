@@ -1,18 +1,20 @@
 package no.difi.sdp.client2.domain;
 
-import no.digipost.api.representations.Organisasjonsnummer;
-
 /**
  * Avsender som beskrevet i <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikten over aktører</a>.
  */
 public class Avsender {
 
-    private final Organisasjonsnummer organisasjonsnummer;
+    private final AvsenderOrganisasjonsnummer organisasjonsnummer;
     private String avsenderIdentifikator;
     private String fakturaReferanse;
 
-    public Avsender(Organisasjonsnummer organisasjonsnummer) {
+    public Avsender(AvsenderOrganisasjonsnummer organisasjonsnummer) {
         this.organisasjonsnummer = organisasjonsnummer;
+    }
+
+    public static Builder builder(AvsenderOrganisasjonsnummer organisasjonsnummer) {
+        return new Builder(organisasjonsnummer);
     }
 
     public String getAvsenderIdentifikator() {
@@ -23,12 +25,8 @@ public class Avsender {
         return fakturaReferanse;
     }
 
-    public Organisasjonsnummer getOrganisasjonsnummer() {
+    public AvsenderOrganisasjonsnummer getOrganisasjonsnummer() {
         return organisasjonsnummer;
-    }
-
-    public static Builder builder(Organisasjonsnummer organisasjonsnummer) {
-        return new Builder(organisasjonsnummer);
     }
 
     public static class Builder {
@@ -36,7 +34,7 @@ public class Avsender {
         private final Avsender target;
         private boolean built = false;
 
-        private Builder(Organisasjonsnummer organisasjonsnummer) {
+        private Builder(AvsenderOrganisasjonsnummer organisasjonsnummer) {
             target = new Avsender(organisasjonsnummer);
         }
 
