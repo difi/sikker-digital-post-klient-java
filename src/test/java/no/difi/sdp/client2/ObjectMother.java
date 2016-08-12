@@ -254,7 +254,7 @@ public class ObjectMother {
                 .build();
     }
 
-    public static Databehandler databehandlerMedSertifikat(final String organisasjonsnummer, final Noekkelpar noekkelpar) {
+    public static Databehandler databehandlerMedSertifikat(final Organisasjonsnummer organisasjonsnummer, final Noekkelpar noekkelpar) {
         return Databehandler
                 .builder(AktørOrganisasjonsnummer.of(organisasjonsnummer).forfremTilDatabehandler(), noekkelpar)
                 .build();
