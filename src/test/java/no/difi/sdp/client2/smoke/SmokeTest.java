@@ -59,6 +59,7 @@ public class SmokeTest {
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
                 .builder("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
+                .proxy("sig-web.posten.no", 3128, "http")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
