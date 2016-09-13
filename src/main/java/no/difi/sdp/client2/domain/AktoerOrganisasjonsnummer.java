@@ -2,13 +2,13 @@ package no.difi.sdp.client2.domain;
 
 import no.digipost.api.representations.Organisasjonsnummer;
 
-public interface AktørOrganisasjonsnummer {
+public interface AktoerOrganisasjonsnummer {
 
-    static AktørOrganisasjonsnummer of(String organisasjonsnummer) {
+    static AktoerOrganisasjonsnummer of(String organisasjonsnummer) {
         return new EtOrganisasjonsnummer(organisasjonsnummer);
     }
 
-    static AktørOrganisasjonsnummer of(Organisasjonsnummer organisasjonsnummer) {
+    static AktoerOrganisasjonsnummer of(Organisasjonsnummer organisasjonsnummer) {
         return new EtOrganisasjonsnummer(organisasjonsnummer.getOrganisasjonsnummer());
     }
 

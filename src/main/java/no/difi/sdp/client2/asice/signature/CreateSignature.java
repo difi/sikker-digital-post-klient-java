@@ -128,7 +128,7 @@ public class CreateSignature {
         XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, singletonList(xmlObject), "Signature", null);
 
         try {
-            xmlSignature.sign(new DOMSignContext(noekkelpar.getVirksomhetssertifikatPrivatnøkkel(), document));
+            xmlSignature.sign(new DOMSignContext(noekkelpar.getVirksomhetssertifikatPrivatnoekkel(), document));
         } catch (MarshalException e) {
             throw new XmlKonfigurasjonException("Klarte ikke å lese ASiC-E XML for signering", e);
         } catch (XMLSignatureException e) {

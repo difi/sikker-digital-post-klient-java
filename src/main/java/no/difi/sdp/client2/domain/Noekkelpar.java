@@ -108,7 +108,7 @@ public class Noekkelpar {
         }
     }
 
-    public PrivateKey getVirksomhetssertifikatPrivatnøkkel() {
+    public PrivateKey getVirksomhetssertifikatPrivatnoekkel() {
         try {
             Key key = keyStore.getKey(virksomhetssertifikatAlias, virksomhetssertifikatPassword.toCharArray());
             if (!(key instanceof PrivateKey)) {

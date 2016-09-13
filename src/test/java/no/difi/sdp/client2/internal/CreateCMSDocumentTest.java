@@ -22,7 +22,7 @@ public class CreateCMSDocumentTest {
     @Before
     public void set_up() {
         Noekkelpar noekkelpar = ObjectMother.noekkelpar();
-        privateKey = noekkelpar.getVirksomhetssertifikatPrivatnøkkel();
+        privateKey = noekkelpar.getVirksomhetssertifikatPrivatnoekkel();
         sertifikat = noekkelpar.getVirksomhetssertifikat();
 
         sut = new CreateCMSDocument();

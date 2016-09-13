@@ -6,12 +6,12 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class AktørOrganisasjonsnummerTest {
+public class AktoerOrganisasjonsnummerTest {
     @Test
     public void create_organisasjonsnummer_from_string() {
         String orgnr = "984661185";
 
-        AktørOrganisasjonsnummer organisasjonsnummer = AktørOrganisasjonsnummer.of(orgnr);
+        AktoerOrganisasjonsnummer organisasjonsnummer = AktoerOrganisasjonsnummer.of(orgnr);
 
         assertThat(organisasjonsnummer.getOrganisasjonsnummer(), equalTo(orgnr));
     }
@@ -20,14 +20,14 @@ public class AktørOrganisasjonsnummerTest {
     public void create_organisasjonsnummer_from_class()  {
         Organisasjonsnummer orgnr = Organisasjonsnummer.of("984661185");
 
-        AktørOrganisasjonsnummer organisasjonsnummer = AktørOrganisasjonsnummer.of(orgnr);
+        AktoerOrganisasjonsnummer organisasjonsnummer = AktoerOrganisasjonsnummer.of(orgnr);
 
         assertThat(organisasjonsnummer.getOrganisasjonsnummer(), equalTo(orgnr.getOrganisasjonsnummer()));
     }
 
     @Test
     public void forfrem_til_avsender() {
-        AktørOrganisasjonsnummer organisasjonsnummer = AktørOrganisasjonsnummer.of("984661185");
+        AktoerOrganisasjonsnummer organisasjonsnummer = AktoerOrganisasjonsnummer.of("984661185");
 
         AvsenderOrganisasjonsnummer avsenderOrganisasjonsnummer = organisasjonsnummer.forfremTilAvsender();
 
@@ -36,7 +36,7 @@ public class AktørOrganisasjonsnummerTest {
 
     @Test
     public void forfrem_til_databehandler() {
-        AktørOrganisasjonsnummer organisasjonsnummer = AktørOrganisasjonsnummer.of("984661185");
+        AktoerOrganisasjonsnummer organisasjonsnummer = AktoerOrganisasjonsnummer.of("984661185");
 
         DatabehandlerOrganisasjonsnummer databehandlerOrganisasjonsnummer = organisasjonsnummer.forfremTilDatabehandler();
 
