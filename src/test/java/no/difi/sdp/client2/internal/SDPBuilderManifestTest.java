@@ -16,14 +16,14 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.junit.Assert.assertThat;
 
 public class SDPBuilderManifestTest {
 
@@ -64,7 +64,7 @@ public class SDPBuilderManifestTest {
         ByteArrayOutputStream xmlBytes = new ByteArrayOutputStream();
         marshaller.marshal(manifest, new StreamResult(xmlBytes));
 
-        assertThat(xmlBytes.toString()).isEqualTo(expectedXml);
+        assertThat(xmlBytes.toString("UTF-8"), equalToIgnoringWhiteSpace(expectedXml));
     }
 
 }
