@@ -18,4 +18,7 @@ before_install:
 install: true
 
 script:
-  - mvn clean deploy --update-snapshots -PunitTests --settings ~/.m2/deploy-settings.xml
+  - 'echo "TRAVIS_PULL_REQUEST value: $TRAVIS_PULL_REQUEST"'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean deploy --update-snapshots -PunitTests --settings ~/.m2/deploy-settings.xml; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then mvn clean install --update-snapshots -PunitTests; fi' #Uses !="false" because $TRAVIS_PULL_REQUEST is the Pull Request # if such is the case.
+
