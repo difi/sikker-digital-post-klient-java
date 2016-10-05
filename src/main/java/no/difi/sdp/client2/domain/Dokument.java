@@ -16,14 +16,10 @@ public class Dokument implements AsicEAttachable {
     private byte[] dokument;
     private String mimeType = "application/pdf";
 
-    private Dokument(String tittel, String filnavn, InputStream dokumentStream) {
+    private Dokument(String tittel, String filnavn, byte[] dokument) {
         this.tittel = tittel;
         this.filnavn = filnavn;
-        try (InputStream dokumentStreamToConsume = dokumentStream) {
-            this.dokument = IOUtils.toByteArray(dokumentStreamToConsume);
-        } catch (IOException e) {
-            throw new LastDokumentException("Kunne ikke lese dokument", e);
-        }
+        this.dokument = dokument;
     }
 
     @Override
@@ -55,6 +51,20 @@ public class Dokument implements AsicEAttachable {
      * @param dokument Dokumentet som en strøm.
      */
     public static Builder builder(String tittel, String filnavn, InputStream dokument) {
+        try (InputStream dokumentStreamToConsume = dokument) {
+            byte[] dokumentBytes = IOUtils.toByteArray(dokumentStreamToConsume);
+            return new Builder(tittel, filnavn, dokumentBytes);
+        } catch (IOException e) {
+            throw new LastDokumentException("Kunne ikke lese dokument", e);
+        }
+    }
+
+    /**
+     * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
+     * @param filnavn Filnavnet til dokumentet.
+     * @param dokument Filen som skal sendes. Navnet på filen vil brukes som filnavn ovenfor mottaker.
+     */
+    public static Builder builder(String tittel, String filnavn, byte[] dokument) {
         return new Builder(tittel, filnavn, dokument);
     }
 
@@ -64,18 +74,20 @@ public class Dokument implements AsicEAttachable {
      */
     public static Builder builder(String tittel, File file) {
         try {
-            return new Builder(tittel, file.getName(), new FileInputStream(file));
+            return builder(tittel, file.getName(), new FileInputStream(file));
         } catch (FileNotFoundException e) {
             throw new LastDokumentException("Fant ikke fil", e);
         }
     }
+
+
 
     public static class Builder {
 
         private final Dokument target;
         private boolean built = false;
 
-        private Builder(String tittel, String filnavn, InputStream dokument) {
+        private Builder(String tittel, String filnavn, byte[] dokument) {
             target = new Dokument(tittel, filnavn, dokument);
         }
 
