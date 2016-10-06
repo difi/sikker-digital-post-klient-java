@@ -16,6 +16,7 @@ import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
+import no.digipost.api.representations.TransportKvittering;
 import no.digipost.api.xml.Schemas;
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -73,8 +74,8 @@ public class DigipostMessageSenderFacade {
         messageSender = messageSenderBuilder.build();
     }
 
-    public void send(final EbmsForsendelse ebmsForsendelse) {
-        performRequest(() -> messageSender.send(ebmsForsendelse));
+    public TransportKvittering send(final EbmsForsendelse ebmsForsendelse) {
+        return performRequest(() -> messageSender.send(ebmsForsendelse));
     }
 
     public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest) {

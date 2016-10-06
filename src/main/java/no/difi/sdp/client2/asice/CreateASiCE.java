@@ -57,9 +57,8 @@ public class CreateASiCE {
             writeArchiveToDisk(archive);
         }
 
-        return new ArchivedASiCE(archive.getBytes());
+        return new ArchivedASiCE(archive.getBytes(), getUnzippedContentBytesCount(files));
     }
-
 
     private void writeArchiveToDisk(Archive archive) {
         log.error("Writing Asic-E to disk for debug");
@@ -77,6 +76,13 @@ public class CreateASiCE {
         } catch (IOException e) {
             log.error("Could not write Asic-E file", e);
         }
+    }
+
+
+    protected static long getUnzippedContentBytesCount(List<AsicEAttachable> attachables){
+        return attachables.stream()
+                .mapToLong(a -> a.getBytes().length)
+                .sum();
     }
 
     /**
