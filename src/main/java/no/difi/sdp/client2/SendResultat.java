@@ -7,7 +7,6 @@ public class SendResultat {
     private final long fakturerbareBytes;
 
     public SendResultat(String meldingsId, String referanseTilMeldingsId, long fakturerbareBytes) {
-
         this.meldingsId = meldingsId;
         this.referanseTilMeldingsId = referanseTilMeldingsId;
         this.fakturerbareBytes = fakturerbareBytes;
