@@ -5,9 +5,9 @@ import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
+import no.difi.sdp.client2.internal.Billable;
 import no.difi.sdp.client2.internal.DigipostMessageSenderFacade;
 import no.difi.sdp.client2.internal.EbmsForsendelseBuilder;
-import no.difi.sdp.client2.internal.EbmsForsendelseContainer;
 import no.difi.sdp.client2.internal.KvitteringBuilder;
 import no.difi.sdp.client2.util.CryptoChecker;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
@@ -48,10 +48,10 @@ public class SikkerDigitalPostKlient {
      * @throws SendException
      */
     public SendResultat send(Forsendelse forsendelse) throws SendException {
-        EbmsForsendelseContainer ebmsForsendelseContainer = ebmsForsendelseBuilder.buildEbmsForsendelse(databehandler, klientKonfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
-        TransportKvittering kvittering = digipostMessageSenderFacade.send(ebmsForsendelseContainer.getEbmsForsendelse());
+        Billable<EbmsForsendelse> forsendelseBundleWithBillableBytes = ebmsForsendelseBuilder.buildEbmsForsendelse(databehandler, klientKonfigurasjon.getMeldingsformidlerOrganisasjon(), forsendelse);
+        TransportKvittering kvittering = digipostMessageSenderFacade.send(forsendelseBundleWithBillableBytes.entity);
 
-        return new SendResultat(kvittering.messageId, kvittering.refToMessageId, ebmsForsendelseContainer.getDokumentpakkeContainer().getAntallFakturerbareBytes() );
+        return new SendResultat(kvittering.messageId, kvittering.refToMessageId, forsendelseBundleWithBillableBytes.billableBytes);
     }
 
     /**
