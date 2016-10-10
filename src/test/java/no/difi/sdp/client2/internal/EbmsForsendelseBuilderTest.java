@@ -42,7 +42,7 @@ public class EbmsForsendelseBuilderTest {
 
         Forsendelse forsendelse = Forsendelse.digital(avsender, digitalpost, dokumentpakke).build();
 
-        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse);
+        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse).entity;
 
         assertThat(ebmsForsendelse.getAvsender().orgnr.getOrganisasjonsnummerMedLandkode()).isEqualTo("9908:991825827");
         assertThat(ebmsForsendelse.getDokumentpakke().getContentType()).isEqualTo("application/cms");
@@ -58,7 +58,7 @@ public class EbmsForsendelseBuilderTest {
 
         Forsendelse forsendelse = Forsendelse.digital(avsender, digitalpost, ObjectMother.dokumentpakke()).mpcId("mpcId").prioritet(Prioritet.PRIORITERT).build();
 
-        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse);
+        EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse).entity;
 
         assertThat(ebmsForsendelse.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
         assertThat(ebmsForsendelse.mpcId).isEqualTo("mpcId");

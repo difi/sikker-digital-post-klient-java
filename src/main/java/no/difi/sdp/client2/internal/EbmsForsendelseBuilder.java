@@ -24,10 +24,9 @@ public class EbmsForsendelseBuilder {
         createDokumentpakke = new CreateDokumentpakke();
     }
 
-    public EbmsForsendelse buildEbmsForsendelse(Databehandler databehandler, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
+    public Billable<EbmsForsendelse> buildEbmsForsendelse(Databehandler databehandler, Organisasjonsnummer meldingsformidler, Forsendelse forsendelse) {
         TekniskMottaker mottaker = forsendelse.getTekniskMottaker();
 
-        //EBMS
         EbmsAktoer ebmsAvsender = EbmsAktoer.avsender(databehandler.organisasjonsnummer.getOrganisasjonsnummer());
         EbmsAktoer ebmsMottaker = EbmsAktoer.meldingsformidler(meldingsformidler);
 
@@ -38,14 +37,15 @@ public class EbmsForsendelseBuilder {
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
         StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, DateTime.now(), forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 
-        //Dokumentpakke
-        Dokumentpakke dokumentpakke = createDokumentpakke.createDokumentpakke(databehandler, forsendelse);
+        Billable<Dokumentpakke> dokumentpakkeWithBillableBytes = createDokumentpakke.createDokumentpakke(databehandler, forsendelse);
 
-        return EbmsForsendelse.create(ebmsAvsender, ebmsMottaker, sbdhMottaker, standardBusinessDocument, dokumentpakke)
+        EbmsForsendelse ebmsForsendelse = EbmsForsendelse.create(ebmsAvsender, ebmsMottaker, sbdhMottaker, standardBusinessDocument, dokumentpakkeWithBillableBytes.entity)
                 .withPrioritet(forsendelse.getPrioritet().getEbmsPrioritet())
                 .withMpcId(forsendelse.getMpcId())
                 .withAction(forsendelse.type.action)
                 .build();
+
+        return new Billable<>(ebmsForsendelse, dokumentpakkeWithBillableBytes.billableBytes);
     }
 
 }

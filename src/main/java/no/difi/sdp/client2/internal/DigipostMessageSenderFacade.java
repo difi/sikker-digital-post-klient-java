@@ -16,6 +16,7 @@ import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
+import no.digipost.api.representations.TransportKvittering;
 import no.digipost.api.xml.Schemas;
 import org.apache.http.HttpRequestInterceptor;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -24,6 +25,7 @@ import org.springframework.ws.context.MessageContext;
 import org.xml.sax.SAXParseException;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.KLIENT;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.SERVER;
@@ -72,8 +74,8 @@ public class DigipostMessageSenderFacade {
         messageSender = messageSenderBuilder.build();
     }
 
-    public void send(final EbmsForsendelse ebmsForsendelse) {
-        performRequest((VoidRequest) () -> messageSender.send(ebmsForsendelse));
+    public TransportKvittering send(final EbmsForsendelse ebmsForsendelse) {
+        return performRequest(() -> messageSender.send(ebmsForsendelse));
     }
 
     public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest) {
@@ -89,16 +91,16 @@ public class DigipostMessageSenderFacade {
 
     }
 
-    private void performRequest(final VoidRequest request) {
+    private void performRequest(final Runnable request) {
         this.performRequest(() -> {
-            request.exec();
+            request.run();
             return null;
         });
     }
 
-    private <T> T performRequest(final Request<T> request) throws SendException {
+    private <T> T performRequest(final Supplier<T> request) throws SendException {
         try {
-            return request.exec();
+            return request.get();
         } catch (RuntimeException e) {
             RuntimeException mappedException = exceptionMapper.mapException(e);
             if (mappedException != null) {
@@ -136,14 +138,6 @@ public class DigipostMessageSenderFacade {
         } catch (Exception e) {
             throw new KonfigurasjonException("Unable to initialize payload validating interecptor", e);
         }
-    }
-
-    private interface VoidRequest {
-        void exec();
-    }
-
-    private interface Request<T> {
-        T exec();
     }
 
 }
