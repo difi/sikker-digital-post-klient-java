@@ -1,0 +1,62 @@
+# name of the software
+name: Sikker Digital Post Java
+siteUrlText: difi.github.io/difi-sikker-digital-post-klient-java
+
+# url of the download button
+downloadUrl: http://mvnrepository.com/artifact/no.difi.sdp
+
+baseurl: "/sikker-digital-post-klient-java"
+
+## Version handling
+currentCollecion: "v2_1"
+currentVersion: "2.1"
+versions: ["2.1", "1.2"]
+
+# Collection of versions
+collections:
+  v1_2:  
+    output: true
+    permalink: /v1.2/
+  v2_1:  
+    output: true
+    permalink: /v2.1/
+## End of Version handling
+
+# list of additional links on the right of the top menu
+headerLinks:
+  - title: GitHub
+    url: https://github.com/difi/sikker-digital-post-klient-java
+  - title: Issues
+    url: https://github.com/difi/sikker-digital-post-klient-java/issues
+
+# github buttons
+githubButton:
+  user: difi
+  repo: sikker-digital-post-klient-java
+
+# twitter buttons
+twitter:
+  enabled: false
+  via:
+  hash:
+  account:
+
+# facebook buttons
+facebook:
+  enabled: false
+  profileUrl:
+
+# google analytics
+analytics:
+  trackingid: UA-78356843-1
+  domain: auto
+
+highlighter: rouge  
+
+gems:
+  - jekyll-redirect-from
+
+exclude: ['README.md', 'Gemfile.lock', 'Gemfile']
+
+kramdown:
+  input: GFM
