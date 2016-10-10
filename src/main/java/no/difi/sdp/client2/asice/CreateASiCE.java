@@ -79,7 +79,7 @@ public class CreateASiCE {
     }
 
 
-    protected static long getUnzippedContentBytesCount(List<AsicEAttachable> attachables){
+    static long getUnzippedContentBytesCount(List<AsicEAttachable> attachables){
         return attachables.stream()
                 .mapToLong(a -> a.getBytes().length)
                 .sum();

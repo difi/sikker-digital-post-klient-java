@@ -21,7 +21,7 @@ public class CreateDokumentpakke {
         createCMS = new CreateCMSDocument();
     }
 
-    public DokumentpakkeContainer createDokumentpakke(Databehandler databehandler, Forsendelse forsendelse) {
+    public DokumentpakkeWithBillableBytes createDokumentpakke(Databehandler databehandler, Forsendelse forsendelse) {
         log.info("Creating dokumentpakke");
         ArchivedASiCE archivedASiCE = createASiCE.createAsice(databehandler, forsendelse);
         Sertifikat mottakerSertifikat = forsendelse.getTekniskMottaker().sertifikat;
@@ -31,7 +31,7 @@ public class CreateDokumentpakke {
 
         Dokumentpakke dokumentpakke = new Dokumentpakke(cms.getBytes());
 
-        return new DokumentpakkeContainer(dokumentpakke, archivedASiCE.getUnzippedContentBytesCount());
+        return new DokumentpakkeWithBillableBytes(dokumentpakke, archivedASiCE.getUnzippedContentBytesCount());
     }
 
 }
