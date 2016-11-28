@@ -39,7 +39,7 @@ public class DigipostMessageSenderFacade {
 
     public DigipostMessageSenderFacade(final Databehandler databehandler, final KlientKonfigurasjon klientKonfigurasjon) {
         KeyStoreInfo keyStoreInfo = databehandler.noekkelpar.getKeyStoreInfo();
-        WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
+        WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, null);
         wsSecurityInterceptor.afterPropertiesSet();
 
         MessageSender.Builder messageSenderBuilder = MessageSender.create(klientKonfigurasjon.getMeldingsformidlerRoot(),
