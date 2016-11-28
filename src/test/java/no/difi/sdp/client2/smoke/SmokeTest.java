@@ -87,8 +87,7 @@ public class SmokeTest {
     }
 
     private static Noekkelpar avsenderNoekkelpar() {
-//        return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
-        return Noekkelpar.fraKeyStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
+        return Noekkelpar.fraKeyStoreUtenTrustStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
     }
 
     private static Organisasjonsnummer getOrganisasjonsnummerFraSertifikat() {
