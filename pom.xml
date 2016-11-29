@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <prerequisites>
@@ -9,7 +10,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <sdp-shared.version>1.2.0</sdp-shared.version>
+        <sdp-shared.version>1.2.1</sdp-shared.version>
 
         <spring.version>4.3.2.RELEASE</spring.version>
         <spring.ws.version>2.3.0.RELEASE</spring.ws.version>
@@ -309,7 +310,9 @@
                     <version>0.8.0</version>
                     <configuration>
                         <newVersion>
-                            <file><path>${project.build.directory}/${project.build.finalName}.${project.packaging}</path></file>
+                            <file>
+                                <path>${project.build.directory}/${project.build.finalName}.${project.packaging}</path>
+                            </file>
                         </newVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
@@ -443,8 +446,10 @@
                                     </includes>
                                     <searchTransitive>true</searchTransitive>
                                     <message>
-                                        Maven-avhengighetene har forandret seg. Sjekk at dette virkelige er nødvendige avhengigheter (inkludert transitive) og at lisenser er OK.
-                                        Være spesielt OBS på lisenser som krever at man open sourcer egen kode, som for eksempel GPL-lisensene.
+                                        Maven-avhengighetene har forandret seg. Sjekk at dette virkelige er nødvendige
+                                        avhengigheter (inkludert transitive) og at lisenser er OK.
+                                        Være spesielt OBS på lisenser som krever at man open sourcer egen kode, som for
+                                        eksempel GPL-lisensene.
                                     </message>
                                 </bannedDependencies>
                             </rules>
