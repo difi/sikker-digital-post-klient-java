@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <prerequisites>
@@ -33,7 +34,7 @@
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>4.1.1-SNAPSHOT</version>
+    <version>5.0.1-SNAPSHOT</version>
     <name>Sikker digital post-klient</name>
 
     <description>
@@ -196,6 +197,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.2.26</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
             <version>2.0.7</version>
@@ -303,7 +310,9 @@
                     <version>0.8.0</version>
                     <configuration>
                         <newVersion>
-                            <file><path>${project.build.directory}/${project.build.finalName}.${project.packaging}</path></file>
+                            <file>
+                                <path>${project.build.directory}/${project.build.finalName}.${project.packaging}</path>
+                            </file>
                         </newVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
@@ -437,8 +446,10 @@
                                     </includes>
                                     <searchTransitive>true</searchTransitive>
                                     <message>
-                                        Maven-avhengighetene har forandret seg. Sjekk at dette virkelige er nødvendige avhengigheter (inkludert transitive) og at lisenser er OK.
-                                        Være spesielt OBS på lisenser som krever at man open sourcer egen kode, som for eksempel GPL-lisensene.
+                                        Maven-avhengighetene har forandret seg. Sjekk at dette virkelige er nødvendige
+                                        avhengigheter (inkludert transitive) og at lisenser er OK.
+                                        Være spesielt OBS på lisenser som krever at man open sourcer egen kode, som for
+                                        eksempel GPL-lisensene.
                                     </message>
                                 </bannedDependencies>
                             </rules>

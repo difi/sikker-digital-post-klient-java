@@ -39,7 +39,7 @@ public class DigipostMessageSenderFacade {
 
     public DigipostMessageSenderFacade(final Databehandler databehandler, final KlientKonfigurasjon klientKonfigurasjon) {
         KeyStoreInfo keyStoreInfo = databehandler.noekkelpar.getKeyStoreInfo();
-        WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new UserFriendlyWsSecurityExceptionMapper());
+        WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new NoOpExceptionResolver());
         wsSecurityInterceptor.afterPropertiesSet();
 
         MessageSender.Builder messageSenderBuilder = MessageSender.create(klientKonfigurasjon.getMeldingsformidlerRoot(),
@@ -131,8 +131,7 @@ public class DigipostMessageSenderFacade {
             };
             payloadValidatingInterceptor.setSchemas(Schemas.allSchemaResources());
             payloadValidatingInterceptor.setValidateRequest(true);
-            // TODO: Responsevalidering skal skrus på når vi er sikre på at MF og postkassene leverer skikkelige responser
-            payloadValidatingInterceptor.setValidateResponse(false);
+            payloadValidatingInterceptor.setValidateResponse(true);
             payloadValidatingInterceptor.afterPropertiesSet();
             return payloadValidatingInterceptor;
         } catch (Exception e) {
