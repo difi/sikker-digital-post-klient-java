@@ -51,7 +51,7 @@ public class ExceptionMapper {
     private KonfigurasjonException resolveToUserFriendlyExceptionIfPossible(Exception e) {
         boolean isPossiblyIncorrectLocalTimeException = (e instanceof Wss4jSecurityValidationException || e instanceof MessageSenderEbmsErrorException) && e.getMessage().contains("Invalid timestamp: The message timestamp is out of range");
         if(isPossiblyIncorrectLocalTimeException) {
-            return new UgyldigTidsstempelException("Ugyldig timestamp i sendt melding. Dette kan skyldes at maskinen som klienten kjører på ikke har stilt klokken korrekt. Juster klokken etter verdensklokken og prøv igjen.", e);
+            return new UgyldigTidsstempelException("Ugyldig timestamp i sendt melding. Dette kan skyldes at maskinen som klienten kjører på ikke har stilt klokken korrekt.", e);
         }
 
         boolean isCouldNotFindTrustedCertificatesException = (e instanceof Wss4jSecurityValidationException && e.getMessage().contains("No trusted certs found"));
