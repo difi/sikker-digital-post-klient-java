@@ -14,11 +14,10 @@ import java.util.Properties;
 
 public class AddClientVersionInterceptor implements HttpRequestInterceptor {
 
-    private final String clientVersion;
+    private static final String clientVersion = getProjectVersion();
     private final String javaVersion;
 
     public AddClientVersionInterceptor() {
-        this.clientVersion = getProjectVersion();
         String javaVersion = System.getProperty("java.version");
         this.javaVersion = javaVersion != null ? javaVersion : "UNKNOWN";
     }
@@ -35,16 +34,13 @@ public class AddClientVersionInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private String getProjectVersion() {
-        InputStream resourceAsStream = this.getClass().getResourceAsStream("/project.properties");
-        Properties properties = new Properties();
-
-        try {
-           properties.load(resourceAsStream);
+    private static String getProjectVersion() {
+        try (InputStream resourceAsStream = AddClientVersionInterceptor.class.getResourceAsStream("/project.properties")) {
+            Properties properties = new Properties();
+            properties.load(resourceAsStream);
+            return properties.getProperty("version");
         } catch (IOException e) {
             throw new SendIOException(e);
         }
-
-        return properties.getProperty("version");
     }
 }
