@@ -14,7 +14,16 @@ import java.util.Properties;
 
 public class AddClientVersionInterceptor implements HttpRequestInterceptor {
 
-    private static final String clientVersion = getProjectVersion();
+    private static final String CLIENT_VERSION; static {
+        try (InputStream resourceAsStream = AddClientVersionInterceptor.class.getResourceAsStream("/project.properties")) {
+            Properties properties = new Properties();
+            properties.load(resourceAsStream);
+            CLIENT_VERSION = properties.getProperty("version");
+        } catch (IOException e) {
+            throw new SendIOException(e);
+        }
+    }
+
     private final String javaVersion;
 
     public AddClientVersionInterceptor() {
@@ -25,22 +34,12 @@ public class AddClientVersionInterceptor implements HttpRequestInterceptor {
     @Override
     public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
         Header[] headers = request.getHeaders("User-Agent");
-        String clientUserAgent = MessageFormat.format("difi-sikker-digital-post-klient-java/{0} (Java/{1})", clientVersion, javaVersion);
+        String clientUserAgent = MessageFormat.format("difi-sikker-digital-post-klient-java/{0} (Java/{1})", CLIENT_VERSION, javaVersion);
 
         if (headers.length == 0) {
             request.addHeader("User-Agent", clientUserAgent);
         } else {
             request.addHeader("User-Agent", headers[0].getValue() + " " + clientUserAgent);
-        }
-    }
-
-    private static String getProjectVersion() {
-        try (InputStream resourceAsStream = AddClientVersionInterceptor.class.getResourceAsStream("/project.properties")) {
-            Properties properties = new Properties();
-            properties.load(resourceAsStream);
-            return properties.getProperty("version");
-        } catch (IOException e) {
-            throw new SendIOException(e);
         }
     }
 }
