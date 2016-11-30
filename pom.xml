@@ -394,6 +394,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
@@ -423,7 +424,7 @@
                                         <include>org.bouncycastle:bcprov-jdk15on:1.50</include>
                                         <include>org.codehaus.woodstox:stax2-api:3.1.4</include>
                                         <include>org.codehaus.woodstox:woodstox-core-asl:4.3.0</include>
-                                        <include>org.hamcrest:hamcrest-core:${hamcrest-version}</include>
+                                        <include>org.hamcrest:hamcrest-core</include>
                                         <include>org.jasypt:jasypt:1.9.1</include>
                                         <include>org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.6.5.1</include>
                                         <include>org.opensaml:*</include>
@@ -458,6 +459,17 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/projectversion</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
     </build>
 
 
