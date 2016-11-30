@@ -18,9 +18,8 @@ public class AddClientVersionInterceptor implements HttpRequestInterceptor {
     private final String javaVersion;
 
     public AddClientVersionInterceptor() {
-        String implementationVersion = getProjectVersion();
+        this.clientVersion = getProjectVersion();
         String javaVersion = System.getProperty("java.version");
-        this.clientVersion = implementationVersion != null ? implementationVersion : System.getProperty("user.name");
         this.javaVersion = javaVersion != null ? javaVersion : "UNKNOWN";
     }
 
