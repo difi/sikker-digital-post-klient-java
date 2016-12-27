@@ -41,7 +41,6 @@ public class SikkerDigitalPostKlient {
         this.klientKonfigurasjon = klientKonfigurasjon;
         this.databehandler = databehandler;
 
-
         CertificateValidator.Validate(klientKonfigurasjon.getMiljo(), databehandler.noekkelpar.getVirksomhetssertifikat().getX509Certificate());
     }
 

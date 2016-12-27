@@ -1,17 +1,21 @@
 package no.difi.sdp.client2;
 
+import no.difi.sdp.client2.domain.Miljo;
 import no.difi.sdp.client2.domain.exceptions.SendIOException;
+import no.difi.sdp.client2.domain.exceptions.SertifikatException;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static no.difi.sdp.client2.ObjectMother.databehandler;
+import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -19,8 +23,11 @@ import static org.junit.Assert.fail;
 
 public class SikkerDigitalPostKlientTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
-    public void haandter_connection_timeouts() {
+    public void handles_connection_timeouts() {
         String lokalTimeoutUrl = "http://10.255.255.1";
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
@@ -38,7 +45,7 @@ public class SikkerDigitalPostKlientTest {
     }
 
     @Test
-    public void kall_http_interceptors() {
+    public void calls_http_interceptors() {
         final StringBuffer interceptorString = new StringBuffer();
 
         String lokalTimeoutUrl = "http://10.255.255.1";
@@ -66,6 +73,12 @@ public class SikkerDigitalPostKlientTest {
         catch (SendIOException e) {
             assertThat(interceptorString.toString(), equalTo("First interceptor called, and second too!"));
         }
+    }
+
+    @Test
+    public void calls_certificate_validator_on_init() {
+        thrown.expect(SertifikatException.class);
+        new SikkerDigitalPostKlient(databehandler(), KlientKonfigurasjon.builder(Miljo.PRODUKSJON).build());
     }
 
 }
