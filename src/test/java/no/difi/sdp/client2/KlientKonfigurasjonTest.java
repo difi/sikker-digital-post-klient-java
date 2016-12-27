@@ -45,7 +45,7 @@ public class KlientKonfigurasjonTest {
         Miljo actualMiljo = klientKonfigurasjon.getMiljo();
 
         assertThat(actualMiljo, equalTo(funksjoneltTestmiljo));
-        assertEquals(klientKonfigurasjon.getMeldingsformidlerRoot(), actualMiljo.getMeldingsformidlerRoot());
+        assertEquals(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri(), actualMiljo.getMeldingsformidlerRoot());
     }
 
 }
