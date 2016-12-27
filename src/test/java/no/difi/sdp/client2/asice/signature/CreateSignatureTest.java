@@ -181,7 +181,7 @@ public class CreateSignatureTest {
 
         String actual = prettyPrint(signature);
 
-//        assertThat(actual).isEqualTo(expected);
+        assertThat(actual, equalTo(expected));
     }
 
     private void verify_signed_data_object_properties(final SignedDataObjectProperties signedDataObjectProperties) {
