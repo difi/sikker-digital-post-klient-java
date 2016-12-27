@@ -13,8 +13,9 @@ import java.util.concurrent.TimeUnit;
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static no.difi.sdp.client2.ObjectMother.databehandler;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Fail.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.fail;
 
 public class SikkerDigitalPostKlientTest {
 
@@ -32,7 +33,7 @@ public class SikkerDigitalPostKlientTest {
             fail("Should fail");
         }
         catch (SendIOException e) {
-            assertThat(e.getAntattSkyldig()).isEqualTo(UKJENT);
+            assertThat(e.getAntattSkyldig(), equalTo(UKJENT));
         }
     }
 
@@ -63,7 +64,7 @@ public class SikkerDigitalPostKlientTest {
             fail("Fails");
         }
         catch (SendIOException e) {
-            assertThat(interceptorString.toString()).isEqualTo("First interceptor called, and second too!");
+            assertThat(interceptorString.toString(), equalTo("First interceptor called, and second too!"));
         }
     }
 

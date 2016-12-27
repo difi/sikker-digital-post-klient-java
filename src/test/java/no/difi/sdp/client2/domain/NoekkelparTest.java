@@ -5,7 +5,12 @@ import org.junit.Test;
 
 import java.security.KeyStore;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 
 public class NoekkelparTest {
@@ -15,8 +20,8 @@ public class NoekkelparTest {
         KeyStore keyStoreMedVirksomhetssertifikatOgTrustStore = testKeyStore();
         Noekkelpar noekkelpar = Noekkelpar.fraKeyStore(keyStoreMedVirksomhetssertifikatOgTrustStore, ObjectMother.VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.VIRKSOMHETSSERTIFIKAT_PASSORD);
 
-        assertThat(noekkelpar.getKeyStore()).isEqualTo(keyStoreMedVirksomhetssertifikatOgTrustStore);
-        assertThat(noekkelpar.getTrustStore()).isNull();
+        assertThat(noekkelpar.getKeyStore(), equalTo(keyStoreMedVirksomhetssertifikatOgTrustStore));
+        assertThat(noekkelpar.getTrustStore(), is(nullValue()));
     }
 
     @Test
@@ -24,9 +29,9 @@ public class NoekkelparTest {
         KeyStore keyStoreUtenTrustStore = testKeyStore();
         Noekkelpar noekkelpar = Noekkelpar.fraKeyStoreUtenTrustStore(keyStoreUtenTrustStore, ObjectMother.VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.VIRKSOMHETSSERTIFIKAT_PASSORD);
 
-        assertThat(noekkelpar.getKeyStore()).isEqualTo(keyStoreUtenTrustStore);
-        assertThat(noekkelpar.getTrustStore()).isNotNull();
-        assertThat(noekkelpar.getTrustStore()).isNotEqualTo(noekkelpar.getKeyStore());
+        assertThat(noekkelpar.getKeyStore(), equalTo(keyStoreUtenTrustStore));
+        assertThat(noekkelpar.getTrustStore(), is(notNullValue()));
+        assertThat(noekkelpar.getTrustStore(), not(equalTo((noekkelpar.getKeyStore()))));
     }
 
     @Test
@@ -36,8 +41,8 @@ public class NoekkelparTest {
 
         Noekkelpar noekkelpar = Noekkelpar.fraKeyStoreOgTrustStore(keyStoreMedVirksomhetssertifikat, trustStore, ObjectMother.VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.VIRKSOMHETSSERTIFIKAT_PASSORD);
 
-        assertThat(noekkelpar.getKeyStore()).isEqualTo(keyStoreMedVirksomhetssertifikat);
-        assertThat(noekkelpar.getTrustStore()).isEqualTo(trustStore);
+        assertThat(noekkelpar.getKeyStore(), equalTo(keyStoreMedVirksomhetssertifikat));
+        assertThat(noekkelpar.getTrustStore(), equalTo(trustStore));
     }
 
     private static KeyStore testKeyStore() {

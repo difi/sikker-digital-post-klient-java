@@ -21,7 +21,10 @@ import static no.difi.sdp.client2.ObjectMother.createEbmsAapningsKvittering;
 import static no.difi.sdp.client2.ObjectMother.createEbmsFeil;
 import static no.difi.sdp.client2.ObjectMother.createEbmsLeveringsKvittering;
 import static no.difi.sdp.client2.ObjectMother.createEbmsVarslingFeiletKvittering;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 
 public class KvitteringBuilderTest {
@@ -34,9 +37,9 @@ public class KvitteringBuilderTest {
         Organisasjonsnummer organisasjonsnummer = Organisasjonsnummer.of("988015814");
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(organisasjonsnummer, kvitteringForespoersel);
 
-        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr).isEqualTo(organisasjonsnummer);
-        assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.NORMAL);
-        assertThat(ebmsPullRequest.mpcId).isEqualTo("mpcId");
+        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr, equalTo(organisasjonsnummer));
+        assertThat(ebmsPullRequest.prioritet, equalTo(EbmsOutgoingMessage.Prioritet.NORMAL));
+        assertThat(ebmsPullRequest.mpcId, equalTo("mpcId"));
     }
 
     @Test
@@ -45,9 +48,9 @@ public class KvitteringBuilderTest {
         Organisasjonsnummer organisasjonsnummer = Organisasjonsnummer.of("988015814");
         EbmsPullRequest ebmsPullRequest = kvitteringBuilder.buildEbmsPullRequest(organisasjonsnummer, kvitteringForespoersel);
 
-        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr).isEqualTo(organisasjonsnummer);
-        assertThat(ebmsPullRequest.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
-        assertThat(ebmsPullRequest.mpcId).isNull();
+        assertThat(ebmsPullRequest.getEbmsMottaker().orgnr, equalTo(organisasjonsnummer));
+        assertThat(ebmsPullRequest.prioritet, equalTo(EbmsOutgoingMessage.Prioritet.PRIORITERT));
+        assertThat(ebmsPullRequest.mpcId, is(nullValue()));
     }
 
     @Test
@@ -116,8 +119,8 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
-        assertThat(varslingFeiletKvittering.getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
-        assertThat(varslingFeiletKvittering.getVarslingskanal()).isEqualTo(VarslingFeiletKvittering.Varslingskanal.EPOST);
+        assertThat(varslingFeiletKvittering.getBeskrivelse(), equalTo("Varsling feilet 'Viktig brev'"));
+        assertThat(varslingFeiletKvittering.getVarslingskanal(), equalTo(VarslingFeiletKvittering.Varslingskanal.EPOST));
     }
 
 
@@ -135,8 +138,8 @@ public class KvitteringBuilderTest {
         assertNotNull(varslingFeiletKvittering.getReferanseTilMeldingSomKvitteres());
 
 
-        assertThat((varslingFeiletKvittering).getBeskrivelse()).isEqualTo("Varsling feilet 'Viktig brev'");
-        assertThat((varslingFeiletKvittering).getVarslingskanal()).isEqualTo(VarslingFeiletKvittering.Varslingskanal.SMS);
+        assertThat((varslingFeiletKvittering).getBeskrivelse(), equalTo("Varsling feilet 'Viktig brev'"));
+        assertThat((varslingFeiletKvittering).getVarslingskanal(), equalTo(VarslingFeiletKvittering.Varslingskanal.SMS));
     }
 
     @Test
@@ -152,8 +155,8 @@ public class KvitteringBuilderTest {
         assertNotNull(feil.getMeldingsId());
         assertNotNull(feil.getReferanseTilMeldingSomKvitteres());
 
-        assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.KLIENT);
-        assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
+        assertThat(feil.getFeiltype(), equalTo(Feil.Feiltype.KLIENT));
+        assertThat(feil.getDetaljer(), equalTo("Feilinformasjon"));
     }
 
     @Test
@@ -170,8 +173,8 @@ public class KvitteringBuilderTest {
         assertNotNull(feil.getReferanseTilMeldingSomKvitteres());
 
 
-        assertThat(feil.getFeiltype()).isEqualTo(Feil.Feiltype.SERVER);
-        assertThat(feil.getDetaljer()).isEqualTo("Feilinformasjon");
+        assertThat(feil.getFeiltype(), equalTo(Feil.Feiltype.SERVER));
+        assertThat(feil.getDetaljer(), equalTo("Feilinformasjon"));
     }
 
 }

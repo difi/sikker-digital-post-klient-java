@@ -7,7 +7,8 @@ import org.junit.rules.ExpectedException;
 
 import java.time.Instant;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 
 public class KvitteringsInfoTest {
@@ -26,9 +27,9 @@ public class KvitteringsInfoTest {
                 .referanseTilMeldingId(referanse)
                 .tidspunkt(tidspunkt).build();
 
-        assertThat(kvitteringsInfo.getKonversasjonsId()).isEqualTo(konversasjonsid);
-        assertThat(kvitteringsInfo.getReferanseTilMeldingId()).isEqualTo(referanse);
-        assertThat(kvitteringsInfo.getTidspunkt()).isEqualTo(tidspunkt);
+        assertThat(kvitteringsInfo.getKonversasjonsId(), equalTo(konversasjonsid));
+        assertThat(kvitteringsInfo.getReferanseTilMeldingId(), equalTo(referanse));
+        assertThat(kvitteringsInfo.getTidspunkt(), equalTo(tidspunkt));
     }
 
 

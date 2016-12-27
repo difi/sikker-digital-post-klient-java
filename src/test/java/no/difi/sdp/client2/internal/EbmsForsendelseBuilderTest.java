@@ -19,7 +19,8 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class EbmsForsendelseBuilderTest {
 
@@ -44,8 +45,8 @@ public class EbmsForsendelseBuilderTest {
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse).entity;
 
-        assertThat(ebmsForsendelse.getAvsender().orgnr.getOrganisasjonsnummerMedLandkode()).isEqualTo("9908:991825827");
-        assertThat(ebmsForsendelse.getDokumentpakke().getContentType()).isEqualTo("application/cms");
+        assertThat(ebmsForsendelse.getAvsender().orgnr.getOrganisasjonsnummerMedLandkode(), equalTo("9908:991825827"));
+        assertThat(ebmsForsendelse.getDokumentpakke().getContentType(), equalTo("application/cms"));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class EbmsForsendelseBuilderTest {
 
         EbmsForsendelse ebmsForsendelse = sut.buildEbmsForsendelse(databehandler, Organisasjonsnummer.of("984661185"), forsendelse).entity;
 
-        assertThat(ebmsForsendelse.prioritet).isEqualTo(EbmsOutgoingMessage.Prioritet.PRIORITERT);
-        assertThat(ebmsForsendelse.mpcId).isEqualTo("mpcId");
+        assertThat(ebmsForsendelse.prioritet, equalTo(EbmsOutgoingMessage.Prioritet.PRIORITERT));
+        assertThat(ebmsForsendelse.mpcId, equalTo("mpcId"));
     }
 }
