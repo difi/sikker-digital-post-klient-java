@@ -15,7 +15,7 @@ public class CertificateValidatorTest {
     public void accepts_test_certificate() {
         X509Certificate certificate = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
 
-        CertStatus certStatus = CertificateValidator.Validate(Miljo.TEST, certificate);
+        CertStatus certStatus = CertificateValidator.Validate(Miljo.FUNKSJONELT_TESTMILJO, certificate);
 
         assertEquals(CertStatus.OK, certStatus);
 
@@ -25,7 +25,7 @@ public class CertificateValidatorTest {
     public void accepts_prod_certificate() {
         X509Certificate certificate = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
 
-        CertStatus certStatus = CertificateValidator.Validate(Miljo.PROD, certificate);
+        CertStatus certStatus = CertificateValidator.Validate(Miljo.PRODUKSJON, certificate);
 
         assertEquals(CertStatus.OK, certStatus);
     }

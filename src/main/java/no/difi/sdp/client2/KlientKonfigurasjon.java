@@ -1,5 +1,6 @@
 package no.difi.sdp.client2;
 
+import no.difi.sdp.client2.domain.Miljo;
 import no.digipost.api.EbmsEndpointUriBuilder;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.http.HttpRequestInterceptor;
@@ -26,9 +27,15 @@ public class KlientKonfigurasjon {
     private ClientInterceptor[] soapInterceptors = new ClientInterceptor[0];
     private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
+    private Miljo miljo;
 
     private KlientKonfigurasjon(URI meldingsformidlerRoot) {
         this.meldingsformidlerRoot = meldingsformidlerRoot;
+    }
+
+    private KlientKonfigurasjon(Miljo miljo) {
+        this.meldingsformidlerRoot = miljo.getMeldingsformidlerRoot();
+        this.miljo = miljo;
     }
 
     public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
@@ -83,8 +90,14 @@ public class KlientKonfigurasjon {
         return httpResponseInterceptors;
     }
 
+    public Miljo getMiljo() { return miljo; }
+
     public static Builder builder(String meldingsformidlerRootUri) {
         return builder(URI.create(meldingsformidlerRootUri));
+    }
+
+    public static Builder builder(Miljo miljo){
+        return new Builder(miljo);
     }
 
     public static Builder builder(URI meldingsformidlerRoot) {
@@ -98,6 +111,10 @@ public class KlientKonfigurasjon {
 
         private Builder(URI meldingsformidlerRoot) {
             target = new KlientKonfigurasjon(meldingsformidlerRoot);
+        }
+
+        private Builder(Miljo miljo){
+            target = new KlientKonfigurasjon(miljo);
         }
 
         public Builder proxy(final String proxyHost, final int proxyPort) {
