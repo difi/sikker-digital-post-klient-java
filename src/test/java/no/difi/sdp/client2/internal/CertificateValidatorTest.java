@@ -2,19 +2,15 @@ package no.difi.sdp.client2.internal;
 
 import no.difi.sdp.client2.domain.Miljo;
 import no.difi.sdp.client2.domain.exceptions.SertifikatException;
-import no.digipost.security.DigipostSecurity;
+import no.digipost.security.cert.Trust;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.security.cert.X509Certificate;
-
-import static org.junit.Assert.assertEquals;
+import static no.difi.sdp.client2.ObjectMother.POSTEN_PROD_CERTIFICATE;
+import static no.difi.sdp.client2.ObjectMother.POSTEN_TEST_CERTIFICATE;
 
 public class CertificateValidatorTest {
-
-    public static final X509Certificate POSTEN_TEST_CERTIFICATE = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
-    public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
 
     @Test
     public void accepts_test_certificate() {
@@ -32,17 +28,25 @@ public class CertificateValidatorTest {
     @Test
     public void stops_test_certificate_in_prod() {
         thrown.expect(SertifikatException.class);
+
         CertificateValidator.Validate(Miljo.PRODUKSJON, POSTEN_TEST_CERTIFICATE);
     }
 
     @Test
     public void stops_prod_certificate_in_test() {
         thrown.expect(SertifikatException.class);
+
         CertificateValidator.Validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_PROD_CERTIFICATE);
     }
 
     @Test
-    public void no_validation_if_environment_is_null(){
-        CertificateValidator.Validate(null, POSTEN_PROD_CERTIFICATE);
+    public void no_validation_if_trusted_chain_certificates_are_null() {
+        Miljo miljo = Miljo.FUNKSJONELT_TESTMILJO;
+        Trust tmpGodkjenteSertifikater = miljo.getGodkjenteKjedeSertifikater();
+        miljo.setGodkjenteKjedeSertifikater(null);
+
+        CertificateValidator.Validate(miljo, POSTEN_PROD_CERTIFICATE);
+
+        miljo.setGodkjenteKjedeSertifikater(tmpGodkjenteSertifikater);
     }
 }

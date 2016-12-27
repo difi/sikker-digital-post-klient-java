@@ -14,7 +14,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class KlientKonfigurasjon {
 
-    private URI meldingsformidlerRoot;
     private final Organisasjonsnummer meldingsformidlerOrganisasjon = Organisasjonsnummer.of("984661185");
 
     private String proxyHost;
@@ -29,17 +28,20 @@ public class KlientKonfigurasjon {
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
     private Miljo miljo;
 
+    @Deprecated
     private KlientKonfigurasjon(URI meldingsformidlerRoot) {
-        this.meldingsformidlerRoot = meldingsformidlerRoot;
+        miljo = Miljo.FUNKSJONELT_TESTMLIJO_NORSK_HELSENETT;
+        miljo.setGodkjenteKjedeSertifikater(null); //Bad hack as we alter state making tests fail if using the same environment as above(editing static property)
+        miljo.setMeldingsformidlerRoot(meldingsformidlerRoot);
     }
 
     private KlientKonfigurasjon(Miljo miljo) {
-        this.meldingsformidlerRoot = miljo.getMeldingsformidlerRoot();
         this.miljo = miljo;
     }
 
-    public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
-        return EbmsEndpointUriBuilder.meldingsformidlerUri(meldingsformidlerRoot);
+    @Deprecated
+    public static Builder builder(URI meldingsformidlerRoot) {
+        return new Builder(meldingsformidlerRoot);
     }
 
     public String getProxyHost() {
@@ -96,19 +98,19 @@ public class KlientKonfigurasjon {
         return builder(URI.create(meldingsformidlerRootUri));
     }
 
-    public static Builder builder(Miljo miljo){
+    public static Builder builder(Miljo miljo) {
         return new Builder(miljo);
     }
 
-    public static Builder builder(URI meldingsformidlerRoot) {
-        return new Builder(meldingsformidlerRoot);
+    public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
+        return EbmsEndpointUriBuilder.meldingsformidlerUri(miljo.getMeldingsformidlerRoot());
     }
-
 
     public static class Builder {
 
         private final KlientKonfigurasjon target;
 
+        @Deprecated
         private Builder(URI meldingsformidlerRoot) {
             target = new KlientKonfigurasjon(meldingsformidlerRoot);
         }

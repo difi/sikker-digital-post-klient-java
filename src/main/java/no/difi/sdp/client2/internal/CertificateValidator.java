@@ -15,7 +15,7 @@ import static no.digipost.security.cert.OcspSetting.NO_OCSP;
 public class CertificateValidator {
 
     public static void Validate(Miljo miljo, X509Certificate certificate) {
-        if (miljo == null) {
+        if (miljo.getGodkjenteKjedeSertifikater() == null) {
             return;
         }
 

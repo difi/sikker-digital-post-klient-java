@@ -25,17 +25,6 @@ public class KlientKonfigurasjonTest {
     }
 
     @Test
-    public void uri_builder_leaves_miljo_as_null(){
-        URI meldingsformidlerRoot = URI.create("http://meldingsformidlerroot.no");
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
-                .builder(meldingsformidlerRoot)
-                .build();
-
-        assertThat(klientKonfigurasjon.getMiljo(), is(nullValue()));
-    }
-
-    @Test
     public void miljo_builder_initializes_meldingsformidler_root_and_miljo() {
         Miljo funksjoneltTestmiljo = Miljo.FUNKSJONELT_TESTMILJO;
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
