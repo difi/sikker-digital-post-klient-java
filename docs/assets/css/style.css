@@ -36,13 +36,23 @@ body{
 }
 .list-group {
   margin-top:10px ;
+
 }
 
 .list-versions {
+  font-size: 1.3rem;
   position: fixed;
-  bottom: 10%;
+  bottom: 0%;
+  right: 12%;
   width: 107px;
 }
+
+@media (max-width:995px){
+  .list-group {
+    display: none;
+  }
+}
+
 @media (max-width: 768px){
   .list-versions{
     top:0%;
