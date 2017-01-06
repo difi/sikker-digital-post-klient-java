@@ -33,7 +33,7 @@ This software includes third party software subject to the following licenses:
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
   java-support under The Apache Software License, Version 2.0
   JavaMail 1.4 under The Apache Software License, Version 2.0
-  JavaMail API (no providers) under CDDL/GPLv2+CE
+  JavaMail API under CDDL/GPLv2+CE
   javax.xml.soap API under CDDL 1.1 or GPL2 w/ CPE
   JAXB2 Basics - Runtime under BSD-Style License
   jaxen under The BSD 3-Clause License
@@ -80,7 +80,5 @@ This software includes third party software subject to the following licenses:
   Spring XML under The Apache Software License, Version 2.0
   spring-security-core under The Apache Software License, Version 2.0
   Stax2 API under The BSD License
-  Streaming API for XML under GNU General Public Library or COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
-  Sun Java Streaming XML Parser under CDDL-1.0 or GPL-2.0
   Woodstox under The Apache Software License, Version 2.0
 
