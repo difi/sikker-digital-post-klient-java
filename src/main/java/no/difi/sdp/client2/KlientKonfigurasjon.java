@@ -92,6 +92,7 @@ public class KlientKonfigurasjon {
 
     public Miljo getMiljo() { return miljo; }
 
+    @Deprecated
     public static Builder builder(String meldingsformidlerRootUri) {
         return builder(URI.create(meldingsformidlerRootUri));
     }
