@@ -8,11 +8,10 @@ import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.NORSK
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.UTENLANDSK;
 import static no.difi.sdp.client2.domain.fysisk_post.Landkoder.Predefinert.USA;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class PostadresseBuilderTest {
 

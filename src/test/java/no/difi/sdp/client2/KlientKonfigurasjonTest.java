@@ -5,16 +5,14 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class KlientKonfigurasjonTest {
 
     @Test
-    public void uri_builder_initializes_meldingsformidler_root() {
+    public void uri_builder_initializes_meldingsformidler_root_and_miljo() {
         URI meldingsformidlerRoot = URI.create("http://meldingsformidlerroot.no");
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
@@ -22,6 +20,7 @@ public class KlientKonfigurasjonTest {
                 .build();
 
         assertThat(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri(), equalTo(meldingsformidlerRoot));
+        assertThat(klientKonfigurasjon.getMiljo().getMeldingsformidlerRoot(), equalTo(meldingsformidlerRoot));
     }
 
     @Test

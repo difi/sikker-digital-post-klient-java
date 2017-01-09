@@ -16,7 +16,6 @@ import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.TransportKvittering;
-import no.digipost.security.cert.CertStatus;
 
 public class SikkerDigitalPostKlient {
 
@@ -41,7 +40,7 @@ public class SikkerDigitalPostKlient {
         this.klientKonfigurasjon = klientKonfigurasjon;
         this.databehandler = databehandler;
 
-        CertificateValidator.Validate(klientKonfigurasjon.getMiljo(), databehandler.noekkelpar.getVirksomhetssertifikat().getX509Certificate());
+        CertificateValidator.validate(klientKonfigurasjon.getMiljo(), databehandler.noekkelpar.getVirksomhetssertifikat().getX509Certificate());
     }
 
     /**

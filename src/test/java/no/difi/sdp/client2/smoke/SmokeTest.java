@@ -32,12 +32,13 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 @Category(SmokeTest.class)
@@ -133,7 +134,7 @@ public class SmokeTest {
         ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient, mpcId);
         sikkerDigitalPostKlient.bekreft(forretningsKvittering);
 
-        assertThat(forretningsKvittering, is(not(nullValue())));
+        assertThat(forretningsKvittering, notNullValue());
     }
 
     private Forsendelse buildForsendelse(String mpcId) {
@@ -158,8 +159,8 @@ public class SmokeTest {
                 out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getReferanseTilMeldingId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
                 assertThat(forretningsKvittering.getKonversasjonsId(), not(isEmptyString()));
                 assertThat(forretningsKvittering.getReferanseTilMeldingId(), not(isEmptyString()));
-                assertThat(forretningsKvittering.getTidspunkt(), is(not(nullValue())));
-                assertThat(forretningsKvittering, is(instanceOf(LeveringsKvittering.class)));
+                assertThat(forretningsKvittering.getTidspunkt(), notNullValue());
+                assertThat(forretningsKvittering, instanceOf(LeveringsKvittering.class));
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);
                 break;

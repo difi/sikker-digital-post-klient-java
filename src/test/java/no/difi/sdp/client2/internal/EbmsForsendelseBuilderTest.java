@@ -19,8 +19,8 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class EbmsForsendelseBuilderTest {
 

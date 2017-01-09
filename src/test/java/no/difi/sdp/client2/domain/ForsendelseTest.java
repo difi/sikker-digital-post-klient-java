@@ -4,7 +4,12 @@ import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
-import no.difi.sdp.client2.domain.fysisk_post.*;
+import no.difi.sdp.client2.domain.fysisk_post.FysiskPost;
+import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse;
+import no.difi.sdp.client2.domain.fysisk_post.Landkoder;
+import no.difi.sdp.client2.domain.fysisk_post.Posttype;
+import no.difi.sdp.client2.domain.fysisk_post.Returhaandtering;
+import no.difi.sdp.client2.domain.fysisk_post.Utskriftsfarge;
 import no.difi.sdp.client2.internal.SDPBuilder;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.Before;
@@ -14,11 +19,11 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import static no.difi.sdp.client2.ObjectMother.mottaker;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class ForsendelseTest {
 
@@ -59,7 +64,7 @@ public class ForsendelseTest {
 
     @Test
     public void default_konversasjonsId_er_satt() {
-        assertThat(forsendelse.getKonversasjonsId(), is(not(nullValue())));
+        assertThat(forsendelse.getKonversasjonsId(), notNullValue());
     }
 
     @Test

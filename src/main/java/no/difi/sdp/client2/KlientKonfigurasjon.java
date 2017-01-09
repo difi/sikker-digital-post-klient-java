@@ -30,9 +30,7 @@ public class KlientKonfigurasjon {
 
     @Deprecated
     private KlientKonfigurasjon(URI meldingsformidlerRoot) {
-        miljo = Miljo.FUNKSJONELT_TESTMLIJO_NORSK_HELSENETT;
-        miljo.setGodkjenteKjedeSertifikater(null); //Bad hack as we alter state making tests fail if using the same environment as above(editing static property)
-        miljo.setMeldingsformidlerRoot(meldingsformidlerRoot);
+        miljo = new Miljo(null,meldingsformidlerRoot);
     }
 
     private KlientKonfigurasjon(Miljo miljo) {

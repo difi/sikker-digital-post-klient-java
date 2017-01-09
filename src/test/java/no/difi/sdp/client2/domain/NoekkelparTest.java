@@ -8,9 +8,9 @@ import java.security.KeyStore;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
 
 
 public class NoekkelparTest {
@@ -30,7 +30,7 @@ public class NoekkelparTest {
         Noekkelpar noekkelpar = Noekkelpar.fraKeyStoreUtenTrustStore(keyStoreUtenTrustStore, ObjectMother.VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.VIRKSOMHETSSERTIFIKAT_PASSORD);
 
         assertThat(noekkelpar.getKeyStore(), equalTo(keyStoreUtenTrustStore));
-        assertThat(noekkelpar.getTrustStore(), is(notNullValue()));
+        assertThat(noekkelpar.getTrustStore(), notNullValue());
         assertThat(noekkelpar.getTrustStore(), not(equalTo((noekkelpar.getKeyStore()))));
     }
 

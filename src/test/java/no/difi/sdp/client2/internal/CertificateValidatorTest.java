@@ -14,12 +14,12 @@ public class CertificateValidatorTest {
 
     @Test
     public void accepts_test_certificate() {
-        CertificateValidator.Validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_TEST_CERTIFICATE);
+        CertificateValidator.validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_TEST_CERTIFICATE);
     }
 
     @Test
     public void accepts_prod_certificate() {
-        CertificateValidator.Validate(Miljo.PRODUKSJON, POSTEN_PROD_CERTIFICATE);
+        CertificateValidator.validate(Miljo.PRODUKSJON, POSTEN_PROD_CERTIFICATE);
     }
 
     @Rule
@@ -29,14 +29,14 @@ public class CertificateValidatorTest {
     public void stops_test_certificate_in_prod() {
         thrown.expect(SertifikatException.class);
 
-        CertificateValidator.Validate(Miljo.PRODUKSJON, POSTEN_TEST_CERTIFICATE);
+        CertificateValidator.validate(Miljo.PRODUKSJON, POSTEN_TEST_CERTIFICATE);
     }
 
     @Test
     public void stops_prod_certificate_in_test() {
         thrown.expect(SertifikatException.class);
 
-        CertificateValidator.Validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_PROD_CERTIFICATE);
+        CertificateValidator.validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_PROD_CERTIFICATE);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class CertificateValidatorTest {
         Trust tmpGodkjenteSertifikater = miljo.getGodkjenteKjedeSertifikater();
         miljo.setGodkjenteKjedeSertifikater(null);
 
-        CertificateValidator.Validate(miljo, POSTEN_PROD_CERTIFICATE);
+        CertificateValidator.validate(miljo, POSTEN_PROD_CERTIFICATE);
 
         miljo.setGodkjenteKjedeSertifikater(tmpGodkjenteSertifikater);
     }
