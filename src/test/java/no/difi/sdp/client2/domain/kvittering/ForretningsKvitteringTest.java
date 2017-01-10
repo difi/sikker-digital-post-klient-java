@@ -6,7 +6,8 @@ import org.junit.Test;
 
 import java.time.Instant;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class ForretningsKvitteringTest {
 
@@ -26,10 +27,10 @@ public class ForretningsKvitteringTest {
         KvitteringsInfo kvitteringsInfo = new KvitteringsInfo("konversasjonsId", "referanseTilMeldingId", Instant.now());
         LeveringsKvittering leveringsKvittering = new LeveringsKvittering(kanBekreftesSomBehandletKvittering, kvitteringsInfo);
 
-        assertThat(leveringsKvittering.getReferanseTilMeldingSomKvitteres()).isEqualTo(kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres());
-        assertThat(leveringsKvittering.getMeldingsId()).isEqualTo(kanBekreftesSomBehandletKvittering.getMeldingsId());
-        assertThat(leveringsKvittering.getKonversasjonsId()).isEqualTo(kvitteringsInfo.getKonversasjonsId());
-        assertThat(leveringsKvittering.getReferanseTilMeldingId()).isEqualTo(kvitteringsInfo.getReferanseTilMeldingId());
-        assertThat(leveringsKvittering.getTidspunkt()).isEqualTo(kvitteringsInfo.getTidspunkt());
+        assertThat(leveringsKvittering.getReferanseTilMeldingSomKvitteres(), equalTo(kanBekreftesSomBehandletKvittering.getReferanseTilMeldingSomKvitteres()));
+        assertThat(leveringsKvittering.getMeldingsId(), equalTo(kanBekreftesSomBehandletKvittering.getMeldingsId()));
+        assertThat(leveringsKvittering.getKonversasjonsId(), equalTo(kvitteringsInfo.getKonversasjonsId()));
+        assertThat(leveringsKvittering.getReferanseTilMeldingId(), equalTo(kvitteringsInfo.getReferanseTilMeldingId()));
+        assertThat(leveringsKvittering.getTidspunkt(), equalTo(kvitteringsInfo.getTidspunkt()));
     }
 }

@@ -30,6 +30,7 @@ import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.StandardBusinessDocumentFactory;
+import no.digipost.security.DigipostSecurity;
 import org.joda.time.DateTime;
 import org.springframework.core.io.ClassPathResource;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.BusinessScope;
@@ -47,6 +48,7 @@ import org.w3.xmldsig.Transforms;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +60,9 @@ public class ObjectMother {
 
     public static final String VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
     public static final String VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
+
+    public static final X509Certificate POSTEN_TEST_CERTIFICATE = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
+    public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
 
     public static Noekkelpar noekkelpar() {
         return Noekkelpar.fraKeyStore(selvsignertKeyStore(), VIRKSOMHETSSERTIFIKAT_ALIAS, VIRKSOMHETSSERTIFIKAT_PASSORD);

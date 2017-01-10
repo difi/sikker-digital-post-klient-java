@@ -2,7 +2,8 @@ package no.difi.sdp.client2.domain;
 
 import org.junit.Test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class SertifikatTest {
 
@@ -12,9 +13,9 @@ public class SertifikatTest {
 
         Sertifikat sertifikat = Sertifikat.fraBase64X509String(base64EncodedCertificate);
 
-        assertThat(sertifikat.getX509Certificate().getSubjectDN().getName())
-                .contains("DIFI")
-                .contains("Sikker Digital Post Test");
+        String certificateSubject = sertifikat.getX509Certificate().getSubjectDN().getName();
+        assertThat(certificateSubject, containsString("DIFI"));
+        assertThat(certificateSubject, containsString("Sikker Digital Post Test"));
     }
 
 }

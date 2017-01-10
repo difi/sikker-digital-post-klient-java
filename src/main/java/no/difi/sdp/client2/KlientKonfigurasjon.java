@@ -1,5 +1,6 @@
 package no.difi.sdp.client2;
 
+import no.difi.sdp.client2.domain.Miljo;
 import no.digipost.api.EbmsEndpointUriBuilder;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.http.HttpRequestInterceptor;
@@ -13,7 +14,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class KlientKonfigurasjon {
 
-    private URI meldingsformidlerRoot;
     private final Organisasjonsnummer meldingsformidlerOrganisasjon = Organisasjonsnummer.of("984661185");
 
     private String proxyHost;
@@ -26,13 +26,20 @@ public class KlientKonfigurasjon {
     private ClientInterceptor[] soapInterceptors = new ClientInterceptor[0];
     private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
+    private Miljo miljo;
 
+    @Deprecated
     private KlientKonfigurasjon(URI meldingsformidlerRoot) {
-        this.meldingsformidlerRoot = meldingsformidlerRoot;
+        miljo = new Miljo(null,meldingsformidlerRoot);
     }
 
-    public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
-        return EbmsEndpointUriBuilder.meldingsformidlerUri(meldingsformidlerRoot);
+    private KlientKonfigurasjon(Miljo miljo) {
+        this.miljo = miljo;
+    }
+
+    @Deprecated
+    public static Builder builder(URI meldingsformidlerRoot) {
+        return new Builder(meldingsformidlerRoot);
     }
 
     public String getProxyHost() {
@@ -83,21 +90,32 @@ public class KlientKonfigurasjon {
         return httpResponseInterceptors;
     }
 
+    public Miljo getMiljo() { return miljo; }
+
+    @Deprecated
     public static Builder builder(String meldingsformidlerRootUri) {
         return builder(URI.create(meldingsformidlerRootUri));
     }
 
-    public static Builder builder(URI meldingsformidlerRoot) {
-        return new Builder(meldingsformidlerRoot);
+    public static Builder builder(Miljo miljo) {
+        return new Builder(miljo);
     }
 
+    public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
+        return EbmsEndpointUriBuilder.meldingsformidlerUri(miljo.getMeldingsformidlerRoot());
+    }
 
     public static class Builder {
 
         private final KlientKonfigurasjon target;
 
+        @Deprecated
         private Builder(URI meldingsformidlerRoot) {
             target = new KlientKonfigurasjon(meldingsformidlerRoot);
+        }
+
+        private Builder(Miljo miljo){
+            target = new KlientKonfigurasjon(miljo);
         }
 
         public Builder proxy(final String proxyHost, final int proxyPort) {

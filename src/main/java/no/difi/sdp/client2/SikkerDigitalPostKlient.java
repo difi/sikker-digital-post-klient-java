@@ -6,6 +6,7 @@ import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.kvittering.ForretningsKvittering;
 import no.difi.sdp.client2.domain.kvittering.KvitteringForespoersel;
 import no.difi.sdp.client2.internal.Billable;
+import no.difi.sdp.client2.internal.CertificateValidator;
 import no.difi.sdp.client2.internal.DigipostMessageSenderFacade;
 import no.difi.sdp.client2.internal.EbmsForsendelseBuilder;
 import no.difi.sdp.client2.internal.KvitteringBuilder;
@@ -25,7 +26,7 @@ public class SikkerDigitalPostKlient {
     private final KlientKonfigurasjon klientKonfigurasjon;
 
     /**
-     * @param databehandler       parten som har ansvarlig for den tekniske utførelsen av sendingen.
+     * @param databehandler       parten som er ansvarlig for den tekniske utførelsen av sendingen.
      *                            Se <a href="http://begrep.difi.no/SikkerDigitalPost/forretningslag/Aktorer">oversikt over aktører</a> for mer informasjon.
      * @param klientKonfigurasjon Oppsett for blant annet oppkoblingen mot meldingsformidler og interceptorer for å få ut data som sendes.
      */
@@ -38,6 +39,8 @@ public class SikkerDigitalPostKlient {
 
         this.klientKonfigurasjon = klientKonfigurasjon;
         this.databehandler = databehandler;
+
+        CertificateValidator.validate(klientKonfigurasjon.getMiljo(), databehandler.noekkelpar.getVirksomhetssertifikat().getX509Certificate());
     }
 
     /**

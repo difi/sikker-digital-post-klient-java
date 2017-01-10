@@ -11,7 +11,8 @@ import org.junit.Test;
 
 import java.security.PrivateKey;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class CreateCMSDocumentTest {
 
@@ -38,7 +39,7 @@ public class CreateCMSDocumentTest {
         RecipientInformation recInfo = (RecipientInformation) cmsEnvelopeParser.getRecipientInfos().getRecipients().iterator().next();
         byte[] decryptedContent = recInfo.getContent(keyDecoder);
 
-        assertThat(decryptedContent).isEqualTo("message".getBytes());
+        assertThat(decryptedContent, equalTo("message".getBytes()));
     }
 
 }

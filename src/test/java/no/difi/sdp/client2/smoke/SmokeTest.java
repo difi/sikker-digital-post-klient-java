@@ -30,9 +30,16 @@ import java.security.cert.X509Certificate;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.System.out;
 import static java.lang.Thread.sleep;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 @Category(SmokeTest.class)
 public class SmokeTest {
@@ -55,11 +62,12 @@ public class SmokeTest {
         verifyEnvironmentVariables();
 
         keyStore = getVirksomhetssertifikat();
+
         organisasjonsnummerFraSertifikat = getOrganisasjonsnummerFraSertifikat();
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
                 .builder("https://qaoffentlig.meldingsformidler.digipost.no/api/ebms")
-//                .proxy("sig-web.posten.no", 3128, "http")
+//                .proxy("webguard.posten.no", 8080, "http")
                 .connectionTimeout(20, TimeUnit.SECONDS)
                 .build();
 
@@ -126,7 +134,7 @@ public class SmokeTest {
         ForretningsKvittering forretningsKvittering = getForretningsKvittering(sikkerDigitalPostKlient, mpcId);
         sikkerDigitalPostKlient.bekreft(forretningsKvittering);
 
-        assertThat(forretningsKvittering != null).isTrue();
+        assertThat(forretningsKvittering, notNullValue());
     }
 
     private Forsendelse buildForsendelse(String mpcId) {
@@ -147,17 +155,17 @@ public class SmokeTest {
             forretningsKvittering = sikkerDigitalPostKlient.hentKvittering(kvitteringForespoersel);
 
             if (forretningsKvittering != null) {
-                System.out.println("Kvittering!");
-                System.out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getReferanseTilMeldingId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
-                assertThat(forretningsKvittering.getKonversasjonsId()).isNotEmpty();
-                assertThat(forretningsKvittering.getReferanseTilMeldingId()).isNotEmpty();
-                assertThat(forretningsKvittering.getTidspunkt()).isNotNull();
-                assertThat(forretningsKvittering).isInstanceOf(LeveringsKvittering.class);
+                out.println("Kvittering!");
+                out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getReferanseTilMeldingId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
+                assertThat(forretningsKvittering.getKonversasjonsId(), not(isEmptyString()));
+                assertThat(forretningsKvittering.getReferanseTilMeldingId(), not(isEmptyString()));
+                assertThat(forretningsKvittering.getTidspunkt(), notNullValue());
+                assertThat(forretningsKvittering, instanceOf(LeveringsKvittering.class));
 
                 sikkerDigitalPostKlient.bekreft(forretningsKvittering);
                 break;
             } else {
-                System.out.println("Ingen kvittering");
+                out.println("Ingen kvittering");
                 sleep(1000);
             }
         }
