@@ -2,10 +2,15 @@ package no.difi.sdp.client2.internal;
 
 import no.digipost.security.cert.Trust;
 
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static no.difi.sdp.client2.internal.Environment.PRODUCTION;
+import static no.difi.sdp.client2.internal.Environment.TEST;
 import static no.digipost.security.DigipostSecurity.readCertificate;
 
 
@@ -69,5 +74,29 @@ public class TrustedCertificates {
         return new IllegalStateException(exceptionDescription);
     }
 
+    public static KeyStore getTrustStore() {
+        KeyStore trustStore = null;
 
+        try {
+            trustStore = KeyStore.getInstance("JCEKS");
+            trustStore.load(null, "".toCharArray());
+
+            addCertificatesToTrustStore(getTrustedRootCertificates(PRODUCTION), trustStore);
+            addCertificatesToTrustStore(getTrustedIntermediateCertificates(PRODUCTION), trustStore);
+            addCertificatesToTrustStore(getTrustedRootCertificates(TEST), trustStore);
+            addCertificatesToTrustStore(getTrustedIntermediateCertificates(TEST), trustStore);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return trustStore;
+    }
+
+    public static void addCertificatesToTrustStore(Stream<X509Certificate> certificates, KeyStore trustStore) throws KeyStoreException {
+        for (X509Certificate cert : certificates.collect(Collectors.toList())) {
+            String uniqueCertificateAlias = cert.getSerialNumber().toString() + Math.random();
+            trustStore.setCertificateEntry(uniqueCertificateAlias, cert);
+        }
+    }
 }

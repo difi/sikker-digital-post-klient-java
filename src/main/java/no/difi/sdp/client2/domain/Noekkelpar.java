@@ -1,8 +1,8 @@
 package no.difi.sdp.client2.domain;
 
 import no.difi.sdp.client2.domain.exceptions.NoekkelException;
+import no.difi.sdp.client2.internal.TrustedCertificates;
 import no.digipost.api.interceptors.KeyStoreInfo;
-import org.springframework.core.io.ClassPathResource;
 
 import java.security.Key;
 import java.security.KeyStore;
@@ -14,8 +14,6 @@ import java.security.cert.Certificate;
 
 public class Noekkelpar {
 
-    private static final String DEFAULT_TRUST_STORE_PASSWORD = "sophisticatedpassword";
-    private static final String DEFAULT_TRUST_STORE_PATH = "/TrustStore.jceks";
     private KeyStore keyStore;
     private KeyStore trustStore;
     private String virksomhetssertifikatAlias;
@@ -55,13 +53,7 @@ public class Noekkelpar {
     }
 
     private static KeyStore getStandardTrustStore() {
-        try {
-            KeyStore trustStore = KeyStore.getInstance("JCEKS");
-            trustStore.load(new ClassPathResource(DEFAULT_TRUST_STORE_PATH).getInputStream(), DEFAULT_TRUST_STORE_PASSWORD.toCharArray());
-            return trustStore;
-        } catch (Exception e) {
-            throw new NoekkelException(String.format("Kunne ikke initiere trust store. Fant ikke '%s'", DEFAULT_TRUST_STORE_PATH), e);
-        }
+        return TrustedCertificates.getTrustStore();
     }
 
     /**
