@@ -1,5 +1,6 @@
 package no.difi.sdp.client2.internal;
 
+import no.difi.sdp.client2.domain.exceptions.SertifikatException;
 import no.digipost.security.cert.Trust;
 
 import java.security.KeyStore;
@@ -75,19 +76,22 @@ public class TrustedCertificates {
     }
 
     public static KeyStore getTrustStore() {
-        KeyStore trustStore = null;
+        KeyStore trustStore;
 
         try {
             trustStore = KeyStore.getInstance("JCEKS");
             trustStore.load(null, "".toCharArray());
+        } catch (Exception e) {
+            throw new SertifikatException("Oppretting av tom keystore feilet. Grunnen er " + e.toString());
+        }
 
+        try {
             addCertificatesToTrustStore(getTrustedRootCertificates(PRODUCTION), trustStore);
             addCertificatesToTrustStore(getTrustedIntermediateCertificates(PRODUCTION), trustStore);
             addCertificatesToTrustStore(getTrustedRootCertificates(TEST), trustStore);
             addCertificatesToTrustStore(getTrustedIntermediateCertificates(TEST), trustStore);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            throw new SertifikatException("Klarte ikke å legge til sertifikat til trust store. Grunnen er " + e.toString());
         }
 
         return trustStore;
