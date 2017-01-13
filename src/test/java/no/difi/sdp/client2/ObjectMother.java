@@ -46,6 +46,7 @@ import org.w3.xmldsig.Transform;
 import org.w3.xmldsig.Transforms;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
@@ -58,20 +59,52 @@ import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
-    public static final String VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
-    public static final String VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
+    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
+    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
 
     public static final X509Certificate POSTEN_TEST_CERTIFICATE = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
     public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
 
-    public static Noekkelpar noekkelpar() {
-        return Noekkelpar.fraKeyStore(selvsignertKeyStore(), VIRKSOMHETSSERTIFIKAT_ALIAS, VIRKSOMHETSSERTIFIKAT_PASSORD);
+    private static final String VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
+    private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
+
+    public static String virksomhetssertifikatPathValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
+    public static String virksomhetssertifikatPasswordValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
+
+    private static final String VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
+    public static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
+
+    public static Noekkelpar selvsignertNoekkelpar() {
+        return Noekkelpar.fraKeyStore(selvsignertKeyStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
+    }
+
+    public static Noekkelpar testEnvironmentNoekkelpar() {
+        return Noekkelpar.fraKeyStoreUtenTrustStore(getVirksomhetssertifikat(), virksomhetssertifikatAliasValue , virksomhetssertifikatPasswordValue);
     }
 
     public static KeyStore selvsignertKeyStore() {
+        return getKeyStore("/selfsigned-keystore.jks", SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD, "jks");
+    }
+
+    public static KeyStore testEnvironmentTrustStore(){
+        return getKeyStore("/test-environment-trust-keystore.jceks", "sophisticatedpassword", "jceks");
+    }
+
+    public static KeyStore getVirksomhetssertifikat() {
+        KeyStore keyStore;
         try {
-            KeyStore keyStore = KeyStore.getInstance("jks");
-            keyStore.load(new ClassPathResource("/selfsigned-keystore.jks").getInputStream(), "password1234".toCharArray());
+            keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(new FileInputStream(virksomhetssertifikatPathValue), virksomhetssertifikatPasswordValue.toCharArray());
+            return keyStore;
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Fant ikke virksomhetssertifikat på sti '%s'. Eksporter environmentvariabel '%s' til virksomhetssertifikatet.", virksomhetssertifikatPathValue, VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE), e);
+        }
+    }
+
+    private static KeyStore getKeyStore(String path, String password, String keyStoreType) {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+            keyStore.load(new ClassPathResource(path).getInputStream(), password.toCharArray());
             return keyStore;
 
         } catch (Exception e) {
@@ -126,11 +159,7 @@ public class ObjectMother {
     }
 
     public static Databehandler databehandler() {
-        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar()).build();
-    }
-
-    public static Databehandler databehandlerMedSertifikat(final Noekkelpar noekkelpar) {
-        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar).build();
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), testEnvironmentNoekkelpar()).build();
     }
 
     public static Mottaker mottaker() {

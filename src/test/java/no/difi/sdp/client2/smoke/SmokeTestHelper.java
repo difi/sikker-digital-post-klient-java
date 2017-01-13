@@ -31,6 +31,9 @@ import java.util.UUID;
 
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
+import static no.difi.sdp.client2.ObjectMother.*;
+import static no.difi.sdp.client2.ObjectMother.getVirksomhetssertifikat;
+import static no.difi.sdp.client2.ObjectMother.virksomhetssertifikatPasswordValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
@@ -38,44 +41,27 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-public class SmokeTestHelper {
+class SmokeTestHelper {
 
-    private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
-    private static final String VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
-    private static final String VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
-    private static String virksomhetssertifikatPasswordValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
-    private static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
-    private static String virksomhetssertifikatPathValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
-
+    private Miljo _miljo;
     private final KeyStore _databehandlerCertificate;
     private final Organisasjonsnummer _databehanderOrgnr;
 
-    private Miljo _miljo;
     private SikkerDigitalPostKlient _klient;
     private final String _mpcId;
     private Forsendelse _forsendelse;
     private ForretningsKvittering _forretningskvittering;
 
-    public SmokeTestHelper(Miljo miljo) {
+    SmokeTestHelper(Miljo miljo) {
         _miljo = miljo;
         _databehandlerCertificate = getVirksomhetssertifikat();
         _databehanderOrgnr = getOrganisasjonsnummerFraSertifikat(_databehandlerCertificate);
         _mpcId = UUID.randomUUID().toString();
     }
 
-    public SmokeTestHelper with_valid_noekkelpar_for_databehandler(){
+    SmokeTestHelper with_valid_noekkelpar_for_databehandler() {
         Noekkelpar databehandlerNoekkelpar = createValidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
-        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
-        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
-
-        return this;
-    }
-
-    public SmokeTestHelper with_invalid_noekkelpar_for_databehandler(){
-        Noekkelpar databehandlerNoekkelpar = createInvalidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
-        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
+        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
 
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
         _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
@@ -91,15 +77,14 @@ public class SmokeTestHelper {
         return Noekkelpar.fraKeyStore(databehandlerCertificate, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
     }
 
-    private static KeyStore getVirksomhetssertifikat() {
-        KeyStore keyStore;
-        try {
-            keyStore = KeyStore.getInstance("PKCS12");
-            keyStore.load(new FileInputStream(virksomhetssertifikatPathValue), virksomhetssertifikatPasswordValue.toCharArray());
-            return keyStore;
-        } catch (Exception e) {
-            throw new RuntimeException(String.format("Fant ikke virksomhetssertifikat på sti '%s'. Eksporter environmentvariabel '%s' til virksomhetssertifikatet.", virksomhetssertifikatPathValue, VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE), e);
-        }
+    SmokeTestHelper with_invalid_noekkelpar_for_databehandler() {
+        Noekkelpar databehandlerNoekkelpar = createInvalidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
+        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
+        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
+
+        return this;
     }
 
     private static Organisasjonsnummer getOrganisasjonsnummerFraSertifikat(KeyStore keyStore) {
@@ -118,12 +103,12 @@ public class SmokeTestHelper {
         }
     }
 
-    public SmokeTestHelper create_digital_forsendelse() {
+    SmokeTestHelper create_digital_forsendelse() {
         assertState(_klient);
 
         Forsendelse forsendelse = null;
         try {
-            forsendelse = ObjectMother.forsendelse(_mpcId, new ClassPathResource("/test.pdf").getInputStream());
+            forsendelse = forsendelse(_mpcId, new ClassPathResource("/test.pdf").getInputStream());
         } catch (IOException e) {
             fail("klarte ikke åpne hoveddokument.");
         }
@@ -133,7 +118,7 @@ public class SmokeTestHelper {
         return this;
     }
 
-    public SmokeTestHelper send() {
+    SmokeTestHelper send() {
         assertState(_forsendelse);
 
         _klient.send(_forsendelse);
@@ -141,7 +126,7 @@ public class SmokeTestHelper {
         return this;
     }
 
-    public SmokeTestHelper fetch_receipt() {
+    SmokeTestHelper fetch_receipt() {
         KvitteringForespoersel kvitteringForespoersel = KvitteringForespoersel.builder(Prioritet.PRIORITERT).mpcId(_mpcId).build();
         ForretningsKvittering forretningsKvittering = null;
 
@@ -176,7 +161,7 @@ public class SmokeTestHelper {
         return this;
     }
 
-    public SmokeTestHelper expect_receipt_to_be_leveringskvittering() {
+    SmokeTestHelper expect_receipt_to_be_leveringskvittering() {
         assertState(_forretningskvittering);
 
         Assert.assertThat(_forretningskvittering, Matchers.instanceOf(LeveringsKvittering.class));
@@ -184,7 +169,7 @@ public class SmokeTestHelper {
         return this;
     }
 
-    public SmokeTestHelper confirm_receipt() {
+    SmokeTestHelper confirm_receipt() {
         _klient.bekreft(_forretningskvittering);
 
         return this;

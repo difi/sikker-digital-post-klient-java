@@ -6,7 +6,6 @@ public class Databehandler {
     public final Noekkelpar noekkelpar;
 
     private Databehandler(DatabehandlerOrganisasjonsnummer organisasjonsnummer, Noekkelpar noekkelpar) {
-
         this.organisasjonsnummer = organisasjonsnummer;
         this.noekkelpar = noekkelpar;
     }

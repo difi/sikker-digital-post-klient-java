@@ -35,9 +35,9 @@ public class TrustedCertificates {
                 trustedCertificates.add(readCertificate("certificates/prod/commfides_root_ca.cer"));
                 break;
             case TEST:
-                // Buypass gyldig 2010 - 2040 - C=NO, O=Buypass AS-983163327, CN=Buypass Class 3 Test4 Root CA
+                // Buypass gyldig 2010 - 2040
                 trustedCertificates.add(readCertificate("certificates/test/Buypass_Class_3_Test4_Root_CA.cer"));
-                // Buypass gyldig 2012 - 2022 - CN=CPN Root SHA256 CA - TEST, OU=Commfides Trust Environment(C) TEST 2010 Commfides Norge AS, OU=CPN TEST - For authorized use only, OU=CPN Primary Certificate Authority TEST, O=Commfides Norge AS - 988 312 495, C=NO
+                // Commfides gyldig 2012 - 2022 - CN=CPN Root SHA256 CA - TEST, OU=Commfides Trust Environment(C) TEST 2010 Commfides Norge AS, OU=CPN TEST - For authorized use only, OU=CPN Primary Certificate Authority TEST, O=Commfides Norge AS - 988 312 495, C=NO
                 trustedCertificates.add(readCertificate("certificates/test/commfides_test_root_ca.cer"));
                 break;
             default:
@@ -52,15 +52,15 @@ public class TrustedCertificates {
 
         switch (environment) {
             case PRODUCTION:
-                //2012-2032
+                //Buypass gyldig 2012-2032
                 trustedCertificates.add(readCertificate("certificates/prod/BPClass3CA3.cer"));
-                //2011-2025
+                //Commfides 2011-2025
                 trustedCertificates.add(readCertificate("certificates/prod/commfides_ca.cer"));
                 break;
             case TEST:
-                //2012-2032
+                //Buypass gyldig 2012-2032
                 trustedCertificates.add(readCertificate("certificates/test/Buypass_Class_3_Test4_CA_3.cer"));
-                //2012-2022
+                //Commfides 2012-2022
                 trustedCertificates.add(readCertificate("certificates/test/commfides_test_ca.cer"));
                 break;
             default:

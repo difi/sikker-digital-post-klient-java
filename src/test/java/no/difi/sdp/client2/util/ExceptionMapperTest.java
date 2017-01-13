@@ -35,28 +35,6 @@ public class ExceptionMapperTest {
     }
 
     @Test
-    public void resolves_possibly_incorrect_local_time_exception() {
-        //Fordi denne er ganske vanskelig å tvinge fram i klienten så legger jeg ved en en kort beskrivelse her på hvordan den reproduseres:
-        //Still klokken på maskinen til å være 1 minutt tidligere enn faktisk tid og kjør en smoke test.
-        ExceptionMapper exceptionMapper = new ExceptionMapper();
-        Exception sourceException = new Wss4jSecurityValidationException("Invalid timestamp: The message timestamp is out of range");
-
-        Exception mappedException = exceptionMapper.mapException(sourceException);
-
-        assertThat(mappedException, instanceOf(UgyldigTidsstempelException.class));
-
-    }
-
-    @Test
-    public void resolves_no_trusted_certs_found_exception() {
-        Exception sourceException = new Wss4jSecurityValidationException("Error during certificate path validation: No trusted certs found");
-
-        Exception mappedException = exceptionMapper.mapException(sourceException);
-
-        assertThat(mappedException, instanceOf(NoekkelException.class));
-    }
-
-    @Test
     public void returns_send_exception_untouched() {
         Exception source = new SendException(null, null, null);
 
