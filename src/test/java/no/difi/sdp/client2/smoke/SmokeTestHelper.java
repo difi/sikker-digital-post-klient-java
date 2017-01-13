@@ -47,24 +47,48 @@ public class SmokeTestHelper {
     private static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
     private static String virksomhetssertifikatPathValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
 
-    private final SikkerDigitalPostKlient _klient;
+    private final KeyStore _databehandlerCertificate;
+    private final Organisasjonsnummer _databehanderOrgnr;
+
+    private Miljo _miljo;
+    private SikkerDigitalPostKlient _klient;
     private final String _mpcId;
     private Forsendelse _forsendelse;
     private ForretningsKvittering _forretningskvittering;
 
     public SmokeTestHelper(Miljo miljo) {
-        KeyStore virksomhetssertifikat = getVirksomhetssertifikat();
-        Organisasjonsnummer databehandlerOrgnr = getOrganisasjonsnummerFraSertifikat(virksomhetssertifikat);
-        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(databehandlerOrgnr, createDatabehandlerNoekkelparFromCertificate(virksomhetssertifikat));
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(miljo).build();
-        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
+        _miljo = miljo;
+        _databehandlerCertificate = getVirksomhetssertifikat();
+        _databehanderOrgnr = getOrganisasjonsnummerFraSertifikat(_databehandlerCertificate);
         _mpcId = UUID.randomUUID().toString();
-
     }
 
-    private static Noekkelpar createDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
-        //        return Noekkelpar.fraKeyStore(keyStore, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
+    public SmokeTestHelper with_valid_noekkelpar_for_databehandler(){
+        Noekkelpar databehandlerNoekkelpar = createValidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
+        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
+        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
+
+        return this;
+    }
+
+    public SmokeTestHelper with_invalid_noekkelpar_for_databehandler(){
+        Noekkelpar databehandlerNoekkelpar = createInvalidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
+        Databehandler databehandler = ObjectMother.databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
+        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
+
+        return this;
+    }
+
+    private static Noekkelpar createValidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
         return Noekkelpar.fraKeyStoreUtenTrustStore(databehandlerCertificate, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
+    }
+
+    private static Noekkelpar createInvalidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
+        return Noekkelpar.fraKeyStore(databehandlerCertificate, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
     }
 
     private static KeyStore getVirksomhetssertifikat() {
@@ -95,6 +119,8 @@ public class SmokeTestHelper {
     }
 
     public SmokeTestHelper create_digital_forsendelse() {
+        assertState(_klient);
+
         Forsendelse forsendelse = null;
         try {
             forsendelse = ObjectMother.forsendelse(_mpcId, new ClassPathResource("/test.pdf").getInputStream());
