@@ -1,12 +1,9 @@
 package no.difi.sdp.client2.domain;
 
-import com.sun.javafx.binding.StringFormatter;
-import javafx.beans.binding.StringExpression;
 import no.difi.sdp.client2.domain.exceptions.NoekkelException;
 import no.difi.sdp.client2.domain.exceptions.SertifikatException;
 import no.difi.sdp.client2.internal.TrustedCertificates;
 import no.digipost.api.interceptors.KeyStoreInfo;
-import sun.plugin2.message.Message;
 
 import java.security.Key;
 import java.security.KeyStore;
