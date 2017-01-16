@@ -60,34 +60,19 @@ import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
+    public static final X509Certificate POSTEN_TEST_CERTIFICATE = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
+    public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
+    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
+    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
     private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
     private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
     private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
-
-    public static final X509Certificate POSTEN_TEST_CERTIFICATE = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
-    public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
-
     public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
     public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
     public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
 
-    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
-    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
-
-    public static Noekkelpar selvsignertNoekkelpar() {
-        return Noekkelpar.fraKeyStore(selvsignertKeyStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
-    }
-
     public static Noekkelpar testEnvironmentNoekkelpar() {
         return Noekkelpar.fraKeyStoreUtenTrustStore(getVirksomhetssertifikat(), TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
-    }
-
-    public static KeyStore selvsignertKeyStore() {
-        return getKeyStore("/selfsigned-keystore.jks", SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD, "jks");
-    }
-
-    public static KeyStore testEnvironmentTrustStore(){
-        return getKeyStore("/test-environment-trust-keystore.jceks", "sophisticatedpassword", "jceks");
     }
 
     public static KeyStore getVirksomhetssertifikat() {
@@ -99,6 +84,10 @@ public class ObjectMother {
         } catch (Exception e) {
             throw new RuntimeException(MessageFormat.format("Fant ikke virksomhetssertifikat på sti {0}. Eksporter environmentvariabel {1} til virksomhetssertifikatet.", TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE), e);
         }
+    }
+
+    public static KeyStore testEnvironmentTrustStore() {
+        return getKeyStore("/test-environment-trust-keystore.jceks", "sophisticatedpassword", "jceks");
     }
 
     private static KeyStore getKeyStore(String path, String password, String keyStoreType) {
@@ -158,11 +147,62 @@ public class ObjectMother {
         return Avsender.builder(avsenderOrganisasjonsnummer()).build();
     }
 
+    public static Sertifikat mottakerSertifikat() {
+        return DigipostMottakerSertifikatTest();
+    }
+
+    public static AvsenderOrganisasjonsnummer avsenderOrganisasjonsnummer() {
+        return AktoerOrganisasjonsnummer.of("988015814").forfremTilAvsender();
+    }
+
+    private static Sertifikat DigipostMottakerSertifikatTest() {
+        return Sertifikat.fraBase64X509String(
+                "MIIE7jCCA9agAwIBAgIKGBZrmEgzTHzeJjANBgkqhkiG9w0BAQsFADBRMQswCQYD" +
+                        "VQQGEwJOTzEdMBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIzAhBgNVBAMM" +
+                        "GkJ1eXBhc3MgQ2xhc3MgMyBUZXN0NCBDQSAzMB4XDTE0MDQyNDEyMzA1MVoXDTE3" +
+                        "MDQyNDIxNTkwMFowVTELMAkGA1UEBhMCTk8xGDAWBgNVBAoMD1BPU1RFTiBOT1JH" +
+                        "RSBBUzEYMBYGA1UEAwwPUE9TVEVOIE5PUkdFIEFTMRIwEAYDVQQFEwk5ODQ2NjEx" +
+                        "ODUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCLCxU4oBhtGmJxXZWb" +
+                        "dWdzO2uA3eRNW/kPdddL1HYl1iXLV/g+H2Q0ELadWLggkS+1kOd8/jKxEN++biMm" +
+                        "mDqqCWbzNdmEd1j4lctSlH6M7tt0ywmXIYdZMz5kxcLAMNXsaqnPdikI9uPJZQEL" +
+                        "3Kc8hXhXISvpzP7gYOvKHg41uCxu1xCZQOM6pTlNbxemBYqvES4fRh2xvB9aMjwk" +
+                        "B4Nz8jrIsyoPI89i05OmGMkI5BPZt8NTa40Yf3yU+SQECW0GWalB5cxaTMeB01tq" +
+                        "slUzBJPV3cQx+AhtQG4hkOhQnAMDJramSPVtwbEnqOjQ+lyNmg5GQ4FJO02ApKJT" +
+                        "ZDTHAgMBAAGjggHCMIIBvjAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFD+u9XgLkqNw" +
+                        "IDVfWvr3JKBSAfBBMB0GA1UdDgQWBBQ1gsJfVC7KYGiWVLP7ZwzppyVYTTAOBgNV" +
+                        "HQ8BAf8EBAMCBLAwFgYDVR0gBA8wDTALBglghEIBGgEAAwIwgbsGA1UdHwSBszCB" +
+                        "sDA3oDWgM4YxaHR0cDovL2NybC50ZXN0NC5idXlwYXNzLm5vL2NybC9CUENsYXNz" +
+                        "M1Q0Q0EzLmNybDB1oHOgcYZvbGRhcDovL2xkYXAudGVzdDQuYnV5cGFzcy5uby9k" +
+                        "Yz1CdXlwYXNzLGRjPU5PLENOPUJ1eXBhc3MlMjBDbGFzcyUyMDMlMjBUZXN0NCUy" +
+                        "MENBJTIwMz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0MIGKBggrBgEFBQcBAQR+" +
+                        "MHwwOwYIKwYBBQUHMAGGL2h0dHA6Ly9vY3NwLnRlc3Q0LmJ1eXBhc3Mubm8vb2Nz" +
+                        "cC9CUENsYXNzM1Q0Q0EzMD0GCCsGAQUFBzAChjFodHRwOi8vY3J0LnRlc3Q0LmJ1" +
+                        "eXBhc3Mubm8vY3J0L0JQQ2xhc3MzVDRDQTMuY2VyMA0GCSqGSIb3DQEBCwUAA4IB" +
+                        "AQCe67UOZ/VSwcH2ov1cOSaWslL7JNfqhyNZWGpfgX1c0Gh+KkO3eVkMSozpgX6M" +
+                        "4eeWBWJGELMiVN1LhNaGxBU9TBMdeQ3SqK219W6DXRJ2ycBtaVwQ26V5tWKRN4Ul" +
+                        "RovYYiY+nMLx9VrLOD4uoP6fm9GE5Fj0vSMMPvOEXi0NsN+8MUm3HWoBeUCLyFpe" +
+                        "7/EPsS/Wud5bb0as/E2zIztRodxfNsoiXNvWaP2ZiPWFunIjK1H/8EcktEW1paiP" +
+                        "d8AZek/QQoG0MKPfPIJuqH+WJU3a8J8epMDyVfaek+4+l9XOeKwVXNSOP/JSwgpO" +
+                        "JNzTdaDOM+uVuk75n2191Fd7");
+    }
+
     public static Databehandler databehandler() {
         Noekkelpar.AKTIV_KEY_STORE_VALIDERING = false;
         Noekkelpar noekkelpar = selvsignertNoekkelpar();
         Noekkelpar.AKTIV_KEY_STORE_VALIDERING = true;
         return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar).build();
+    }
+
+    public static Noekkelpar selvsignertNoekkelpar() {
+        return Noekkelpar.fraKeyStore(selvsignertKeyStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
+    }
+
+    public static DatabehandlerOrganisasjonsnummer databehandlerOrganisasjonsnummer() {
+        return AktoerOrganisasjonsnummer.of("984661185").forfremTilDatabehandler();
+    }
+
+    public static KeyStore selvsignertKeyStore() {
+        return getKeyStore("/selfsigned-keystore.jks", SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD, "jks");
     }
 
     public static Mottaker mottaker() {
@@ -172,38 +212,6 @@ public class ObjectMother {
     public static EbmsApplikasjonsKvittering createEbmsFeil(final SDPFeiltype feiltype) {
         SDPFeil sdpFeil = new SDPFeil(null, DateTime.now(), feiltype, "Feilinformasjon");
         return createEbmsKvittering(sdpFeil);
-    }
-
-    public static EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
-        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPAapning(), null, null);
-        return createEbmsKvittering(aapningsKvittering);
-    }
-
-    public static EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
-        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering(), null);
-
-        return createEbmsKvittering(leveringsKvittering);
-    }
-
-    public static EbmsApplikasjonsKvittering createEbmsMottaksKvittering() {
-        SDPKvittering mottaksKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, null, new SDPMottak());
-        return createEbmsKvittering(mottaksKvittering);
-    }
-
-    public static EbmsApplikasjonsKvittering createEbmsReturpostKvittering() {
-        SDPKvittering returpostKvittering = new SDPKvittering(null, DateTime.now(), new SDPReturpost(), null, null, null, null);
-        return createEbmsKvittering(returpostKvittering);
-    }
-
-    public static EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(final SDPVarslingskanal varslingskanal) {
-        SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
-        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null, null);
-        return createEbmsKvittering(varslingFeiletKvittering);
-    }
-
-    public static Dokumentpakke dokumentpakke() {
-        Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
-        return Dokumentpakke.builder(dokument).build();
     }
 
     public static EbmsApplikasjonsKvittering createEbmsKvittering(final Object sdpMelding) {
@@ -262,12 +270,36 @@ public class ObjectMother {
         return incomingReferences;
     }
 
-    public static AvsenderOrganisasjonsnummer avsenderOrganisasjonsnummer() {
-        return AktoerOrganisasjonsnummer.of("988015814").forfremTilAvsender();
+    public static EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
+        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPAapning(), null, null);
+        return createEbmsKvittering(aapningsKvittering);
     }
 
-    public static DatabehandlerOrganisasjonsnummer databehandlerOrganisasjonsnummer() {
-        return AktoerOrganisasjonsnummer.of("984661185").forfremTilDatabehandler();
+    public static EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
+        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering(), null);
+
+        return createEbmsKvittering(leveringsKvittering);
+    }
+
+    public static EbmsApplikasjonsKvittering createEbmsMottaksKvittering() {
+        SDPKvittering mottaksKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, null, new SDPMottak());
+        return createEbmsKvittering(mottaksKvittering);
+    }
+
+    public static EbmsApplikasjonsKvittering createEbmsReturpostKvittering() {
+        SDPKvittering returpostKvittering = new SDPKvittering(null, DateTime.now(), new SDPReturpost(), null, null, null, null);
+        return createEbmsKvittering(returpostKvittering);
+    }
+
+    public static EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(final SDPVarslingskanal varslingskanal) {
+        SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
+        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null, null);
+        return createEbmsKvittering(varslingFeiletKvittering);
+    }
+
+    public static Dokumentpakke dokumentpakke() {
+        Dokument dokument = Dokument.builder("Sensitiv tittel", "filnavn", new ByteArrayInputStream("hei".getBytes())).build();
+        return Dokumentpakke.builder(dokument).build();
     }
 
     public static Forsendelse forsendelse(String mpcId, InputStream dokumentStream) {
@@ -295,41 +327,6 @@ public class ObjectMother {
         return Databehandler
                 .builder(AktoerOrganisasjonsnummer.of(organisasjonsnummer).forfremTilDatabehandler(), noekkelpar)
                 .build();
-    }
-
-    public static Sertifikat mottakerSertifikat() {
-        return DigipostMottakerSertifikatTest();
-    }
-
-    private static Sertifikat DigipostMottakerSertifikatTest() {
-        return Sertifikat.fraBase64X509String(
-                "MIIE7jCCA9agAwIBAgIKGBZrmEgzTHzeJjANBgkqhkiG9w0BAQsFADBRMQswCQYD" +
-                        "VQQGEwJOTzEdMBsGA1UECgwUQnV5cGFzcyBBUy05ODMxNjMzMjcxIzAhBgNVBAMM" +
-                        "GkJ1eXBhc3MgQ2xhc3MgMyBUZXN0NCBDQSAzMB4XDTE0MDQyNDEyMzA1MVoXDTE3" +
-                        "MDQyNDIxNTkwMFowVTELMAkGA1UEBhMCTk8xGDAWBgNVBAoMD1BPU1RFTiBOT1JH" +
-                        "RSBBUzEYMBYGA1UEAwwPUE9TVEVOIE5PUkdFIEFTMRIwEAYDVQQFEwk5ODQ2NjEx" +
-                        "ODUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCLCxU4oBhtGmJxXZWb" +
-                        "dWdzO2uA3eRNW/kPdddL1HYl1iXLV/g+H2Q0ELadWLggkS+1kOd8/jKxEN++biMm" +
-                        "mDqqCWbzNdmEd1j4lctSlH6M7tt0ywmXIYdZMz5kxcLAMNXsaqnPdikI9uPJZQEL" +
-                        "3Kc8hXhXISvpzP7gYOvKHg41uCxu1xCZQOM6pTlNbxemBYqvES4fRh2xvB9aMjwk" +
-                        "B4Nz8jrIsyoPI89i05OmGMkI5BPZt8NTa40Yf3yU+SQECW0GWalB5cxaTMeB01tq" +
-                        "slUzBJPV3cQx+AhtQG4hkOhQnAMDJramSPVtwbEnqOjQ+lyNmg5GQ4FJO02ApKJT" +
-                        "ZDTHAgMBAAGjggHCMIIBvjAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFD+u9XgLkqNw" +
-                        "IDVfWvr3JKBSAfBBMB0GA1UdDgQWBBQ1gsJfVC7KYGiWVLP7ZwzppyVYTTAOBgNV" +
-                        "HQ8BAf8EBAMCBLAwFgYDVR0gBA8wDTALBglghEIBGgEAAwIwgbsGA1UdHwSBszCB" +
-                        "sDA3oDWgM4YxaHR0cDovL2NybC50ZXN0NC5idXlwYXNzLm5vL2NybC9CUENsYXNz" +
-                        "M1Q0Q0EzLmNybDB1oHOgcYZvbGRhcDovL2xkYXAudGVzdDQuYnV5cGFzcy5uby9k" +
-                        "Yz1CdXlwYXNzLGRjPU5PLENOPUJ1eXBhc3MlMjBDbGFzcyUyMDMlMjBUZXN0NCUy" +
-                        "MENBJTIwMz9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0MIGKBggrBgEFBQcBAQR+" +
-                        "MHwwOwYIKwYBBQUHMAGGL2h0dHA6Ly9vY3NwLnRlc3Q0LmJ1eXBhc3Mubm8vb2Nz" +
-                        "cC9CUENsYXNzM1Q0Q0EzMD0GCCsGAQUFBzAChjFodHRwOi8vY3J0LnRlc3Q0LmJ1" +
-                        "eXBhc3Mubm8vY3J0L0JQQ2xhc3MzVDRDQTMuY2VyMA0GCSqGSIb3DQEBCwUAA4IB" +
-                        "AQCe67UOZ/VSwcH2ov1cOSaWslL7JNfqhyNZWGpfgX1c0Gh+KkO3eVkMSozpgX6M" +
-                        "4eeWBWJGELMiVN1LhNaGxBU9TBMdeQ3SqK219W6DXRJ2ycBtaVwQ26V5tWKRN4Ul" +
-                        "RovYYiY+nMLx9VrLOD4uoP6fm9GE5Fj0vSMMPvOEXi0NsN+8MUm3HWoBeUCLyFpe" +
-                        "7/EPsS/Wud5bb0as/E2zIztRodxfNsoiXNvWaP2ZiPWFunIjK1H/8EcktEW1paiP" +
-                        "d8AZek/QQoG0MKPfPIJuqH+WJU3a8J8epMDyVfaek+4+l9XOeKwVXNSOP/JSwgpO" +
-                        "JNzTdaDOM+uVuk75n2191Fd7");
     }
 
     public static Sertifikat eboksmottakerSertifikatTest() {

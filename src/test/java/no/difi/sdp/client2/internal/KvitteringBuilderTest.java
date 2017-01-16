@@ -21,9 +21,9 @@ import static no.difi.sdp.client2.ObjectMother.createEbmsAapningsKvittering;
 import static no.difi.sdp.client2.ObjectMother.createEbmsFeil;
 import static no.difi.sdp.client2.ObjectMother.createEbmsLeveringsKvittering;
 import static no.difi.sdp.client2.ObjectMother.createEbmsVarslingFeiletKvittering;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 

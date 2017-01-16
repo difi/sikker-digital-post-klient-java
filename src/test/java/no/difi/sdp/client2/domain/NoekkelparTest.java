@@ -18,10 +18,14 @@ import static org.junit.Assert.assertThat;
 
 public class NoekkelparTest {
 
+    private static KeyStore testKeyStore() {
+        return ObjectMother.selvsignertKeyStore();
+    }
+
     public static class fraKeyStoreMethod {
 
         @Test
-        public void initializes_from_key_store() {
+        public void initializes() {
             KeyStore keyStoreMedVirksomhetssertifikatOgTrustStore = testKeyStore();
             Noekkelpar noekkelpar = Noekkelpar.fraKeyStore(keyStoreMedVirksomhetssertifikatOgTrustStore, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
 
@@ -30,7 +34,7 @@ public class NoekkelparTest {
         }
 
         @Test
-        public void can_disable_key_store_validation(){
+        public void can_disable_key_store_validation() {
             KeyStore keyStore = NoekkelparTest.testKeyStore();
 
             Noekkelpar.AKTIV_KEY_STORE_VALIDERING = false;
@@ -41,7 +45,7 @@ public class NoekkelparTest {
     public static class fraKeyStoreUtenTrustStoreMethod {
 
         @Test
-        public void initializes_from_key_store_without_trust_store() {
+        public void initializes() {
             KeyStore keyStoreUtenTrustStore = testKeyStore();
             Noekkelpar noekkelpar = Noekkelpar.fraKeyStoreUtenTrustStore(keyStoreUtenTrustStore, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
 
@@ -57,7 +61,7 @@ public class NoekkelparTest {
         public final ExpectedException thrown = ExpectedException.none();
 
         @Test
-        public void initializes_from_key_store_and_trust_store() {
+        public void initializes() {
             KeyStore keyStoreMedVirksomhetssertifikat = testKeyStore();
             KeyStore trustStore = ObjectMother.testEnvironmentTrustStore();
 
@@ -82,12 +86,8 @@ public class NoekkelparTest {
             KeyStore trustStore = NoekkelparTest.testKeyStore();
 
             Noekkelpar.AKTIV_TRUST_STORE_VALIDERING = false;
-            Noekkelpar noekkelpar = Noekkelpar.fraKeyStoreOgTrustStore(keyStore, trustStore, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
+            Noekkelpar.fraKeyStoreOgTrustStore(keyStore, trustStore, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
         }
-    }
-
-    private static KeyStore testKeyStore() {
-        return ObjectMother.selvsignertKeyStore();
     }
 
 }

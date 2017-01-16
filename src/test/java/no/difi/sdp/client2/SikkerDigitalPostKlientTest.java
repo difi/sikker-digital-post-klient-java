@@ -34,8 +34,7 @@ public class SikkerDigitalPostKlientTest {
         try {
             postklient.send(forsendelse());
             fail("Should fail");
-        }
-        catch (SendIOException e) {
+        } catch (SendIOException e) {
             assertThat(e.getAntattSkyldig(), equalTo(UKJENT));
         }
     }
@@ -57,8 +56,7 @@ public class SikkerDigitalPostKlientTest {
         try {
             postklient.send(forsendelse());
             fail("Fails");
-        }
-        catch (SendIOException e) {
+        } catch (SendIOException e) {
             assertThat(interceptorString.toString(), equalTo("First interceptor called, and second too!"));
         }
     }

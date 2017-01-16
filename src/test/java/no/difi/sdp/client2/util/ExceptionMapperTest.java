@@ -2,11 +2,9 @@ package no.difi.sdp.client2.util;
 
 import no.difi.sdp.client2.ExceptionMapper;
 import no.difi.sdp.client2.domain.exceptions.EbmsException;
-import no.difi.sdp.client2.domain.exceptions.NoekkelException;
 import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.exceptions.SendIOException;
 import no.difi.sdp.client2.domain.exceptions.SoapFaultException;
-import no.difi.sdp.client2.domain.exceptions.UgyldigTidsstempelException;
 import no.difi.sdp.client2.domain.exceptions.ValideringException;
 import no.digipost.api.exceptions.MessageSenderEbmsErrorException;
 import no.digipost.api.exceptions.MessageSenderIOException;
@@ -18,12 +16,12 @@ import org.mockito.Answers;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Description;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityValidationException;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.withSettings;
 
 public class ExceptionMapperTest {
 

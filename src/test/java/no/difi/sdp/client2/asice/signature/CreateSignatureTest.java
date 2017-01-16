@@ -63,22 +63,20 @@ import static org.junit.Assert.fail;
 
 public class CreateSignatureTest {
 
-    private CreateSignature sut;
-
-    /**
-     * SHA256 hash of "hoveddokument-innhold"
-     */
-    private final byte[] expectedHovedDokumentHash = new byte[] { 93, -36, 99, 92, -27, 39, 21, 31, 33, -127, 30, 77, 6, 49, 92, -48, -114, -61, -100, -126, -64, -70, 70, -38, 67, 93, -126, 62, -125, -7, -115, 123 };
-
-    private Noekkelpar noekkelpar;
-    private List<AsicEAttachable> files;
-
     private static final Jaxb2Marshaller marshaller;
 
     static {
         marshaller = new Jaxb2Marshaller();
         marshaller.setClassesToBeBound(XAdESSignatures.class, QualifyingProperties.class);
     }
+
+    /**
+     * SHA256 hash of "hoveddokument-innhold"
+     */
+    private final byte[] expectedHovedDokumentHash = new byte[]{93, -36, 99, 92, -27, 39, 21, 31, 33, -127, 30, 77, 6, 49, 92, -48, -114, -61, -100, -126, -64, -70, 70, -38, 67, 93, -126, 62, -125, -7, -115, 123};
+    private CreateSignature sut;
+    private Noekkelpar noekkelpar;
+    private List<AsicEAttachable> files;
 
     @Before
     public void setUp() throws Exception {
@@ -112,32 +110,32 @@ public class CreateSignatureTest {
 
     @Test
     public void multithreaded_signing() throws Exception {
-    	List<Thread> threads = new ArrayList<Thread>();
-    	final AtomicInteger fails = new AtomicInteger(0);
-    	for (int i = 0; i < 50; i++) {
-    		Thread t = new Thread() {
-    			@Override
-				public void run() {
-    				for (int j = 0; j < 20; j++) {
-	        			Signature signature = sut.createSignature(noekkelpar, files);
-	        	        if (!verify_signature(signature)) {
-	        	        	fails.incrementAndGet();
-	        	        }
-	        	        if (fails.get() > 0) {
-	        	        	break;
-	        	        }
-    				}
-    			}
-    		};
-    		threads.add(t);
-    		t.start();
-    	}
-    	for(Thread t : threads) {
-    		t.join();
-    	}
-    	if (fails.get() > 0) {
-    		fail("Signature validation failed");
-    	}
+        List<Thread> threads = new ArrayList<Thread>();
+        final AtomicInteger fails = new AtomicInteger(0);
+        for (int i = 0; i < 50; i++) {
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    for (int j = 0; j < 20; j++) {
+                        Signature signature = sut.createSignature(noekkelpar, files);
+                        if (!verify_signature(signature)) {
+                            fails.incrementAndGet();
+                        }
+                        if (fails.get() > 0) {
+                            break;
+                        }
+                    }
+                }
+            };
+            threads.add(t);
+            t.start();
+        }
+        for (Thread t : threads) {
+            t.join();
+        }
+        if (fails.get() > 0) {
+            fail("Signature validation failed");
+        }
     }
 
     @Test
@@ -167,7 +165,6 @@ public class CreateSignatureTest {
         String uri = xAdESSignatures.getSignatures().get(0).getSignedInfo().getReferences().get(0).getURI();
         assertEquals("hoveddokument+%282%29.pdf", uri);
     }
-
 
 
     @Test
@@ -221,56 +218,56 @@ public class CreateSignatureTest {
     }
 
     private boolean verify_signature(final Signature signature2) {
-    	try {
-    		signature2.getBytes();
-    		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-    		fac.setNamespaceAware(true);
-    		DocumentBuilder builder = fac.newDocumentBuilder();
-    		final Document doc = builder.parse(new ByteArrayInputStream(signature2.getBytes()));
-    		//System.err.println(new String(signature2.getBytes()));
-	    	NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-	    	DOMValidateContext valContext = new DOMValidateContext
-	    		    (noekkelpar.getVirksomhetssertifikat().getX509Certificate().getPublicKey(), nl.item(0));
-	    	valContext.setURIDereferencer(new URIDereferencer() {
-				@Override
-				public Data dereference(final URIReference uriReference, final XMLCryptoContext context) throws URIReferenceException {
-					//System.out.println("$$$$ " + uriReference.getURI());
-					for(AsicEAttachable file : files) {
-						if (file.getFileName().equals(uriReference.getURI().toString())) {
-							return new OctetStreamData(new ByteArrayInputStream(file.getBytes()));
-						}
-					}
-					uriReference.getURI().toString().replace("#", "");
-					Node element = doc.getElementsByTagName("SignedProperties").item(0);
-					return new DOMSubTreeData(element, false);
+        try {
+            signature2.getBytes();
+            DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+            fac.setNamespaceAware(true);
+            DocumentBuilder builder = fac.newDocumentBuilder();
+            final Document doc = builder.parse(new ByteArrayInputStream(signature2.getBytes()));
+            //System.err.println(new String(signature2.getBytes()));
+            NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+            DOMValidateContext valContext = new DOMValidateContext
+                    (noekkelpar.getVirksomhetssertifikat().getX509Certificate().getPublicKey(), nl.item(0));
+            valContext.setURIDereferencer(new URIDereferencer() {
+                @Override
+                public Data dereference(final URIReference uriReference, final XMLCryptoContext context) throws URIReferenceException {
+                    //System.out.println("$$$$ " + uriReference.getURI());
+                    for (AsicEAttachable file : files) {
+                        if (file.getFileName().equals(uriReference.getURI().toString())) {
+                            return new OctetStreamData(new ByteArrayInputStream(file.getBytes()));
+                        }
+                    }
+                    uriReference.getURI().toString().replace("#", "");
+                    Node element = doc.getElementsByTagName("SignedProperties").item(0);
+                    return new DOMSubTreeData(element, false);
 
-				}
-			});
-	    	XMLSignatureFactory fact = XMLSignatureFactory.getInstance("DOM");
-			XMLSignature signature = fact.unmarshalXMLSignature(valContext);
-	    	boolean coreValidity = signature.validate(valContext);
-	    	if (coreValidity == false) {
-	    	    System.err.println("Signature failed core validation");
-	    	    boolean sv = signature.getSignatureValue().validate(valContext);
-	    	    System.out.println("signature validation status: " + sv);
-	    	    if (sv == false) {
-	    	        // Check the validation status of each Reference.
-	                @SuppressWarnings("unchecked")
+                }
+            });
+            XMLSignatureFactory fact = XMLSignatureFactory.getInstance("DOM");
+            XMLSignature signature = fact.unmarshalXMLSignature(valContext);
+            boolean coreValidity = signature.validate(valContext);
+            if (coreValidity == false) {
+                System.err.println("Signature failed core validation");
+                boolean sv = signature.getSignatureValue().validate(valContext);
+                System.out.println("signature validation status: " + sv);
+                if (sv == false) {
+                    // Check the validation status of each Reference.
+                    @SuppressWarnings("unchecked")
                     Iterator<javax.xml.crypto.dsig.Reference> i = signature.getSignedInfo().getReferences().iterator();
-	    	        for (int j=0; i.hasNext(); j++) {
-	    	            boolean refValid = i.next().validate(valContext);
-	    	            System.out.println("ref["+j+"] validity status: " + refValid);
-	    	        }
-	    	    }
-	    	}
-	    	return coreValidity;
-    	} catch(Exception ex) {
-    		ex.printStackTrace(System.err);
-    		return false;
-    	}
-	}
+                    for (int j = 0; i.hasNext(); j++) {
+                        boolean refValid = i.next().validate(valContext);
+                        System.out.println("ref[" + j + "] validity status: " + refValid);
+                    }
+                }
+            }
+            return coreValidity;
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            return false;
+        }
+    }
 
-	private void verify_signed_properties_reference(final Reference signedPropertiesReference) {
+    private void verify_signed_properties_reference(final Reference signedPropertiesReference) {
         assertThat(signedPropertiesReference.getURI(), equalTo("#SignedProperties"));
         assertThat(signedPropertiesReference.getType(), equalTo("http://uri.etsi.org/01903#SignedProperties"));
         assertThat(signedPropertiesReference.getDigestMethod().getAlgorithm(), equalTo("http://www.w3.org/2001/04/xmlenc#sha256"));
@@ -287,11 +284,19 @@ public class CreateSignatureTest {
     private AsicEAttachable file(final String fileName, final byte[] contents, final String mimeType) {
         return new AsicEAttachable() {
             @Override
-            public String getFileName() { return fileName; }
+            public String getFileName() {
+                return fileName;
+            }
+
             @Override
-            public byte[] getBytes() { return contents; }
+            public byte[] getBytes() {
+                return contents;
+            }
+
             @Override
-            public String getMimeType() { return mimeType; }
+            public String getMimeType() {
+                return mimeType;
+            }
         };
     }
 

@@ -5,11 +5,8 @@ import no.difi.sdp.client2.domain.exceptions.NoekkelException;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.rules.ExpectedException;
 
 
 @Category(SmokeTest.class)
@@ -18,7 +15,7 @@ public class SmokeTest {
     private SmokeTestHelper t;
 
     @Before
-    public void init(){
+    public void init() {
         t = new SmokeTestHelper(Miljo.FUNKSJONELT_TESTMILJO);
     }
 
@@ -41,7 +38,7 @@ public class SmokeTest {
                     .with_invalid_noekkelpar_for_databehandler()
                     .create_digital_forsendelse()
                     .send();
-        }catch(Exception e){
+        } catch (Exception e) {
             Assert.assertThat(e.getCause(), Matchers.instanceOf(NoekkelException.class));
         }
     }

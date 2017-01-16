@@ -29,9 +29,11 @@ import java.util.UUID;
 
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
-import static no.difi.sdp.client2.ObjectMother.*;
-import static no.difi.sdp.client2.ObjectMother.getVirksomhetssertifikat;
+import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE;
 import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE;
+import static no.difi.sdp.client2.ObjectMother.databehandlerMedSertifikat;
+import static no.difi.sdp.client2.ObjectMother.forsendelse;
+import static no.difi.sdp.client2.ObjectMother.getVirksomhetssertifikat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
@@ -41,12 +43,11 @@ import static org.junit.Assert.fail;
 
 class SmokeTestHelper {
 
-    private Miljo _miljo;
     private final KeyStore _databehandlerCertificate;
     private final Organisasjonsnummer _databehanderOrgnr;
-
-    private SikkerDigitalPostKlient _klient;
     private final String _mpcId;
+    private Miljo _miljo;
+    private SikkerDigitalPostKlient _klient;
     private Forsendelse _forsendelse;
     private ForretningsKvittering _forretningskvittering;
 
@@ -57,32 +58,12 @@ class SmokeTestHelper {
         _mpcId = UUID.randomUUID().toString();
     }
 
-    SmokeTestHelper with_valid_noekkelpar_for_databehandler() {
-        Noekkelpar databehandlerNoekkelpar = createValidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
-        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
-        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
-
-        return this;
-    }
-
     private static Noekkelpar createValidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
         return Noekkelpar.fraKeyStoreUtenTrustStore(databehandlerCertificate, TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
     }
 
     private static Noekkelpar createInvalidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
         return Noekkelpar.fraKeyStore(databehandlerCertificate, TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
-    }
-
-    SmokeTestHelper with_invalid_noekkelpar_for_databehandler() {
-        Noekkelpar databehandlerNoekkelpar = createInvalidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
-        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
-        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
-
-        return this;
     }
 
     private static Organisasjonsnummer getOrganisasjonsnummerFraSertifikat(KeyStore keyStore) {
@@ -99,6 +80,26 @@ class SmokeTestHelper {
         } catch (KeyStoreException e) {
             throw new RuntimeException("Klarte ikke hente ut virksomhetssertifikatet fra keystoren.", e);
         }
+    }
+
+    SmokeTestHelper with_valid_noekkelpar_for_databehandler() {
+        Noekkelpar databehandlerNoekkelpar = createValidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
+        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
+        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
+
+        return this;
+    }
+
+    SmokeTestHelper with_invalid_noekkelpar_for_databehandler() {
+        Noekkelpar databehandlerNoekkelpar = createInvalidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
+        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
+        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
+
+        return this;
     }
 
     SmokeTestHelper create_digital_forsendelse() {

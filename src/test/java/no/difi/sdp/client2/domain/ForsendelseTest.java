@@ -68,27 +68,27 @@ public class ForsendelseTest {
     }
 
     @Test
-	public void fysisk_post_faar_land_eller_landkode() {
-    	FysiskPost adresse = FysiskPost.builder()
-    			.adresse(KonvoluttAdresse.build("Rall").iUtlandet("Sweden Main Street", null, null, null, Landkoder.Predefinert.SVERIGE).build())
-    			.retur(Returhaandtering.MAKULERING_MED_MELDING, KonvoluttAdresse.build("Rall").iUtlandet("Hungary street 2", null, null, null, "Ungarn").build())
-    			.sendesMed(Posttype.A_PRIORITERT)
-    			.utskrift(Utskriftsfarge.FARGE, new TekniskMottaker(Organisasjonsnummer.of("988015814"), null)).build();
-		Forsendelse fysiskForsendelse = Forsendelse.fysisk(ObjectMother.avsender(), adresse,
-    			Dokumentpakke.builder(Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes())).build()).build()).build();
+    public void fysisk_post_faar_land_eller_landkode() {
+        FysiskPost adresse = FysiskPost.builder()
+                .adresse(KonvoluttAdresse.build("Rall").iUtlandet("Sweden Main Street", null, null, null, Landkoder.Predefinert.SVERIGE).build())
+                .retur(Returhaandtering.MAKULERING_MED_MELDING, KonvoluttAdresse.build("Rall").iUtlandet("Hungary street 2", null, null, null, "Ungarn").build())
+                .sendesMed(Posttype.A_PRIORITERT)
+                .utskrift(Utskriftsfarge.FARGE, new TekniskMottaker(Organisasjonsnummer.of("988015814"), null)).build();
+        Forsendelse fysiskForsendelse = Forsendelse.fysisk(ObjectMother.avsender(), adresse,
+                Dokumentpakke.builder(Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes())).build()).build()).build();
 
-		assertThat(fysiskForsendelse.type, equalTo(Forsendelse.Type.FYSISK));
-		assertThat(fysiskForsendelse.getFysiskPost().getAdresse().getLandkode(), equalTo("SE"));
-		assertThat(fysiskForsendelse.getFysiskPost().getAdresse().getLand(), is(nullValue()));
+        assertThat(fysiskForsendelse.type, equalTo(Forsendelse.Type.FYSISK));
+        assertThat(fysiskForsendelse.getFysiskPost().getAdresse().getLandkode(), equalTo("SE"));
+        assertThat(fysiskForsendelse.getFysiskPost().getAdresse().getLand(), is(nullValue()));
 
-		assertThat(fysiskForsendelse.getFysiskPost().getReturadresse().getLand(), equalTo("Ungarn"));
-		assertThat(fysiskForsendelse.getFysiskPost().getReturadresse().getLandkode(), is(nullValue()));
+        assertThat(fysiskForsendelse.getFysiskPost().getReturadresse().getLand(), equalTo("Ungarn"));
+        assertThat(fysiskForsendelse.getFysiskPost().getReturadresse().getLandkode(), is(nullValue()));
 
-		SDPDigitalPost sdpDigitalPost = new SDPBuilder().buildDigitalPost(fysiskForsendelse);
-		assertThat(sdpDigitalPost.getFysiskPostInfo().getMottaker().getUtenlandskAdresse().getLand(), is(nullValue()));
-		assertThat(sdpDigitalPost.getFysiskPostInfo().getMottaker().getUtenlandskAdresse().getLandkode(), equalTo("SE"));
+        SDPDigitalPost sdpDigitalPost = new SDPBuilder().buildDigitalPost(fysiskForsendelse);
+        assertThat(sdpDigitalPost.getFysiskPostInfo().getMottaker().getUtenlandskAdresse().getLand(), is(nullValue()));
+        assertThat(sdpDigitalPost.getFysiskPostInfo().getMottaker().getUtenlandskAdresse().getLandkode(), equalTo("SE"));
 
-		assertThat(sdpDigitalPost.getFysiskPostInfo().getRetur().getMottaker().getUtenlandskAdresse().getLandkode(), is(nullValue()));
-		assertThat(sdpDigitalPost.getFysiskPostInfo().getRetur().getMottaker().getUtenlandskAdresse().getLand(), equalTo("Ungarn"));
-	}
+        assertThat(sdpDigitalPost.getFysiskPostInfo().getRetur().getMottaker().getUtenlandskAdresse().getLandkode(), is(nullValue()));
+        assertThat(sdpDigitalPost.getFysiskPostInfo().getRetur().getMottaker().getUtenlandskAdresse().getLand(), equalTo("Ungarn"));
+    }
 }

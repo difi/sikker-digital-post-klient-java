@@ -4,13 +4,12 @@ import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.domain.Dokument;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.equalTo;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class CreateASiCETest {
     @Test
@@ -20,6 +19,6 @@ public class CreateASiCETest {
         List<Dokument> attachments = Arrays.asList(attachment, attachment, attachment);
         long unzippedContentBytesCount = CreateASiCE.getUnzippedContentBytesCount(new ArrayList<>(attachments));
 
-        assertThat(unzippedContentBytesCount, equalTo((long)attachment.getBytes().length * attachments.size()));
+        assertThat(unzippedContentBytesCount, equalTo((long) attachment.getBytes().length * attachments.size()));
     }
 }
