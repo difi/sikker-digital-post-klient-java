@@ -39,7 +39,7 @@ public class CreateZipTest {
     }
 
     @Test
-    @Ignore("Writes files to disk. Can be useful for debugging")
+    @Ignore("WARN! Write zip file to to disk test is disabled.")
     public void write_file_to_disk() throws IOException {
         CreateZip createZip = new CreateZip();
 
