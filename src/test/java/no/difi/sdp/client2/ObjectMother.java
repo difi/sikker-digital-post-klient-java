@@ -159,7 +159,10 @@ public class ObjectMother {
     }
 
     public static Databehandler databehandler() {
-        return Databehandler.builder(databehandlerOrganisasjonsnummer(), testEnvironmentNoekkelpar()).build();
+        Noekkelpar.AKTIV_KEY_STORE_VALIDERING = false;
+        Noekkelpar noekkelpar = selvsignertNoekkelpar();
+        Noekkelpar.AKTIV_KEY_STORE_VALIDERING = true;
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar).build();
     }
 
     public static Mottaker mottaker() {
