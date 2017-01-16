@@ -50,6 +50,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,27 +60,26 @@ import static java.util.Arrays.asList;
 
 public class ObjectMother {
 
-    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
-    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
+    private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
+    private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
+    private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
 
     public static final X509Certificate POSTEN_TEST_CERTIFICATE = DigipostSecurity.readCertificate("certificates/test/posten_test.pem");
     public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
 
-    private static final String VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
-    private static final String VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
+    public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
+    public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
+    public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
 
-    public static String virksomhetssertifikatPathValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
-    public static String virksomhetssertifikatPasswordValue = System.getenv(VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
-
-    private static final String VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
-    public static String virksomhetssertifikatAliasValue = System.getenv(VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
+    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
+    public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
 
     public static Noekkelpar selvsignertNoekkelpar() {
         return Noekkelpar.fraKeyStore(selvsignertKeyStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
     }
 
     public static Noekkelpar testEnvironmentNoekkelpar() {
-        return Noekkelpar.fraKeyStoreUtenTrustStore(getVirksomhetssertifikat(), virksomhetssertifikatAliasValue , virksomhetssertifikatPasswordValue);
+        return Noekkelpar.fraKeyStoreUtenTrustStore(getVirksomhetssertifikat(), TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
     }
 
     public static KeyStore selvsignertKeyStore() {
@@ -94,10 +94,10 @@ public class ObjectMother {
         KeyStore keyStore;
         try {
             keyStore = KeyStore.getInstance("PKCS12");
-            keyStore.load(new FileInputStream(virksomhetssertifikatPathValue), virksomhetssertifikatPasswordValue.toCharArray());
+            keyStore.load(new FileInputStream(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE), TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE.toCharArray());
             return keyStore;
         } catch (Exception e) {
-            throw new RuntimeException(String.format("Fant ikke virksomhetssertifikat på sti '%s'. Eksporter environmentvariabel '%s' til virksomhetssertifikatet.", virksomhetssertifikatPathValue, VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE), e);
+            throw new RuntimeException(MessageFormat.format("Fant ikke virksomhetssertifikat på sti {0}. Eksporter environmentvariabel {1} til virksomhetssertifikatet.", TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE), e);
         }
     }
 

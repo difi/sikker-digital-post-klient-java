@@ -1,7 +1,6 @@
 package no.difi.sdp.client2.smoke;
 
 import no.difi.sdp.client2.KlientKonfigurasjon;
-import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.SikkerDigitalPostKlient;
 import no.difi.sdp.client2.domain.Databehandler;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -21,7 +20,6 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -33,7 +31,7 @@ import static java.lang.System.out;
 import static java.lang.Thread.sleep;
 import static no.difi.sdp.client2.ObjectMother.*;
 import static no.difi.sdp.client2.ObjectMother.getVirksomhetssertifikat;
-import static no.difi.sdp.client2.ObjectMother.virksomhetssertifikatPasswordValue;
+import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
@@ -70,11 +68,11 @@ class SmokeTestHelper {
     }
 
     private static Noekkelpar createValidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
-        return Noekkelpar.fraKeyStoreUtenTrustStore(databehandlerCertificate, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
+        return Noekkelpar.fraKeyStoreUtenTrustStore(databehandlerCertificate, TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
     }
 
     private static Noekkelpar createInvalidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
-        return Noekkelpar.fraKeyStore(databehandlerCertificate, virksomhetssertifikatAliasValue, virksomhetssertifikatPasswordValue);
+        return Noekkelpar.fraKeyStore(databehandlerCertificate, TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
     }
 
     SmokeTestHelper with_invalid_noekkelpar_for_databehandler() {
@@ -89,9 +87,9 @@ class SmokeTestHelper {
 
     private static Organisasjonsnummer getOrganisasjonsnummerFraSertifikat(KeyStore keyStore) {
         try {
-            X509Certificate cert = (X509Certificate) keyStore.getCertificate(virksomhetssertifikatAliasValue);
+            X509Certificate cert = (X509Certificate) keyStore.getCertificate(TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE);
             if (cert == null) {
-                throw new RuntimeException(String.format("Klarte ikke hente ut virksomhetssertifikatet fra keystoren med alias '%s'", virksomhetssertifikatAliasValue));
+                throw new RuntimeException(String.format("Klarte ikke hente ut virksomhetssertifikatet fra keystoren med alias '%s'", TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE));
             }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
