@@ -29,8 +29,12 @@ import java.util.UUID;
 
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
+import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE;
 import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE;
+import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE;
 import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE;
+import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE;
+import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE;
 import static no.difi.sdp.client2.ObjectMother.databehandlerMedSertifikat;
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static no.difi.sdp.client2.ObjectMother.getVirksomhetssertifikat;
@@ -43,27 +47,26 @@ import static org.junit.Assert.fail;
 
 class SmokeTestHelper {
 
-    private final KeyStore _databehandlerCertificate;
-    private final Organisasjonsnummer _databehanderOrgnr;
     private final String _mpcId;
-    private Miljo _miljo;
     private SikkerDigitalPostKlient _klient;
     private Forsendelse _forsendelse;
     private ForretningsKvittering _forretningskvittering;
 
     SmokeTestHelper(Miljo miljo) {
-        _miljo = miljo;
-        _databehandlerCertificate = getVirksomhetssertifikat();
-        _databehanderOrgnr = getOrganisasjonsnummerFraSertifikat(_databehandlerCertificate);
+        verifyEnvironmentVariables();
+        KeyStore databehandlerCertificate = getVirksomhetssertifikat();
+        Organisasjonsnummer databehanderOrgnr = getOrganisasjonsnummerFraSertifikat(databehandlerCertificate);
         _mpcId = UUID.randomUUID().toString();
+
+        Noekkelpar databehandlerNoekkelpar = createValidDatabehandlerNoekkelparFromCertificate(databehandlerCertificate);
+        Databehandler databehandler = databehandlerMedSertifikat(databehanderOrgnr, databehandlerNoekkelpar);
+
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(miljo).build();
+        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
     }
 
     private static Noekkelpar createValidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
         return Noekkelpar.fraKeyStoreUtenTrustStore(databehandlerCertificate, TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
-    }
-
-    private static Noekkelpar createInvalidDatabehandlerNoekkelparFromCertificate(KeyStore databehandlerCertificate) {
-        return Noekkelpar.fraKeyStore(databehandlerCertificate, TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
     }
 
     private static Organisasjonsnummer getOrganisasjonsnummerFraSertifikat(KeyStore keyStore) {
@@ -80,26 +83,6 @@ class SmokeTestHelper {
         } catch (KeyStoreException e) {
             throw new RuntimeException("Klarte ikke hente ut virksomhetssertifikatet fra keystoren.", e);
         }
-    }
-
-    SmokeTestHelper with_valid_noekkelpar_for_databehandler() {
-        Noekkelpar databehandlerNoekkelpar = createValidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
-        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
-        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
-
-        return this;
-    }
-
-    SmokeTestHelper with_invalid_noekkelpar_for_databehandler() {
-        Noekkelpar databehandlerNoekkelpar = createInvalidDatabehandlerNoekkelparFromCertificate(_databehandlerCertificate);
-        Databehandler databehandler = databehandlerMedSertifikat(_databehanderOrgnr, databehandlerNoekkelpar);
-
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(_miljo).build();
-        _klient = new SikkerDigitalPostKlient(databehandler, klientKonfigurasjon);
-
-        return this;
     }
 
     SmokeTestHelper create_digital_forsendelse() {
@@ -172,6 +155,24 @@ class SmokeTestHelper {
         _klient.bekreft(_forretningskvittering);
 
         return this;
+    }
+
+    private static void verifyEnvironmentVariables() {
+        throwIfEnvironmentVariableNotSet("sti", TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE);
+        throwIfEnvironmentVariableNotSet("alias", TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE);
+        throwIfEnvironmentVariableNotSet("passord", TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
+    }
+
+    private static void throwIfEnvironmentVariableNotSet(String variabel, String value) {
+        String oppsett = "For å kjøre smoketestene må det brukes et gyldig virksomhetssertifikat. \n" +
+                "1) Sett environmentvariabel '" + TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE + "' til full sti til virksomhetsssertifikatet. \n" +
+                "2) Sett environmentvariabel '" + TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE  + "' til aliaset (siste avsnitt, første del før komma): \n" +
+                "       keytool -list -keystore VIRKSOMHETSSERTIFIKAT.p12 -storetype pkcs12 \n" +
+                "3) Sett environmentvariabel '" + TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE + "' til passordet til virksomhetssertifikatet. \n";
+
+        if (value == null) {
+            throw new RuntimeException(String.format("Finner ikke %s til virksomhetssertifikat. \n %s", variabel, oppsett));
+        }
     }
 
     private void assertState(Object object) {

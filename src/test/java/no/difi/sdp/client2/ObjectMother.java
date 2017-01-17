@@ -19,6 +19,7 @@ import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
 import no.difi.sdp.client2.domain.Mottaker;
+import no.difi.sdp.client2.domain.NoValidationNoekkelpar;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.Prioritet;
 import no.difi.sdp.client2.domain.Sertifikat;
@@ -26,6 +27,7 @@ import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.digital_post.EpostVarsel;
 import no.difi.sdp.client2.domain.digital_post.Sikkerhetsnivaa;
 import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
+import no.difi.sdp.client2.internal.TrustedCertificates;
 import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
@@ -64,12 +66,12 @@ public class ObjectMother {
     public static final X509Certificate POSTEN_PROD_CERTIFICATE = DigipostSecurity.readCertificate("certificates/prod/posten_prod.pem");
     public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS = "avsender";
     public static final String SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD = "password1234";
-    private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_sti";
-    private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_passord";
-    private static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "virksomhetssertifikat_alias";
+    public static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE = "no_difi_sdp_client2_virksomhetssertifikat_sti";
+    public static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE = "no_difi_sdp_client2_virksomhetssertifikat_alias";
+    public static final String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE = "no_difi_sdp_client2_virksomhetssertifikat_passord";
     public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PATH_ENVIRONMENT_VARIABLE);
-    public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
     public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_ENVIRONMENT_VARIABLE);
+    public static String TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE = System.getenv(TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_ENVIRONMENT_VARIABLE);
 
     public static Noekkelpar testEnvironmentNoekkelpar() {
         return Noekkelpar.fraKeyStoreUtenTrustStore(getVirksomhetssertifikat(), TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE, TESTMILJO_VIRKSOMHETSSERTIFIKAT_PASSWORD_VALUE);
@@ -187,14 +189,15 @@ public class ObjectMother {
     }
 
     public static Databehandler databehandler() {
-        Noekkelpar.AKTIV_KEY_STORE_VALIDERING = false;
-        Noekkelpar noekkelpar = selvsignertNoekkelpar();
-        Noekkelpar.AKTIV_KEY_STORE_VALIDERING = true;
-        return Databehandler.builder(databehandlerOrganisasjonsnummer(), noekkelpar).build();
+        return Databehandler.builder(databehandlerOrganisasjonsnummer(), selvsignertNoekkelparUtenTrustStore()).build();
     }
 
-    public static Noekkelpar selvsignertNoekkelpar() {
-        return Noekkelpar.fraKeyStore(selvsignertKeyStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
+    public static Noekkelpar selvsignertNoekkelparUtenTrustStore() {
+        return new NoValidationNoekkelpar(selvsignertKeyStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
+    }
+
+    public static Noekkelpar selvsignertNoekkelparMedTrustStore() {
+        return new NoValidationNoekkelpar(selvsignertKeyStore(), TrustedCertificates.getTrustStore(), SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
     }
 
     public static DatabehandlerOrganisasjonsnummer databehandlerOrganisasjonsnummer() {

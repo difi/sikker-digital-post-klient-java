@@ -11,6 +11,8 @@ import no.digipost.api.exceptions.MessageSenderIOException;
 import no.digipost.api.exceptions.MessageSenderSoapFaultException;
 import no.digipost.api.exceptions.MessageSenderValidationException;
 
+import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
+
 /**
  * Exception mapper for sending av sikker digital post. Gjør subclassing av denne for implementere egen/tilpasset feilhåndtering.
  * Bruk kall til super for å ta med innebygd feilhåndtering.
@@ -36,6 +38,6 @@ public class ExceptionMapper {
             return new SoapFaultException((MessageSenderSoapFaultException) e);
         }
 
-        return null;
+        return new SendException("En uhåndtert feil skjedde under sending", UKJENT, e);
     }
 }

@@ -21,9 +21,6 @@ public class Noekkelpar {
     private String virksomhetssertifikatAlias;
     private String virksomhetssertifikatPassword;
 
-    public static boolean AKTIV_TRUST_STORE_VALIDERING = true;
-    public static boolean AKTIV_KEY_STORE_VALIDERING = true;
-
     /**
      * For oppretting av {@link Noekkelpar} fra key store og trust store, hvor begge disse er i samme {@link KeyStore}.
      *
@@ -58,15 +55,16 @@ public class Noekkelpar {
         return new Noekkelpar(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword, true);
     }
 
-    private Noekkelpar(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord, boolean withTrustStoreValidation) {
+    Noekkelpar(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord, boolean withTrustStoreValidation) {
         this(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord, false);
         this.trustStore = trustStore;
 
-        validateTrustStore(trustStore);
+        if(withTrustStoreValidation) {
+            validateTrustStore(trustStore);
+        }
     }
 
-
-    private Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword, boolean withKeyStoreValidation) {
+    Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword, boolean withKeyStoreValidation) {
         this.keyStore = keyStore;
 
         if(withKeyStoreValidation){
@@ -129,11 +127,12 @@ public class Noekkelpar {
         return TrustedCertificates.getTrustStore();
     }
 
+    //Implementer og override disse valideringe.
     private void validateTrustStore(KeyStore trustStore) {
         try {
-            if (AKTIV_TRUST_STORE_VALIDERING && trustStore.size() < 4) {
+            if (trustStore.size() < 4) {
                 throw new SertifikatException(MessageFormat.format(
-                        "Du initierer {0} med key store og trust store , og da må intermediate- og rotsertifikater til Buypass og Commfides inkluderes" +
+                        "Du initierer {0} med key store og trust store, og da må intermediate- og rotsertifikater til Buypass og Commfides inkluderes" +
                                 "i trust store. Et alternativ er å bruke konstruktør som laster innebygd trust store. Dette kan du lese mer om på" +
                                 " http://difi.github.io/sikker-digital-post-klient-java.", Noekkelpar.class.getSimpleName()));
             }
@@ -144,7 +143,7 @@ public class Noekkelpar {
 
     private void validateKeyStore(KeyStore keyStore) {
         try {
-            if (AKTIV_KEY_STORE_VALIDERING && keyStore.size() < 5) {
+            if (keyStore.size() < 5) {
                 throw new SertifikatException(MessageFormat.format(
                         "Du initierer {0} kun med key store, og da må intermediate- og rotsertifikater til Buypass og Commfides inkluderes. " +
                                 "Et alternativ er å bruke konstruktør som laster innebygd trust store. Dette kan du lese mer om på" +

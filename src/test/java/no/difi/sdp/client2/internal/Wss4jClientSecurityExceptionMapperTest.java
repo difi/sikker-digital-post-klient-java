@@ -1,15 +1,16 @@
 package no.difi.sdp.client2.internal;
 
 import no.difi.sdp.client2.domain.exceptions.NoekkelException;
+import no.difi.sdp.client2.domain.exceptions.SendException;
 import no.difi.sdp.client2.domain.exceptions.UgyldigTidsstempelException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityValidationException;
 
-public class SecurtyExceptionResolverTest {
+public class Wss4jClientSecurityExceptionMapperTest {
 
-    private static SecurityExceptionResolver securityExceptionResolver = new SecurityExceptionResolver();
+    private static Wss4jClientSecurityExceptionMapper wss4jClientSecurityExceptionMapper = new Wss4jClientSecurityExceptionMapper();
 
     public static class ResolveExceptionMethod {
 
@@ -23,7 +24,7 @@ public class SecurtyExceptionResolverTest {
             Exception invalidTimestampException = new Wss4jSecurityValidationException("Invalid timestamp: The message timestamp is out of range");
 
             thrown.expect(UgyldigTidsstempelException.class);
-            securityExceptionResolver.resolveException(null, null, invalidTimestampException);
+            wss4jClientSecurityExceptionMapper.resolveException(null, null, invalidTimestampException);
         }
 
         @Test
@@ -31,7 +32,15 @@ public class SecurtyExceptionResolverTest {
             Exception invalidTimestampException = new Wss4jSecurityValidationException("Error during certificate path validation: No trusted certs found");
 
             thrown.expect(NoekkelException.class);
-            securityExceptionResolver.resolveException(null, null, invalidTimestampException);
+            wss4jClientSecurityExceptionMapper.resolveException(null, null, invalidTimestampException);
+        }
+
+        @Test
+        public void handles_null_exception_message() {
+            Exception exceptionWithNullMessage = new Wss4jSecurityValidationException(null);
+
+            thrown.expect(SendException.class);
+            wss4jClientSecurityExceptionMapper.resolveException(null, null, exceptionWithNullMessage);
         }
     }
 

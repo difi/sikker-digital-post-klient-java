@@ -80,8 +80,7 @@ public class CreateSignatureTest {
 
     @Before
     public void setUp() throws Exception {
-        Noekkelpar.AKTIV_KEY_STORE_VALIDERING = false;
-        noekkelpar = ObjectMother.selvsignertNoekkelpar();
+        noekkelpar = ObjectMother.selvsignertNoekkelparUtenTrustStore();
         files = asList(
                 file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
                 file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
@@ -93,7 +92,6 @@ public class CreateSignatureTest {
     @After
     public void tearDown() {
         DateTimeUtils.setCurrentMillisSystem();
-        Noekkelpar.AKTIV_KEY_STORE_VALIDERING = false;
     }
 
     @Test
