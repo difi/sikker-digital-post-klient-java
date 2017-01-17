@@ -1,8 +1,9 @@
 package no.difi.sdp.client2.domain;
 
 import no.difi.sdp.client2.domain.exceptions.NoekkelException;
+import no.difi.sdp.client2.domain.exceptions.SertifikatException;
+import no.difi.sdp.client2.internal.TrustedCertificates;
 import no.digipost.api.interceptors.KeyStoreInfo;
-import org.springframework.core.io.ClassPathResource;
 
 import java.security.Key;
 import java.security.KeyStore;
@@ -11,26 +12,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.text.MessageFormat;
 
 public class Noekkelpar {
 
-    private static final String DEFAULT_TRUST_STORE_PASSWORD = "sophisticatedpassword";
-    private static final String DEFAULT_TRUST_STORE_PATH = "/TrustStore.jceks";
     private KeyStore keyStore;
     private KeyStore trustStore;
     private String virksomhetssertifikatAlias;
     private String virksomhetssertifikatPassword;
-
-    private Noekkelpar(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
-        this(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
-        this.trustStore = trustStore;
-    }
-
-    private Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword) {
-        this.keyStore = keyStore;
-        this.virksomhetssertifikatAlias = virksomhetssertifikatAlias;
-        this.virksomhetssertifikatPassword = virksomhetssertifikatPassword;
-    }
 
     /**
      * For oppretting av {@link Noekkelpar} fra key store og trust store, hvor begge disse er i samme {@link KeyStore}.
@@ -40,7 +29,7 @@ public class Noekkelpar {
      * @param virksomhetssertifikatPassord Dette er passordet som er satt på selve virksomhetssertifikatet.
      */
     public static Noekkelpar fraKeyStore(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
-        return new Noekkelpar(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord);
+        return new Noekkelpar(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord, true);
     }
 
     /**
@@ -51,17 +40,7 @@ public class Noekkelpar {
      * @param virksomhetssertifikatPassord Dette er passordet som er satt på selve virksomhetssertifikatet.
      */
     public static Noekkelpar fraKeyStoreUtenTrustStore(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord) {
-        return new Noekkelpar(keyStore, getStandardTrustStore(), virksomhetssertifikatAlias, virksomhetssertifikatPassord);
-    }
-
-    private static KeyStore getStandardTrustStore() {
-        try {
-            KeyStore trustStore = KeyStore.getInstance("JCEKS");
-            trustStore.load(new ClassPathResource(DEFAULT_TRUST_STORE_PATH).getInputStream(), DEFAULT_TRUST_STORE_PASSWORD.toCharArray());
-            return trustStore;
-        } catch (Exception e) {
-            throw new NoekkelException(String.format("Kunne ikke initiere trust store. Fant ikke '%s'", DEFAULT_TRUST_STORE_PATH), e);
-        }
+        return new Noekkelpar(keyStore, getStandardTrustStore(), virksomhetssertifikatAlias, virksomhetssertifikatPassord, false);
     }
 
     /**
@@ -73,7 +52,27 @@ public class Noekkelpar {
      * @param virksomhetssertifikatPassword Dette er passordet som er satt på selve virksomhetssertifikatet.
      */
     public static Noekkelpar fraKeyStoreOgTrustStore(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword) {
-        return new Noekkelpar(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword);
+        return new Noekkelpar(keyStore, trustStore, virksomhetssertifikatAlias, virksomhetssertifikatPassword, true);
+    }
+
+    Noekkelpar(KeyStore keyStore, KeyStore trustStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassord, boolean withTrustStoreValidation) {
+        this(keyStore, virksomhetssertifikatAlias, virksomhetssertifikatPassord, false);
+        this.trustStore = trustStore;
+
+        if(withTrustStoreValidation) {
+            validateTrustStore(trustStore);
+        }
+    }
+
+    Noekkelpar(KeyStore keyStore, String virksomhetssertifikatAlias, String virksomhetssertifikatPassword, boolean withKeyStoreValidation) {
+        this.keyStore = keyStore;
+
+        if(withKeyStoreValidation){
+            validateKeyStore(keyStore);
+        }
+
+        this.virksomhetssertifikatAlias = virksomhetssertifikatAlias;
+        this.virksomhetssertifikatPassword = virksomhetssertifikatPassword;
     }
 
     public String getAlias() {
@@ -121,6 +120,37 @@ public class Noekkelpar {
             throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Verifiser at nøkkelen er støttet på plattformen", e);
         } catch (UnrecoverableKeyException e) {
             throw new NoekkelException("Kunne ikke hente privatnøkkel fra KeyStore. Sjekk at passordet er riktig.", e);
+        }
+    }
+
+    private static KeyStore getStandardTrustStore() {
+        return TrustedCertificates.getTrustStore();
+    }
+
+    //Implementer og override disse valideringe.
+    private void validateTrustStore(KeyStore trustStore) {
+        try {
+            if (trustStore.size() < 4) {
+                throw new SertifikatException(MessageFormat.format(
+                        "Du initierer {0} med key store og trust store, og da må intermediate- og rotsertifikater til Buypass og Commfides inkluderes" +
+                                "i trust store. Et alternativ er å bruke konstruktør som laster innebygd trust store. Dette kan du lese mer om på" +
+                                " http://difi.github.io/sikker-digital-post-klient-java.", Noekkelpar.class.getSimpleName()));
+            }
+        } catch (KeyStoreException e) {
+            throw new SertifikatException("Klarte ikke å lese trust store.");
+        }
+    }
+
+    private void validateKeyStore(KeyStore keyStore) {
+        try {
+            if (keyStore.size() < 5) {
+                throw new SertifikatException(MessageFormat.format(
+                        "Du initierer {0} kun med key store, og da må intermediate- og rotsertifikater til Buypass og Commfides inkluderes. " +
+                                "Et alternativ er å bruke konstruktør som laster innebygd trust store. Dette kan du lese mer om på" +
+                                " http://difi.github.io/sikker-digital-post-klient-java.", Noekkelpar.class.getSimpleName()));
+            }
+        } catch (KeyStoreException e) {
+            throw new SertifikatException("Klarte ikke å lese key store.");
         }
     }
 }

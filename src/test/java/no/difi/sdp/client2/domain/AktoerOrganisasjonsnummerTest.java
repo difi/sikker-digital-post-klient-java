@@ -17,7 +17,7 @@ public class AktoerOrganisasjonsnummerTest {
     }
 
     @Test
-    public void create_organisasjonsnummer_from_class()  {
+    public void create_organisasjonsnummer_from_class() {
         Organisasjonsnummer orgnr = Organisasjonsnummer.of("984661185");
 
         AktoerOrganisasjonsnummer organisasjonsnummer = AktoerOrganisasjonsnummer.of(orgnr);

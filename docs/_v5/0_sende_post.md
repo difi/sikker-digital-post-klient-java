@@ -129,6 +129,8 @@ try {
 
 ```
 
+> Mer informasjon om hvordan du oppretter et `Noekkelpar` finner du [her](#noekkelpar).
+
 ### Hent kvittering og bekreft
 
 ```java

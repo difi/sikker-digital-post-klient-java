@@ -39,7 +39,7 @@ public class DigipostMessageSenderFacade {
 
     public DigipostMessageSenderFacade(final Databehandler databehandler, final KlientKonfigurasjon klientKonfigurasjon) {
         KeyStoreInfo keyStoreInfo = databehandler.noekkelpar.getKeyStoreInfo();
-        WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new NoOpExceptionResolver());
+        WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new Wss4jClientSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
 
         MessageSender.Builder messageSenderBuilder = MessageSender.create(klientKonfigurasjon.getMeldingsformidlerRoot(),
@@ -102,12 +102,7 @@ public class DigipostMessageSenderFacade {
         try {
             return request.get();
         } catch (RuntimeException e) {
-            RuntimeException mappedException = exceptionMapper.mapException(e);
-            if (mappedException != null) {
-                throw mappedException;
-            }
-
-            throw new SendException("An unhandled exception occured while performing request", UKJENT, e);
+            throw exceptionMapper.mapException(e);
         }
     }
 

@@ -12,6 +12,9 @@ import static no.difi.sdp.client2.ObjectMother.POSTEN_TEST_CERTIFICATE;
 
 public class CertificateValidatorTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void accepts_test_certificate() {
         CertificateValidator.validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_TEST_CERTIFICATE);
@@ -21,9 +24,6 @@ public class CertificateValidatorTest {
     public void accepts_prod_certificate() {
         CertificateValidator.validate(Miljo.PRODUKSJON, POSTEN_PROD_CERTIFICATE);
     }
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void stops_test_certificate_in_prod() {

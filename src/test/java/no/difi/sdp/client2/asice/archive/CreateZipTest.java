@@ -39,7 +39,7 @@ public class CreateZipTest {
     }
 
     @Test
-    @Ignore("Writes files to disk. Can be useful for debugging")
+    @Ignore("WARN! Write zip file to to disk test is disabled.")
     public void write_file_to_disk() throws IOException {
         CreateZip createZip = new CreateZip();
 
@@ -64,11 +64,19 @@ public class CreateZipTest {
     private AsicEAttachable file(final String fileName, final String contents) {
         return new AsicEAttachable() {
             @Override
-            public String getFileName() { return fileName; }
+            public String getFileName() {
+                return fileName;
+            }
+
             @Override
-            public byte[] getBytes() { return contents.getBytes(); }
+            public byte[] getBytes() {
+                return contents.getBytes();
+            }
+
             @Override
-            public String getMimeType() { return "application/txt"; }
+            public String getMimeType() {
+                return "application/txt";
+            }
         };
     }
 

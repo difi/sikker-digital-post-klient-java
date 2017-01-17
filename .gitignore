@@ -12,5 +12,4 @@ target
 
 # ... except these
 !.idea/codeStyleSettings.xml
-!src/main/resources/TrustStore.jceks
 !.settings/org.eclipse.jdt.ui.prefs
