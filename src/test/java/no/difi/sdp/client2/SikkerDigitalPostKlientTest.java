@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import static no.difi.sdp.client2.ObjectMother.databehandler;
@@ -19,12 +20,14 @@ import static org.junit.Assert.fail;
 
 public class SikkerDigitalPostKlientTest {
 
+    private static final URI lokalTimeoutUrl = URI.create("http://10.255.255.1");
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void handles_connection_timeouts() {
-        String lokalTimeoutUrl = "http://10.255.255.1";
+        @SuppressWarnings("deprecation")
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .build();
@@ -41,9 +44,9 @@ public class SikkerDigitalPostKlientTest {
 
     @Test
     public void calls_http_interceptors() {
-        final StringBuffer interceptorString = new StringBuffer();
+        final StringBuilder interceptorString = new StringBuilder();
 
-        String lokalTimeoutUrl = "http://10.255.255.1";
+        @SuppressWarnings("deprecation")
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
                 .connectionTimeout(1, TimeUnit.MILLISECONDS)
                 .httpRequestInterceptors(
@@ -63,9 +66,11 @@ public class SikkerDigitalPostKlientTest {
 
     @Test
     public void calls_certificate_validator_on_init() {
-        thrown.expect(SertifikatException.class);
         Databehandler databehandlerWithTestCertificate = databehandler();
-        new SikkerDigitalPostKlient(databehandlerWithTestCertificate, KlientKonfigurasjon.builder(Miljo.PRODUKSJON).build());
+        KlientKonfigurasjon konfigurasjon = KlientKonfigurasjon.builder(Miljo.PRODUKSJON).build();
+
+        thrown.expect(SertifikatException.class);
+        new SikkerDigitalPostKlient(databehandlerWithTestCertificate, konfigurasjon);
     }
 
 }

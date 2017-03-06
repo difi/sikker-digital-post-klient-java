@@ -3,14 +3,13 @@ package no.difi.sdp.client2.internal;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.exceptions.NoekkelException;
 import no.difi.sdp.client2.domain.exceptions.SendException;
-import no.difi.sdp.client2.domain.exceptions.SikkerDigitalPostException;
 import no.difi.sdp.client2.domain.exceptions.UgyldigTidsstempelException;
 import no.digipost.api.exceptions.MessageSenderEbmsErrorException;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityValidationException;
 
-import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.*;
+import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
 /**
  * Even if this class implements the {@see org.springframework.ws.server.EndpointExceptionResolver}, this implementation is injected into our {@see no.digipost.api.interceptors.WsSecurityInterceptor},
