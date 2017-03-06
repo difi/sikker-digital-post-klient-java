@@ -33,7 +33,7 @@
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>5.1.2-SNAPSHOT</version>
+    <version>5.2-SNAPSHOT</version>
     <name>Sikker digital post-klient</name>
 
     <description>
