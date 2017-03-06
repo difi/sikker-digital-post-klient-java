@@ -1,21 +1,20 @@
 package no.difi.sdp.client2.asice.signature;
 
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.KLIENT;
-import static org.apache.commons.codec.digest.DigestUtils.sha256;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.List;
+import no.difi.sdp.client2.asice.AsicEAttachable;
+import no.difi.sdp.client2.domain.Noekkelpar;
+import no.difi.sdp.client2.domain.exceptions.KonfigurasjonException;
+import no.difi.sdp.client2.domain.exceptions.RuntimeIOException;
+import no.difi.sdp.client2.domain.exceptions.XmlKonfigurasjonException;
+import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
+import no.digipost.api.xml.Constants;
+import no.digipost.api.xml.Schemas;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.validation.SchemaLoaderUtils;
+import org.springframework.xml.validation.XmlValidatorFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
@@ -42,22 +41,23 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 
-import no.difi.sdp.client2.asice.AsicEAttachable;
-import no.difi.sdp.client2.domain.Noekkelpar;
-import no.difi.sdp.client2.domain.exceptions.KonfigurasjonException;
-import no.difi.sdp.client2.domain.exceptions.RuntimeIOException;
-import no.difi.sdp.client2.domain.exceptions.XmlKonfigurasjonException;
-import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
-import no.digipost.api.xml.Constants;
-import no.digipost.api.xml.Schemas;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.Certificate;
+import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.core.io.Resource;
-import org.springframework.xml.validation.SchemaLoaderUtils;
-import org.springframework.xml.validation.XmlValidatorFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.KLIENT;
+import static org.apache.commons.codec.digest.DigestUtils.sha256;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CreateSignature {
@@ -74,29 +74,29 @@ public class CreateSignature {
     private final Schema schema;
 
     public CreateSignature() {
-        createXAdESProperties = new CreateXAdESProperties();
-        transformerFactory = TransformerFactory.newInstance();
-        try {
-            XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
-            sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
-            canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod(Constants.C14V1, (C14NMethodParameterSpec) null);
-            canonicalXmlTransform = xmlSignatureFactory.newTransform(Constants.C14V1, (TransformParameterSpec) null);
-        } catch (NoSuchAlgorithmException e) {
-            throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new KonfigurasjonException("Kunne ikke initialisere xml-signering", e);
-        }
-
-        schema = loadSchema();
+        this(new CreateXAdESProperties(Clock.systemDefaultZone()));
     }
 
-	private Schema loadSchema() {
+    public CreateSignature(CreateXAdESProperties createXAdESProperties) {
+        this.createXAdESProperties = createXAdESProperties;
+        this.transformerFactory = TransformerFactory.newInstance();
+        try {
+            XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
+            this.sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
+            this.canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod(Constants.C14V1, (C14NMethodParameterSpec) null);
+            this.canonicalXmlTransform = xmlSignatureFactory.newTransform(Constants.C14V1, (TransformParameterSpec) null);
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            throw new KonfigurasjonException("Kunne ikke initialisere xml-signering, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
+        }
+
+        this.schema = loadSchema();
+    }
+
+	private static Schema loadSchema() {
 		try {
             return SchemaLoaderUtils.loadSchema(new Resource[]{ Schemas.ASICE_SCHEMA }, XmlValidatorFactory.SCHEMA_W3C_XML);
-        } catch (IOException e) {
-            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures", e);
-        } catch (SAXException e) {
-            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures", e);
+        } catch (IOException | SAXException e) {
+            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
         }
 	}
 

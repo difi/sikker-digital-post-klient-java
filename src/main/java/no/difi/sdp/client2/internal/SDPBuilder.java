@@ -1,6 +1,27 @@
 package no.difi.sdp.client2.internal;
 
-import no.difi.begrep.sdp.schema_v10.*;
+import no.difi.begrep.sdp.schema_v10.SDPAvsender;
+import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
+import no.difi.begrep.sdp.schema_v10.SDPDigitalPostInfo;
+import no.difi.begrep.sdp.schema_v10.SDPDokument;
+import no.difi.begrep.sdp.schema_v10.SDPEpostVarsel;
+import no.difi.begrep.sdp.schema_v10.SDPEpostVarselTekst;
+import no.difi.begrep.sdp.schema_v10.SDPFysiskPostInfo;
+import no.difi.begrep.sdp.schema_v10.SDPFysiskPostRetur;
+import no.difi.begrep.sdp.schema_v10.SDPFysiskPostadresse;
+import no.difi.begrep.sdp.schema_v10.SDPIso6523Authority;
+import no.difi.begrep.sdp.schema_v10.SDPManifest;
+import no.difi.begrep.sdp.schema_v10.SDPMottaker;
+import no.difi.begrep.sdp.schema_v10.SDPNorskPostadresse;
+import no.difi.begrep.sdp.schema_v10.SDPOrganisasjon;
+import no.difi.begrep.sdp.schema_v10.SDPPerson;
+import no.difi.begrep.sdp.schema_v10.SDPRepetisjoner;
+import no.difi.begrep.sdp.schema_v10.SDPSikkerhetsnivaa;
+import no.difi.begrep.sdp.schema_v10.SDPSmsVarsel;
+import no.difi.begrep.sdp.schema_v10.SDPSmsVarselTekst;
+import no.difi.begrep.sdp.schema_v10.SDPTittel;
+import no.difi.begrep.sdp.schema_v10.SDPUtenlandskPostadresse;
+import no.difi.begrep.sdp.schema_v10.SDPVarsler;
 import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Forsendelse;
@@ -10,16 +31,17 @@ import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client2.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type;
-import org.joda.time.DateTime;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.NORSK;
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.UTENLANDSK;
+import static no.difi.sdp.client2.internal.SdpTimeConstants.UTC;
 
 @SuppressWarnings("ConstantConditions")
 public class SDPBuilder {
@@ -88,9 +110,9 @@ public class SDPBuilder {
         	return null;
         }
 
-        DateTime virkningstidspunkt = null;
+        ZonedDateTime virkningstidspunkt = null;
         if (digitalPost.getVirkningsdato() != null) {
-            virkningstidspunkt = new DateTime(digitalPost.getVirkningsdato().getTime());
+            virkningstidspunkt = ZonedDateTime.ofInstant(digitalPost.getVirkningsdato().toInstant(), UTC);
         }
 
         boolean aapningskvittering = digitalPost.isAapningskvittering();

@@ -3,6 +3,7 @@ package no.difi.sdp.client2.asice.signature;
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.asice.AsicEAttachable;
 import no.difi.sdp.client2.domain.Noekkelpar;
+import no.digipost.time.ControllableClock;
 import org.apache.commons.io.IOUtils;
 import org.apache.jcp.xml.dsig.internal.dom.DOMSubTreeData;
 import org.etsi.uri._01903.v1_3.DataObjectFormat;
@@ -11,10 +12,6 @@ import org.etsi.uri._01903.v1_3.QualifyingProperties;
 import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
 import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-import org.joda.time.DateTimeZone;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -44,8 +41,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +54,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static no.difi.sdp.client2.internal.SdpTimeConstants.UTC;
+import static no.digipost.DiggBase.nonNull;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -70,6 +73,8 @@ public class CreateSignatureTest {
         marshaller.setClassesToBeBound(XAdESSignatures.class, QualifyingProperties.class);
     }
 
+    private final ControllableClock clock = ControllableClock.freezedAt(Instant.now(), UTC);
+
     /**
      * SHA256 hash of "hoveddokument-innhold"
      */
@@ -86,13 +91,9 @@ public class CreateSignatureTest {
                 file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
         );
 
-        sut = new CreateSignature();
+        sut = new CreateSignature(new CreateXAdESProperties(clock));
     }
 
-    @After
-    public void tearDown() {
-        DateTimeUtils.setCurrentMillisSystem();
-    }
 
     @Test
     public void test_generated_signatures() {
@@ -168,17 +169,20 @@ public class CreateSignatureTest {
     @Test
     public void test_pregenerated_xml() throws Exception {
         // Note: this is a very brittle test. it is meant to be guiding. If it fails, manually check if the changes to the XML makes sense. If they do, just update the expected XML.
-        String expected = IOUtils.toString(this.getClass().getResourceAsStream("/asic/expected-asic-signature.xml"), UTF_8);
+
+        String expected;
+        try (InputStream expectedStream = nonNull("/asic/expected-asic-signature.xml", getClass()::getResourceAsStream)) {
+            expected = IOUtils.toString(expectedStream, UTF_8);
+        }
 
         // The signature partly depends on the exact time the original message was signed
-        DateTime dateTime = new DateTime(2014, 5, 21, 17, 7, 15, 756, DateTimeZone.forOffsetHours(2));
-        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+        clock.set(ZonedDateTime.of(2014, 5, 21, 15, 7, 15, 756_000_000, UTC));
 
         Signature signature = sut.createSignature(noekkelpar, files);
 
         String actual = prettyPrint(signature);
 
-        assertThat(actual, equalTo(expected));
+        assertEquals(expected, actual);
     }
 
     private void verify_signed_data_object_properties(final SignedDataObjectProperties signedDataObjectProperties) {

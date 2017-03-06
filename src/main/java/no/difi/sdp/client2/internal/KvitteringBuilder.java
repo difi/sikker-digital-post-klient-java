@@ -20,8 +20,6 @@ import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.SimpleStandardBusinessDocument;
 
-import java.time.Instant;
-
 import static no.digipost.api.representations.EbmsAktoer.meldingsformidler;
 
 public class KvitteringBuilder {
@@ -39,7 +37,7 @@ public class KvitteringBuilder {
 
         if (simpleStandardBusinessDocument.erKvittering()) {
             SDPKvittering sdpKvittering = simpleStandardBusinessDocument.getKvittering().kvittering;
-            kvitteringsinfoBuilder.tidspunkt(Instant.ofEpochMilli(sdpKvittering.getTidspunkt().getMillis()));
+            kvitteringsinfoBuilder.tidspunkt(sdpKvittering.getTidspunkt().toInstant());
 
             final KvitteringsInfo kvitteringsInfo = kvitteringsinfoBuilder.build();
 
@@ -56,7 +54,7 @@ public class KvitteringBuilder {
             }
         } else if (simpleStandardBusinessDocument.erFeil()) {
             SDPFeil sdpFeil = simpleStandardBusinessDocument.getFeil();
-            kvitteringsinfoBuilder.tidspunkt(Instant.ofEpochMilli(sdpFeil.getTidspunkt().getMillis()));
+            kvitteringsinfoBuilder.tidspunkt(sdpFeil.getTidspunkt().toInstant());
 
             final KvitteringsInfo kvitteringsInfo = kvitteringsinfoBuilder.build();
 

@@ -11,8 +11,6 @@ import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
 import org.etsi.uri._01903.v1_3.SignedProperties;
 import org.etsi.uri._01903.v1_3.SignedSignatureProperties;
 import org.etsi.uri._01903.v1_3.SigningCertificate;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3.xmldsig.X509IssuerSerialType;
 import org.w3c.dom.Document;
@@ -24,7 +22,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import java.security.cert.X509Certificate;
+import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +36,21 @@ import static org.apache.commons.codec.digest.DigestUtils.sha1;
 
 class CreateXAdESProperties {
 
-    private final org.w3.xmldsig.DigestMethod sha1DigestMethod = new org.w3.xmldsig.DigestMethod(emptyList(), DigestMethod.SHA1);
+    private static final org.w3.xmldsig.DigestMethod sha1DigestMethod = new org.w3.xmldsig.DigestMethod(emptyList(), DigestMethod.SHA1);
 
-    private static Jaxb2Marshaller marshaller;
+    private static final Jaxb2Marshaller marshaller;
+
 
     static {
         marshaller = new Jaxb2Marshaller();
         marshaller.setClassesToBeBound(QualifyingProperties.class);
+    }
+
+
+    private final Clock clock;
+
+    CreateXAdESProperties(Clock clock) {
+        this.clock = clock;
     }
 
     public Document createPropertiesToSign(List<AsicEAttachable> files, Sertifikat sertifikat) {
@@ -52,7 +61,7 @@ class CreateXAdESProperties {
         X509IssuerSerialType certificateIssuer = new X509IssuerSerialType(certificate.getIssuerDN().getName(), certificate.getSerialNumber());
         SigningCertificate signingCertificate = new SigningCertificate(singletonList(new CertIDType(certificateDigest, certificateIssuer, null)));
 
-        DateTime now = DateTime.now(DateTimeZone.UTC);
+        ZonedDateTime now = ZonedDateTime.now(clock);
         SignedSignatureProperties signedSignatureProperties = new SignedSignatureProperties(now, signingCertificate, null, null, null, null);
         SignedDataObjectProperties signedDataObjectProperties = new SignedDataObjectProperties(dataObjectFormats(files), null, null, null, null);
         SignedProperties signedProperties = new SignedProperties(signedSignatureProperties, signedDataObjectProperties, "SignedProperties");

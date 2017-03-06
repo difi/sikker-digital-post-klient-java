@@ -9,9 +9,9 @@ import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.StandardBusinessDocumentFactory;
-import org.joda.time.DateTime;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class EbmsForsendelseBuilder {
@@ -35,7 +35,7 @@ public class EbmsForsendelseBuilder {
         Organisasjonsnummer sbdhMottaker = mottaker.organisasjonsnummer;
         Organisasjonsnummer sbdhAvsender = Organisasjonsnummer.of(databehandler.organisasjonsnummer.getOrganisasjonsnummer());
         SDPDigitalPost sikkerDigitalPost = sdpBuilder.buildDigitalPost(forsendelse);
-        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, DateTime.now(), forsendelse.getKonversasjonsId(), sikkerDigitalPost);
+        StandardBusinessDocument standardBusinessDocument = StandardBusinessDocumentFactory.create(sbdhAvsender, sbdhMottaker, meldingsId, ZonedDateTime.now(), forsendelse.getKonversasjonsId(), sikkerDigitalPost);
 
         Billable<Dokumentpakke> dokumentpakkeWithBillableBytes = createDokumentpakke.createDokumentpakke(databehandler, forsendelse);
 
