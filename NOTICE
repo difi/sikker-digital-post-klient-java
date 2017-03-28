@@ -24,6 +24,7 @@ This software includes third party software subject to the following licenses:
   Byte Buddy Java agent under The Apache Software License, Version 2.0
   Cryptacular Library under Apache 2 or GNU Lesser General Public License
   Digipost Certificate Validator under The Apache Software License, Version 2.0
+  Digipost Digg under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0
   Extended StAX API under Dual license consisting of the CDDL v1.1 and GPL v2
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
@@ -36,7 +37,7 @@ This software includes third party software subject to the following licenses:
   javax.xml.soap API under CDDL 1.1 or GPL2 w/ CPE
   JAXB2 Basics - Runtime under BSD-Style License
   jaxen under The BSD 3-Clause License
-  JCL 1.1.1 implemented over SLF4J under MIT License
+  JCL 1.2 implemented over SLF4J under MIT License
   Joda-Time under Apache 2
   JUL to SLF4J bridge under MIT License
   JUnit under Eclipse Public License 1.0
@@ -44,7 +45,7 @@ This software includes third party software subject to the following licenses:
   Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   MIME streaming extension under CDDL 1.1 or GPL2 w/ CPE
-  Mockito under The MIT License
+  mockito-core under The MIT License
   Objenesis under Apache 2
   OpenSAML :: Core under The Apache Software License, Version 2.0
   OpenSAML :: Profile API under The Apache Software License, Version 2.0

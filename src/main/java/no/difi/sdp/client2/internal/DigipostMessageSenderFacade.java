@@ -29,7 +29,6 @@ import java.util.function.Supplier;
 
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.KLIENT;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.SERVER;
-import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 
 public class DigipostMessageSenderFacade {
 

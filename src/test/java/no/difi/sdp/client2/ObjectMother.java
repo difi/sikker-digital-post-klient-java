@@ -33,7 +33,6 @@ import no.digipost.api.representations.EbmsApplikasjonsKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.StandardBusinessDocumentFactory;
 import no.digipost.security.DigipostSecurity;
-import org.joda.time.DateTime;
 import org.springframework.core.io.ClassPathResource;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.BusinessScope;
 import org.unece.cefact.namespaces.standardbusinessdocumentheader.DocumentIdentification;
@@ -53,6 +52,7 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -213,7 +213,7 @@ public class ObjectMother {
     }
 
     public static EbmsApplikasjonsKvittering createEbmsFeil(final SDPFeiltype feiltype) {
-        SDPFeil sdpFeil = new SDPFeil(null, DateTime.now(), feiltype, "Feilinformasjon");
+        SDPFeil sdpFeil = new SDPFeil(null, ZonedDateTime.now(), feiltype, "Feilinformasjon");
         return createEbmsKvittering(sdpFeil);
     }
 
@@ -231,7 +231,7 @@ public class ObjectMother {
                                 .withTypeVersion("1.0")
                                 .withInstanceIdentifier("instanceIdentifier")
                                 .withType(StandardBusinessDocumentFactory.Type.from((SDPMelding) sdpMelding).toString())
-                                .withCreationDateAndTime(DateTime.now())
+                                .withCreationDateAndTime(ZonedDateTime.now())
                         )
                         .withBusinessScope(new BusinessScope()
                                 .withScopes(new Scope()
@@ -274,29 +274,29 @@ public class ObjectMother {
     }
 
     public static EbmsApplikasjonsKvittering createEbmsAapningsKvittering() {
-        SDPKvittering aapningsKvittering = new SDPKvittering(null, DateTime.now(), null, null, new SDPAapning(), null, null);
+        SDPKvittering aapningsKvittering = new SDPKvittering(null, ZonedDateTime.now(), null, null, new SDPAapning(), null, null);
         return createEbmsKvittering(aapningsKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsLeveringsKvittering() {
-        SDPKvittering leveringsKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, new SDPLevering(), null);
+        SDPKvittering leveringsKvittering = new SDPKvittering(null, ZonedDateTime.now(), null, null, null, new SDPLevering(), null);
 
         return createEbmsKvittering(leveringsKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsMottaksKvittering() {
-        SDPKvittering mottaksKvittering = new SDPKvittering(null, DateTime.now(), null, null, null, null, new SDPMottak());
+        SDPKvittering mottaksKvittering = new SDPKvittering(null, ZonedDateTime.now(), null, null, null, null, new SDPMottak());
         return createEbmsKvittering(mottaksKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsReturpostKvittering() {
-        SDPKvittering returpostKvittering = new SDPKvittering(null, DateTime.now(), new SDPReturpost(), null, null, null, null);
+        SDPKvittering returpostKvittering = new SDPKvittering(null, ZonedDateTime.now(), new SDPReturpost(), null, null, null, null);
         return createEbmsKvittering(returpostKvittering);
     }
 
     public static EbmsApplikasjonsKvittering createEbmsVarslingFeiletKvittering(final SDPVarslingskanal varslingskanal) {
         SDPVarslingfeilet sdpVarslingfeilet = new SDPVarslingfeilet(varslingskanal, "Varsling feilet 'Viktig brev'");
-        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, DateTime.now(), null, sdpVarslingfeilet, null, null, null);
+        SDPKvittering varslingFeiletKvittering = new SDPKvittering(null, ZonedDateTime.now(), null, sdpVarslingfeilet, null, null, null);
         return createEbmsKvittering(varslingFeiletKvittering);
     }
 

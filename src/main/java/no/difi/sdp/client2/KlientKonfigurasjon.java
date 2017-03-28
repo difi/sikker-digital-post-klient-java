@@ -14,8 +14,24 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class KlientKonfigurasjon {
 
+    public static Builder builder(Miljo miljo) {
+        return new Builder(miljo);
+    }
+
+    @Deprecated
+    public static Builder builder(String meldingsformidlerRootUri) {
+        return builder(URI.create(meldingsformidlerRootUri));
+    }
+
+    @Deprecated
+    public static Builder builder(URI meldingsformidlerRoot) {
+        return builder(new Miljo(null, meldingsformidlerRoot));
+    }
+
+
     private final Organisasjonsnummer meldingsformidlerOrganisasjon = Organisasjonsnummer.of("984661185");
 
+    private final Miljo miljo;
     private String proxyHost;
     private int proxyPort;
     private String proxyScheme = "https";
@@ -26,20 +42,11 @@ public class KlientKonfigurasjon {
     private ClientInterceptor[] soapInterceptors = new ClientInterceptor[0];
     private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
-    private Miljo miljo;
 
-    @Deprecated
-    private KlientKonfigurasjon(URI meldingsformidlerRoot) {
-        miljo = new Miljo(null,meldingsformidlerRoot);
-    }
+
 
     private KlientKonfigurasjon(Miljo miljo) {
         this.miljo = miljo;
-    }
-
-    @Deprecated
-    public static Builder builder(URI meldingsformidlerRoot) {
-        return new Builder(meldingsformidlerRoot);
     }
 
     public String getProxyHost() {
@@ -90,78 +97,67 @@ public class KlientKonfigurasjon {
         return httpResponseInterceptors;
     }
 
-    public Miljo getMiljo() { return miljo; }
-
-    @Deprecated
-    public static Builder builder(String meldingsformidlerRootUri) {
-        return builder(URI.create(meldingsformidlerRootUri));
-    }
-
-    public static Builder builder(Miljo miljo) {
-        return new Builder(miljo);
+    public Miljo getMiljo() {
+        return miljo;
     }
 
     public EbmsEndpointUriBuilder getMeldingsformidlerRoot() {
         return EbmsEndpointUriBuilder.meldingsformidlerUri(miljo.getMeldingsformidlerRoot());
     }
 
+
     public static class Builder {
 
         private final KlientKonfigurasjon target;
-
-        @Deprecated
-        private Builder(URI meldingsformidlerRoot) {
-            target = new KlientKonfigurasjon(meldingsformidlerRoot);
-        }
 
         private Builder(Miljo miljo){
             target = new KlientKonfigurasjon(miljo);
         }
 
-        public Builder proxy(final String proxyHost, final int proxyPort) {
+        public Builder proxy(String proxyHost, int proxyPort) {
             target.proxyHost = proxyHost;
             target.proxyPort = proxyPort;
             return this;
         }
 
-        public Builder proxy(final String proxyHost, final int proxyPort, final String proxyScheme) {
+        public Builder proxy(String proxyHost, int proxyPort, String proxyScheme) {
             target.proxyHost = proxyHost;
             target.proxyPort = proxyPort;
             target.proxyScheme = proxyScheme;
             return this;
         }
 
-        public Builder socketTimeout(final int socketTimeout, final TimeUnit timeUnit) {
+        public Builder socketTimeout(int socketTimeout, TimeUnit timeUnit) {
             target.socketTimeoutInMillis = timeUnit.toMillis(socketTimeout);
             return this;
         }
 
-        public Builder connectionTimeout(final int connectionTimeout, final TimeUnit timeUnit) {
+        public Builder connectionTimeout(int connectionTimeout, TimeUnit timeUnit) {
             target.connectTimeoutInMillis = timeUnit.toMillis(connectionTimeout);
             return this;
         }
 
-        public Builder connectionRequestTimeout(final int connectionRequestTimeout, final TimeUnit timeUnit) {
+        public Builder connectionRequestTimeout(int connectionRequestTimeout, TimeUnit timeUnit) {
             target.connectionRequestTimeoutInMillis = timeUnit.toMillis(connectionRequestTimeout);
             return this;
         }
 
-        public Builder maxConnectionPoolSize(final int maxConnectionPoolSize) {
+        public Builder maxConnectionPoolSize(int maxConnectionPoolSize) {
             target.maxConnectionPoolSize = maxConnectionPoolSize;
             return this;
         }
 
-        public Builder soapInterceptors(final ClientInterceptor... soapInterceptors) {
+        public Builder soapInterceptors(ClientInterceptor... soapInterceptors) {
             target.soapInterceptors = soapInterceptors;
             return this;
         }
 
-        public Builder httpRequestInterceptors(final HttpRequestInterceptor... httpRequestInterceptors) {
+        public Builder httpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptors) {
             target.httpRequestInterceptors = httpRequestInterceptors;
             return this;
         }
 
-        public Builder httpResponseInterceptors(final HttpResponseInterceptor... httpResponseInterceptors) {
+        public Builder httpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptors) {
             target.httpResponseInterceptors = httpResponseInterceptors;
             return this;
         }

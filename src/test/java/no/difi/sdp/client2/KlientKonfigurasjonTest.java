@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class KlientKonfigurasjonTest {
@@ -15,12 +14,11 @@ public class KlientKonfigurasjonTest {
     public void uri_builder_initializes_meldingsformidler_root_and_miljo() {
         URI meldingsformidlerRoot = URI.create("http://meldingsformidlerroot.no");
 
-        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon
-                .builder(meldingsformidlerRoot)
-                .build();
+        @SuppressWarnings("deprecation")
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(meldingsformidlerRoot).build();
 
-        assertThat(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri(), equalTo(meldingsformidlerRoot));
-        assertThat(klientKonfigurasjon.getMiljo().getMeldingsformidlerRoot(), equalTo(meldingsformidlerRoot));
+        assertThat(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri(), is(meldingsformidlerRoot));
+        assertThat(klientKonfigurasjon.getMiljo().getMeldingsformidlerRoot(), is(meldingsformidlerRoot));
     }
 
     @Test
@@ -32,8 +30,8 @@ public class KlientKonfigurasjonTest {
 
         Miljo actualMiljo = klientKonfigurasjon.getMiljo();
 
-        assertThat(actualMiljo, equalTo(funksjoneltTestmiljo));
-        assertEquals(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri(), actualMiljo.getMeldingsformidlerRoot());
+        assertThat(actualMiljo, is(funksjoneltTestmiljo));
+        assertThat(actualMiljo.getMeldingsformidlerRoot(), is(klientKonfigurasjon.getMeldingsformidlerRoot().getBaseUri()));
     }
 
 }
