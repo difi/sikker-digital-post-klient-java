@@ -21,6 +21,9 @@
         </profile>
         <profile>
             <id>unitTests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <test.excludedGroups>no.difi.sdp.client2.smoke.SmokeTest</test.excludedGroups>
             </properties>
