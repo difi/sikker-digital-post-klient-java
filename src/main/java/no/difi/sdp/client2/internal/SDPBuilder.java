@@ -62,7 +62,7 @@ public class SDPBuilder {
             sdpVedlegg.add(sdpDokument(dokument, spraakkode));
         }
 
-        return new SDPManifest(sdpMottaker, sdpAvsender, sdpHovedDokument, sdpVedlegg);
+        return new SDPManifest(sdpMottaker, sdpAvsender, sdpHovedDokument, sdpVedlegg, null);
     }
 
     public SDPDigitalPost buildDigitalPost(final Forsendelse forsendelse) {
