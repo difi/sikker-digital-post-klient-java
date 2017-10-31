@@ -20,3 +20,5 @@ For å starte sending av digital post må:
 * Avsender må ha et gyldig virksomhetssertifikat
 
 Mottaker av digital post må slås opp i <a href="https://github.com/difi/kontaktregisteret-klient">kontaktregisteret</a>. Dette håndteres ikke av klienten.
+
+
