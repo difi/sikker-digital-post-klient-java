@@ -9,8 +9,8 @@ jdk:
 
 env:
   global:
-  - secure: jtLBK7IkwGIbjw9oh8mPvbrP0jVzgXz9UbFK/7dTBSCgCv/hhXt7pzz9YX9swHZa6+JMSx5vxN2gRh44QzDfWlpC2y1kCdu3DVlVqS0iGlHN9zJ4W+3X4mc4B2gw8Pcb70tdQisMLETz2LA+4Sud6MD3UGlfogWtl1CHy605Xb8=
-  - secure: GHobjUkb61LLmhP3NkHqsxM+cmka1eyz0z236cmXMtfgatCMIom4nCXEHXYdVbxL5cXHJ9EkrHhjXGhvLOeJS3ROCneE1c9rFP/9hC33E5rBsvxS66qLpuA9WyfWAxS3paM6JnrFEgOyAoX+otkIFEJ1dDXSlMfjq9uSXHzRWz8=
+  - secure: R3C4eAdh8jRdKxDGRNyXE7u8oe5Y/R+4uIYu7d/5UovJKFrv54Y/AjqpVIRiSSAEOe2ccSkTha2TjtROt5Ys+v6eLaZdnYaY0a1hZG0St5Q9FK+JcRsrxRJSkK45cyx19XQ6fysqlskzOuAxyQKo7zjZbvZOnZji/LUmsN/erNc=
+  - secure: J93srOX2tKrLfD00rYxCSvyJGYzNS0bvmi7gy7WSjKZ+WBCo2anUxvFZM7dcH8C5BwfowCTSgjzE76bQlxlXMO84q7LaFRxil4lD1jqYONzCTwg0OhUpNJPuJPXPmOFEgQZaQy4ZaVDAhV9bL4RK+MK+rm5/rMZxMz7Pg8yp9dU=
 
 before_install:
   - echo "<settings><servers><server><id>sonatype-oss-nexus-snapshots</id><username>\${env.SONATYPE_USER}</username><password>\${env.SONATYPE_PASS}</password></server></servers></settings>" > ~/.m2/deploy-settings.xml
