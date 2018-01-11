@@ -42,6 +42,7 @@ public class CreateASiCE {
         List<AsicEAttachable> files = new ArrayList<AsicEAttachable>();
         files.add(forsendelse.getDokumentpakke().getHoveddokument());
         files.addAll(forsendelse.getDokumentpakke().getVedlegg());
+        files.addAll(forsendelse.getDokumentpakke().getDataDokumenter());
         files.add(manifest);
 
         // Lag signatur over alle filene i pakka

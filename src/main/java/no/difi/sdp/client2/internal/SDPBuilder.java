@@ -4,6 +4,7 @@ import no.difi.begrep.sdp.schema_v10.SDPAvsender;
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPostInfo;
 import no.difi.begrep.sdp.schema_v10.SDPDokument;
+import no.difi.begrep.sdp.schema_v10.SDPDokumentData;
 import no.difi.begrep.sdp.schema_v10.SDPEpostVarsel;
 import no.difi.begrep.sdp.schema_v10.SDPEpostVarselTekst;
 import no.difi.begrep.sdp.schema_v10.SDPFysiskPostInfo;
@@ -31,6 +32,7 @@ import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client2.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type;
+import no.difi.sdp.client2.domain.utvidelser.DataDokument;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
 
@@ -81,7 +83,13 @@ public class SDPBuilder {
 
 	private SDPDokument sdpDokument(final Dokument dokument, final String spraakkode) {
         SDPTittel sdpTittel = new SDPTittel(dokument.getTittel(), spraakkode);
-        return new SDPDokument(sdpTittel, dokument.getFilnavn(), dokument.getMimeType());
+        SDPDokumentData sdpDokumentData = dokument.getDataDokument().map(SDPBuilder::sdpDokumentData).orElse(null);
+
+        return new SDPDokument(sdpTittel, sdpDokumentData, dokument.getFilnavn(), dokument.getMimeType());
+    }
+
+    private static SDPDokumentData sdpDokumentData(DataDokument dataDokument) {
+        return new SDPDokumentData(dataDokument.getFileName(), dataDokument.getMimeType());
     }
 
     private SDPMottaker sdpMottaker(final DigitalPost digitalPost) {
