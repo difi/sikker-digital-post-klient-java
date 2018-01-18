@@ -32,13 +32,13 @@ public class LenkeTest {
     public void lenke_med_alle_felter_satt_oversettes_riktig() {
         SDPLenke lenke = Lenke.builder("lenke.xml", "https://www.avsender.no")
                 .beskrivelse("Beskrivelse")
-                .knappTekst("Knappe-tekst")
+                .knappetekst("Knappetekst")
                 .frist(ZonedDateTime.of(LocalDateTime.of(2017, 1, 10, 11, 29), ZoneId.of("Europe/Oslo")))
                 .build()
                 .jaxbObject();
         assertThat(lenke.getUrl(), is("https://www.avsender.no"));
         assertThat(lenke.getBeskrivelse().getValue(), is("Beskrivelse"));
-        assertThat(lenke.getKnappTekst().getValue(), is("Knappe-tekst"));
+        assertThat(lenke.getKnappTekst().getValue(), is("Knappetekst"));
         assertThat(lenke.getFrist(), is(ZonedDateTime.of(LocalDateTime.of(2017, 1, 10, 11, 29), ZoneId.of("Europe/Oslo"))));
     }
 

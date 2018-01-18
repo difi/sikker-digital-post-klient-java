@@ -13,7 +13,7 @@ public final class Lenke extends DataDokument {
 
     private final String url;
     private String beskrivelse;
-    private String knappTekst;
+    private String knappetekst;
     private String spraakkode = "NO";
     private ZonedDateTime frist;
 
@@ -28,7 +28,7 @@ public final class Lenke extends DataDokument {
         return new SDPLenke(
                 url,
                 beskrivelse != null ? new SDPLenkeBeskrivelseTekst(beskrivelse, spraakkode) : null,
-                knappTekst != null ? new SDPLenkeKnappTekst(knappTekst, spraakkode) : null,
+                knappetekst != null ? new SDPLenkeKnappTekst(knappetekst, spraakkode) : null,
                 frist
         );
     }
@@ -51,8 +51,8 @@ public final class Lenke extends DataDokument {
             return this;
         }
 
-        public Builder knappTekst(String knappTekst) {
-            target.knappTekst = knappTekst;
+        public Builder knappetekst(String knappetekst) {
+            target.knappetekst = knappetekst;
             return this;
         }
 
