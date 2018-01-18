@@ -5,7 +5,7 @@ import no.difi.sdp.client2.domain.utvidelser.DataDokument;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
@@ -26,11 +26,12 @@ public class Dokumentpakke {
         return vedlegg;
     }
 
-    public List<DataDokument> getDataDokumenter() {
-        List<DataDokument> dataDokumenter = new ArrayList<>();
-        getHoveddokument().getDataDokument().ifPresent(dataDokumenter::add);
-        getVedlegg().stream().map(Dokument::getDataDokument).filter(Optional::isPresent).map(Optional::get).forEach(dataDokumenter::add);
-        return dataDokumenter;
+    public Stream<Dokument> alleDokumenter() {
+        return Stream.concat(Stream.of(this.hoveddokument), this.vedlegg.stream());
+    }
+
+    public Stream<DataDokument> alleDataDokumenter() {
+        return alleDokumenter().map(Dokument::getDataDokument).flatMap(d -> d.map(Stream::of).orElseGet(Stream::empty));
     }
 
     public static Builder builder(Dokument hoveddokument) {
