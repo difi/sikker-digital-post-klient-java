@@ -5,7 +5,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <sdp-shared.version>2.5-RC1</sdp-shared.version>
+        <sdp-shared.version>2.5</sdp-shared.version>
 
         <spring.version>4.3.7.RELEASE</spring.version>
         <spring.ws.version>2.3.0.RELEASE</spring.ws.version>
