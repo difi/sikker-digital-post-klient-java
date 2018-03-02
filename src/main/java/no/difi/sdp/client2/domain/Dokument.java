@@ -1,6 +1,7 @@
 package no.difi.sdp.client2.domain;
 
 import no.difi.sdp.client2.asice.AsicEAttachable;
+import no.difi.sdp.client2.domain.utvidelser.DataDokument;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 public class Dokument implements AsicEAttachable {
 
@@ -15,6 +17,7 @@ public class Dokument implements AsicEAttachable {
     private String filnavn;
     private byte[] dokument;
     private String mimeType = "application/pdf";
+    private Optional<DataDokument> dataDokument = Optional.empty();
 
     private Dokument(String tittel, String filnavn, byte[] dokument) {
         this.tittel = tittel;
@@ -43,6 +46,10 @@ public class Dokument implements AsicEAttachable {
 
     public String getTittel() {
         return tittel;
+    }
+
+    public Optional<DataDokument> getDataDokument() {
+        return dataDokument;
     }
 
     /**
@@ -98,6 +105,11 @@ public class Dokument implements AsicEAttachable {
          */
         public Builder mimeType(String mimeType) {
             target.mimeType = mimeType;
+            return this;
+        }
+
+        public Builder dataDokument(DataDokument dataDokument) {
+            target.dataDokument = Optional.of(dataDokument);
             return this;
         }
 

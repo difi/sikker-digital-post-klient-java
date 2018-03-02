@@ -15,8 +15,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class CreateASiCE {
 
@@ -39,9 +41,10 @@ public class CreateASiCE {
         log.info("Creating ASiC-E manifest");
         Manifest manifest = createManifest.createManifest(forsendelse);
 
-        List<AsicEAttachable> files = new ArrayList<AsicEAttachable>();
-        files.add(forsendelse.getDokumentpakke().getHoveddokument());
-        files.addAll(forsendelse.getDokumentpakke().getVedlegg());
+        List<AsicEAttachable> files = Stream.concat(
+                forsendelse.getDokumentpakke().alleDokumenter(),
+                forsendelse.getDokumentpakke().alleDataDokumenter()
+        ).collect(toList());
         files.add(manifest);
 
         // Lag signatur over alle filene i pakka

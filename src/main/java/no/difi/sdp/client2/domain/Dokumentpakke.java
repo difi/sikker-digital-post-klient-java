@@ -1,8 +1,11 @@
 package no.difi.sdp.client2.domain;
 
+import no.difi.sdp.client2.domain.utvidelser.DataDokument;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
@@ -23,6 +26,14 @@ public class Dokumentpakke {
         return vedlegg;
     }
 
+    public Stream<Dokument> alleDokumenter() {
+        return Stream.concat(Stream.of(this.hoveddokument), this.vedlegg.stream());
+    }
+
+    public Stream<DataDokument> alleDataDokumenter() {
+        return alleDokumenter().map(Dokument::getDataDokument).flatMap(d -> d.map(Stream::of).orElseGet(Stream::empty));
+    }
+
     public static Builder builder(Dokument hoveddokument) {
         return new Builder(hoveddokument);
     }
@@ -37,7 +48,7 @@ public class Dokumentpakke {
         }
 
         public Builder vedlegg(List<Dokument> vedlegg) {
-            target.vedlegg = new ArrayList<Dokument>(vedlegg);
+            target.vedlegg = new ArrayList<>(vedlegg);
             return this;
         }
 
