@@ -2,6 +2,11 @@ package no.difi.sdp.client2.domain.fysisk_post;
 
 import no.difi.sdp.client2.domain.TekniskMottaker;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
+
 public class FysiskPost {
 
     private KonvoluttAdresse adressat;
@@ -10,6 +15,7 @@ public class FysiskPost {
     private Returhaandtering returhaandtering;
     private KonvoluttAdresse returadresse;
     private TekniskMottaker utskriftsleverandoer;
+    private List<Printinstruksjon> printinstruksjoner = new ArrayList<>();
 
     public KonvoluttAdresse getAdresse() {
         return adressat;
@@ -33,6 +39,10 @@ public class FysiskPost {
 
     public TekniskMottaker getUtskriftsleverandoer() {
         return utskriftsleverandoer;
+    }
+
+    public List<Printinstruksjon> getPrintinstruksjoner() {
+        return unmodifiableList(printinstruksjoner);
     }
 
     public static FysiskPost.Builder builder() {
@@ -67,6 +77,11 @@ public class FysiskPost {
         public Builder retur(Returhaandtering haandtering, KonvoluttAdresse returadresse) {
             fysiskPost.returhaandtering = haandtering;
             fysiskPost.returadresse = returadresse;
+            return this;
+        }
+
+        public Builder printinstruksjon(String navn, String verdi) {
+            fysiskPost.printinstruksjoner.add(new Printinstruksjon(navn, verdi));
             return this;
         }
 
