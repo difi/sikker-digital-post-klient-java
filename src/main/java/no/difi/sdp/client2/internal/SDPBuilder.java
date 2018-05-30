@@ -16,6 +16,8 @@ import no.difi.begrep.sdp.schema_v10.SDPMottaker;
 import no.difi.begrep.sdp.schema_v10.SDPNorskPostadresse;
 import no.difi.begrep.sdp.schema_v10.SDPOrganisasjon;
 import no.difi.begrep.sdp.schema_v10.SDPPerson;
+import no.difi.begrep.sdp.schema_v10.SDPPrintinstruksjon;
+import no.difi.begrep.sdp.schema_v10.SDPPrintinstruksjoner;
 import no.difi.begrep.sdp.schema_v10.SDPRepetisjoner;
 import no.difi.begrep.sdp.schema_v10.SDPSikkerhetsnivaa;
 import no.difi.begrep.sdp.schema_v10.SDPSmsVarsel;
@@ -32,6 +34,7 @@ import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client2.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type;
+import no.difi.sdp.client2.domain.fysisk_post.Printinstruksjon;
 import no.difi.sdp.client2.domain.utvidelser.DataDokument;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
@@ -41,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.NORSK;
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.UTENLANDSK;
 import static no.difi.sdp.client2.internal.SdpTimeConstants.UTC;
@@ -140,7 +144,8 @@ public class SDPBuilder {
     		.withMottaker(sdpPostadresse(fysiskPost.getAdresse()))
     		.withPosttype(fysiskPost.getPosttype().sdpType)
     		.withUtskriftsfarge(fysiskPost.getUtskriftsfarge().sdpUtskriftsfarge)
-    		.withRetur(new SDPFysiskPostRetur(fysiskPost.getReturhaandtering().sdpReturhaandtering, sdpPostadresse(fysiskPost.getReturadresse())));
+    		.withRetur(new SDPFysiskPostRetur(fysiskPost.getReturhaandtering().sdpReturhaandtering, sdpPostadresse(fysiskPost.getReturadresse())))
+    		.withPrintinstruksjoner(sdpPrintinstruksjoner(fysiskPost));
     }
 
     private SDPFysiskPostadresse sdpPostadresse(KonvoluttAdresse adresse) {
@@ -155,6 +160,16 @@ public class SDPBuilder {
     		throw new IllegalArgumentException("Ukjent " + KonvoluttAdresse.class.getSimpleName() + "." + Type.class.getSimpleName() + ": " + adresse.getType());
     	}
     	return sdpAdresse;
+    }
+
+    private SDPPrintinstruksjoner sdpPrintinstruksjoner(FysiskPost fysiskPost) {
+        List<Printinstruksjon> printinstruksjoner = fysiskPost.getPrintinstruksjoner();
+        if (printinstruksjoner.isEmpty()) {
+            return null;
+        }
+        return new SDPPrintinstruksjoner(
+                printinstruksjoner.stream().map(p -> new SDPPrintinstruksjon(p.getNavn(), p.getVerdi())).collect(toList())
+        );
     }
 
 
