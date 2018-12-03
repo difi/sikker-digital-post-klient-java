@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <license-lookup
-	xmlns="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup https://source.jasig.org/schemas/maven-notice-plugin/license-lookup/license-lookup-v1.0.xsd">
+    xmlns="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup https://source.jasig.org/schemas/maven-notice-plugin/license-lookup/license-lookup-v1.0.xsd">
 
-    <artifact>
-        <groupId>com.sun.xml.wsit</groupId>
-        <artifactId>wsit-rt</artifactId>
-        <license>CDDL v1.1</license>
-    </artifact>
     <artifact>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
         <license>The BSD 3-Clause License</license>
     </artifact>
-    <artifact>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-expression</artifactId>
-        <license>The Apache Software License, Version 2.0</license>
-    </artifact>
-
 </license-lookup>

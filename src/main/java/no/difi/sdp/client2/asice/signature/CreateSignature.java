@@ -3,20 +3,19 @@ package no.difi.sdp.client2.asice.signature;
 import no.difi.sdp.client2.asice.AsicEAttachable;
 import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.exceptions.KonfigurasjonException;
-import no.difi.sdp.client2.domain.exceptions.RuntimeIOException;
 import no.difi.sdp.client2.domain.exceptions.XmlKonfigurasjonException;
 import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
-import no.digipost.api.xml.Constants;
 import no.digipost.api.xml.Schemas;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.validation.SchemaLoaderUtils;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.NodeSetData;
+import javax.xml.crypto.URIDereferencer;
 import javax.xml.crypto.dom.DOMStructure;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
@@ -34,14 +33,9 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -53,7 +47,6 @@ import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.KLIENT;
@@ -62,29 +55,34 @@ import static org.apache.commons.codec.digest.DigestUtils.sha256;
 @SuppressWarnings("FieldCanBeLocal")
 public class CreateSignature {
 
-    private final String asicNamespace = "http://uri.etsi.org/2918/v1.2.1#";
-    private final String signedPropertiesType = "http://uri.etsi.org/01903#SignedProperties";
+    private static final String C14V1 = CanonicalizationMethod.INCLUSIVE;
+    private static final String ASIC_NAMESPACE = "http://uri.etsi.org/2918/v1.2.1#";
+    private static final String SIGNED_PROPERTIES_TYPE = "http://uri.etsi.org/01903#SignedProperties";
 
     private final DigestMethod sha256DigestMethod;
     private final CanonicalizationMethod canonicalizationMethod;
     private final Transform canonicalXmlTransform;
 
-    private final CreateXAdESProperties createXAdESProperties;
-    private final TransformerFactory transformerFactory;
+    private final DomUtils domUtils;
+    private final CreateXAdESArtifacts createXAdESProperties;
     private final Schema schema;
 
     public CreateSignature() {
-        this(new CreateXAdESProperties(Clock.systemDefaultZone()));
+        this(Clock.systemDefaultZone());
     }
 
-    public CreateSignature(CreateXAdESProperties createXAdESProperties) {
+    public CreateSignature(Clock clock) {
+        this(new CreateXAdESArtifacts(clock));
+    }
+
+    public CreateSignature(CreateXAdESArtifacts createXAdESProperties) {
+        this.domUtils = new DomUtils();
         this.createXAdESProperties = createXAdESProperties;
-        this.transformerFactory = TransformerFactory.newInstance();
         try {
             XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
             this.sha256DigestMethod = xmlSignatureFactory.newDigestMethod(DigestMethod.SHA256, null);
-            this.canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod(Constants.C14V1, (C14NMethodParameterSpec) null);
-            this.canonicalXmlTransform = xmlSignatureFactory.newTransform(Constants.C14V1, (TransformParameterSpec) null);
+            this.canonicalizationMethod = xmlSignatureFactory.newCanonicalizationMethod(C14V1, (C14NMethodParameterSpec) null);
+            this.canonicalXmlTransform = xmlSignatureFactory.newTransform(C14V1, (TransformParameterSpec) null);
         } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
         }
@@ -104,57 +102,64 @@ public class CreateSignature {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
         SignatureMethod signatureMethod = getSignatureMethod(xmlSignatureFactory);
 
+        // Generer XAdES-dokument som skal signeres, informasjon om nøkkel brukt til signering og informasjon om hva som er signert
+        XAdESArtifacts xadesArtifacts = createXAdESProperties.createArtifactsToSign(attachedFiles, noekkelpar.getVirksomhetssertifikat());
 
         // Lag signatur-referanse for alle filer
         List<Reference> references = references(xmlSignatureFactory, attachedFiles);
 
         // Lag signatur-referanse for XaDES properties
         references.add(xmlSignatureFactory.newReference(
-                "#SignedProperties",
+                xadesArtifacts.signablePropertiesReferenceUri,
                 sha256DigestMethod,
                 singletonList(canonicalXmlTransform),
-                signedPropertiesType,
+                SIGNED_PROPERTIES_TYPE,
                 null
         ));
 
-        // Generer XAdES-dokument som skal signeres, informasjon om nøkkel brukt til signering og informasjon om hva som er signert
-        Document document = createXAdESProperties.createPropertiesToSign(attachedFiles, noekkelpar.getVirksomhetssertifikat());
 
         KeyInfo keyInfo = keyInfo(xmlSignatureFactory, noekkelpar.getVirksomhetssertifikatKjede());
         SignedInfo signedInfo = xmlSignatureFactory.newSignedInfo(canonicalizationMethod, signatureMethod, references);
 
         // Definer signatur over XAdES-dokument
-        XMLObject xmlObject = xmlSignatureFactory.newXMLObject(singletonList(new DOMStructure(document.getDocumentElement())), null, null, null);
+        XMLObject xmlObject = xmlSignatureFactory.newXMLObject(singletonList(new DOMStructure(xadesArtifacts.document.getDocumentElement())), null, null, null);
         XMLSignature xmlSignature = xmlSignatureFactory.newXMLSignature(signedInfo, keyInfo, singletonList(xmlObject), "Signature", null);
 
+        Document signedDocument = domUtils.newEmptyXmlDocument();
+        DOMSignContext signContext = new DOMSignContext(noekkelpar.getVirksomhetssertifikatPrivatnoekkel(), addXAdESSignaturesElement(signedDocument));
+        signContext.setURIDereferencer(signedPropertiesURIDereferencer(xadesArtifacts, xmlSignatureFactory));
+
         try {
-            xmlSignature.sign(new DOMSignContext(noekkelpar.getVirksomhetssertifikatPrivatnoekkel(), document));
+            xmlSignature.sign(signContext);
         } catch (MarshalException e) {
             throw new XmlKonfigurasjonException("Klarte ikke å lese ASiC-E XML for signering", e);
         } catch (XMLSignatureException e) {
             throw new XmlKonfigurasjonException("Klarte ikke å signere ASiC-E element.", e);
         }
 
-        // Pakk Signatur inn i XAdES-konvolutt
-        wrapSignatureInXADeSEnvelope(document);
-
-        ByteArrayOutputStream outputStream;
         try {
-            outputStream = new ByteArrayOutputStream();
-            Transformer transformer = transformerFactory.newTransformer();
-            schema.newValidator().validate(new DOMSource(document));
-            transformer.transform(new DOMSource(document), new StreamResult(outputStream));
-        } catch (TransformerException e) {
-            throw new KonfigurasjonException("Klarte ikke å serialisere XML", e);
-        } catch (SAXException e) {
-            throw new XmlValideringException("Kunne ikke validere generert signatures.xml. Sjekk at input er gyldig og at det ikke er ugyldige tegn i filnavn o.l.", KLIENT, e);
-        } catch (IOException e) {
-            throw new RuntimeIOException(e);
+            schema.newValidator().validate(new DOMSource(signedDocument));
+        } catch (SAXException | IOException e) {
+            throw new XmlValideringException(
+                    "Failed to validate generated signature.xml because " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'. " +
+                    "Verify that the input is valid and that there are no illegal symbols in file names etc.", KLIENT, e);
         }
-        return new Signature(outputStream.toByteArray());
+        return new Signature(domUtils.serializeToXml(signedDocument));
     }
 
-	private SignatureMethod getSignatureMethod(final XMLSignatureFactory xmlSignatureFactory) {
+    private URIDereferencer signedPropertiesURIDereferencer(XAdESArtifacts xadesArtifacts, XMLSignatureFactory signatureFactory) {
+        return (uriReference, context) -> {
+            if (xadesArtifacts.signablePropertiesReferenceUri.equals(uriReference.getURI())) {
+                return (NodeSetData) domUtils.allNodesBelow(xadesArtifacts.signableProperties)::iterator;
+            }
+            return signatureFactory.getURIDereferencer().dereference(uriReference, context);
+        };
+    }
+     private static Element addXAdESSignaturesElement(Document doc) {
+        return (Element) doc.appendChild(doc.createElementNS(ASIC_NAMESPACE, "XAdESSignatures"));
+    }
+
+	private static SignatureMethod getSignatureMethod(final XMLSignatureFactory xmlSignatureFactory) {
         try {
             return xmlSignatureFactory.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null);
         } catch (NoSuchAlgorithmException e) {
@@ -168,7 +173,7 @@ public class CreateSignature {
         List<Reference> result = new ArrayList<Reference>();
         for (int i = 0; i < files.size(); i++) {
             try {
-	            String signatureElementId = format("ID_%s", i);
+	            String signatureElementId = "ID_" + i;
                 String uri = URLEncoder.encode(files.get(i).getFileName(), "UTF-8");
                 Reference reference = xmlSignatureFactory.newReference(uri, sha256DigestMethod, null, null, signatureElementId, sha256(files.get(i).getBytes()));
                 result.add(reference);
@@ -180,20 +185,13 @@ public class CreateSignature {
         return result;
     }
 
-    private KeyInfo keyInfo(final XMLSignatureFactory xmlSignatureFactory, final Certificate[] sertifikater) {
+    private static KeyInfo keyInfo(final XMLSignatureFactory xmlSignatureFactory, final Certificate[] sertifikater) {
         KeyInfoFactory keyInfoFactory = xmlSignatureFactory.getKeyInfoFactory();
         X509Data x509Data = keyInfoFactory.newX509Data(asList(sertifikater));
         return keyInfoFactory.newKeyInfo(singletonList(x509Data));
     }
 
-    private void wrapSignatureInXADeSEnvelope(final Document document) {
-        Node signatureElement = document.removeChild(document.getDocumentElement());
-        Element xadesElement = document.createElementNS(asicNamespace, "XAdESSignatures");
-        xadesElement.appendChild(signatureElement);
-        document.appendChild(xadesElement);
-    }
-
-    private XMLSignatureFactory getSignatureFactory() {
+    private static XMLSignatureFactory getSignatureFactory() {
         try {
             return XMLSignatureFactory.getInstance("DOM", "XMLDSig");
         } catch (NoSuchProviderException e) {

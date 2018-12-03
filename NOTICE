@@ -20,33 +20,29 @@ This software includes third party software subject to the following licenses:
   Apache XML Security for Java under The Apache Software License, Version 2.0
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
-  Byte Buddy (without dependencies) under The Apache Software License, Version 2.0
-  Byte Buddy Java agent under The Apache Software License, Version 2.0
   Cryptacular Library under Apache 2 or GNU Lesser General Public License
   Digipost Certificate Validator under The Apache Software License, Version 2.0
-  Digipost Digg under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0
   Extended StAX API under Dual license consisting of the CDDL v1.1 and GPL v2
+  fastinfoset under Apache License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
-  Hamcrest Core under New BSD License
-  Hamcrest library under New BSD License
+  istack common utility code runtime under CDDL 1.1 or GPL2 w/ CPE
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
   java-support under The Apache Software License, Version 2.0
+  JavaBeans Activation Framework under CDDL/GPLv2+CE
+  JavaBeans Activation Framework API jar under CDDL/GPLv2+CE
   JavaMail 1.4 under The Apache Software License, Version 2.0
   JavaMail API under CDDL/GPLv2+CE
   javax.xml.soap API under CDDL 1.1 or GPL2 w/ CPE
+  JAXB Runtime under CDDL+GPL License
+  jaxb-api under CDDL 1.1 or GPL2 w/ CPE
   JAXB2 Basics - Runtime under BSD-Style License
   jaxen under The BSD 3-Clause License
   JCL 1.2 implemented over SLF4J under MIT License
   Joda-Time under Apache 2
   JUL to SLF4J bridge under MIT License
-  JUnit under Eclipse Public License 1.0
   Log4j Implemented Over SLF4J under Apache Software Licenses
-  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
-  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   MIME streaming extension under CDDL 1.1 or GPL2 w/ CPE
-  mockito-core under The MIT License
-  Objenesis under Apache 2
   OpenSAML :: Core under The Apache Software License, Version 2.0
   OpenSAML :: Profile API under The Apache Software License, Version 2.0
   OpenSAML :: SAML Provider API under The Apache Software License, Version 2.0
@@ -80,5 +76,6 @@ This software includes third party software subject to the following licenses:
   Spring XML under The Apache Software License, Version 2.0
   spring-security-core under The Apache Software License, Version 2.0
   Stax2 API under The BSD License
+  TXW2 Runtime under CDDL+GPL License
   Woodstox under The Apache Software License, Version 2.0
 

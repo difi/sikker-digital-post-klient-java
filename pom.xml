@@ -14,25 +14,35 @@
 
     <profiles>
         <profile>
-            <id>smokeTests</id>
-            <properties>
-                <test.includedGroups>no.difi.sdp.client2.smoke.SmokeTest</test.includedGroups>
-            </properties>
-        </profile>
-        <profile>
-            <id>unitTests</id>
+            <id>non-java-11</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <jdk>[1.8,11)</jdk>
             </activation>
-            <properties>
-                <test.excludedGroups>no.difi.sdp.client2.smoke.SmokeTest</test.excludedGroups>
-            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- The notice-plugin does not yet work on Java 11,
+                             because it fails on reading its own configuration -->
+                        <groupId>org.jasig.maven</groupId>
+                        <artifactId>maven-notice-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-NOTICE-file</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>5.2.1</version>
+    <version>5.3-SNAPSHOT</version>
     <name>Sikker digital post-klient</name>
 
     <description>
@@ -46,6 +56,21 @@
     </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+            <version>1.2.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -187,7 +212,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.7.13</version>
+            <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -273,11 +298,14 @@
                 <plugin>
                     <groupId>org.jasig.maven</groupId>
                     <artifactId>maven-notice-plugin</artifactId>
-                    <version>1.0.6.1</version>
+                    <version>1.1.0</version>
                     <configuration>
                         <noticeTemplate>${project.basedir}/src/main/notice/NOTICE.template</noticeTemplate>
+                        <excludeScopes>
+                            <excludeScope>test</excludeScope>
+                        </excludeScopes>
                         <licenseMapping>
-                            <param>${project.basedir}/src/main/notice/license-mappings.xml</param>
+                            <param>src/main/notice/license-mappings.xml</param>
                         </licenseMapping>
                     </configuration>
                 </plugin>
@@ -325,9 +353,10 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
+                    <version>3.0.1</version>
                     <configuration>
-                        <additionalparam>-Xdoclint:-missing</additionalparam>
+                        <doclint>-missing</doclint>
+                        <quiet>true</quiet>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -364,19 +393,6 @@
                         <id>attach-source</id>
                         <goals>
                             <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jasig.maven</groupId>
-                <artifactId>maven-notice-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>check-NOTICE-file</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
