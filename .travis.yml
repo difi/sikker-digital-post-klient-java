@@ -13,7 +13,7 @@ env:
   - secure: J93srOX2tKrLfD00rYxCSvyJGYzNS0bvmi7gy7WSjKZ+WBCo2anUxvFZM7dcH8C5BwfowCTSgjzE76bQlxlXMO84q7LaFRxil4lD1jqYONzCTwg0OhUpNJPuJPXPmOFEgQZaQy4ZaVDAhV9bL4RK+MK+rm5/rMZxMz7Pg8yp9dU=
 
 before_install:
-  - echo "<settings><servers><server><id>sonatype-oss-nexus-staging</id><username>\${env.SONATYPE_USER}</username><password>\${env.SONATYPE_PASS}</password></server></servers></settings>" > ~/.m2/deploy-settings.xml
+  - echo "<settings><servers><server><id>sonatype-oss-nexus-snapshots</id><username>\${env.SONATYPE_USER}</username><password>\${env.SONATYPE_PASS}</password></server></servers></settings>" > ~/.m2/deploy-settings.xml
 
 install: true
 
