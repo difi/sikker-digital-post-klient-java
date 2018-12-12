@@ -9,8 +9,8 @@ cache:
 
 env:
   global:
-  - secure: R3C4eAdh8jRdKxDGRNyXE7u8oe5Y/R+4uIYu7d/5UovJKFrv54Y/AjqpVIRiSSAEOe2ccSkTha2TjtROt5Ys+v6eLaZdnYaY0a1hZG0St5Q9FK+JcRsrxRJSkK45cyx19XQ6fysqlskzOuAxyQKo7zjZbvZOnZji/LUmsN/erNc=
-  - secure: J93srOX2tKrLfD00rYxCSvyJGYzNS0bvmi7gy7WSjKZ+WBCo2anUxvFZM7dcH8C5BwfowCTSgjzE76bQlxlXMO84q7LaFRxil4lD1jqYONzCTwg0OhUpNJPuJPXPmOFEgQZaQy4ZaVDAhV9bL4RK+MK+rm5/rMZxMz7Pg8yp9dU=
+  - secure: m7sMzcBvfteNPkw2i0C39d0sJooQc683YQnnnwyTA7GeCctLkblNZl4Cr0z1fHhEprZ+8XEh+jpZOerMnQMwdh1WoE3j8ftPKXkumyeIbNPRza1nj3Lga0UK+5sWYMGyjbjEN2J6e/+++Evx0xksxgb+xR/yzsIoUvQQjmeHNs0=
+  - secure: VC9+GA8Viioh1n/MLk1yWty86jlfMzReg6AUwmzfzSS9ZcUK9ZMFkS8MUN8iUuPx6Lhvyb2LAZ4labxwNk5s4Yuro+SiAmwWojduEns7jszYrLf+7YL5OcdpGZC1l/ISMJIQPnSh2dXv4ZUa+i43azx48NkVmEGFPaL/ej4fZuw=
 
 install: true
 
