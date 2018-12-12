@@ -81,7 +81,7 @@ public class SDPBuilder {
 
 	private SDPDokument sdpDokument(final Dokument dokument, final String spraakkode) {
         SDPTittel sdpTittel = new SDPTittel(dokument.getTittel(), spraakkode);
-        return new SDPDokument(sdpTittel, dokument.getFilnavn(), dokument.getMimeType());
+        return new SDPDokument(sdpTittel, null, dokument.getFilnavn(), dokument.getMimeType());
     }
 
     private SDPMottaker sdpMottaker(final DigitalPost digitalPost) {

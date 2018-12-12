@@ -1,7 +1,7 @@
 Sikker Digital Post Klient Java
 ==============================
 
-[![Build Status](https://travis-ci.org/difi/sikker-digital-post-klient-java.svg?branch=master)](https://travis-ci.org/difi/sikker-digital-post-klient-java)
+[![Build Status](https://travis-ci.org/difi/sikker-digital-post-klient-java.svg?branch=master)](https://travis-ci.org/difi/sikker-digital-post-klient-java) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/no.difi.sdp/sikker-digital-post-klient-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/no.difi.sdp/sikker-digital-post-klient-java)
 
 [DOKUMENTASJON FINNER DU HER](https://difi.github.io/sikker-digital-post-klient-java/)
 

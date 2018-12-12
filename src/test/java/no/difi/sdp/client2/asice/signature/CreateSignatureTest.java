@@ -52,7 +52,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static no.difi.sdp.client2.internal.SdpTimeConstants.UTC;
 import static no.digipost.DiggBase.nonNull;
@@ -91,7 +90,7 @@ public class CreateSignatureTest {
                 file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
         );
 
-        sut = new CreateSignature(new CreateXAdESProperties(clock));
+        sut = new CreateSignature(clock);
     }
 
 
@@ -170,9 +169,9 @@ public class CreateSignatureTest {
     public void test_pregenerated_xml() throws Exception {
         // Note: this is a very brittle test. it is meant to be guiding. If it fails, manually check if the changes to the XML makes sense. If they do, just update the expected XML.
 
-        String expected;
+        byte[] expected;
         try (InputStream expectedStream = nonNull("/asic/expected-asic-signature.xml", getClass()::getResourceAsStream)) {
-            expected = IOUtils.toString(expectedStream, UTF_8);
+            expected = IOUtils.toByteArray(expectedStream);
         }
 
         // The signature partly depends on the exact time the original message was signed
@@ -182,7 +181,7 @@ public class CreateSignatureTest {
 
         String actual = prettyPrint(signature);
 
-        assertEquals(expected, actual);
+        assertEquals(prettyPrint(expected), actual);
     }
 
     private void verify_signed_data_object_properties(final SignedDataObjectProperties signedDataObjectProperties) {
@@ -303,7 +302,11 @@ public class CreateSignatureTest {
     }
 
     private String prettyPrint(final Signature signature) throws TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        StreamSource xmlSource = new StreamSource(new ByteArrayInputStream(signature.getBytes()));
+        return prettyPrint(signature.getBytes());
+    }
+
+    private String prettyPrint(final byte[] xml) throws TransformerException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        StreamSource xmlSource = new StreamSource(new ByteArrayInputStream(xml));
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         DOMResult outputTarget = new DOMResult();
         transformer.transform(xmlSource, outputTarget);
@@ -315,7 +318,17 @@ public class CreateSignatureTest {
         writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
         writer.getDomConfig().setParameter("xml-declaration", Boolean.FALSE);
 
-        return writer.writeToString(outputTarget.getNode());
+        return writer.writeToString(outputTarget.getNode())
+                /**
+                 * The Base64 signatures produced on Java 11 includes '\r' end-of-line characters encoded as &#13;,
+                 * because of using the java.util.Base64 Mime Encoder internally. This is by specification, and
+                 * handled when validating the signature, though it creates a diff when comparing the XML to
+                 * what is expected, so we simply strip it away here for the tests to run on both JDK 8 and 11.
+                 *
+                 * https://issues.apache.org/jira/browse/SANTUARIO-494
+                 * https://issues.apache.org/jira/browse/SANTUARIO-482
+                 */
+                .replaceAll("&#13;", "");
     }
 
 }

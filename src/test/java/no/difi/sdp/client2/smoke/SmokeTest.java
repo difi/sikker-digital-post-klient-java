@@ -1,28 +1,17 @@
 package no.difi.sdp.client2.smoke;
 
 import no.difi.sdp.client2.domain.Miljo;
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.rules.ExpectedException;
 
 
-@Category(SmokeTest.class)
+@Ignore("This test runs the client against a deployed backed, and thus needs correct keys set up. " +
+        "Run it, and it will tell you how to set things up!")
 public class SmokeTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private SmokeTestHelper t;
-
-    @Before
-    public void init() {
-        t = new SmokeTestHelper(Miljo.FUNKSJONELT_TESTMILJO);
-    }
 
     @Test
     public void send_simple_digital_message() {
-        t
+        new SmokeTestHelper(Miljo.FUNKSJONELT_TESTMILJO)
                 .create_digital_forsendelse()
                 .send()
                 .fetch_receipt()
