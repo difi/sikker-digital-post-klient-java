@@ -1,11 +1,11 @@
-sudo: false
-cache:
-  directories:
-  - $HOME/.m2/repository
-
+dist: trusty
 language: java
 jdk:
 - oraclejdk8
+
+cache:
+  directories:
+  - $HOME/.m2
 
 env:
   global:
@@ -20,5 +20,5 @@ install: true
 script:
   - 'echo "TRAVIS_PULL_REQUEST value: $TRAVIS_PULL_REQUEST"'
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean deploy --update-snapshots --settings ~/.m2/deploy-settings.xml; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then mvn clean install --update-snapshots; fi' #Uses !="false" because $TRAVIS_PULL_REQUEST is the Pull Request # if such is the case.
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then mvn clean install --update-snapshots; fi' #Uses !="false" because $TRAVIS_PULL_REQUEST is the Pull Request number if such is the case.
 
