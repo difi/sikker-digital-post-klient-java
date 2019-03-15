@@ -1,11 +1,11 @@
 package no.difi.sdp.client2.smoke;
 
 import no.difi.sdp.client2.domain.Miljo;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
-@Ignore("This test runs the client against a deployed backed, and thus needs correct keys set up. " +
+@Disabled("This test runs the client against a deployed backed, and thus needs correct keys set up. " +
         "Run it, and it will tell you how to set things up!")
 public class SmokeTest {
 

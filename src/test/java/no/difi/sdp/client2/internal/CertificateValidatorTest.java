@@ -3,17 +3,13 @@ package no.difi.sdp.client2.internal;
 import no.difi.sdp.client2.domain.Miljo;
 import no.difi.sdp.client2.domain.exceptions.SertifikatException;
 import no.digipost.security.cert.Trust;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static no.difi.sdp.client2.ObjectMother.POSTEN_PROD_CERTIFICATE;
 import static no.difi.sdp.client2.ObjectMother.POSTEN_TEST_CERTIFICATE;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CertificateValidatorTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void accepts_test_certificate() {
@@ -27,16 +23,12 @@ public class CertificateValidatorTest {
 
     @Test
     public void stops_test_certificate_in_prod() {
-        thrown.expect(SertifikatException.class);
-
-        CertificateValidator.validate(Miljo.PRODUKSJON, POSTEN_TEST_CERTIFICATE);
+        assertThrows(SertifikatException.class, () -> CertificateValidator.validate(Miljo.PRODUKSJON, POSTEN_TEST_CERTIFICATE));
     }
 
     @Test
     public void stops_prod_certificate_in_test() {
-        thrown.expect(SertifikatException.class);
-
-        CertificateValidator.validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_PROD_CERTIFICATE);
+        assertThrows(SertifikatException.class, () -> CertificateValidator.validate(Miljo.FUNKSJONELT_TESTMILJO, POSTEN_PROD_CERTIFICATE));
     }
 
     @Test

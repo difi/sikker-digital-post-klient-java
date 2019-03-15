@@ -6,13 +6,13 @@ import no.difi.sdp.client2.domain.Sertifikat;
 import org.bouncycastle.cms.CMSEnvelopedDataParser;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.security.PrivateKey;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class CreateCMSDocumentTest {
 
@@ -20,7 +20,7 @@ public class CreateCMSDocumentTest {
     private PrivateKey privateKey;
     private Sertifikat sertifikat;
 
-    @Before
+    @BeforeEach
     public void set_up() {
         Noekkelpar noekkelpar = ObjectMother.selvsignertNoekkelparUtenTrustStore();
         privateKey = noekkelpar.getVirksomhetssertifikatPrivatnoekkel();
@@ -36,7 +36,7 @@ public class CreateCMSDocumentTest {
         CMSEnvelopedDataParser cmsEnvelopeParser = new CMSEnvelopedDataParser(cms.getBytes());
         JceKeyTransEnvelopedRecipient keyDecoder = new JceKeyTransEnvelopedRecipient(privateKey);
 
-        RecipientInformation recInfo = (RecipientInformation) cmsEnvelopeParser.getRecipientInfos().getRecipients().iterator().next();
+        RecipientInformation recInfo = cmsEnvelopeParser.getRecipientInfos().getRecipients().iterator().next();
         byte[] decryptedContent = recInfo.getContent(keyDecoder);
 
         assertThat(decryptedContent, equalTo("message".getBytes()));

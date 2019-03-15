@@ -16,8 +16,6 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -38,12 +36,12 @@ import static no.difi.sdp.client2.ObjectMother.TESTMILJO_VIRKSOMHETSSERTIFIKAT_P
 import static no.difi.sdp.client2.ObjectMother.databehandlerMedSertifikat;
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static no.difi.sdp.client2.ObjectMother.getVirksomhetssertifikat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SmokeTestHelper {
 
@@ -121,8 +119,8 @@ class SmokeTestHelper {
                 if (forretningsKvittering != null) {
                     out.println("Kvittering!");
                     out.println(String.format("%s: %s, %s, %s, %s", forretningsKvittering.getClass().getSimpleName(), forretningsKvittering.getKonversasjonsId(), forretningsKvittering.getReferanseTilMeldingId(), forretningsKvittering.getTidspunkt(), forretningsKvittering));
-                    assertThat(forretningsKvittering.getKonversasjonsId(), not(isEmptyString()));
-                    assertThat(forretningsKvittering.getReferanseTilMeldingId(), not(isEmptyString()));
+                    assertThat(forretningsKvittering.getKonversasjonsId(), not(emptyString()));
+                    assertThat(forretningsKvittering.getReferanseTilMeldingId(), not(emptyString()));
                     assertThat(forretningsKvittering.getTidspunkt(), notNullValue());
                     assertThat(forretningsKvittering, instanceOf(LeveringsKvittering.class));
 
@@ -146,7 +144,7 @@ class SmokeTestHelper {
     SmokeTestHelper expect_receipt_to_be_leveringskvittering() {
         assertState(_forretningskvittering);
 
-        Assert.assertThat(_forretningskvittering, Matchers.instanceOf(LeveringsKvittering.class));
+        assertThat(_forretningskvittering, instanceOf(LeveringsKvittering.class));
 
         return this;
     }

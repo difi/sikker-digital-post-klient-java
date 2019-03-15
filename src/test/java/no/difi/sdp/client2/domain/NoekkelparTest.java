@@ -2,17 +2,16 @@ package no.difi.sdp.client2.domain;
 
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.domain.exceptions.SertifikatException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.security.KeyStore;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class NoekkelparTest {
@@ -46,9 +45,6 @@ public class NoekkelparTest {
 
     public static class fraKeyStoreOgTrustStoreMethod {
 
-        @Rule
-        public final ExpectedException thrown = ExpectedException.none();
-
         @Test
         public void initializes() {
             KeyStore keyStoreMedVirksomhetssertifikat = testKeyStore();
@@ -65,8 +61,8 @@ public class NoekkelparTest {
             KeyStore keyStore = NoekkelparTest.testKeyStore();
             KeyStore trustStore = NoekkelparTest.testKeyStore();
 
-            thrown.expect(SertifikatException.class);
-            Noekkelpar.fraKeyStoreOgTrustStore(keyStore, trustStore, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD);
+            assertThrows(SertifikatException.class,
+                    () -> Noekkelpar.fraKeyStoreOgTrustStore(keyStore, trustStore, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_ALIAS, ObjectMother.SELVSIGNERT_VIRKSOMHETSSERTIFIKAT_PASSORD));
         }
     }
 

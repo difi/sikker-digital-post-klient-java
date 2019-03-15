@@ -12,8 +12,8 @@ import org.etsi.uri._01903.v1_3.QualifyingProperties;
 import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
 import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.SignedInfo;
@@ -55,13 +55,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.util.Arrays.asList;
 import static no.difi.sdp.client2.internal.SdpTimeConstants.UTC;
 import static no.digipost.DiggBase.nonNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CreateSignatureTest {
 
@@ -82,7 +82,7 @@ public class CreateSignatureTest {
     private Noekkelpar noekkelpar;
     private List<AsicEAttachable> files;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         noekkelpar = ObjectMother.selvsignertNoekkelparUtenTrustStore();
         files = asList(

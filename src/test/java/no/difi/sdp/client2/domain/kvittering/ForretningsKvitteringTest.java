@@ -2,12 +2,12 @@ package no.difi.sdp.client2.domain.kvittering;
 
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.KvitteringsReferanse;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class ForretningsKvitteringTest {
 

@@ -1,20 +1,16 @@
 package no.difi.sdp.client2.domain.kvittering;
 
 import no.difi.sdp.client2.domain.kvittering.KvitteringsInfo.Builder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class KvitteringsInfoTest {
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void builder_initializes() throws Exception {
@@ -42,8 +38,7 @@ public class KvitteringsInfoTest {
                 .referanseTilMeldingId(referanse)
                 .tidspunkt(tidspunkt);
 
-        thrown.expect(RuntimeException.class);
-        kvitteringsInfoBuilder.build();
+        assertThrows(RuntimeException.class, () -> kvitteringsInfoBuilder.build());
     }
 
     @Test
@@ -55,8 +50,7 @@ public class KvitteringsInfoTest {
                 .konversasjonsId(konversasjonsid)
                 .tidspunkt(tidspunkt);
 
-        thrown.expect(RuntimeException.class);
-        kvitteringsInfoBuilder.build();
+        assertThrows(RuntimeException.class, () -> kvitteringsInfoBuilder.build());
     }
 
     @Test
@@ -68,7 +62,6 @@ public class KvitteringsInfoTest {
                 .konversasjonsId(konversasjonsid)
                 .referanseTilMeldingId(referanse);
 
-        thrown.expect(RuntimeException.class);
-        kvitteringsInfoBuilder.build();
+        assertThrows(RuntimeException.class, () -> kvitteringsInfoBuilder.build());
     }
 }
