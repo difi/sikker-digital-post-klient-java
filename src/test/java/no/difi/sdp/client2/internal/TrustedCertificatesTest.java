@@ -1,12 +1,12 @@
 package no.difi.sdp.client2.internal;
 
 import no.digipost.security.cert.Trust;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.KeyStore;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class TrustedCertificatesTest {
     @Test

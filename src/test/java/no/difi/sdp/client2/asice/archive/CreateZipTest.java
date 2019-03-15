@@ -2,8 +2,8 @@ package no.difi.sdp.client2.asice.archive;
 
 import no.difi.sdp.client2.asice.AsicEAttachable;
 import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -15,9 +15,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class CreateZipTest {
 
@@ -39,7 +39,7 @@ public class CreateZipTest {
     }
 
     @Test
-    @Ignore("WARN! Write zip file to to disk test is disabled.")
+    @Disabled("WARN! Write zip file to to disk test is disabled.")
     public void write_file_to_disk() throws IOException {
         CreateZip createZip = new CreateZip();
 

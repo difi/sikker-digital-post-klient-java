@@ -10,20 +10,21 @@ import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 
 public class SDPBuilderManifestTest {
 
@@ -37,7 +38,7 @@ public class SDPBuilderManifestTest {
 
     private SDPBuilder sdpBuilder;
 
-    @Before
+    @BeforeEach
     public void set_up() throws Exception {
         sdpBuilder = new SDPBuilder();
     }
@@ -64,7 +65,7 @@ public class SDPBuilderManifestTest {
         ByteArrayOutputStream xmlBytes = new ByteArrayOutputStream();
         marshaller.marshal(manifest, new StreamResult(xmlBytes));
 
-        assertThat(xmlBytes.toString("UTF-8"), equalToIgnoringWhiteSpace(expectedXml));
+        assertThat(xmlBytes.toString("UTF-8"), equalToCompressingWhiteSpace(expectedXml));
     }
 
 }

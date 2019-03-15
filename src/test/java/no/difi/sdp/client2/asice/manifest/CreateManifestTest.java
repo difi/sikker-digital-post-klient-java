@@ -7,16 +7,17 @@ import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
 import no.digipost.api.representations.Organisasjonsnummer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CreateManifestTest {
 
     private CreateManifest sut;
 
-    @Before
+    @BeforeEach
     public void set_up() throws Exception {
         sut = new CreateManifest();
     }
@@ -28,12 +29,12 @@ public class CreateManifestTest {
         sut.createManifest(forsendelse); // No Exceptions
     }
 
-    @Test(expected = XmlValideringException.class)
+    @Test
     public void should_validate_manifest() {
         Mottaker mottaker = Mottaker.builder("04036125433", null, mottakerSertifikat(), Organisasjonsnummer.of("984661185")).build();
         Avsender avsender = Avsender.builder(ObjectMother.avsenderOrganisasjonsnummer()).build();
 
         Forsendelse ugyldigForsendelse = Forsendelse.digital(avsender, DigitalPost.builder(mottaker, "tittel").build(), ObjectMother.dokumentpakke()).build();
-        sut.createManifest(ugyldigForsendelse);
+        assertThrows(XmlValideringException.class, () -> sut.createManifest(ugyldigForsendelse));
     }
 }

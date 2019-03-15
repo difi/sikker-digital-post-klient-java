@@ -12,18 +12,18 @@ import no.difi.sdp.client2.domain.fysisk_post.Returhaandtering;
 import no.difi.sdp.client2.domain.fysisk_post.Utskriftsfarge;
 import no.difi.sdp.client2.internal.SDPBuilder;
 import no.digipost.api.representations.Organisasjonsnummer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import static no.difi.sdp.client2.ObjectMother.mottaker;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 public class ForsendelseTest {
 
@@ -31,7 +31,7 @@ public class ForsendelseTest {
     private Dokumentpakke dokumentpakke;
     private Forsendelse forsendelse;
 
-    @Before
+    @BeforeEach
     public void setup() {
         Mottaker mottaker = mottaker();
 

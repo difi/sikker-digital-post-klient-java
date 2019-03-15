@@ -13,20 +13,20 @@ import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsOutgoingMessage;
 import no.digipost.api.representations.Organisasjonsnummer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class EbmsForsendelseBuilderTest {
 
     private EbmsForsendelseBuilder sut;
 
-    @Before
+    @BeforeEach
     public void set_up() {
         sut = new EbmsForsendelseBuilder();
     }
