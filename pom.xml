@@ -12,7 +12,7 @@
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>5.4-SNAPSHOT</version>
+    <version>5.4</version>
     <name>Sikker digital post-klient</name>
 
     <description>
@@ -475,7 +475,7 @@
         <connection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</connection>
         <developerConnection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</developerConnection>
         <url>scm:git:git@github.com:difi/sikker-digital-post-klient</url>
-        <tag>5.2.1</tag>
+        <tag>5.4</tag>
     </scm>
 
 </project>
