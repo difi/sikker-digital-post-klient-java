@@ -15,6 +15,7 @@ import static no.difi.sdp.client2.ObjectMother.databehandler;
 import static no.difi.sdp.client2.ObjectMother.forsendelse;
 import static no.difi.sdp.client2.domain.exceptions.SendException.AntattSkyldig.UKJENT;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -73,4 +74,13 @@ public class SikkerDigitalPostKlientTest {
         new SikkerDigitalPostKlient(databehandlerWithTestCertificate, konfigurasjon);
     }
 
+    @Test
+    public void get_meldings_template_returns_not_null() {
+        KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
+                .build();
+
+        SikkerDigitalPostKlient postklient = new SikkerDigitalPostKlient(databehandler(), klientKonfigurasjon);
+
+        assertThat(postklient.getMeldingTemplate(), notNullValue());
+    }
 }
