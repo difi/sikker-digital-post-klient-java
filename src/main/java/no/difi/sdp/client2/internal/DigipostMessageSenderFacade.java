@@ -74,10 +74,6 @@ public class DigipostMessageSenderFacade {
         messageSender = messageSenderBuilder.build();
     }
 
-    public WebServiceTemplate getMeldingTemplate() {
-        return messageSender.getMeldingTemplate();
-    }
-
     public TransportKvittering send(final EbmsForsendelse ebmsForsendelse) {
         return performRequest(() -> messageSender.send(ebmsForsendelse));
     }
@@ -112,6 +108,10 @@ public class DigipostMessageSenderFacade {
 
     public void setExceptionMapper(final ExceptionMapper exceptionMapper) {
         this.exceptionMapper = exceptionMapper;
+    }
+
+    public WebServiceTemplate getMeldingTemplate() {
+        return messageSender.getMeldingTemplate();
     }
 
     protected ClientInterceptor payloadValidatingInterceptor() {

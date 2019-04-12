@@ -44,10 +44,6 @@ public class SikkerDigitalPostKlient {
         CertificateValidator.validate(klientKonfigurasjon.getMiljo(), databehandler.noekkelpar.getVirksomhetssertifikat().getX509Certificate());
     }
 
-    public WebServiceTemplate getMeldingTemplate() {
-        return digipostMessageSenderFacade.getMeldingTemplate();
-    }
-
     /**
      * Sender en forsendelse til meldingsformidler. Dersom noe feilet i sendingen til meldingsformidler, vil det kastes en exception med beskrivende feilmelding.
      *
@@ -128,6 +124,22 @@ public class SikkerDigitalPostKlient {
      */
     public void setExceptionMapper(ExceptionMapper exceptionMapper) {
         this.digipostMessageSenderFacade.setExceptionMapper(exceptionMapper);
+    }
+
+    /**
+     * Hent ut Spring {@code WebServiceTemplate} som er konfigurert internt, og brukes av biblioteket
+     * til kommunikasjon med meldingsformidler. Ved hjelp av denne instansen kan man f.eks. sette opp en
+     * {@code MockWebServiceServer} for bruk i tester.
+     * <p>
+     * Man vil ikke under normale omstendigheter aksessere denne i produksjonskode.
+     *
+     * @return Spring {@code WebServiceTemplate} som er konfigurert internt i klientbiblioteket
+     *
+     * @see <a href="https://docs.spring.io/spring-ws/docs/3.0.7.RELEASE/reference/#_using_the_client_side_api">Spring WS - 6.2. Using the client-side API</a>
+     * @see <a href="https://docs.spring.io/spring-ws/docs/3.0.7.RELEASE/reference/#_client_side_testing">Spring WS - 6.3. Client-side testing</a>
+     */
+    public WebServiceTemplate getMeldingTemplate() {
+        return digipostMessageSenderFacade.getMeldingTemplate();
     }
 
 }
