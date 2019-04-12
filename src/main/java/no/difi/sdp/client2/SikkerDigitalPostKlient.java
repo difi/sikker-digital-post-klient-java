@@ -16,6 +16,7 @@ import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.TransportKvittering;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
 public class SikkerDigitalPostKlient {
 
@@ -41,6 +42,10 @@ public class SikkerDigitalPostKlient {
         this.databehandler = databehandler;
 
         CertificateValidator.validate(klientKonfigurasjon.getMiljo(), databehandler.noekkelpar.getVirksomhetssertifikat().getX509Certificate());
+    }
+
+    public WebServiceTemplate getMeldingTemplate() {
+        return digipostMessageSenderFacade.getMeldingTemplate();
     }
 
     /**

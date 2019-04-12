@@ -19,6 +19,7 @@ import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.TransportKvittering;
 import no.digipost.api.xml.Schemas;
 import org.apache.http.HttpRequestInterceptor;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor;
 import org.springframework.ws.context.MessageContext;
@@ -71,6 +72,10 @@ public class DigipostMessageSenderFacade {
         }
 
         messageSender = messageSenderBuilder.build();
+    }
+
+    public WebServiceTemplate getMeldingTemplate() {
+        return messageSender.getMeldingTemplate();
     }
 
     public TransportKvittering send(final EbmsForsendelse ebmsForsendelse) {
