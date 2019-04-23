@@ -5,7 +5,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <sdp-shared.version>2.8</sdp-shared.version>
+        <sdp-shared.version>2.9</sdp-shared.version>
 
         <spring.ws.version>3.0.7.RELEASE</spring.ws.version>
     </properties>
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
+            <version>3.9</version>
         </dependency>
 
         <dependency>
@@ -134,14 +134,6 @@
             <version>${spring.ws.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.sun.xml.wsit</groupId>
-                    <artifactId>xws-security</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.ws.security</groupId>
-                    <artifactId>wss4j</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>net.sf.ehcache</groupId>
                     <artifactId>ehcache</artifactId>
                 </exclusion>
@@ -167,7 +159,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.25.0</version>
+            <version>2.27.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -179,7 +171,7 @@
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
-            <version>2.1.2</version>
+            <version>2.1.3</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -204,24 +196,14 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>5.1.5.RELEASE</version>
+                <version>5.1.6.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.wss4j</groupId>
-                <artifactId>wss4j-ws-security-dom</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <groupId>net.sf.ehcache</groupId>
-                        <artifactId>ehcache</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.4.0</version>
+                <version>5.5.0-M1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -337,31 +319,19 @@
                                     <exclude>*:*:*:*:runtime</exclude>
                                 </excludes>
                                 <includes>
-                                    <include>aopalliance:aopalliance:1.0</include>
-                                    <include>commons-codec:commons-codec</include>
-                                    <include>commons-io:commons-io</include>
-                                    <include>javax.xml.stream:stax-api:1.0</include>
-                                    <include>jaxen:jaxen:1.1.6</include>
-                                    <include>joda-time:joda-time</include>
-                                    <include>junit:junit</include>
-                                    <include>org.bouncycastle:bcpkix-jdk15on:1.50</include>
-                                    <include>org.bouncycastle:bcprov-jdk15on:1.50</include>
-                                    <include>org.codehaus.woodstox:stax2-api:3.1.4</include>
-                                    <include>org.codehaus.woodstox:woodstox-core-asl:4.3.0</include>
-                                    <include>org.hamcrest:hamcrest-core</include>
-                                    <include>org.jasypt:jasypt:1.9.1</include>
-                                    <include>org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.6.5.1</include>
-                                    <include>org.opensaml:*</include>
-                                    <include>org.cryptacular:cryptacular</include>
-                                    <include>com.google.guava:guava</include>
-                                    <include>net.shibboleth.utilities:java-support</include>
-                                    <include>wsdl4j:wsdl4j:1.6.1</include>
+                                    <include>commons-codec</include>
+                                    <include>commons-io</include>
+                                    <include>org.bouncycastle:bcpkix-jdk15on</include>
+                                    <include>org.bouncycastle:bcprov-jdk15on</include>
+                                    <include>org.codehaus.woodstox:stax2-api</include>
+                                    <include>org.codehaus.woodstox:woodstox-core-asl</include>
+                                    <include>org.jasypt:jasypt</include>
+                                    <include>org.jvnet.jaxb2_commons:jaxb2-basics-runtime</include>
                                     <include>no.digipost:sdp-api-client</include>
                                     <include>no.digipost:sdp-api-commons</include>
                                     <include>no.digipost:sdp-xsd</include>
                                     <include>org.slf4j</include>
                                     <include>org.apache.commons</include>
-                                    <include>org.apache.geronimo.specs</include>
                                     <include>org.apache.httpcomponents</include>
                                     <include>org.apache.santuario</include>
                                     <include>com.fasterxml.woodstox:woodstox-core</include>
@@ -376,10 +346,8 @@
                                     <include>com.sun.istack</include>
                                     <include>jakarta.activation</include>
                                     <include>com.sun.activation:jakarta.activation</include>
-                                    <include>com.sun.mail</include>
                                     <include>com.sun.xml.fastinfoset</include>
                                     <include>com.sun.xml.messaging.saaj</include>
-                                    <include>com.sun.xml.wsit</include>
                                     <include>org.jvnet.mimepull:mimepull</include>
                                     <include>org.jvnet.staxex:stax-ex</include>
                                 </includes>
