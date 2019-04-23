@@ -19,40 +19,21 @@ This software includes third party software subject to the following licenses:
   Apache XML Security for Java under The Apache Software License, Version 2.0
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
-  Cryptacular Library under Apache 2 or GNU Lesser General Public License
   Digipost Certificate Validator under The Apache Software License, Version 2.0
   Extended StAX API under Eclipse Distribution License - v 1.0
   fastinfoset under Apache License, Version 2.0 or Eclipse Distribution License - v 1.0
-  Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   istack common utility code runtime under Eclipse Distribution License - v 1.0
   jakarta.xml.bind-api under Eclipse Distribution License - v 1.0
   jakarta.xml.soap API under Eclipse Distribution License - v 1.0
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
-  java-support under The Apache Software License, Version 2.0
   JavaBeans Activation Framework under EDL 1.0
   JavaBeans Activation Framework API jar under EDL 1.0
-  JavaMail API under CDDL/GPLv2+CE
   JAXB Runtime under Eclipse Distribution License - v 1.0
   JAXB2 Basics - Runtime under BSD-Style License
-  jaxen under The BSD 3-Clause License
   JCL 1.2 implemented over SLF4J under MIT License
-  Joda-Time under Apache 2
   JUL to SLF4J bridge under MIT License
   Log4j Implemented Over SLF4J under Apache Software Licenses
   MIME streaming extension under Eclipse Distribution License - v 1.0
-  OpenSAML :: Core under The Apache Software License, Version 2.0
-  OpenSAML :: Profile API under The Apache Software License, Version 2.0
-  OpenSAML :: SAML Provider API under The Apache Software License, Version 2.0
-  OpenSAML :: SAML Provider Implementations under The Apache Software License, Version 2.0
-  OpenSAML :: SAML XACML Profile API under The Apache Software License, Version 2.0
-  OpenSAML :: SAML XACML Profile Implementation under The Apache Software License, Version 2.0
-  OpenSAML :: Security API under The Apache Software License, Version 2.0
-  OpenSAML :: Security Implementation under The Apache Software License, Version 2.0
-  OpenSAML :: SOAP Provider API under The Apache Software License, Version 2.0
-  OpenSAML :: XACML Provider API under The Apache Software License, Version 2.0
-  OpenSAML :: XACML Provider Implementations under The Apache Software License, Version 2.0
-  OpenSAML :: XML Security API under The Apache Software License, Version 2.0
-  OpenSAML :: XML Security Implementation under The Apache Software License, Version 2.0
   saaj-impl under Eclipse Distribution License - v 1.0
   SDP Shared - API Client under The Apache Software License, Version 2.0
   SDP Shared - API Commons under The Apache Software License, Version 2.0
