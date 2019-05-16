@@ -95,6 +95,40 @@ Forsendelse forsendelse = Forsendelse
 
 > Sett en unik `Forsendelse.mpcId` for å unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer. Dette er nyttig i større organisasjoner som har flere avsenderenheter. I tillegg kan det være veldig nyttig i utvikling for å unngå at utviklere og testmiljøer går i beina på hverandre.
 
+### Utvidelser
+Difi har egne dokumenttyper, eller utvidelser, som kan sendes som vedlegg til hoveddokumenter. Disse utvidelsene er strukturerte xml-dokumenter
+med egne mime-typer. Disse utvidelsene benyttes av postkasseleverandørene til å gi en øket brukeropplevelse for innbyggere.
+Les mer om utvidelser på [https://begrep.difi.no/SikkerDigitalPost/](https://begrep.difi.no/SikkerDigitalPost/)
+
+Utvidelsene ligger som generert kode i `sdp-shared`, som er en avhengighet av `sikker-digital-post-klient-java`. Du kan selv lage kode
+for å generere xml fra instanser av disse typene, eller du kan lage xml på andre måter.
+
+```java
+SDPLenke lenke = new SDPLenke();
+lenke.setUrl("http://example.com");
+
+Marshaller jaxbMarshaller = JAXBContext.newInstance(SDPLenke.class).createMarshaller();
+
+StringResult result = new StringResult();
+jaxbMarshaller.marshal(lenke, result);
+String xmlSomBytes = result.toString();
+
+Dokument lenkeVedlegg = Dokument.builder(
+    "Min lenke",
+    "lenke.xml",
+    xmlSomBytes.getBytes()
+).mimeType("application/vnd.difi.dpi.lenke+xml")
+    .build();
+
+Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument)
+    .vedlegg(Arrays.asList(lenkeVedlegg))
+    .build();
+```
+
+Eksempelet bruker JAXBMarchaller og gjør dette om til bytes i minnet. Men det er ikke noe i veien for å lage xml-dokumenter
+på helt andre måter og lese disse inn som filer som hvilket som helst vedlegg. Det er mime-typen tilnyttet dokumentet
+som gjør dette til spesielle dokumenter.
+
 ### Opprette klient og sende post
 
 ```java
