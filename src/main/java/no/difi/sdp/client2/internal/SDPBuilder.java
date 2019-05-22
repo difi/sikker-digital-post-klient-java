@@ -4,6 +4,7 @@ import no.difi.begrep.sdp.schema_v10.SDPAvsender;
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPost;
 import no.difi.begrep.sdp.schema_v10.SDPDigitalPostInfo;
 import no.difi.begrep.sdp.schema_v10.SDPDokument;
+import no.difi.begrep.sdp.schema_v10.SDPDokumentData;
 import no.difi.begrep.sdp.schema_v10.SDPEpostVarsel;
 import no.difi.begrep.sdp.schema_v10.SDPEpostVarselTekst;
 import no.difi.begrep.sdp.schema_v10.SDPFysiskPostInfo;
@@ -81,7 +82,8 @@ public class SDPBuilder {
 
 	private SDPDokument sdpDokument(final Dokument dokument, final String spraakkode) {
         SDPTittel sdpTittel = new SDPTittel(dokument.getTittel(), spraakkode);
-        return new SDPDokument(sdpTittel, null, dokument.getFilnavn(), dokument.getMimeType());
+        SDPDokumentData sdpDokumentData = dokument.getMetadataDocument().map(d -> new SDPDokumentData(d.getFileName(), d.getMimeType())).orElse(null);
+        return new SDPDokument(sdpTittel, sdpDokumentData, dokument.getFilnavn(), dokument.getMimeType());
     }
 
     private SDPMottaker sdpMottaker(final DigitalPost digitalPost) {
@@ -148,7 +150,6 @@ public class SDPBuilder {
     	}
     	return sdpAdresse;
     }
-
 
 
     private SDPVarsler sdpVarsler(final Forsendelse forsendelse) {

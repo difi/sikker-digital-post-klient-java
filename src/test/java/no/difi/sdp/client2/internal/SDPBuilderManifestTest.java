@@ -6,6 +6,7 @@ import no.difi.sdp.client2.domain.Avsender;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
+import no.difi.sdp.client2.domain.MetadataDokument;
 import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.digital_post.DigitalPost;
 import no.digipost.api.representations.Organisasjonsnummer;
@@ -53,7 +54,7 @@ public class SDPBuilderManifestTest {
 
         Forsendelse forsendelse = Forsendelse.digital(avsender,
                 DigitalPost.builder(mottaker, "Ikke sensitiv tittel").build(),
-                Dokumentpakke.builder(Dokument.builder("Vedtak", "vedtak_2398324.pdf", new ByteArrayInputStream("vedtak".getBytes())).mimeType("application/pdf").build()).
+                Dokumentpakke.builder(Dokument.builder("Vedtak", "vedtak_2398324.pdf", new ByteArrayInputStream("vedtak".getBytes())).mimeType("application/pdf").metadataDocument(new MetadataDokument("lenke.xml", "application/vnd.difi.dpi.lenke+xml", "<lenke></lenke".getBytes())).build()).
                         vedlegg(
                                 Dokument.builder("informasjon", "info.html", new ByteArrayInputStream("info".getBytes())).mimeType("text/html").build(),
                                 Dokument.builder("journal", "journal.txt", new ByteArrayInputStream("journal".getBytes())).mimeType("text/plain").build())

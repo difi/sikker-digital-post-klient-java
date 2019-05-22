@@ -18,6 +18,7 @@ import no.difi.sdp.client2.domain.DatabehandlerOrganisasjonsnummer;
 import no.difi.sdp.client2.domain.Dokument;
 import no.difi.sdp.client2.domain.Dokumentpakke;
 import no.difi.sdp.client2.domain.Forsendelse;
+import no.difi.sdp.client2.domain.MetadataDokument;
 import no.difi.sdp.client2.domain.Mottaker;
 import no.difi.sdp.client2.domain.NoValidationNoekkelpar;
 import no.difi.sdp.client2.domain.Noekkelpar;
@@ -108,6 +109,7 @@ public class ObjectMother {
 
         Dokument hovedDokument = Dokument.builder("Sensitiv brevtittel", "faktura.pdf", new ByteArrayInputStream("hei".getBytes()))
                 .mimeType("application/pdf")
+                .metadataDocument(new MetadataDokument("lenke.xml", "application/vnd.difi.dpi.lenke+xml", "<lenke></lenke>".getBytes()))
                 .build();
 
         Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument)

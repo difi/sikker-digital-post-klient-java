@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class CreateZip {
@@ -19,7 +20,7 @@ public class CreateZip {
 
     public Archive zipIt(List<AsicEAttachable> files) {
         try (ByteArrayOutputStream archive = new ByteArrayOutputStream(); ZipArchiveOutputStream zipOutputStream = new ZipArchiveOutputStream(archive)) {
-            zipOutputStream.setEncoding(Charsets.UTF_8.name());
+            zipOutputStream.setEncoding(StandardCharsets.UTF_8.name());
             zipOutputStream.setMethod(ZipArchiveOutputStream.DEFLATED);
             for (AsicEAttachable file : files) {
                 log.trace("Adding " + file.getFileName() + " to archive. Size in bytes before compression: " + file.getBytes().length);
