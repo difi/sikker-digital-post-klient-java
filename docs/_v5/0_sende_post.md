@@ -95,6 +95,32 @@ Forsendelse forsendelse = Forsendelse
 
 > Sett en unik `Forsendelse.mpcId` for å unngå at det konsumeres kvitteringer på tvers av ulike avsendere med samme organisasjonsnummer. Dette er nyttig i større organisasjoner som har flere avsenderenheter. I tillegg kan det være veldig nyttig i utvikling for å unngå at utviklere og testmiljøer går i beina på hverandre.
 
+### Utvidelser
+Difi har egne dokumenttyper, eller utvidelser, som kan sendes som metadata til hoveddokumenter. Disse utvidelsene er strukturerte xml-dokumenter
+med egne mime-typer. Disse utvidelsene benyttes av postkasseleverandørene til å gi en øket brukeropplevelse for innbyggere.
+Les mer om utvidelser på [https://begrep.difi.no/SikkerDigitalPost/](https://begrep.difi.no/SikkerDigitalPost/)
+
+Utvidelsene ligger som generert kode i `sdp-shared`, som er en avhengighet av `sikker-digital-post-klient-java`. Du kan selv lage kode
+for å generere xml fra instanser av disse typene med JAXB, eller du kan lage xml på andre måter.
+
+```java
+SDPLenke lenke = new SDPLenke();
+lenke.setUrl("http://example.com");
+
+StringResult result = new StringResult();
+JAXBContext.newInstance(SDPLenke.class).createMarshaller().marshal(lenke, result);
+
+MetadataDokument innkalling = MetadataDokument.builder(
+        "lenke.xml", 
+        "application/vnd.difi.dpi.lenke+xml", 
+        result.toString().getBytes()
+).build();
+
+Dokumentpakke dokumentpakke = Dokumentpakke.builder(hovedDokument)
+    .metadataDocument(innkalling)
+    .build();
+```
+
 ### Opprette klient og sende post
 
 ```java
