@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 public class Dokument implements AsicEAttachable {
 
@@ -15,11 +16,13 @@ public class Dokument implements AsicEAttachable {
     private String filnavn;
     private byte[] dokument;
     private String mimeType = "application/pdf";
+    private Optional<MetadataDokument> metadataDocument;
 
-    private Dokument(String tittel, String filnavn, byte[] dokument) {
+    private Dokument(String tittel, String filnavn, byte[] dokument, MetadataDokument metadataDocument) {
         this.tittel = tittel;
         this.filnavn = filnavn;
         this.dokument = dokument;
+        this.metadataDocument = Optional.ofNullable(metadataDocument);
     }
 
     @Override
@@ -43,6 +46,10 @@ public class Dokument implements AsicEAttachable {
 
     public String getTittel() {
         return tittel;
+    }
+    
+    public Optional<MetadataDokument> getMetadataDocument() {
+        return metadataDocument;
     }
 
     /**
@@ -81,14 +88,13 @@ public class Dokument implements AsicEAttachable {
     }
 
 
-
     public static class Builder {
 
         private final Dokument target;
         private boolean built = false;
 
         private Builder(String tittel, String filnavn, byte[] dokument) {
-            target = new Dokument(tittel, filnavn, dokument);
+            target = new Dokument(tittel, filnavn, dokument, null);
         }
 
         /**
@@ -98,6 +104,11 @@ public class Dokument implements AsicEAttachable {
          */
         public Builder mimeType(String mimeType) {
             target.mimeType = mimeType;
+            return this;
+        }
+        
+        public Builder metadataDocument(MetadataDokument metadataDokument){
+            target.metadataDocument = Optional.of(metadataDokument);
             return this;
         }
 

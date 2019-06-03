@@ -13,6 +13,7 @@
     </avsender>
     <hoveddokument href="vedtak_2398324.pdf" mime="application/pdf">
         <tittel lang="NO">Vedtak</tittel>
+        <data href="lenke.xml" mime="application/vnd.difi.dpi.lenke+xml"/>
     </hoveddokument>
     <vedlegg href="info.html" mime="text/html">
         <tittel lang="NO">informasjon</tittel>

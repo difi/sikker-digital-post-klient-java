@@ -87,6 +87,7 @@ public class CreateSignatureTest {
         noekkelpar = ObjectMother.selvsignertNoekkelparUtenTrustStore();
         files = asList(
                 file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
+                file("lenke.xml", "hoveddokumentdata".getBytes(), "application/vnd.difi.dpi.lenke+xml"),
                 file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
         );
 
@@ -185,13 +186,17 @@ public class CreateSignatureTest {
     }
 
     private void verify_signed_data_object_properties(final SignedDataObjectProperties signedDataObjectProperties) {
-        assertThat(signedDataObjectProperties.getDataObjectFormats(), hasSize(2)); // One per file
+        assertThat(signedDataObjectProperties.getDataObjectFormats(), hasSize(3)); // One per file
         DataObjectFormat hoveddokumentDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(0);
         assertThat(hoveddokumentDataObjectFormat.getObjectReference(), equalTo("#ID_0"));
         assertThat(hoveddokumentDataObjectFormat.getMimeType(), equalTo("application/pdf"));
 
-        DataObjectFormat manifestDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(1);
-        assertThat(manifestDataObjectFormat.getObjectReference(), equalTo("#ID_1"));
+        DataObjectFormat metadataDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(1);
+        assertThat(metadataDataObjectFormat.getObjectReference(), equalTo("#ID_1"));
+        assertThat(metadataDataObjectFormat.getMimeType(), equalTo("application/vnd.difi.dpi.lenke+xml"));
+        
+        DataObjectFormat manifestDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(2);
+        assertThat(manifestDataObjectFormat.getObjectReference(), equalTo("#ID_2"));
         assertThat(manifestDataObjectFormat.getMimeType(), equalTo("application/xml"));
     }
 
@@ -212,10 +217,11 @@ public class CreateSignatureTest {
         assertThat(signedInfo.getSignatureMethod().getAlgorithm(), equalTo("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"));
 
         List<Reference> references = signedInfo.getReferences();
-        assertThat(references, hasSize(3));
+        assertThat(references, hasSize(4));
         assert_hovedokument_reference(references.get(0));
-        assertThat(references.get(1).getURI(), equalTo("manifest.xml"));
-        verify_signed_properties_reference(references.get(2));
+        assertThat(references.get(1).getURI(), equalTo("lenke.xml"));
+        assertThat(references.get(2).getURI(), equalTo("manifest.xml"));
+        verify_signed_properties_reference(references.get(3));
     }
 
     private boolean verify_signature(final Signature signature2) {

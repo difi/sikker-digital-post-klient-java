@@ -78,15 +78,11 @@
 							<article class="one-col">
 								{% if site.downloadUrl != "" %}
 									<div class="body">
-										<div class="button custom" data-button-type="0" data-url="{{ site.downloadUrl }}" role="button" tabindex="0">
-											<div class="logo">
-												<img alt="logo" src="//www.difi.no/modules/contrib/difi_ckeditor_widgets/plugins/difibutton/icons/difibutton.png">
-											</div>
-											<div class="text">
+										<div class="button custom" data-button-type="2">
+											<a href="{{ site.downloadUrl }}">
 												<div class="title">Last ned</div>
 												<div class="sub-title">Gå til {{ site.downloadUrl }}</div>
-											</div>
-											<div class="arrow">›</div>
+											</a>
 										</div>
 									</div>
 								{% endif %}

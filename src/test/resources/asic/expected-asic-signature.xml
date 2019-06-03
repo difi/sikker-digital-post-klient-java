@@ -7,7 +7,11 @@
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                 <DigestValue>XdxjXOUnFR8hgR5NBjFc0I7DnILAukbaQ12CPoP5jXs=</DigestValue>
             </Reference>
-            <Reference Id="ID_1" URI="manifest.xml">
+            <Reference Id="ID_1" URI="lenke.xml">
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>FAuHzyr+oew/Izax7eqPh1Z9TwRuauq8EFEJSjmfhPo=</DigestValue>
+            </Reference>
+            <Reference Id="ID_2" URI="manifest.xml">
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                 <DigestValue>wEftXp/TkL614dcx9Txw8O1lLxylP8ZS2WohNKbFdQo=</DigestValue>
             </Reference>
@@ -16,14 +20,14 @@
                     <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                 </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <DigestValue>KoWEbfFoWw5i4Y/UH7+CiCBTyTePTWScTDJpnVwe9eI=</DigestValue>
+                <DigestValue>/wBCAb1r3esoFfVCgak1QwFYZEdDFojlhmdg/bG8x1s=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>i9dKYtuaA+T0jT+j9qyAfA1wH9Eo7SsZK9S7fsHxYHPVf00+3b5fGIvGbNiyiv2bivEeOnIIG+l5
-jJz/I/UygwVCv4OYDVDWGDoJ4cDCTyT+MlaEL0YWZecng+TR4VmEkCK0+8fhQoLcFTb53TH9H1Kq
-tDqlWqB3fSwFonaj24aDVPlUW41C0SonJ1NL8e3vC2hOZdyz5+YoFUscp2K2sdqJ3unn7s6FH/AO
-d6HzK73mqobm2kQewPYCG6v6bijaFVai3Y7t4PpNSNvEuOh3KHxQds0NQKMeeSN5aLoS97Aq4KVP
-t8FR+/xsJWgLvGtbHnV5J0sbx+Y+Jx03N+iFqA==</SignatureValue>
+        <SignatureValue>h4yOx+jDInHN/jpAnzgyhh66geUA6DcwLSdnz4ovJlBygoYz+U15ZZZIqgeCdO0eOqItiaqXRAoW
+Zt8qU4CBA4fbPKMdT/BrI1gJnzRjbrtykcWebvA1bS37zU3VJPXYiTFysW+dDUXcFXZoU3QO05s4
+0TqrOb6yBy4yftp+0/Gl6aIdYN7fkwfNUJctwePu50siiOB5LXbOgVQv88+K0cXYJz6uw7XDF+Sr
+3kxcHhbgeKu0M/FUKQxrE4NFcO8+4Fz1JSQaLOQKtTg8VVj44v2e3fAnXKfmugIsKSkyCRsIPdmM
+AsAXHQ2DpDtThlqFvASUqv8+5HcqDKRPUAnu3w==</SignatureValue>
         <KeyInfo>
             <X509Data>
                 <X509Certificate>MIIDYzCCAkugAwIBAgIEIyZ/HzANBgkqhkiG9w0BAQsFADBiMQswCQYDVQQGEwJOTzELMAkGA1UE
@@ -46,7 +50,7 @@ l5gXsb+YU/RPOlg+xh5xRA==</X509Certificate>
         </KeyInfo>
         <Object>
             <QualifyingProperties Target="#Signature"
-                xmlns="http://uri.etsi.org/01903/v1.3.2#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
+                                  xmlns="http://uri.etsi.org/01903/v1.3.2#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
                 <SignedProperties Id="SignedProperties">
                     <SignedSignatureProperties>
                         <SigningTime>2014-05-21T15:07:15.756Z</SigningTime>
@@ -68,6 +72,9 @@ l5gXsb+YU/RPOlg+xh5xRA==</X509Certificate>
                             <MimeType>application/pdf</MimeType>
                         </DataObjectFormat>
                         <DataObjectFormat ObjectReference="#ID_1">
+                            <MimeType>application/vnd.difi.dpi.lenke+xml</MimeType>
+                        </DataObjectFormat>
+                        <DataObjectFormat ObjectReference="#ID_2">
                             <MimeType>application/xml</MimeType>
                         </DataObjectFormat>
                     </SignedDataObjectProperties>
