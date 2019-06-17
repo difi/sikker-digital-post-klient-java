@@ -71,6 +71,7 @@ public class SikkerDigitalPostKlientTest {
 
     @Test
     public void get_meldings_template_returns_not_null() {
+        @SuppressWarnings("deprecation")
         KlientKonfigurasjon klientKonfigurasjon = KlientKonfigurasjon.builder(lokalTimeoutUrl)
                 .build();
 
