@@ -10,7 +10,7 @@ import no.digipost.security.cert.Trust;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
 
-import static no.digipost.security.cert.OcspSetting.NO_OCSP;
+import static no.digipost.security.cert.OcspPolicy.NEVER_DO_OCSP_LOOKUP;
 
 public class CertificateValidator {
 
@@ -21,7 +21,7 @@ public class CertificateValidator {
 
         Trust trusteChainCertificates = miljo.getGodkjenteKjedeSertifikater();
 
-        CertificateValidatorConfig certificateValidatorConfig = CertificateValidatorConfig.MOST_STRICT.with(NO_OCSP);
+        CertificateValidatorConfig certificateValidatorConfig = CertificateValidatorConfig.MOST_STRICT.withOcspPolicy(NEVER_DO_OCSP_LOOKUP);
         no.digipost.security.cert.CertificateValidator certificateValidator = new no.digipost.security.cert.CertificateValidator(certificateValidatorConfig, trusteChainCertificates, null);
 
         CertStatus certStatus = certificateValidator.validateCert(certificate);
