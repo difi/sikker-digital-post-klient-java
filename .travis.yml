@@ -15,10 +15,8 @@ env:
 install: true
 
 before_script:
-  - cp .travis.maven.settings.xml ~/.m2/settings.xml
+  - cp .travis/maven.settings.xml ~/.m2/settings.xml
 
 script:
-  - 'echo "TRAVIS_PULL_REQUEST value: $TRAVIS_PULL_REQUEST"'
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn clean deploy --update-snapshots; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then mvn clean install --update-snapshots; fi' #Uses !="false" because $TRAVIS_PULL_REQUEST is the Pull Request number if such is the case.
+  - mvn clean deploy --update-snapshots
 
