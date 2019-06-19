@@ -4,7 +4,6 @@ import no.difi.sdp.client2.asice.AsicEAttachable;
 import no.difi.sdp.client2.domain.exceptions.RuntimeIOException;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.compress.utils.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
