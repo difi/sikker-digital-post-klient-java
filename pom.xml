@@ -12,7 +12,7 @@
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>5.8</version>
+    <version>5.9-SNAPSHOT</version>
     <name>Sikker digital post-klient</name>
 
     <description>
@@ -443,7 +443,7 @@
         <connection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</connection>
         <developerConnection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</developerConnection>
         <url>scm:git:git@github.com:difi/sikker-digital-post-klient</url>
-        <tag>5.8</tag>
+        <tag>5.2.1</tag>
     </scm>
 
 </project>
