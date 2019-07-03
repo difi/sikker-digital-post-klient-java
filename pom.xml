@@ -5,14 +5,14 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <sdp-shared.version>2.11</sdp-shared.version>
+        <sdp-shared.version>2.13</sdp-shared.version>
 
         <spring.ws.version>3.0.7.RELEASE</spring.ws.version>
     </properties>
 
     <groupId>no.difi.sdp</groupId>
     <artifactId>sikker-digital-post-klient-java</artifactId>
-    <version>5.9-SNAPSHOT</version>
+    <version>5.10-SNAPSHOT</version>
     <name>Sikker digital post-klient</name>
 
     <description>
@@ -203,7 +203,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.5.0-RC1</version>
+                <version>5.5.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
