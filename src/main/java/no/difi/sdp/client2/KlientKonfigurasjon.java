@@ -2,6 +2,7 @@ package no.difi.sdp.client2;
 
 import no.difi.sdp.client2.domain.Miljo;
 import no.digipost.api.EbmsEndpointUriBuilder;
+import no.digipost.api.MessageFactorySupplier;
 import no.digipost.api.representations.Organisasjonsnummer;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
@@ -42,11 +43,16 @@ public class KlientKonfigurasjon {
     private ClientInterceptor[] soapInterceptors = new ClientInterceptor[0];
     private HttpRequestInterceptor[] httpRequestInterceptors = new HttpRequestInterceptor[0];
     private HttpResponseInterceptor[] httpResponseInterceptors = new HttpResponseInterceptor[0];
+    private MessageFactorySupplier messageFactorySupplier;
 
 
 
     private KlientKonfigurasjon(Miljo miljo) {
         this.miljo = miljo;
+    }
+
+    public MessageFactorySupplier getSoapMessageFactorySupplier() {
+        return MessageFactorySupplier.defaultIfNull(messageFactorySupplier);
     }
 
     public String getProxyHost() {
@@ -112,6 +118,11 @@ public class KlientKonfigurasjon {
 
         private Builder(Miljo miljo){
             target = new KlientKonfigurasjon(miljo);
+        }
+
+        public Builder soapMessageFactorySupplier(MessageFactorySupplier messageFactorySupplier) {
+            target.messageFactorySupplier = messageFactorySupplier;
+            return this;
         }
 
         public Builder proxy(String proxyHost, int proxyPort) {

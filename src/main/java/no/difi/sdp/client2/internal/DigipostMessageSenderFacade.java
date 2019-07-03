@@ -51,6 +51,7 @@ public class DigipostMessageSenderFacade {
                 .withSocketTimeout((int) klientKonfigurasjon.getSocketTimeoutInMillis())
                 .withConnectionRequestTimeout((int) klientKonfigurasjon.getConnectionRequestTimeoutInMillis())
                 .withDefaultMaxPerRoute(klientKonfigurasjon.getMaxConnectionPoolSize())
+                .withSoapMessageFactorySupplier(klientKonfigurasjon.getSoapMessageFactorySupplier())
                 .withMaxTotal(klientKonfigurasjon.getMaxConnectionPoolSize());
 
         if (klientKonfigurasjon.useProxy()) {
