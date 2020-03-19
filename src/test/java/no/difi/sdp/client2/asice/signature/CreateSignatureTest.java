@@ -86,9 +86,9 @@ public class CreateSignatureTest {
     public void setUp() throws Exception {
         noekkelpar = ObjectMother.selvsignertNoekkelparUtenTrustStore();
         files = asList(
-                file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
-                file("lenke.xml", "hoveddokumentdata".getBytes(), "application/vnd.difi.dpi.lenke+xml"),
-                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
+            file("hoveddokument.pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
+            file("lenke.xml", "hoveddokumentdata".getBytes(), "application/vnd.difi.dpi.lenke+xml"),
+            file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
         );
 
         sut = new CreateSignature(clock);
@@ -155,8 +155,8 @@ public class CreateSignatureTest {
     @Test
     public void should_support_filenames_with_spaces_and_other_characters() {
         List<AsicEAttachable> otherFiles = asList(
-                file("hoveddokument (2).pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
-                file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
+            file("hoveddokument (2).pdf", "hoveddokument-innhold".getBytes(), "application/pdf"),
+            file("manifest.xml", "manifest-innhold".getBytes(), "application/xml")
         );
 
         Signature signature = sut.createSignature(noekkelpar, otherFiles);
@@ -194,7 +194,7 @@ public class CreateSignatureTest {
         DataObjectFormat metadataDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(1);
         assertThat(metadataDataObjectFormat.getObjectReference(), equalTo("#ID_1"));
         assertThat(metadataDataObjectFormat.getMimeType(), equalTo("application/vnd.difi.dpi.lenke+xml"));
-        
+
         DataObjectFormat manifestDataObjectFormat = signedDataObjectProperties.getDataObjectFormats().get(2);
         assertThat(manifestDataObjectFormat.getObjectReference(), equalTo("#ID_2"));
         assertThat(manifestDataObjectFormat.getMimeType(), equalTo("application/xml"));
@@ -234,7 +234,7 @@ public class CreateSignatureTest {
             //System.err.println(new String(signature2.getBytes()));
             NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
             DOMValidateContext valContext = new DOMValidateContext
-                    (noekkelpar.getVirksomhetssertifikat().getX509Certificate().getPublicKey(), nl.item(0));
+                (noekkelpar.getVirksomhetssertifikat().getX509Certificate().getPublicKey(), nl.item(0));
             valContext.setURIDereferencer(new URIDereferencer() {
                 @Override
                 public Data dereference(final URIReference uriReference, final XMLCryptoContext context) throws URIReferenceException {
@@ -325,16 +325,17 @@ public class CreateSignatureTest {
         writer.getDomConfig().setParameter("xml-declaration", Boolean.FALSE);
 
         return writer.writeToString(outputTarget.getNode())
-                /**
-                 * The Base64 signatures produced on Java 11 includes '\r' end-of-line characters encoded as &#13;,
-                 * because of using the java.util.Base64 Mime Encoder internally. This is by specification, and
-                 * handled when validating the signature, though it creates a diff when comparing the XML to
-                 * what is expected, so we simply strip it away here for the tests to run on both JDK 8 and 11.
-                 *
-                 * https://issues.apache.org/jira/browse/SANTUARIO-494
-                 * https://issues.apache.org/jira/browse/SANTUARIO-482
-                 */
-                .replaceAll("&#13;", "");
+            /**
+             * The Base64 signatures produced on Java 11 includes '\r' end-of-line characters encoded as &#13; or &#xd;,
+             * because of using the java.util.Base64 Mime Encoder internally. This is by specification, and
+             * handled when validating the signature, though it creates a diff when comparing the XML to
+             * what is expected, so we simply strip it away here for the tests to run on both JDK 8 and 11.
+             *
+             * https://issues.apache.org/jira/browse/SANTUARIO-494
+             * https://issues.apache.org/jira/browse/SANTUARIO-482
+             */
+            .replaceAll("&#13;", "")
+            .replaceAll("&#xd;", "");
     }
 
 }
