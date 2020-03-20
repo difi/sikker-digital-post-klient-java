@@ -81,7 +81,8 @@ public class SDPBuilder {
     }
 
 	private SDPDokument sdpDokument(final Dokument dokument, final String spraakkode) {
-        SDPTittel sdpTittel = new SDPTittel(dokument.getTittel(), spraakkode);
+        final String dokumentTittel = dokument.getTittel();
+        SDPTittel sdpTittel = dokumentTittel != null ? new SDPTittel(dokumentTittel, spraakkode) : null;
         SDPDokumentData sdpDokumentData = dokument.getMetadataDocument().map(d -> new SDPDokumentData(d.getFileName(), d.getMimeType())).orElse(null);
         return new SDPDokument(sdpTittel, sdpDokumentData, dokument.getFilnavn(), dokument.getMimeType());
     }

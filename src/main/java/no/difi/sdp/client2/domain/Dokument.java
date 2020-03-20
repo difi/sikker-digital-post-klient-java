@@ -53,7 +53,7 @@ public class Dokument implements AsicEAttachable {
     }
 
     /**
-     * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
+     * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå. Kan være null for hoveddokument
      * @param filnavn Filnavnet til dokumentet.
      * @param dokument Dokumentet som en strøm.
      */
@@ -67,7 +67,7 @@ public class Dokument implements AsicEAttachable {
     }
 
     /**
-     * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
+     * @param tittel Tittel som vises til brukeren gitt riktig sikkerhetsnivå. Kan være null for hoveddokument
      * @param filnavn Filnavnet til dokumentet.
      * @param dokument Filen som skal sendes. Navnet på filen vil brukes som filnavn ovenfor mottaker.
      */
