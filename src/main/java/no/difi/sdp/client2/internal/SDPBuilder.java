@@ -16,6 +16,8 @@ import no.difi.begrep.sdp.schema_v10.SDPMottaker;
 import no.difi.begrep.sdp.schema_v10.SDPNorskPostadresse;
 import no.difi.begrep.sdp.schema_v10.SDPOrganisasjon;
 import no.difi.begrep.sdp.schema_v10.SDPPerson;
+import no.difi.begrep.sdp.schema_v10.SDPPrintinstruksjon;
+import no.difi.begrep.sdp.schema_v10.SDPPrintinstruksjoner;
 import no.difi.begrep.sdp.schema_v10.SDPRepetisjoner;
 import no.difi.begrep.sdp.schema_v10.SDPSikkerhetsnivaa;
 import no.difi.begrep.sdp.schema_v10.SDPSmsVarsel;
@@ -32,6 +34,7 @@ import no.difi.sdp.client2.domain.digital_post.SmsVarsel;
 import no.difi.sdp.client2.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type;
+import no.difi.sdp.client2.domain.fysisk_post.Printinstruksjon;
 import org.w3.xmldsig.Reference;
 import org.w3.xmldsig.Signature;
 
@@ -40,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.NORSK;
 import static no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type.UTENLANDSK;
 import static no.difi.sdp.client2.internal.SdpTimeConstants.UTC;
@@ -58,7 +62,7 @@ public class SDPBuilder {
         String spraakkode = forsendelse.getSpraakkode();
         SDPDokument sdpHovedDokument = sdpDokument(forsendelse.getDokumentpakke().getHoveddokument(), spraakkode);
 
-        List<SDPDokument> sdpVedlegg = new ArrayList<SDPDokument>();
+        List<SDPDokument> sdpVedlegg = new ArrayList<>();
         for (Dokument dokument : forsendelse.getDokumentpakke().getVedlegg()) {
             sdpVedlegg.add(sdpDokument(dokument, spraakkode));
         }
@@ -135,7 +139,20 @@ public class SDPBuilder {
     		.withMottaker(sdpPostadresse(fysiskPost.getAdresse()))
     		.withPosttype(fysiskPost.getPosttype().sdpType)
     		.withUtskriftsfarge(fysiskPost.getUtskriftsfarge().sdpUtskriftsfarge)
-    		.withRetur(new SDPFysiskPostRetur(fysiskPost.getReturhaandtering().sdpReturhaandtering, sdpPostadresse(fysiskPost.getReturadresse())));
+    		.withRetur(new SDPFysiskPostRetur(fysiskPost.getReturhaandtering().sdpReturhaandtering, sdpPostadresse(fysiskPost.getReturadresse())))
+            .withPrintinstruksjoner(sdpPrintinstruksjoner(fysiskPost.getPrintinstruksjoner()));
+    }
+
+    private SDPPrintinstruksjoner sdpPrintinstruksjoner(List<Printinstruksjon> printinstruksjoner) {
+        if (printinstruksjoner == null) {
+            return null;
+        }
+
+        return new SDPPrintinstruksjoner(
+            printinstruksjoner.stream()
+                .map(p -> new SDPPrintinstruksjon(p.getNavn(), p.getVerdi()))
+                .collect(toList())
+        );
     }
 
     private SDPFysiskPostadresse sdpPostadresse(KonvoluttAdresse adresse) {
@@ -185,7 +202,7 @@ public class SDPBuilder {
     	final T _4;
 
     	static <T> UpTo4ElementsOfList<T> extract(Iterable<T> iterable) {
-    		return new UpTo4ElementsOfList<T>(iterable);
+    		return new UpTo4ElementsOfList<>(iterable);
     	}
 
     	private UpTo4ElementsOfList(Iterable<T> iterable) {
