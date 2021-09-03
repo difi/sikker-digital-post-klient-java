@@ -15,9 +15,9 @@ import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.w3.xmldsig.Reference;
-import org.w3.xmldsig.SignedInfo;
-import org.w3.xmldsig.X509IssuerSerialType;
+import no.digipost.org.w3.xmldsig.Reference;
+import no.digipost.org.w3.xmldsig.SignedInfo;
+import no.digipost.org.w3.xmldsig.X509IssuerSerialType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -101,7 +101,7 @@ public class CreateSignatureTest {
         XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
 
         assertThat(xAdESSignatures.getSignatures(), hasSize(1));
-        org.w3.xmldsig.Signature dSignature = xAdESSignatures.getSignatures().get(0);
+        no.digipost.org.w3.xmldsig.Signature dSignature = xAdESSignatures.getSignatures().get(0);
         verify_signed_info(dSignature.getSignedInfo());
         assertThat(dSignature.getSignatureValue(), notNullValue());
         assertThat(dSignature.getKeyInfo(), notNullValue());
@@ -142,7 +142,7 @@ public class CreateSignatureTest {
         Signature signature = sut.createSignature(noekkelpar, files);
 
         XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
-        org.w3.xmldsig.Object object = xAdESSignatures.getSignatures().get(0).getObjects().get(0);
+        no.digipost.org.w3.xmldsig.Object object = xAdESSignatures.getSignatures().get(0).getObjects().get(0);
 
         QualifyingProperties xadesProperties = (QualifyingProperties) object.getContent().get(0);
         SigningCertificate signingCertificate = xadesProperties.getSignedProperties().getSignedSignatureProperties().getSigningCertificate();
