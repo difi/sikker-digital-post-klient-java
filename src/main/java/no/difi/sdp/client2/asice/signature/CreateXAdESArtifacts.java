@@ -10,7 +10,7 @@ import org.etsi.uri._01903.v1_3.SignedDataObjectProperties;
 import org.etsi.uri._01903.v1_3.SignedProperties;
 import org.etsi.uri._01903.v1_3.SignedSignatureProperties;
 import org.etsi.uri._01903.v1_3.SigningCertificate;
-import org.w3.xmldsig.X509IssuerSerialType;
+import no.digipost.org.w3.xmldsig.X509IssuerSerialType;
 
 import javax.xml.crypto.dsig.DigestMethod;
 
@@ -26,7 +26,7 @@ import static org.apache.commons.codec.digest.DigestUtils.sha1;
 
 class CreateXAdESArtifacts {
 
-    private static final org.w3.xmldsig.DigestMethod sha1DigestMethod = new org.w3.xmldsig.DigestMethod(emptyList(), DigestMethod.SHA1);
+    private static final no.digipost.org.w3.xmldsig.DigestMethod sha1DigestMethod = new no.digipost.org.w3.xmldsig.DigestMethod(emptyList(), DigestMethod.SHA1);
     private final Clock clock;
 
 

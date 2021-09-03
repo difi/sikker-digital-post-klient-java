@@ -9,7 +9,7 @@ import no.digipost.api.representations.EbmsAktoer;
 import no.digipost.api.representations.EbmsForsendelse;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.StandardBusinessDocumentFactory;
-import org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
+import no.digipost.org.unece.cefact.namespaces.standardbusinessdocumentheader.StandardBusinessDocument;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

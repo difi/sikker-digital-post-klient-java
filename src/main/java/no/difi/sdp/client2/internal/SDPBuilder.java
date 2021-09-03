@@ -35,8 +35,8 @@ import no.difi.sdp.client2.domain.fysisk_post.FysiskPost;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse;
 import no.difi.sdp.client2.domain.fysisk_post.KonvoluttAdresse.Type;
 import no.difi.sdp.client2.domain.fysisk_post.Printinstruksjon;
-import org.w3.xmldsig.Reference;
-import org.w3.xmldsig.Signature;
+import no.digipost.org.w3.xmldsig.Reference;
+import no.digipost.org.w3.xmldsig.Signature;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -127,7 +127,12 @@ public class SDPBuilder {
         SDPTittel tittel = new SDPTittel(digitalPost.getIkkeSensitivTittel(), forsendelse.getSpraakkode());
         SDPVarsler varsler = sdpVarsler(forsendelse);
 
-        return new SDPDigitalPostInfo(virkningstidspunkt, null, aapningskvittering, sikkerhetsnivaa, tittel, varsler);
+        return new SDPDigitalPostInfo()
+            .withVirkningstidspunkt(virkningstidspunkt)
+            .withAapningskvittering(aapningskvittering)
+            .withSikkerhetsnivaa(sikkerhetsnivaa)
+            .withIkkeSensitivTittel(tittel)
+            .withVarsler(varsler);
     }
 
     private SDPFysiskPostInfo sdpFysiskPostInfo(FysiskPost fysiskPost) {

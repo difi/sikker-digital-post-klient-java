@@ -13,8 +13,8 @@ import no.digipost.api.exceptions.MessageSenderValidationException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
-import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Description;
-import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error;
+import no.digipost.org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Description;
+import no.digipost.org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error;
 import org.springframework.ws.soap.SoapMessage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
