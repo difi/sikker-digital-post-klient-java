@@ -74,7 +74,7 @@ class SmokeTestHelper {
                 throw new RuntimeException(String.format("Klarte ikke hente ut virksomhetssertifikatet fra keystoren med alias '%s'", TESTMILJO_VIRKSOMHETSSERTIFIKAT_ALIAS_VALUE));
             }
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
-            RDN serialnumber = x500name.getRDNs(BCStyle.SN)[0];
+            RDN serialnumber = x500name.getRDNs(BCStyle.SERIALNUMBER)[0];
             return Organisasjonsnummer.of(IETFUtils.valueToString(serialnumber.getFirst().getValue()));
         } catch (CertificateEncodingException e) {
             throw new RuntimeException("Klarte ikke hente ut organisasjonsnummer fra sertifikatet.", e);
