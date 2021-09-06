@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>no.difi.sdp</groupId>
+    <artifactId>sikker-digital-post-klient-bom</artifactId>
+    <version>LOCAL-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Sikker digital post-klient Bill-of-materials</name>
+    <url>https://github.com/difi/sikker-digital-post-klient-java</url>
+
+
+    <parent>
+        <groupId>no.digipost</groupId>
+        <artifactId>digipost-open-super-pom</artifactId>
+        <version>7</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <sdp-shared.version>3.0</sdp-shared.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>no.digipost</groupId>
+                <artifactId>sdp-api-client</artifactId>
+                <version>${sdp-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.digipost</groupId>
+                <artifactId>sdp-xsd</artifactId>
+                <version>${sdp-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.digipost</groupId>
+                <artifactId>sdp-api-commons</artifactId>
+                <version>${sdp-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sikker-digital-post-klient-java</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</connection>
+        <developerConnection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</developerConnection>
+        <url>scm:git:git@github.com:difi/sikker-digital-post-klient</url>
+    </scm>
+
+</project>
