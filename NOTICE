@@ -22,7 +22,7 @@ This software includes third party software subject to the following licenses:
   Bouncy Castle Provider under Bouncy Castle Licence
   Cryptacular Library under Apache 2 or GNU Lesser General Public License
   Digipost Certificate Validator under The Apache Software License, Version 2.0
-  Extended StAX API under Dual license consisting of the CDDL v1.1 and GPL v2
+  Extended StAX API under Eclipse Distribution License - v 1.0
   Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under Apache License, Version 2.0
   istack common utility code runtime under Eclipse Distribution License - v 1.0
@@ -33,7 +33,6 @@ This software includes third party software subject to the following licenses:
   Jakarta XML Binding API under Eclipse Distribution License - v 1.0
   Jakarta XML Web Services API under Eclipse Distribution License - v 1.0
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
-  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JAXB Runtime under Eclipse Distribution License - v 1.0
   JAXB2 Basics - Runtime under BSD-Style License
   JCL 1.2 implemented over SLF4J under Apache License, Version 2.0
@@ -63,7 +62,6 @@ This software includes third party software subject to the following licenses:
   spring-ws-security under Apache License, Version 2.0
   spring-xml under Apache License, Version 2.0
   Stax2 API under The BSD License
-  Streaming API for XML under GNU General Public Library or COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
   TXW2 Runtime under Eclipse Distribution License - v 1.0
   Woodstox under The Apache License, Version 2.0
 
