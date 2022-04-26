@@ -193,9 +193,14 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>5.3.18</version>
+                <version>5.3.19</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>5.6.3</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -315,7 +320,14 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.0.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.sonatype.ossindex.maven</groupId>
+                            <artifactId>ossindex-maven-enforcer-rules</artifactId>
+                            <version>3.2.0</version>
+                        </dependency>                    
+                    </dependencies>
                     <configuration>
                         <rules>
                             <bannedDependencies>
@@ -378,6 +390,7 @@
                                      https://maven.apache.org/docs/3.3.1/release-notes.html -->
                                 <version>3.3.1</version>
                             </requireMavenVersion>
+                            <banVulnerable implementation="org.sonatype.ossindex.maven.enforcer.BanVulnerableDependencies"/>
                         </rules>
                     </configuration>
                 </plugin>
