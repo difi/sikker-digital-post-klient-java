@@ -1,6 +1,7 @@
 package no.difi.sdp.client2.domain;
 
 import no.difi.sdp.client2.asice.AsicEAttachable;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class MetadataDokument implements AsicEAttachable {
 
     /**
      * @param filnavn  Tittel som vises til brukeren gitt riktig sikkerhetsnivå.
-     * @param filnavn  Filnavnet til dokumentet.
+     * @param mimetype  Filnavnet til dokumentet.
      * @param dokument Filen som skal sendes. Navnet på filen vil brukes som filnavn ovenfor mottaker.
      */
     public static Builder builder(String filnavn, String mimetype, byte[] dokument) {
@@ -81,7 +82,9 @@ public class MetadataDokument implements AsicEAttachable {
         }
 
         public MetadataDokument build() {
-            if (built) throw new IllegalStateException("Can't build twice");
+            if (built) {
+                throw new IllegalStateException("Can't build twice");
+            }
             built = true;
             return target;
         }
