@@ -15,7 +15,7 @@
     <parent>
         <groupId>no.digipost</groupId>
         <artifactId>digipost-open-super-pom</artifactId>
-        <version>7</version>
+        <version>13</version>
         <relativePath/>
     </parent>
 
@@ -247,11 +247,11 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -263,7 +263,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.3.0</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -275,59 +275,47 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jasig.maven</groupId>
-                    <artifactId>maven-notice-plugin</artifactId>
-                    <version>1.1.0</version>
+                    <artifactId>notice-maven-plugin</artifactId>
+                    <version>2.0.0</version>
                     <configuration>
-                        <noticeTemplate>${project.basedir}/src/main/notice/NOTICE.template</noticeTemplate>
                         <outputDir>${project.basedir}/..</outputDir>
-                        <excludeScopes>
-                            <excludeScope>test</excludeScope>
-                        </excludeScopes>
-                        <licenseMapping>
-                            <param>src/main/notice/license-mappings.xml</param>
-                        </licenseMapping>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
-                    <version>3.0</version>
+                    <version>4.2</version>
                     <configuration>
-                        <header>src/main/resources/header.txt</header>
-                        <strictCheck>true</strictCheck>
-                        <excludes>
-                            <exclude>LICENSE*</exclude>
-                            <exclude>NOTICE</exclude>
-                            <exclude>**/*.pdf</exclude>
-                            <exclude>**/*.p12</exclude>
-                            <exclude>**/*.txt</exclude>
-                            <exclude>**/*.xml</exclude>
-                            <exclude>**/*.xsd</exclude>
-                            <exclude>**/*.template</exclude>
-                            <exclude>**/*.jks</exclude>
-                            <exclude>**/*.jce</exclude>
-                            <exclude>**/*.jceks</exclude>
-                            <exclude>**/*.properties</exclude>
-                        </excludes>
+                        <licenseSets>
+                            <licenseSet>
+                                <excludes>
+                                    <exclude>LICENSE*</exclude>
+                                    <exclude>**/*.pdf</exclude>
+                                    <exclude>**/*.p12</exclude>
+                                    <exclude>**/*.txt</exclude>
+                                    <exclude>**/*.xml</exclude>
+                                    <exclude>**/*.xsd</exclude>
+                                    <exclude>**/*.jks</exclude>
+                                    <exclude>**/*.jce</exclude>
+                                    <exclude>**/*.jceks</exclude>
+                                    <exclude>**/*.cer</exclude>
+                                    <exclude>**/*.pem</exclude>
+                                    <exclude>**/*.properties</exclude>
+                                </excludes>
+                            </licenseSet>
+                        </licenseSets>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>com.github.siom79.japicmp</groupId>
                     <artifactId>japicmp-maven-plugin</artifactId>
-                    <version>0.14.1</version>
+                    <version>0.17.2</version>
                     <configuration>
-                        <newVersion>
-                            <file>
-                                <path>${project.build.directory}/${project.build.finalName}.${project.packaging}</path>
-                            </file>
-                        </newVersion>
                         <parameter>
-                            <onlyModified>true</onlyModified>
-                            <onlyBinaryIncompatible>true</onlyBinaryIncompatible>
                             <includes>
                                 <include>no.difi.sdp</include>
                             </includes>
@@ -336,11 +324,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <doclint>-missing</doclint>
-                        <quiet>true</quiet>
-                    </configuration>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-enforcer-plugin</artifactId>
@@ -352,44 +336,22 @@
                             <version>3.2.0</version>
                         </dependency>
                     </dependencies>
-                    <configuration>
-                        <rules>
-                            <requireMavenVersion>
-                                <version>3.6.3</version>
-                            </requireMavenVersion>
-                        </rules>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.5.0</version>
+                    <configuration>
+                        <ignoreAllNonTestScoped>true</ignoreAllNonTestScoped>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.8.1</version>
+                    <version>2.15.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>true</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
@@ -482,34 +444,6 @@
         </resources>
 
     </build>
-
-    <profiles>
-        <profile>
-            <id>non-java-11</id>
-            <activation>
-                <jdk>[1.8,11)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <!-- The notice-plugin does not yet work on Java 11,
-                             because it fails on reading its own configuration -->
-                        <groupId>org.jasig.maven</groupId>
-                        <artifactId>maven-notice-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>check-NOTICE-file</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <scm>
         <connection>scm:git:git@github.com:difi/sikker-digital-post-klient.git</connection>

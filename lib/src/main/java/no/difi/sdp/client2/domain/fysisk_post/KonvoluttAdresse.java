@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.difi.sdp.client2.domain.fysisk_post;
 
 import java.util.List;
@@ -89,11 +104,10 @@ public class KonvoluttAdresse {
 		/**
 		 * Lag norsk postadresse for fysisk post.
 		 *
-		 * @param adresselinje1
-		 * @param adresselinje2 (valgfri)
-		 * @param adresselinje3 (valgfri)
-		 * @param postnummer
-		 * @param poststed
+		 * @param adresselinje1 første adresselinje
+		 * @param adresselinje2 valgfri andre adresselinje
+		 * @param adresselinje3 valgfri tredje adresselinje
+		 *
 		 * @return builder. Kall {@link #build()} for å få en {@link KonvoluttAdresse}.
 		 */
 		public Builder iNorge(String adresselinje1, String adresselinje2, String adresselinje3, String postnummer, String poststed) {
