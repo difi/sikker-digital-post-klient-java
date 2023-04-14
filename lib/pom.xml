@@ -79,14 +79,14 @@
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.69</version>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>1.72</version>
         </dependency>
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.69</version>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.72</version>
         </dependency>
 
         <dependency>
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>no.digipost</groupId>
             <artifactId>certificate-validator</artifactId>
-            <version>2.0</version>
+            <version>javax-to-jakarta-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -316,6 +316,82 @@
                     <configuration>
                         <doclint>-missing</doclint>
                         <quiet>true</quiet>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.sonatype.ossindex.maven</groupId>
+                            <artifactId>ossindex-maven-enforcer-rules</artifactId>
+                            <version>3.2.0</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <rules>
+                            <bannedDependencies>
+                                <excludes>
+                                    <exclude>*:*:*:*:compile</exclude>
+                                    <exclude>*:*:*:*:runtime</exclude>
+                                </excludes>
+                                <includes>
+                                    <include>commons-codec</include>
+                                    <include>commons-io</include>
+                                    <include>org.bouncycastle:bcutil-jdk18on</include>
+                                    <include>org.bouncycastle:bcpkix-jdk18on</include>
+                                    <include>org.bouncycastle:bcprov-jdk18on</include>
+                                    <include>org.codehaus.woodstox:stax2-api</include>
+                                    <include>org.codehaus.woodstox:woodstox-core-asl</include>
+                                    <include>org.jasypt:jasypt</include>
+                                    <include>org.jvnet.jaxb2_commons:jaxb2-basics-runtime</include>
+                                    <include>no.digipost:sdp-api-client</include>
+                                    <include>no.digipost:sdp-api-commons</include>
+                                    <include>no.digipost:sdp-xsd</include>
+                                    <include>org.slf4j</include>
+                                    <include>org.apache.commons</include>
+                                    <include>org.apache.httpcomponents</include>
+                                    <include>org.apache.santuario</include>
+                                    <include>com.fasterxml.woodstox:woodstox-core</include>
+                                    <include>org.apache.wss4j</include>
+                                    <include>org.springframework</include>
+                                    <include>org.springframework.ws</include>
+                                    <include>org.springframework.security</include>
+                                    <include>no.digipost:certificate-validator</include>
+                                    <include>javax.xml.stream:stax-api</include>
+                                    <include>jakarta.xml.bind</include>
+                                    <include>org.glassfish.jaxb</include>
+                                    <include>jakarta.xml.soap:jakarta.xml.soap-api</include>
+                                    <include>com.sun.istack</include>
+                                    <include>jakarta.activation</include>
+                                    <include>com.sun.activation:jakarta.activation</include>
+                                    <include>javax.activation:activation</include>
+                                    <include>com.sun.xml.fastinfoset</include>
+                                    <include>com.sun.xml.messaging.saaj</include>
+                                    <include>org.jvnet.mimepull:mimepull</include>
+                                    <include>org.jvnet.staxex:stax-ex</include>
+                                    <include>org.cryptacular:cryptacular</include>
+                                    <include>com.google.guava:guava</include>
+                                    <include>com.google.guava:failureaccess</include>
+                                    <include>joda-time:joda-time</include>
+                                    <include>jakarta.jws:jakarta.jws-api</include>
+                                    <include>jakarta.xml.ws:jakarta.xml.ws-api</include>
+                                </includes>
+                                <searchTransitive>true</searchTransitive>
+                                <message>
+                                    Maven-avhengighetene har forandret seg. Sjekk at dette virkelige er nødvendige
+                                    avhengigheter (inkludert transitive) og at lisenser er OK.
+                                    Være spesielt OBS på lisenser som krever at man open sourcer egen kode, som for
+                                    eksempel GPL-lisensene.
+                                </message>
+                            </bannedDependencies>
+                            <requireMavenVersion>
+                                <!-- Maven 3.3.1 is needed for .mvn/maven.config to work
+                                     https://maven.apache.org/docs/3.3.1/release-notes.html -->
+                                <version>3.3.1</version>
+                            </requireMavenVersion>
+                            <banVulnerable implementation="org.sonatype.ossindex.maven.enforcer.BanVulnerableDependencies"/>
+                        </rules>
                     </configuration>
                 </plugin>
                 <plugin>
