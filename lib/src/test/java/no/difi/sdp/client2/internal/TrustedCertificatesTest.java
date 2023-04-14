@@ -12,8 +12,8 @@ public class TrustedCertificatesTest {
     @Test
     public void trust_store_for_production_and_test() throws Exception {
         int numOfEnvironments = 2;
-        int numOfRootCerts = 2;
-        int numOfIntermediateCerts = 2;
+        int numOfRootCerts = 5;
+        int numOfIntermediateCerts = 5;
         int numOfCertificates = numOfEnvironments * (numOfRootCerts + numOfIntermediateCerts);
 
         KeyStore trustStore = TrustedCertificates.getTrustStore();
@@ -32,8 +32,8 @@ public class TrustedCertificatesTest {
     }
 
     private void hasCorrectCertificateCount(Environment environment) {
-        int numOfRootCerts = 2;
-        int numOfIntermediateCerts = 2;
+        int numOfRootCerts = 5;
+        int numOfIntermediateCerts = 5;
         Trust trustedCerts = TrustedCertificates.createTrust(environment);
         assertThat(trustedCerts.getTrustAnchors().size(), equalTo(numOfRootCerts));
         assertThat(trustedCerts.getTrustedIntermediateCertificates().size(), equalTo(numOfIntermediateCerts));
