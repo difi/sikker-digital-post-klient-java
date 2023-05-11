@@ -18,6 +18,10 @@ package no.difi.sdp.client2.asice.signature;
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.asice.AsicEAttachable;
 import no.difi.sdp.client2.domain.Noekkelpar;
+import no.digipost.api.xml.JaxbMarshaller;
+import no.digipost.org.w3.xmldsig.Reference;
+import no.digipost.org.w3.xmldsig.SignedInfo;
+import no.digipost.org.w3.xmldsig.X509IssuerSerialType;
 import no.digipost.time.ControllableClock;
 import org.apache.commons.io.IOUtils;
 import org.apache.jcp.xml.dsig.internal.dom.DOMSubTreeData;
@@ -29,10 +33,6 @@ import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import no.digipost.org.w3.xmldsig.Reference;
-import no.digipost.org.w3.xmldsig.SignedInfo;
-import no.digipost.org.w3.xmldsig.X509IssuerSerialType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -80,12 +80,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class CreateSignatureTest {
 
-    private static final Jaxb2Marshaller marshaller;
-
-    static {
-        marshaller = new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(XAdESSignatures.class, QualifyingProperties.class);
-    }
+    private static final JaxbMarshaller marshaller = JaxbMarshaller.marshallerForClasses(asList(XAdESSignatures.class, QualifyingProperties.class));
 
     private final ControllableClock clock = ControllableClock.freezedAt(Instant.now(), UTC);
 
@@ -113,7 +108,7 @@ public class CreateSignatureTest {
     @Test
     public void test_generated_signatures() {
         Signature signature = sut.createSignature(noekkelpar, files);
-        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        XAdESSignatures xAdESSignatures = marshaller.unmarshal(signature.getBytes(), XAdESSignatures.class);
 
         assertThat(xAdESSignatures.getSignatures(), hasSize(1));
         no.digipost.org.w3.xmldsig.Signature dSignature = xAdESSignatures.getSignatures().get(0);
@@ -156,7 +151,7 @@ public class CreateSignatureTest {
     public void test_xades_signed_properties() {
         Signature signature = sut.createSignature(noekkelpar, files);
 
-        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        XAdESSignatures xAdESSignatures = marshaller.unmarshal(signature.getBytes(), XAdESSignatures.class);
         no.digipost.org.w3.xmldsig.Object object = xAdESSignatures.getSignatures().get(0).getObjects().get(0);
 
         QualifyingProperties xadesProperties = (QualifyingProperties) object.getContent().get(0);
@@ -175,7 +170,7 @@ public class CreateSignatureTest {
         );
 
         Signature signature = sut.createSignature(noekkelpar, otherFiles);
-        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        XAdESSignatures xAdESSignatures = marshaller.unmarshal(signature.getBytes(), XAdESSignatures.class);
         String uri = xAdESSignatures.getSignatures().get(0).getSignedInfo().getReferences().get(0).getURI();
         assertEquals("hoveddokument+%282%29.pdf", uri);
     }

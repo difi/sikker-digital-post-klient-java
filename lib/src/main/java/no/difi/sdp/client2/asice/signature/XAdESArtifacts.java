@@ -15,8 +15,8 @@
  */
 package no.difi.sdp.client2.asice.signature;
 
+import no.digipost.api.xml.JaxbMarshaller;
 import org.etsi.uri._01903.v1_3.QualifyingProperties;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -24,16 +24,12 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.transform.dom.DOMResult;
 
+import static java.util.Collections.singleton;
 import static java.util.stream.IntStream.range;
 
 final class XAdESArtifacts {
 
-    private static Jaxb2Marshaller marshaller;
-
-    static {
-        marshaller = new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(QualifyingProperties.class);
-    }
+    private static JaxbMarshaller marshaller = JaxbMarshaller.marshallerForClasses(singleton(QualifyingProperties.class));
 
 
     public static XAdESArtifacts from(QualifyingProperties qualifyingProperties) {

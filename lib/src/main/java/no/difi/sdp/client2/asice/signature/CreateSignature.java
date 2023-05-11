@@ -20,10 +20,7 @@ import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client2.domain.exceptions.XmlKonfigurasjonException;
 import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
-import no.digipost.api.xml.Schemas;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.validation.SchemaLoaderUtils;
-import org.springframework.xml.validation.XmlValidatorFactory;
+import no.digipost.api.xml.SchemaResources;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -102,16 +99,8 @@ public class CreateSignature {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
         }
 
-        this.schema = loadSchema();
+        this.schema = SchemaResources.createSchema(SchemaResources.ASICE_SCHEMA);
     }
-
-	private static Schema loadSchema() {
-		try {
-            return SchemaLoaderUtils.loadSchema(new Resource[]{ Schemas.ASICE_SCHEMA }, XmlValidatorFactory.SCHEMA_W3C_XML);
-        } catch (IOException | SAXException e) {
-            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
-        }
-	}
 
     public Signature createSignature(final Noekkelpar noekkelpar, final List<AsicEAttachable> attachedFiles) throws XmlValideringException {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
