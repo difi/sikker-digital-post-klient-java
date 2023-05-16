@@ -25,8 +25,6 @@ import no.digipost.api.xml.MarshallingException;
 import no.digipost.api.xml.SchemaResources;
 import org.xml.sax.SAXParseException;
 
-import java.io.ByteArrayOutputStream;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 
@@ -42,13 +40,9 @@ public class CreateManifest {
 
     public Manifest createManifest(Forsendelse forsendelse) {
         SDPManifest sdpManifest = sdpBuilder.createManifest(forsendelse);
-
-        ByteArrayOutputStream manifestStream = new ByteArrayOutputStream();
         try {
-            marshaller.marshalToBytes(sdpManifest);
-            return new Manifest(manifestStream.toByteArray());
-        }
-        catch (MarshallingException e) {
+            return new Manifest(marshaller.marshalToBytes(sdpManifest));
+        } catch (MarshallingException e) {
             for (Throwable cause = e.getCause(); cause != null; cause = cause.getCause()) {
                 if (cause instanceof SAXParseException) {
                     throw new XmlValideringException("Kunne ikke validere generert Manifest XML. Sjekk at alle påkrevde input er satt og ikke er null",

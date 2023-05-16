@@ -22,8 +22,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.transform.dom.DOMResult;
-
 import static java.util.Collections.singleton;
 import static java.util.stream.IntStream.range;
 
@@ -33,9 +31,8 @@ final class XAdESArtifacts {
 
 
     public static XAdESArtifacts from(QualifyingProperties qualifyingProperties) {
-        DOMResult domResult = new DOMResult();
-        marshaller.marshal(qualifyingProperties, domResult);
-        return from((Document) domResult.getNode());
+        Document qualifyingPropertiesAsDomDocument = marshaller.marshalToDomDocument(qualifyingProperties);
+        return from(qualifyingPropertiesAsDomDocument);
     }
 
     private static XAdESArtifacts from(Document qualifyingPropertiesDocument) {

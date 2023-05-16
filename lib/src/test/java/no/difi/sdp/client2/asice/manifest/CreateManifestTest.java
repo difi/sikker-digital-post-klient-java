@@ -25,7 +25,12 @@ import no.digipost.api.representations.Organisasjonsnummer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.difi.sdp.client2.ObjectMother.mottakerSertifikat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CreateManifestTest {
@@ -41,7 +46,11 @@ public class CreateManifestTest {
     public void accept_valid_forsendelse() {
         Forsendelse forsendelse = ObjectMother.forsendelse();
 
-        sut.createManifest(forsendelse); // No Exceptions
+        Manifest manifest = sut.createManifest(forsendelse);
+        String manifestXml = new String(manifest.getBytes(), UTF_8);
+        assertAll(
+                () -> assertThat(manifest.getFileName(), is("manifest.xml")),
+                () -> assertThat(manifestXml, containsString("href=\"faktura.pdf\"")));
     }
 
     @Test
