@@ -23,6 +23,7 @@ import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
 import no.digipost.api.xml.SchemaResources;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
@@ -154,7 +155,7 @@ public class CreateSignature {
     private URIDereferencer signedPropertiesURIDereferencer(XAdESArtifacts xadesArtifacts, XMLSignatureFactory signatureFactory) {
         return (uriReference, context) -> {
             if (xadesArtifacts.signablePropertiesReferenceUri.equals(uriReference.getURI())) {
-                return (NodeSetData) domUtils.allNodesBelow(xadesArtifacts.signableProperties)::iterator;
+                return (NodeSetData<Node>) domUtils.allNodesBelow(xadesArtifacts.signableProperties)::iterator;
             }
             return signatureFactory.getURIDereferencer().dereference(uriReference, context);
         };

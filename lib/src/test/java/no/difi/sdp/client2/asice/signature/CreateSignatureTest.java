@@ -269,7 +269,6 @@ public class CreateSignatureTest {
                 System.out.println("signature validation status: " + sv);
                 if (sv == false) {
                     // Check the validation status of each Reference.
-                    @SuppressWarnings("unchecked")
                     Iterator<javax.xml.crypto.dsig.Reference> i = signature.getSignedInfo().getReferences().iterator();
                     for (int j = 0; i.hasNext(); j++) {
                         boolean refValid = i.next().validate(valContext);
