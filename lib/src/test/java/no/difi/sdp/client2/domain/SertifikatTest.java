@@ -28,7 +28,7 @@ public class SertifikatTest {
 
         Sertifikat sertifikat = Sertifikat.fraBase64X509String(base64EncodedCertificate);
 
-        String certificateSubject = sertifikat.getX509Certificate().getSubjectDN().getName();
+        String certificateSubject = sertifikat.getX509Certificate().getSubjectX500Principal().getName();
         assertThat(certificateSubject, containsString("DIFI"));
         assertThat(certificateSubject, containsString("Sikker Digital Post Test"));
     }
