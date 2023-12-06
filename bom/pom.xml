@@ -18,7 +18,7 @@
     </parent>
 
     <properties>
-        <sdp-shared.version>jakarta-soap-SNAPSHOT</sdp-shared.version>
+        <sdp-shared.version>5.0.0</sdp-shared.version>
         <license.skip>true</license.skip>
         <skip.checks>true</skip.checks>
     </properties>
