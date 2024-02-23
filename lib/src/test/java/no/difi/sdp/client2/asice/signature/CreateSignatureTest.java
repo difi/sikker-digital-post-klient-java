@@ -1,8 +1,27 @@
+/*
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.difi.sdp.client2.asice.signature;
 
 import no.difi.sdp.client2.ObjectMother;
 import no.difi.sdp.client2.asice.AsicEAttachable;
 import no.difi.sdp.client2.domain.Noekkelpar;
+import no.digipost.api.xml.JaxbMarshaller;
+import no.digipost.org.w3.xmldsig.Reference;
+import no.digipost.org.w3.xmldsig.SignedInfo;
+import no.digipost.org.w3.xmldsig.X509IssuerSerialType;
 import no.digipost.time.ControllableClock;
 import org.apache.commons.io.IOUtils;
 import org.apache.jcp.xml.dsig.internal.dom.DOMSubTreeData;
@@ -14,10 +33,6 @@ import org.etsi.uri._01903.v1_3.SigningCertificate;
 import org.etsi.uri._2918.v1_2.XAdESSignatures;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import no.digipost.org.w3.xmldsig.Reference;
-import no.digipost.org.w3.xmldsig.SignedInfo;
-import no.digipost.org.w3.xmldsig.X509IssuerSerialType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,12 +80,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class CreateSignatureTest {
 
-    private static final Jaxb2Marshaller marshaller;
-
-    static {
-        marshaller = new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(XAdESSignatures.class, QualifyingProperties.class);
-    }
+    private static final JaxbMarshaller marshaller = JaxbMarshaller.marshallerForClasses(asList(XAdESSignatures.class, QualifyingProperties.class));
 
     private final ControllableClock clock = ControllableClock.freezedAt(Instant.now(), UTC);
 
@@ -98,7 +108,7 @@ public class CreateSignatureTest {
     @Test
     public void test_generated_signatures() {
         Signature signature = sut.createSignature(noekkelpar, files);
-        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        XAdESSignatures xAdESSignatures = marshaller.unmarshal(signature.getBytes(), XAdESSignatures.class);
 
         assertThat(xAdESSignatures.getSignatures(), hasSize(1));
         no.digipost.org.w3.xmldsig.Signature dSignature = xAdESSignatures.getSignatures().get(0);
@@ -141,7 +151,7 @@ public class CreateSignatureTest {
     public void test_xades_signed_properties() {
         Signature signature = sut.createSignature(noekkelpar, files);
 
-        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        XAdESSignatures xAdESSignatures = marshaller.unmarshal(signature.getBytes(), XAdESSignatures.class);
         no.digipost.org.w3.xmldsig.Object object = xAdESSignatures.getSignatures().get(0).getObjects().get(0);
 
         QualifyingProperties xadesProperties = (QualifyingProperties) object.getContent().get(0);
@@ -160,7 +170,7 @@ public class CreateSignatureTest {
         );
 
         Signature signature = sut.createSignature(noekkelpar, otherFiles);
-        XAdESSignatures xAdESSignatures = (XAdESSignatures) marshaller.unmarshal(new StreamSource(new ByteArrayInputStream(signature.getBytes())));
+        XAdESSignatures xAdESSignatures = marshaller.unmarshal(signature.getBytes(), XAdESSignatures.class);
         String uri = xAdESSignatures.getSignatures().get(0).getSignedInfo().getReferences().get(0).getURI();
         assertEquals("hoveddokument+%282%29.pdf", uri);
     }
@@ -259,7 +269,6 @@ public class CreateSignatureTest {
                 System.out.println("signature validation status: " + sv);
                 if (sv == false) {
                     // Check the validation status of each Reference.
-                    @SuppressWarnings("unchecked")
                     Iterator<javax.xml.crypto.dsig.Reference> i = signature.getSignedInfo().getReferences().iterator();
                     for (int j = 0; i.hasNext(); j++) {
                         boolean refValid = i.next().validate(valContext);

@@ -13,12 +13,14 @@
     <parent>
         <groupId>no.digipost</groupId>
         <artifactId>digipost-open-super-pom</artifactId>
-        <version>7</version>
+        <version>13</version>
         <relativePath/>
     </parent>
 
     <properties>
-        <sdp-shared.version>3.1</sdp-shared.version>
+        <sdp-shared.version>5.1.0</sdp-shared.version>
+        <license.skip>true</license.skip>
+        <skip.checks>true</skip.checks>
     </properties>
 
     <dependencyManagement>

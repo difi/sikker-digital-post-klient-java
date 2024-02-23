@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.difi.sdp.client2.asice.signature;
 
 import no.difi.sdp.client2.asice.AsicEAttachable;
@@ -5,12 +20,10 @@ import no.difi.sdp.client2.domain.Noekkelpar;
 import no.difi.sdp.client2.domain.exceptions.KonfigurasjonException;
 import no.difi.sdp.client2.domain.exceptions.XmlKonfigurasjonException;
 import no.difi.sdp.client2.domain.exceptions.XmlValideringException;
-import no.digipost.api.xml.Schemas;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.validation.SchemaLoaderUtils;
-import org.springframework.xml.validation.XmlValidatorFactory;
+import no.digipost.api.xml.SchemaResources;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
@@ -87,16 +100,8 @@ public class CreateSignature {
             throw new KonfigurasjonException("Kunne ikke initialisere xml-signering, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
         }
 
-        this.schema = loadSchema();
+        this.schema = SchemaResources.createSchema(SchemaResources.ASICE_SCHEMA);
     }
-
-	private static Schema loadSchema() {
-		try {
-            return SchemaLoaderUtils.loadSchema(new Resource[]{ Schemas.ASICE_SCHEMA }, XmlValidatorFactory.SCHEMA_W3C_XML);
-        } catch (IOException | SAXException e) {
-            throw new KonfigurasjonException("Kunne ikke laste schema for validering av signatures, fordi " + e.getClass().getSimpleName() + ": '" + e.getMessage() + "'", e);
-        }
-	}
 
     public Signature createSignature(final Noekkelpar noekkelpar, final List<AsicEAttachable> attachedFiles) throws XmlValideringException {
         XMLSignatureFactory xmlSignatureFactory = getSignatureFactory();
@@ -150,7 +155,7 @@ public class CreateSignature {
     private URIDereferencer signedPropertiesURIDereferencer(XAdESArtifacts xadesArtifacts, XMLSignatureFactory signatureFactory) {
         return (uriReference, context) -> {
             if (xadesArtifacts.signablePropertiesReferenceUri.equals(uriReference.getURI())) {
-                return (NodeSetData) domUtils.allNodesBelow(xadesArtifacts.signableProperties)::iterator;
+                return (NodeSetData<Node>) domUtils.allNodesBelow(xadesArtifacts.signableProperties)::iterator;
             }
             return signatureFactory.getURIDereferencer().dereference(uriReference, context);
         };

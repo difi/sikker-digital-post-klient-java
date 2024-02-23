@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.difi.sdp.client2.internal;
 
 import no.difi.sdp.client2.ExceptionMapper;
@@ -17,8 +32,10 @@ import no.digipost.api.representations.EbmsPullRequest;
 import no.digipost.api.representations.KanBekreftesSomBehandletKvittering;
 import no.digipost.api.representations.Organisasjonsnummer;
 import no.digipost.api.representations.TransportKvittering;
-import no.digipost.api.xml.Schemas;
+import no.digipost.api.xml.SchemaResources;
 import org.apache.http.HttpRequestInterceptor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.client.support.interceptor.PayloadValidatingInterceptor;
@@ -37,7 +54,7 @@ public class DigipostMessageSenderFacade {
     private ExceptionMapper exceptionMapper = new ExceptionMapper();
 
 
-    public DigipostMessageSenderFacade(final Databehandler databehandler, final KlientKonfigurasjon klientKonfigurasjon) {
+    public DigipostMessageSenderFacade(Databehandler databehandler, KlientKonfigurasjon klientKonfigurasjon) {
         KeyStoreInfo keyStoreInfo = databehandler.noekkelpar.getKeyStoreInfo();
         WsSecurityInterceptor wsSecurityInterceptor = new WsSecurityInterceptor(keyStoreInfo, new Wss4jClientSecurityExceptionMapper());
         wsSecurityInterceptor.afterPropertiesSet();
@@ -75,31 +92,31 @@ public class DigipostMessageSenderFacade {
         messageSender = messageSenderBuilder.build();
     }
 
-    public TransportKvittering send(final EbmsForsendelse ebmsForsendelse) {
+    public TransportKvittering send(EbmsForsendelse ebmsForsendelse) {
         return performRequest(() -> messageSender.send(ebmsForsendelse));
     }
 
-    public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest) {
+    public EbmsApplikasjonsKvittering hentKvittering(EbmsPullRequest ebmsPullRequest) {
         return performRequest(() -> messageSender.hentKvittering(ebmsPullRequest));
     }
 
-    public EbmsApplikasjonsKvittering hentKvittering(final EbmsPullRequest ebmsPullRequest, final KanBekreftesSomBehandletKvittering applikasjonsKvittering) {
+    public EbmsApplikasjonsKvittering hentKvittering(EbmsPullRequest ebmsPullRequest, KanBekreftesSomBehandletKvittering applikasjonsKvittering) {
         return performRequest(() -> messageSender.hentKvittering(ebmsPullRequest, applikasjonsKvittering));
     }
 
-    public void bekreft(final KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering) {
+    public void bekreft(KanBekreftesSomBehandletKvittering kanBekreftesSomBehandletKvittering) {
         performRequest(() -> messageSender.bekreft(kanBekreftesSomBehandletKvittering));
 
     }
 
-    private void performRequest(final Runnable request) {
+    private void performRequest(Runnable request) {
         this.performRequest(() -> {
             request.run();
             return null;
         });
     }
 
-    private <T> T performRequest(final Supplier<T> request) throws SendException {
+    private <T> T performRequest(Supplier<T> request) throws SendException {
         try {
             return request.get();
         } catch (RuntimeException e) {
@@ -107,7 +124,7 @@ public class DigipostMessageSenderFacade {
         }
     }
 
-    public void setExceptionMapper(final ExceptionMapper exceptionMapper) {
+    public void setExceptionMapper(ExceptionMapper exceptionMapper) {
         this.exceptionMapper = exceptionMapper;
     }
 
@@ -129,7 +146,7 @@ public class DigipostMessageSenderFacade {
 
                 }
             };
-            payloadValidatingInterceptor.setSchemas(Schemas.allSchemaResources());
+            payloadValidatingInterceptor.setSchemas(SchemaResources.all().stream().map(s -> new UrlResource(s.getURL())).toArray(Resource[]::new));
             payloadValidatingInterceptor.setValidateRequest(true);
             payloadValidatingInterceptor.setValidateResponse(true);
             payloadValidatingInterceptor.afterPropertiesSet();

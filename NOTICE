@@ -8,39 +8,45 @@ Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 
 This software includes third party software subject to the following licenses:
 
-  Apache Commons Codec under Apache License, Version 2.0
-  Apache Commons Compress under Apache License, Version 2.0
-  Apache Commons IO under Apache License, Version 2.0
-  Apache Commons Lang under Apache License, Version 2.0
+  Angus Activation Registries under EDL 1.0
+  Apache Commons Codec under Apache-2.0
+  Apache Commons Compress under Apache-2.0
+  Apache Commons IO under Apache-2.0
+  Apache Commons Lang under Apache-2.0
   Apache HttpClient under Apache License, Version 2.0
+  Apache HttpComponents Core HTTP/1.1 under Apache License, Version 2.0
+  Apache HttpComponents Core HTTP/2 under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
-  Apache WSS4J DOM WS-Security under Apache License, Version 2.0
-  Apache WSS4J WS-Security Common under Apache License, Version 2.0
-  Apache XML Security for Java under Apache License, Version 2.0
+  Apache WSS4J DOM WS-Security under Apache-2.0
+  Apache WSS4J WS-Security Common under Apache-2.0
+  Apache XML Security for Java under Apache-2.0
   Bouncy Castle ASN.1 Extension and Utility APIs under Bouncy Castle Licence
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
   Cryptacular Library under Apache 2 or GNU Lesser General Public License
   Digipost Certificate Validator under The Apache Software License, Version 2.0
+  Digipost JAXB Resolver - com.sun.xml.bind under The Apache Software License, Version 2.0
   Extended StAX API under Eclipse Distribution License - v 1.0
   Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under Apache License, Version 2.0
   istack common utility code runtime under Eclipse Distribution License - v 1.0
-  Jakarta Activation under EDL 1.0
-  Jakarta Activation API jar under EDL 1.0
+  Jakarta Activation API under EDL 1.0
+  Jakarta Mail API under EPL 2.0 or GPL2 w/ CPE or EDL 1.0
+  Jakarta SOAP Implementation under Eclipse Distribution License - v 1.0
   Jakarta SOAP with Attachments API under Eclipse Distribution License - v 1.0
-  Jakarta Web Services Metadata API under Eclipse Distribution License - v 1.0
   Jakarta XML Binding API under Eclipse Distribution License - v 1.0
-  Jakarta XML Web Services API under Eclipse Distribution License - v 1.0
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
+  JavaBeans Activation Framework API jar under CDDL/GPLv2+CE
+  JAXB Core under Eclipse Distribution License - v 1.0
   JAXB Runtime under Eclipse Distribution License - v 1.0
+  jaxb-api under CDDL 1.1 or GPL2 w/ CPE
   JAXB2 Basics - Runtime under BSD-Style License
   JCL 1.2 implemented over SLF4J under Apache License, Version 2.0
-  Joda-Time under Apache License, Version 2.0
   JUL to SLF4J bridge under MIT License
-  Log4j Implemented Over SLF4J under Apache Software Licenses
-  MIME streaming extension under Eclipse Distribution License - v 1.0
-  saaj-impl under Eclipse Distribution License - v 1.0
+  micrometer-commons under The Apache Software License, Version 2.0
+  micrometer-observation under The Apache Software License, Version 2.0
+  Old JAXB Core under CDDL+GPL License
+  Old JAXB Runtime under Eclipse Distribution License - v 1.0
   SDP Shared - API Client under The Apache Software License, Version 2.0
   SDP Shared - API Commons under The Apache Software License, Version 2.0
   SDP Shared - XSD & JAXB under The Apache Software License, Version 2.0
